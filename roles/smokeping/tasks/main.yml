@@ -1,0 +1,4 @@
+- import_tasks: smokeping-install.yml
+  tags:
+    - smokeping
+    - smokeping:install

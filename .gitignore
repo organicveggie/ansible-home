@@ -1,0 +1,8 @@
+!/galaxy_collections
+/galaxy_collections/*
+!/galaxy_collections/requirements.yml
+!/galaxy_roles
+/galaxy_roles/*
+!/galaxy_roles/requirements.yml
+py38
+temp.log
