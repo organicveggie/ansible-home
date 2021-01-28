@@ -1,0 +1,4 @@
+- import_tasks: telegraf-install.yml
+  tags:
+    - telegraf
+    - telegraf:install

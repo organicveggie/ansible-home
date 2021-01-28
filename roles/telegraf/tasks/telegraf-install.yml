@@ -1,0 +1,13 @@
+- name: Import InfluxDB GPG signing key
+  ansible.builtin.apt_key:
+    url: https://repos.influxdata.com/influxdb.key
+
+- name: Add InfluxDB repository
+  ansible.builtin.apt_repository:
+    repo: 'deb https://repos.influxdata.com/ubuntu buster stable'
+
+- name: Install Telegraf packages
+  ansible.builtin.apt:
+    name: telegraf
+  notify:
+    - Restart Telegraf

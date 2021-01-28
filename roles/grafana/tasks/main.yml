@@ -1,0 +1,4 @@
+- import_tasks: grafana-install.yml
+  tags:
+    - grafana
+    - grafana:install

@@ -1,0 +1,9 @@
+---
+- name: Setup Speed Test
+  hosts: speedtest
+  remote_user: pi
+  become: yes
+  roles:
+    - influxdb
+    - grafana
+    - telegraf
