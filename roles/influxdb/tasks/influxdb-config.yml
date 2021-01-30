@@ -6,3 +6,8 @@
     backup: yes
   notify:
     - Restart InfluxDB
+
+- name: Create default admin user
+  community.general.influxdb_user:
+    user_name: "{{ influxdb_admin_username }}"
+    user_password: "{{ influxdb_admin_password }}"

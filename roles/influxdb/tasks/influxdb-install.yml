@@ -9,3 +9,9 @@
 - name: Install InfluxDB packages
   ansible.builtin.apt:
     name: influxdb
+  notify:
+    - Restart InfluxDB
+
+- name: Install InfluxDB Python module
+  ansible.builtin.pip:
+    name: influxdb

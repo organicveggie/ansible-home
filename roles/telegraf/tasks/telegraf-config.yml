@@ -1,0 +1,35 @@
+---
+- name: Create InfluxDB database
+  community.general.influxdb_database:
+    username: "{{ influxdb_admin_username }}"
+    password: "{{ influxdb_admin_password }}"
+    database_name: "{{ telegraf_influxdb_dbname }}"
+
+- name: Create InfluxDB Telegraf user
+  community.general.influxdb_user:
+    user_name: "{{ telegraf_influxdb_user }}"
+    user_password: "{{ telegraf_influxdb_password }}"
+    login_username: "{{ influxdb_admin_username }}"
+    login_password: "{{ influxdb_admin_password }}"
+    grants:
+      - database: "{{ telegraf_influxdb_dbname }}"
+        privilege: ALL
+
+- name: Create Telegraf config
+  ansible.builtin.template:
+    src: ../templates/telegraf.conf.j2
+    dest: /etc/telegraf/telegraf.conf
+    force: yes
+    backup: yes
+    owner: telegraf
+    group: telegraf
+    mode: 0744
+  notify:
+    - Restart Telegraf
+
+# When using Ping with method = "native", Telegraf will attempt to use
+# privileged raw ICMP sockets. On most systems, doing so requires
+# CAP_NET_RAW capabilities.
+- name: Grant Telegraf CAP_NET_RAW capabilities
+  ansible.builtin.command:
+    cmd: setcap cap_net_raw=eip /usr/bin/telegraf

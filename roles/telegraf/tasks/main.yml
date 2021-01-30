@@ -2,3 +2,8 @@
   tags:
     - telegraf
     - telegraf:install
+
+- import_tasks: telegraf-config.yml
+  tags:
+    - telegraf
+    - telegraf:config

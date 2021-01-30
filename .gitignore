@@ -6,3 +6,4 @@
 !/galaxy_roles/requirements.yml
 py38
 temp.log
+vault-passwd

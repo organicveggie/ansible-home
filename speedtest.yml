@@ -7,3 +7,16 @@
     - influxdb
     - grafana
     - telegraf
+  vars:
+    telegraf_collection_jitter: 1s
+    telegraf_plugins_extra:
+     - name: ping
+       options:
+        urls: ["{{ telegraf_ping_host1 }}", "{{ telegraf_ping_host2 }}", "www.google.com", "8.8.8.8", "75.75.75.75"]
+        method: "exec"
+        interval: "120s"
+        count: 10
+        ping_interval: 1.0
+        timeout: 3.0
+        deadline: 10
+        binary: "/usr/bin/ping"

@@ -1,0 +1,50 @@
+---
+# defaults file for Telegraf
+
+# Configuration Variables
+telegraf_tags:
+
+telegraf_agent_interval: 10s
+telegraf_round_interval: "true"
+telegraf_metric_batch_size: "1000"
+telegraf_metric_buffer_limit: "10000"
+
+telegraf_collection_jitter: 0s
+telegraf_flush_interval: 10s
+telegraf_flush_jitter: 0s
+telegraf_debug: "false"
+telegraf_quiet: "false"
+telegraf_hostname:
+telegraf_omit_hostname: "false"
+
+telegraf_influxdb_url: http://influxdb.example.com:8086
+telegraf_influxdb_dbname: telegraf
+telegraf_influxdb_user: telegraf
+telegraf_influxdb_password: password
+
+telegraf_plugins_base:
+  - name: mem
+  - name: system
+  - name: cpu
+    options:
+      percpu: "true"
+      totalcpu: "true"
+      fielddrop:
+        - "time_*"
+  - name: disk
+    options:
+      mountpoints:
+        - "/"
+  - name: diskio
+    options:
+      skip_serial_number: "true"
+  - name: procstat
+    options:
+      exe: "influxd"
+      prefix: "influxdb"
+  - name: net
+    options:
+      interfaces:
+        - "eth0"
+
+telegraf_plugins: "{{ telegraf_plugins_base }} + {{ telegraf_plugins_extra | default([]) }}"
