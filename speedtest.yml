@@ -9,6 +9,7 @@
     - telegraf
     - speedtest_cli
     - speedtest_telegraf
+    - grafana_apache
 
   vars:
     telegraf_collection_jitter: 1s

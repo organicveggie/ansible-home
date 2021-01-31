@@ -1,0 +1,45 @@
+<VirtualHost *:80>
+    ServerAdmin {{ grafana_apache_admin }}
+    ServerName {{ grafana_apache_fqdn }}
+    DocumentRoot {{ grafana_apache_root }}
+    ErrorLog ${APACHE_LOG_DIR}/{{ grafana_apache_fqdn }}-error.log
+    CustomLog ${APACHE_LOG_DIR}/{{ grafana_apache_fqdn }}-access.log combined
+
+    ProxyRequests off
+
+    ProxyPass         "/"     http://127.0.0.1:3000/
+    ProxyPassReverse  "/"     http://127.0.0.1:3000/
+    ProxyPreserveHost On
+
+#    RewriteEngine on
+#    RewriteCond %{SERVER_NAME} ={{ grafana_apache_fqdn }}
+#    RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
+</VirtualHost>
+
+#<VirtualHost *:443>
+#  ServerAdmin {{ grafana_apache_admin }}
+#  DocumentRoot {{ grafana_apache_root }}
+#  ServerName {{ grafana_apache_fqdn }}
+#
+#  ErrorLog ${APACHE_LOG_DIR}/{{ grafana_apache_fqdn }}-ssl-error.log
+#  CustomLog ${APACHE_LOG_DIR}/{{ grafana_apache_fqdn }}-ssl-access.log combined
+#
+#  SSLCertificateFile      /etc/letsencrypt/live/{{ grafana_apache_cert_fqdn }}/fullchain.pem
+#  SSLCertificateKeyFile /etc/letsencrypt/live/{{ grafana_apache_cert_fqdn }}/privkey.pem
+#  Include /etc/letsencrypt/options-ssl-apache.conf
+#
+#  # Encoded slashes need to be allowed
+#  AllowEncodedSlashes     NoDecode
+#
+#  SSLProxyEngine on
+#  SSLProxyVerify none
+#  SSLProxyCheckPeerCN off
+#  SSLProxyCheckPeerName off
+#  SSLProxyCheckPeerExpire off
+#
+#  ProxyRequests off
+#
+#  ProxyPass         "/"     https://127.0.0.1:3000/
+#  ProxyPassReverse  "/"     https://127.0.0.1:3000/
+#  ProxyPreserveHost On
+#</VirtualHost>
