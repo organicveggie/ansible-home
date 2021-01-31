@@ -1,9 +1,0 @@
-- name: Install smokeping packages
-  ansible.builtin.apt:
-    pkg: 
-      - smokeping
-
-- name: Disable Apache2 auth_basic
-  community.general.apache2_module:
-    state: absent
-    name: auth_basic
