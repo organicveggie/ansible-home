@@ -1,0 +1,5 @@
+---
+- import_tasks: speedtest_cli-install.yml
+  tags:
+    - speedtest_cli
+    - speedtest_cli:install

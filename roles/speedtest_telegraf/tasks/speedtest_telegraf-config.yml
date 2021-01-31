@@ -1,0 +1,31 @@
+---
+- name: Create speedtest input for Telegraf
+  ansible.builtin.template:
+    src: ../templates/speedtest.conf.j2
+    dest: /etc/telegraf/telegraf.d/speedtest.conf
+    owner: "telegraf"
+    group: "telegraf"
+  notify:
+    - Restart Telegraf
+
+- name: Create speedtest config directory
+  ansible.builtin.file:
+    path: /etc/telegraf/.config/ookla
+    state: directory
+    mode: '0755'
+
+- name: Update speedtest config directory ownership
+  ansible.builtin.file:
+    path: /etc/telegraf/.config
+    state: directory
+    recurse: yes
+    owner: telegraf
+    group: telegraf
+
+- name: Create Speedtest license agreement
+  ansible.builtin.template:
+    src: ../templates/speedtest-cli.json.j2
+    dest: /etc/telegraf/.config/ookla/speedtest-cli.json
+    owner: telegraf
+    group: telegraf
+    mode: '0640'

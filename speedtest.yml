@@ -7,6 +7,9 @@
     - influxdb
     - grafana
     - telegraf
+    - speedtest_cli
+    - speedtest_telegraf
+
   vars:
     telegraf_collection_jitter: 1s
     telegraf_plugins_extra:

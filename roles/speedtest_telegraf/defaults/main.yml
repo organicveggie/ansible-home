@@ -1,0 +1,3 @@
+speedtest_telegraf_bin: "/usr/bin/speedtest"
+speedtest_telegraf_interval: "60m"
+speedtest_telegraf_timeout: "1m"

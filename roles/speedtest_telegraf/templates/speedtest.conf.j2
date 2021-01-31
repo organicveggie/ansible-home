@@ -1,0 +1,19 @@
+#
+# Install speedtest cli from SpeedTest.net first
+# https://www.speedtest.net/apps/cli
+#
+# And then run speedtest once to accept the license
+#
+
+[[inputs.exec]]
+commands = ["{{ speedtest_telegraf_bin }} -f json-pretty"]
+name_override = "Speedtest"
+timeout = "{{ speedtest_telegraf_timeout }}"
+interval = "{{ speedtest_telegraf_interval }}"
+data_format = "json"
+json_string_fields = [ "interface_externalIp",
+                       "server_name",
+                       "server_location",
+                       "server_host",
+                       "server_ip",
+                       "result_url" ]

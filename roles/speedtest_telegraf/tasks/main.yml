@@ -1,0 +1,5 @@
+---
+- import_tasks: speedtest_telegraf-config.yml
+  tags:
+    - speedtest_telegraf
+    - speedtest_telegraf:config

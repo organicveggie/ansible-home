@@ -1,0 +1,24 @@
+---
+- name: Install Speedtest Dependencies
+  ansible.builtin.apt:
+    pkg:
+      - gnupg1
+      - apt-transport-https
+      - dirmngr
+
+# sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys $INSTALL_KEY
+- name: Add apt key
+  ansible.builtin.apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: "{{ speedtest_install_key }}"
+    state: present
+
+# echo "deb https://ookla.bintray.com/debian generic main" | sudo tee  /etc/apt/sources.list.d/speedtest.list
+- name: Add speedtest Apt repository
+  ansible.builtin.apt_repository:
+    repo: deb https://ookla.bintray.com/debian generic main
+    state: present
+
+- name: Install Speedtest CLI
+  ansible.builtin.apt:
+    name: speedtest
