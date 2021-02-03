@@ -1,0 +1,13 @@
+acme_challenge_type: dns-01
+acme_directory: https://acme-v02.api.letsencrypt.org/directory
+acme_route53_domain: example.com
+acme_version: 2
+acme_email: certificate-reminders@example.com
+letsencrypt_account_dir: "{{ letsencrypt_dir }}/account"
+letsencrypt_certs_dir: "{{ letsencrypt_dir }}/certs"
+letsencrypt_csrs_dir: "{{ letsencrypt_dir }}/csrs"
+letsencrypt_dir: /etc/letsencrypt
+letsencrypt_domain_name: example.com
+letsencrypt_remaining_days: 10
+letsencrypt_aws_access_key: ACCESS_KEY
+letsencrypt_aws_secret_key: SECRET_KEY

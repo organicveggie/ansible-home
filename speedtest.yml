@@ -9,6 +9,9 @@
     - telegraf
     - speedtest_cli
     - speedtest_telegraf
+    - role: letsencrypt
+      vars:
+        letsencrypt_domain_name: "{{ grafana_apache_fqdn }}"
     - grafana_apache
 
   vars:

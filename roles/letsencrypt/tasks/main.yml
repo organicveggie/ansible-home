@@ -1,0 +1,10 @@
+---
+- import_tasks: letsencrypt-deps.yml
+  tags:
+    - letsencrypt
+    - letsencrypt:deps
+
+- import_tasks: letsencrypt-issue.yml
+  tags:
+    - letsencrypt
+    - letsencrypt:issue

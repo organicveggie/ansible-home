@@ -1,0 +1,13 @@
+---
+- name: Install Lets Encrypt and Route53 python deps
+  ansible.builtin.apt:
+    pkg:
+      - python3-pip
+      - python3-virtualenv
+      - python3-setuptools
+
+- name: Install Route53 python deps
+  ansible.builtin.pip:
+    name:
+      - boto
+      - boto3
