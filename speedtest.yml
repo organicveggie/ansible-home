@@ -29,4 +29,4 @@
         binary: "/usr/bin/ping"
      - name: snmp_trap
        options:
-        service_address: "udp://127.0.0.1:{{ telegraf_snmp_trap_port }}"
+        service_address: "udp://:{{ telegraf_snmp_trap_port }}"
