@@ -22,6 +22,12 @@ telegraf_influxdb_dbname: telegraf
 telegraf_influxdb_user: telegraf
 telegraf_influxdb_password: password
 
+telegraf_logging_debug: false
+telegraf_logging_file: ""
+telegraf_logfile_rotation_interval: ""
+telegraf_logfile_rotation_max_size: ""
+telegraf_logfile_rotation_max_archives: 5
+
 telegraf_plugins_base:
   - name: mem
   - name: system

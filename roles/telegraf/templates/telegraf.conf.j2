@@ -66,7 +66,7 @@
   precision = ""
 
   ## Log at debug level.
-  # debug = false
+  debug = {{ telegraf_logging_debug|lower }}
   ## Log only error level messages.
   # quiet = false
 
@@ -79,18 +79,30 @@
   ## the empty string then logs are written to stderr.
   # logfile = ""
 
+{% if telegraf_logging_file is defined and telegraf_logging_file|length %}
+  logtarget = "file"
+  logfile = "{{ telegraf_logging_file }}"
+{% endif %}
+
   ## The logfile will be rotated after the time interval specified.  When set
   ## to 0 no time based rotation is performed.  Logs are rotated only when
   ## written to, if there is no log activity rotation may be delayed.
   # logfile_rotation_interval = "0d"
+{% if telegraf_logfile_rotation_interval is defined and telegraf_logfile_rotation_interval|length %}
+  logfile_rotation_interval = "{{ telegraf_logfile_rotation_interval }}"
+{% endif %}
 
   ## The logfile will be rotated when it becomes larger than the specified
   ## size.  When set to 0 no size based rotation is performed.
   # logfile_rotation_max_size = "0MB"
+{% if telegraf_logfile_rotation_max_size is defined and telegraf_logfile_rotation_max_size|length %}
+  logfile_rotation_max_size = "{{ telegraf_logfile_rotation_max_size }}"
+{% endif %}
 
   ## Maximum number of rotated archives to keep, any older logs are deleted.
   ## If set to -1, no archives are removed.
   # logfile_rotation_max_archives = 5
+  logfile_rotation_max_archives = {{ telegraf_logfile_rotation_max_archives }}
 
   # Override default hostname, if empty use os.Hostname()
 {% if telegraf_hostname is defined and telegraf_hostname != None %}

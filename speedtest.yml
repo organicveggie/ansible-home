@@ -15,6 +15,9 @@
     - grafana_apache
 
   vars:
+    telegraf_logging_debug: false
+    telegraf_logging_file: "/var/log/telegraf/telegraf.log"
+    telegraf_logfile_rotation_max_size: "20MB"
     telegraf_collection_jitter: 1s
     telegraf_plugins_extra:
      - name: ping
