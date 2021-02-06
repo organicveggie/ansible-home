@@ -6,6 +6,7 @@
   roles:
     - influxdb
     - grafana
+    - snmp_mibs
     - telegraf
     - speedtest_cli
     - speedtest_telegraf

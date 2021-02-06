@@ -1,0 +1,7 @@
+- import_tasks: mibs-install.yml
+  tags:
+    - snmp
+    - snmp-mibs
+    - snmp-mibs:install
+    - mibs
+    - mibs:install

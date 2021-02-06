@@ -1,0 +1,36 @@
+- name: Enable Debian contrib non-free
+  ansible.builtin.replace:
+    dest: /etc/apt/sources.list
+    regexp: "^# deb-src http://raspbian.raspberrypi.org/raspbian/ buster main contrib non-free rpi"
+    replace: "deb-src http://raspbian.raspberrypi.org/raspbian/ buster main contrib non-free rpi"
+    backup: no
+  register: enable_contrib_nonfree_repo
+
+- name: Update apt
+  ansible.builtin.command:
+    cmd: apt update
+  when: enable_contrib_nonfree_repo
+
+- name: Install snmp
+  ansible.builtin.apt:
+    pkg:
+      - snmp
+
+- name: Install snmp-mibs-downloader
+  ansible.builtin.apt:
+    pkg:
+      - snmp-mibs-downloader
+  register: mibs_downloader_installed
+
+- name: Configure net-snmp command-line to use the MIBS
+  ansible.builtin.replace:
+    dest: /etc/snmp/snmp.conf
+    regexp: "^# mibs"
+    replace: "# mibs :"
+    backup: no
+  when: mibs_downloader_installed
+
+- name: Update the MIBS to latest versions
+  ansible.builtin.command:
+    cmd: download-mibs
+  when: mibs_downloader_installed
