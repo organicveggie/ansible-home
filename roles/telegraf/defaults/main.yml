@@ -28,6 +28,9 @@ telegraf_logfile_rotation_interval: ""
 telegraf_logfile_rotation_max_size: ""
 telegraf_logfile_rotation_max_archives: 5
 
+telegraf_snmp_host1: host1.example.com
+telegraf_snmp_host1_community: secret
+
 telegraf_plugins_base:
   - name: mem
   - name: system

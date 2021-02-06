@@ -1,0 +1,41 @@
+[[inputs.snmp]]
+  ## Agent addresses to retrieve values from.
+  ##   example: agents = ["udp://127.0.0.1:161"]
+  ##            agents = ["tcp://127.0.0.1:161"]
+  agents = ["{{ telegraf_snmp_host1 }}}161"]
+
+  ## Timeout for each request.
+  # timeout = "5s"
+
+  ## SNMP version; can be 1, 2, or 3.
+  version = 2
+
+  ## SNMP community string.
+  community = "{{ telegraf_snmp_host1_community }}"
+
+  ## Agent host tag
+  # agent_host_tag = "agent_host"
+
+  ## Number of retries to attempt.
+  # retries = 3
+
+  ## The GETBULK max-repetitions parameter.
+  # max_repetitions = 10
+
+  ## Add fields and tables defining the variables you wish to collect.
+  [[inputs.snmp.field]]
+    name = "hostname"
+    oid = "RFC1213-MIB::sysName.0"
+    is_tag = true
+    
+  # IF-MIB::ifTable contains counters on input and output traffic as well as errors and discards.
+  [[inputs.snmp.table]]
+    name = "interface"
+    inherit_tags = [ "hostname" ]
+    oid = "IF-MIB::ifTable"
+
+    # Interface tag - used to identify interface in metrics database
+    [[inputs.snmp.table.field]]
+      name = "ifDescr"
+      oid = "IF-MIB::ifDescr"
+      is_tag = true
