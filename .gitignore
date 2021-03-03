@@ -4,6 +4,7 @@
 !/galaxy_roles
 /galaxy_roles/*
 !/galaxy_roles/requirements.yml
+.vagrant
 py38
 temp.log
 vault-passwd
