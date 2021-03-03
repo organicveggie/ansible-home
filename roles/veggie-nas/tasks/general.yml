@@ -1,11 +1,11 @@
 ---
 - name: Set login banner
-  copy:
+  ansible.builtin.copy:
     src: motd.txt
     dest: /etc/motd
 
 - name: Enable Universe repository
-  raw: apt-add-repository universe
+  ansible.builtin.raw: apt-add-repository universe
   register: add_repo_result
   changed_when: "'distribution component enabled for all sources' in add_repo_result.stdout"
   until: add_repo_result.rc == 0
@@ -13,14 +13,14 @@
   delay: 1
 
 - name: Update apt-cache
-  apt:
+  ansible.builtin.apt:
     update_cache: yes
     cache_valid_time: 3600
   register: result
   until: result is succeeded
 
 - name: Upgrade all packages
-  apt:
+  ansible.builtin.apt:
     upgrade: yes
     state: latest
   when: keep_packages_updated
@@ -28,27 +28,27 @@
     - skip_ansible_lint
 
 - name: Install some packages
-  apt:
+  ansible.builtin.apt:
     name: "{{ veggie_nas_extra_packages }}"
     state: present
   register: result
   until: result is succeeded
 
 - name: "Set hostname to {{ veggie_nas_hostname }}"
-  hostname:
+  ansible.builtin.hostname:
     name: "{{ veggie_nas_hostname }}"
 
 - name: "Set timezone to {{ veggie_nas_timezone }}"
-  timezone:
+  community.general.timezone:
     name: "{{ veggie_nas_timezone }}"
 
 - name: Create veggie-nas group
-  group:
+  ansible.builtin.group:
     name: veggie-nas
     state: present
 
 - name: Create veggie-nas user
-  user:
+  ansible.builtin.user:
     name: veggie-nas
     state: present
     system: yes
