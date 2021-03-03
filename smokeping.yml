@@ -1,7 +1,0 @@
----
-- name: Setup smokeping
-  hosts: smokepings
-  remote_user: pi
-  become: yes
-  roles:
-    - smokeping
