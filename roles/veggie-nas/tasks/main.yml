@@ -1,0 +1,10 @@
+- import_tasks: general.yml
+  tags:
+    - veggie-nas
+    - veggie-nas:general
+
+- import_tasks: docker.yml
+  tags:
+    - veggie-nas
+    - veggie-nas:docker
+

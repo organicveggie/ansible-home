@@ -1,0 +1,30 @@
+---
+veggie_nas_hostname: veggie-nas
+
+# Update all apt packages when playbook is run
+keep_packages_updated: false
+
+# Extra packages to install
+veggie_nas_extra_packages:
+  - smartmontools
+  - htop
+  - zfsutils-linux
+  - bonnie++
+  - unzip
+  - lm-sensors
+  - ctop
+
+# https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+veggie_nas_timezone: America/Los_Angeles
+
+veggie_nas_user: sean
+
+# Where you want Docker to store its container data.
+docker_home: /mnt/nas/docker
+
+# Where you want Docker to store images
+docker_image_directory: "{{ docker_home }}/data"
+
+# Docker storage driver, see https://docs.docker.com/storage/storagedriver/select-storage-driver/#supported-backing-filesystems
+# You might want to change this to ZFS, depending on your underlying filesystem.
+docker_storage_driver: zfs

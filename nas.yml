@@ -1,0 +1,11 @@
+---
+- name: Setup Veggie NAS
+  hosts: nas
+  remote_user: sean
+  become: yes
+  roles:
+    - role: geerlingguy.docker
+      tags:
+        - docker
+        - skip_ansible_lint
+    - role: veggie-nas
