@@ -1,10 +1,7 @@
 [[inputs.snmp]]
-  ## Agent addresses to retrieve values from.
-  ##   example: agents = ["udp://127.0.0.1:161"]
-  ##            agents = ["tcp://127.0.0.1:161"]
-  agents = ["{{ telegraf_snmp_firewall }}:161"]
+  agents = {{ telegraf_snmp_net }}
 
-  interval = "{{ telegraf_snmp_firewall_interval }}"
+  interval = "{{ telegraf_snmp_net_interval }}"
 
   ## Timeout for each request.
   # timeout = "5s"
@@ -13,7 +10,7 @@
   version = 2
 
   ## SNMP community string.
-  community = "{{ telegraf_snmp_firewall_community }}"
+  community = "{{ telegraf_snmp_net_community }}"
 
   ## Agent host tag
   # agent_host_tag = "agent_host"

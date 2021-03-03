@@ -7,7 +7,9 @@
     - influxdb
     - grafana
     - snmp_mibs
-    - telegraf
+    - role: telegraf
+      vars:
+        telegraf_snmp_net: ["192.168.25.3:161", "192.168.25.4:161", "192.168.25.180:161", "192.168.25.181:161"]
     - speedtest_cli
     - speedtest_telegraf
     - role: letsencrypt

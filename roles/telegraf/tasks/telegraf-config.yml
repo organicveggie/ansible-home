@@ -39,6 +39,18 @@
   notify:
     - Restart Telegraf
 
+- name: Create SNMP input config for network devices
+  ansible.builtin.template:
+    src: ../templates/inputs_snmp_net.conf.j2
+    dest: /etc/telegraf/telegraf.d/snmp_net.conf
+    force: yes
+    backup: yes
+    owner: telegraf
+    group: telegraf
+    mode: 0744
+  notify:
+    - Restart Telegraf
+
 # When using Ping with method = "native", Telegraf will attempt to use
 # privileged raw ICMP sockets. On most systems, doing so requires
 # CAP_NET_RAW capabilities.
