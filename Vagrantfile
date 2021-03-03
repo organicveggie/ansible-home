@@ -9,7 +9,6 @@ Vagrant.configure("2") do |config|
     vb.cpus = 1
   end
   config.vm.provision "ansible" do |ansible|
-    ansible.galaxy_role_file = "galaxy_roles/requirements.yml"
     ansible.playbook = "nas.yml"
     ansible.become = true
     ansible.groups = {
