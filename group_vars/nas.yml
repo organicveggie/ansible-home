@@ -1,3 +1,6 @@
+heimdall_hostname: "{{ inventory_hostname }}"
+heimdall_host_domain: "{{ veggie_nas_domain_name }}"
+
 samba_users:
   - name: "{{veggie_nas_admin_username}}"
     password: "{{veggie_nas_admin_samba_passwd}}"

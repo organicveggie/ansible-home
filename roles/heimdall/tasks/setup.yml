@@ -1,0 +1,58 @@
+---
+- name: Create Heimdall group
+  ansible.builtin.group:
+    name: "{{ heimdall_group }}"
+    gid: "{{ heimdall_group_id }}"
+    state: present
+
+- name: Create Heimdall user
+  ansible.builtin.user:
+    name: "{{ heimdall_user }}"
+    uid: "{{ heimdall_user_id }}"
+    state: present
+    system: yes
+    update_password: on_create
+    create_home: no
+    group: "{{ heimdall_group }}"
+
+- name: Create Heimdall Directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ heimdall_user }}"
+    group: "{{ heimdall_group }}"
+  loop:
+    - "{{ heimdall_data_directory }}"
+
+- name: Create Heimdall container
+  community.docker.docker_container:
+    name: heimdall
+    image: "{{ heimdall_docker_image }}"
+    pull: true
+    volumes:
+      - "{{ heimdall_data_directory }}:/config:rw"
+    env:
+      PUID: "{{ heimdall_user_id }}"
+      PGID: "{{ heimdall_group_id }}"
+      TZ: "{{ heimdall_timezone }}"
+    ports:
+      - "{{ heimdall_port_http }}:80"
+      - "{{ heimdall_port_https }}:443"
+    restart_policy: unless-stopped
+    memory: "{{ heimdall_memory }}"
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: no
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
+    labels:
+      traefik.enable: "{{ heimdall_available_externally }}"
+      traefik.http.routers.heimdall.rule: "Host(`{{ heimdall_hostname }}.{{ heimdall_host_domain }}`)"
+      traefik.http.routers.heimdall.tls.certresolver: "letsencrypt"
+      traefik.http.routers.heimdall.tls.domains[0].main: "{{ heimdall_host_domain }}"
+      traefik.http.routers.heimdall.tls.domains[0].sans: "*.{{ heimdall_host_domain }}"
+      traefik.http.services.heimdall.loadbalancer.server.port: "80"

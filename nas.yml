@@ -13,3 +13,4 @@
       tags:
         - samba
         - skip_ansible_lint
+    - role: heimdall
