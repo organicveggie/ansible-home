@@ -1,4 +1,3 @@
-heimdall_host_domain: "{{ inventory_hostname }}.{{ veggie_nas_domain_name }}"
 glances_host_domain: "{{ inventory_hostname }}.{{ veggie_nas_domain_name }}"
 
 samba_users:
