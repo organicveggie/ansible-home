@@ -169,11 +169,3 @@ veggie_nas_retropie_password: !vault |
           36306161653035633766303135306136323937326131653834633938383834386633363365346130
           6533653533633361640a656135373263326536626436653639333834663734613362666433356535
           3161
-
-samba_users:
-  - name: "{{veggie_nas_admin_username}}"
-    password: "{{veggie_nas_admin_samba_passwd}}"
-  - name: "plex"
-    password: "{{veggie_nas_plex_password}}"
-  - name: "retropie"
-    password: "{{veggie_nas_retropie_password}}"

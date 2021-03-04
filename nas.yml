@@ -13,3 +13,22 @@
       tags:
         - samba
         - skip_ansible_lint
+  vars:
+    samba_users:
+      - name: "{{veggie_nas_admin_username}}"
+        password: "{{veggie_nas_admin_samba_passwd}}"
+      - name: "plex"
+        password: "{{veggie_nas_plex_password}}"
+      - name: "retropie"
+        password: "{{veggie_nas_retropie_password}}"
+    veggie_nas_samba_groups:
+      - book_writer
+      - doc_writer
+      - media_writer
+      - music_writer
+      - photo_writer
+      - rom_writer
+      - source_writer
+    veggie_nas_users_passwords:
+      plex: "*"
+      retropie: "*"

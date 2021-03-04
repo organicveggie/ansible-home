@@ -26,18 +26,12 @@ veggie_nas_admin_samba_passwd: secretpassword
 #   python3 -c 'import crypt,getpass;pw=getpass.getpass();print(crypt.crypt(pw) if (pw==getpass.getpass("Confirm: ")) else exit())'
 veggie_nas_admin_passwd: 1mGEYMWdG0wQs
 veggie_nas_users_passwords:
-  plex: "*"
-  retropie: "*"
+  user1: "password1"
 
 # Groups to create for use with Samba.
 veggie_nas_samba_groups:
-  - book_writer
-  - doc_writer
-  - media_writer
-  - music_writer
-  - photo_writer
-  - rom_writer
-  - source_writer
+  - group1
+  - group2
 
 # Where you want Docker to store its container data.
 docker_home: /mnt/nas/docker
