@@ -1,15 +1,15 @@
 ---
 - name: Setup Veggie NAS
-  hosts: veggie-nas
+  hosts: nas
   remote_user: sean
   become: yes
   roles:
-    - role: bertvv.samba
-      tags:
-        - samba
-        - skip_ansible_lint
     - role: geerlingguy.docker
       tags:
         - docker
         - skip_ansible_lint
     - role: veggie_nas
+    - role: bertvv.samba
+      tags:
+        - samba
+        - skip_ansible_lint

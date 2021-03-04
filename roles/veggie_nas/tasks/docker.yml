@@ -28,7 +28,7 @@
 
 - name: Add user account to Docker group
   ansible.builtin.user:
-    name: "{{ veggie_nas_user }}"
+    name: "{{ veggie_nas_admin_username }}"
     groups: docker
     append: yes
 

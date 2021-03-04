@@ -1,10 +1,14 @@
 - import_tasks: general.yml
   tags:
-    - veggie-nas
-    - veggie-nas:general
+    - veggie_nas
+    - veggie_nas:general
 
 - import_tasks: docker.yml
   tags:
-    - veggie-nas
-    - veggie-nas:docker
+    - veggie_nas
+    - veggie_nas:docker
 
+- import_tasks: samba.yml
+  tags:
+    - veggie_nas
+    - veggie_nas:samba

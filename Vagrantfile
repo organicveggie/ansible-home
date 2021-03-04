@@ -10,6 +10,7 @@ Vagrant.configure("2") do |config|
   end
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "nas.yml"
+    ansible.vault_password_file = "vault-passwd"
     ansible.become = true
     ansible.groups = {
       "nas" => ["host1"],

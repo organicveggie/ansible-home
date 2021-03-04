@@ -17,7 +17,27 @@ veggie_nas_extra_packages:
 # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 veggie_nas_timezone: America/Los_Angeles
 
-veggie_nas_user: sean
+veggie_nas_admin_username: admin
+
+# Plain texxt
+veggie_nas_admin_samba_passwd: secretpassword
+
+# Password must be specified as an encrypted password:
+#   python3 -c 'import crypt,getpass;pw=getpass.getpass();print(crypt.crypt(pw) if (pw==getpass.getpass("Confirm: ")) else exit())'
+veggie_nas_admin_passwd: 1mGEYMWdG0wQs
+veggie_nas_users_passwords:
+  plex: "*"
+  retropie: "*"
+
+# Groups to create for use with Samba.
+veggie_nas_samba_groups:
+  - book_writer
+  - doc_writer
+  - media_writer
+  - music_writer
+  - photo_writer
+  - rom_writer
+  - source_writer
 
 # Where you want Docker to store its container data.
 docker_home: /mnt/nas/docker

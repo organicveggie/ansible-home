@@ -42,17 +42,19 @@
   community.general.timezone:
     name: "{{ veggie_nas_timezone }}"
 
-- name: Create veggie-nas group
-  ansible.builtin.group:
-    name: veggie-nas
-    state: present
-
-- name: Create veggie-nas user
+- name: Create admin user
   ansible.builtin.user:
-    name: veggie-nas
+    name: "{{ veggie_nas_admin_username }}"
+    shell: /bin/bash
     state: present
-    system: yes
+    password: "{{ veggie_nas_admin_passwd }}"
     update_password: on_create
-    create_home: no
-    group: veggie-nas
-    shell: /usr/sbin/nologin
+
+- name: Create additional users
+  ansible.builtin.user:
+    name: "{{ item.key }}"
+    shell: /usr/bin/false
+    state: present
+    password: "{{ item.value }}"
+    update_password: always
+  loop: "{{ veggie_nas_users_passwords | dict2items }}"

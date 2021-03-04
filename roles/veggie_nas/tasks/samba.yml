@@ -1,0 +1,12 @@
+---
+- name: Create groups needed for SMB shares
+  ansible.builtin.group:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ veggie_nas_samba_groups }}"
+
+- name: Add admin user to samba groups
+  ansible.builtin.user:
+    name: "{{ veggie_nas_admin_username }}"
+    groups: "{{ veggie_nas_samba_groups }}"
+    append: yes
