@@ -1,5 +1,11 @@
+###
+### Glances
+###
 glances_host_domain: "{{ inventory_hostname }}.{{ veggie_nas_domain_name }}"
 
+###
+### Samba
+###
 samba_users:
   - name: "{{veggie_nas_admin_username}}"
     password: "{{veggie_nas_admin_samba_passwd}}"
@@ -18,3 +24,9 @@ veggie_nas_samba_groups:
 veggie_nas_users_passwords:
   plex: "*"
   retropie: "*"
+
+###
+### TimeMachine
+###
+timemachine_data_directory: "/mnt/nas/time-machine"
+timemachine_volume_size_limit: "512000"

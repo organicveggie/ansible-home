@@ -1,0 +1,9 @@
+- import_tasks: docker.yml
+  tags:
+    - time_machine
+    - time_machine:docker
+
+- import_tasks: avahi.yml
+  tags:
+    - time_machine
+    - time_machine:avahi

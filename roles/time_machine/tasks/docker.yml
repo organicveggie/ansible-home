@@ -1,0 +1,34 @@
+---
+- name: Time Machine Directories
+  file:
+    path: "{{ timemachine_data_directory }}"
+    state: directory
+    mode: 0750
+
+- name: Time Machine Docker Container
+  docker_container:
+    name: timemachine
+    image: awlnx/samba-timemachine:latest
+    pull: true
+    ports:
+      - "{{ timemachine_port }}:445"
+    env:
+      TMSIZE: "{{ timemachine_volume_size_limit }}"
+      PASS: "{{ timemachine_password }}"
+      SHARENAME: "{{ timemachine_share_name }}"
+    volumes:
+      - "{{ timemachine_data_directory }}/data:/backups"
+    ulimits:
+      - "nofile:1048576:1048576"
+    network_mode: bridge
+    restart_policy: unless-stopped
+    memory: 1g
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: no
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
