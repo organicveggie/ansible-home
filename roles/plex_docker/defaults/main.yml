@@ -1,0 +1,12 @@
+plex_docker_db_path: /var/lib/plexmedia
+plex_docker_transcode_path: /tmp
+plex_docker_media_path: /mnt/plex
+
+plex_docker_timezone: America/Los_Angeles
+
+plex_docker_claim: ""
+
+plex_docker_memory: "2GB"
+
+plex_docker_uid: 32400
+plex_docker_gid: 32400

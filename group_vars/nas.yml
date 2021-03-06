@@ -4,6 +4,13 @@
 glances_host_domain: "{{ inventory_hostname }}.{{ veggie_nas_domain_name }}"
 
 ###
+### Plex
+###
+plex_docker_claim: "{{ plex_claim }}"
+plex_docker_db_path: "/mnt/nas/plex"
+plex_docker_transcode_path: "/mnt/nas/plex/transcode"
+
+###
 ### Samba
 ###
 samba_users:
@@ -22,7 +29,6 @@ veggie_nas_samba_groups:
   - rom_writer
   - source_writer
 veggie_nas_users_passwords:
-  plex: "*"
   retropie: "*"
 
 ###

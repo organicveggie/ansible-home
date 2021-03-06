@@ -1,0 +1,26 @@
+---
+- name: Create Plex Docker Container
+  docker_container:
+    name: plex
+    image: plexinc/pms-docker
+    pull: true
+    network_mode: host
+    volumes:
+      - "{{ plex_docker_db_path }}":/config
+      - "{{ plex_docker_transcode_path }}":/transcode
+      - "{{ plex_docker_media_path }}":/data
+    env:
+      TZ: "{{ plex_docker_timezone }}"
+      PLEX_CLAIM: "{{ plex_docker_claim }}"
+      PLEX_UID: "{{ plex_docker_uid }}"
+      PLEX_GID: "{{ plex_docker_gid }}"
+    restart_policy: unless-stopped
+    memory: "{{ plex_docker_memory }}"
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: no
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no

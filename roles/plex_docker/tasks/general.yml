@@ -1,0 +1,28 @@
+---
+- name: Create Plex group
+  ansible.builtin.group:
+    name: "plex"
+    gid: "{{ plex_docker_gid }}"
+    state: present
+
+- name: Create Plex user
+  ansible.builtin.user:
+    name: "plex"
+    shell: /usr/bin/false
+    state: present
+    password: "*"
+    update_password: always
+    create_home: no
+    group: "plex"
+    uid: "{{ plex_docker_uid }}"
+
+- name: Create directories
+  ansible.builtin.file:
+    name: "{{ item }}"
+    state: directory
+    owner: "plex"
+    group: "plex"
+    mode: 0755
+  loop:
+    - "{{ plex_docker_db_path }}"
+    - "{{ plex_docker_transcode_path }}"
