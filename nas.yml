@@ -15,3 +15,4 @@
         - skip_ansible_lint
     - role: glances
     - role: time_machine
+    - role: stefangweichinger.ansible_rclone
