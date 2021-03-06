@@ -9,3 +9,5 @@
   version: 2.0.0
 
 - src: stefangweichinger.ansible_rclone
+
+- src: nickhammond.logrotate

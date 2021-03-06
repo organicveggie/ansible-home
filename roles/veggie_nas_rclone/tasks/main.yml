@@ -1,0 +1,4 @@
+- import_tasks: crontab.yml
+  tags:
+    - veggie_nas_rclone
+    - veggie_nas_rclone:crontab

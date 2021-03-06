@@ -1,0 +1,28 @@
+---
+- name: Setup rclone books to S3
+  ansible.builtin.cron:
+    name: "rclone books to S3"
+    minute: "0"
+    hour: "1"
+    job: "rclone --config={{veggie_rclone_config_path}} --log-file=/var/log/rclone.log sync /mnt/nas/data/books/ AwsS3Remote:{{veggie_rclone_s3_bucket}}/books/"
+
+- name: Setup rclone photos to S3
+  ansible.builtin.cron:
+    name: "rclone photos to S3"
+    minute: "30"
+    hour: "1"
+    job: "rclone --config={{veggie_rclone_config_path}} --log-file=/var/log/rclone.log sync /mnt/nas/data/photos/ AwsS3Remote:{{veggie_rclone_s3_bucket}}/photos/"
+
+- name: Setup rclone plex to S3
+  ansible.builtin.cron:
+    name: "rclone plex to S3"
+    minute: "0"
+    hour: "2"
+    job: "rclone --config={{veggie_rclone_config_path}} --log-file=/var/log/rclone.log sync /mnt/nas/plex_system/ AwsS3Remote:{{veggie_rclone_s3_bucket}}/plex/"
+
+- name: Setup rclone roms to S3
+  ansible.builtin.cron:
+    name: "rclone roms to S3"
+    minute: "0"
+    hour: "1"
+    job: "rclone --config={{veggie_rclone_config_path}} --log-file=/var/log/rclone.log sync /mnt/nas/roms/ AwsS3Remote:{{veggie_rclone_s3_bucket}}/roms/"

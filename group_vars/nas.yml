@@ -4,6 +4,20 @@
 glances_host_domain: "{{ inventory_hostname }}.{{ veggie_nas_domain_name }}"
 
 ###
+### Logrotate
+###
+logrotate_scripts:
+  - name: rclone
+    path: "/var/log/rclone.log"
+    options:
+      - daily
+      - rotate 7
+      - missingok
+      - compress
+      - delaycompress
+      - copytruncate
+
+###
 ### Plex
 ###
 plex_docker_claim: "{{ plex_claim }}"
@@ -26,6 +40,8 @@ rclone_configs:
       storage_class: STANDARD
       access_key_id: "{{ aws_s3_rclone_access_key }}"
       secret_access_key: "{{ aws_s3_rclone_secret_key }}"
+veggie_rclone_s3_bucket: "{{ veggie_nas_rclone_s3_bucket }}"
+veggie_rclone_config_path: /root/.config/rclone/rclone.conf
 
 ###
 ### Samba
