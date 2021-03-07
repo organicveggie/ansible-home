@@ -13,6 +13,8 @@ veggie_nas_extra_packages:
   - unzip
   - lm-sensors
   - ctop
+  - mbuffer
+  - screen
 
 # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 veggie_nas_timezone: America/Los_Angeles
