@@ -69,3 +69,4 @@ veggie_nas_users_passwords:
 ###
 timemachine_data_directory: "/mnt/nas/time-machine"
 timemachine_volume_size_limit: "512000"
+timemachine_share_name: "nas-time-machine"

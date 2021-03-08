@@ -1,4 +1,20 @@
 ---
+- name: Create time-machine group
+  ansible.builtin.group:
+    name: "{{ timemachine_group }}"
+    gid: "{{ timemachine_gid }}"
+    state: present
+
+- name: Create time-machine user
+  ansible.builtin.user:
+    name: "{{ timemachine_user }}"
+    uid: "{{ timemachine_uid }}"
+    state: present
+    password: "*"
+    update_password: always
+    create_home: no
+    group: "{{ timemachine_group }}"
+
 - name: Time Machine Directories
   file:
     path: "{{ timemachine_data_directory }}"
@@ -16,6 +32,8 @@
       TMSIZE: "{{ timemachine_volume_size_limit }}"
       PASS: "{{ timemachine_password }}"
       SHARENAME: "{{ timemachine_share_name }}"
+      USERID: "{{ timemachine_uid }}"
+      GROUPID: "{{ timemachine_gid }}"
     volumes:
       - "{{ timemachine_data_directory }}/data:/backups"
     ulimits:
