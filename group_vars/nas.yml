@@ -22,7 +22,7 @@ logrotate_scripts:
 ###
 plex_docker_claim: "{{ plex_claim }}"
 plex_docker_db_path: "/mnt/nas/plex"
-plex_docker_transcode_path: "/mnt/nas/plex/transcode"
+plex_docker_transcode_path: "/tmp/plex/transcode"
 
 ###
 ### RClone
@@ -47,12 +47,12 @@ veggie_rclone_config_path: /root/.config/rclone/rclone.conf
 ### Samba
 ###
 samba_users:
-  - name: "{{veggie_nas_admin_username}}"
-    password: "{{veggie_nas_admin_samba_passwd}}"
-  - name: "plex"
-    password: "{{veggie_nas_plex_password}}"
+  - name: "{{ veggie_nas_admin_username }}"
+    password: "{{ veggie_nas_admin_samba_passwd }}"
+  # - name: "plex"
+  #   password: "{{ veggie_nas_plex_password }}"
   - name: "retropie"
-    password: "{{veggie_nas_retropie_password}}"
+    password: "{{ veggie_nas_retropie_password }}"
 veggie_nas_samba_groups:
   - book_writer
   - doc_writer
