@@ -1,6 +1,6 @@
 plex_docker_db_path: /var/lib/plexmedia
 plex_docker_transcode_path: /tmp
-plex_docker_media_path: /mnt/plex
+plex_docker_media_path: /mnt/nas/data
 
 plex_docker_timezone: America/Los_Angeles
 

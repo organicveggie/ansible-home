@@ -6,14 +6,17 @@
     pull: true
     network_mode: host
     volumes:
-      - "{{ plex_docker_db_path }}":/config
-      - "{{ plex_docker_transcode_path }}":/transcode
-      - "{{ plex_docker_media_path }}":/data
+      - "{{ plex_docker_db_path }}:/config"
+      - "{{ plex_docker_transcode_path }}:/transcode"
+      - "{{ plex_docker_media_path }}/videos/anime:/media/anime"
+      - "{{ plex_docker_media_path }}/videos/exercise:/media/exercise"
+      - "{{ plex_docker_media_path }}/videos/movies:/media/movies"
+      - "{{ plex_docker_media_path }}/videos/tv:/media/tv"
     env:
       TZ: "{{ plex_docker_timezone }}"
       PLEX_CLAIM: "{{ plex_docker_claim }}"
-      PLEX_UID: "{{ plex_docker_uid }}"
-      PLEX_GID: "{{ plex_docker_gid }}"
+      PLEX_UID: \""{{ plex_docker_uid }}"\"
+      PLEX_GID: \""{{ plex_docker_gid }}"\"
     restart_policy: unless-stopped
     memory: "{{ plex_docker_memory }}"
     container_default_behavior: no_defaults
