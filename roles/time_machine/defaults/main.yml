@@ -1,6 +1,7 @@
 timemachine_data_directory: "{{ docker_home }}/timemachine"
 timemachine_volume_size_limit: "1024"
-timemachine_password: timemachine
+timemachine_smb_user: time-machine
+timemachine_smb_password: timemachine
 timemachine_share_name: Data
 timemachine_log_level: error
 timemachine_port: "10445"

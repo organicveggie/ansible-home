@@ -30,7 +30,8 @@
       - "{{ timemachine_port }}:445"
     env:
       TMSIZE: "{{ timemachine_volume_size_limit }}"
-      PASS: "{{ timemachine_password }}"
+      USER: "{{ timemachine_smb_user }}"
+      PASS: "{{ timemachine_smb_password }}"
       SHARENAME: "{{ timemachine_share_name }}"
       USERID: "{{ timemachine_uid }}"
       GROUPID: "{{ timemachine_gid }}"
