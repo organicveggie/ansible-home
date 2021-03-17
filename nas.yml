@@ -16,5 +16,12 @@
     - role: glances
     - role: time_machine
     - role: plex_docker
-    # - role: stefangweichinger.ansible_rclone
-    # - role: ansible-logrotate
+    - role: stefangweichinger.ansible_rclone
+      tags:
+        - rclone
+        - skip_ansible_lint
+    - role: nickhammond.logrotate
+      tags:
+        - logrotate
+        - skip_ansible_lint
+    - role: veggie_nas_rclone
