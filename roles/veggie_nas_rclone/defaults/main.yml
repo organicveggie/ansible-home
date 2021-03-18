@@ -1,2 +1,3 @@
 veggie_rclone_s3_bucket: fake-bucket-name
 veggie_rclone_config: /home/user/.config/rclone/rclone.conf
+veggie_rclone_logfile: /var/log/rclone.log

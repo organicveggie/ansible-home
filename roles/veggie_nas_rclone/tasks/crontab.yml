@@ -4,40 +4,52 @@
     name: "rclone books to S3"
     minute: "0"
     hour: "1"
-    job: "rclone --config={{veggie_rclone_config_path}} --log-file=/var/log/rclone.log sync /mnt/nas/data/books/ AWSS3Remote:{{veggie_rclone_s3_bucket}}/backups/books/"
+    job: >
+        rclone --config={{ veggie_rclone_config_path }} --log-file={{ veggie_rclone_logfile }}
+        sync /mnt/nas/data/books/ AWSS3Remote:{{ veggie_rclone_s3_bucket }}/backups/books/
 
 - name: Setup rclone roms to S3
   ansible.builtin.cron:
     name: "rclone roms to S3"
     minute: "0"
     hour: "1"
-    job: "rclone --config={{veggie_rclone_config_path}} --log-file=/var/log/rclone.log sync /mnt/nas/data/roms/ AWSS3Remote:{{veggie_rclone_s3_bucket}}/backups/roms/"
+    job: >
+        rclone --config={{ veggie_rclone_config_path }} --log-file={{ veggie_rclone_logfile }}
+        sync /mnt/nas/data/roms/ AWSS3Remote:{{ veggie_rclone_s3_bucket }}/backups/roms/
 
 - name: Setup rclone photos to S3
   ansible.builtin.cron:
     name: "rclone photos to S3"
     minute: "15"
     hour: "1"
-    job: "rclone --config={{veggie_rclone_config_path}} --log-file=/var/log/rclone.log sync /mnt/nas/data/photos/ AWSS3Remote:{{veggie_rclone_s3_bucket}}/backups/photos/"
+    job: >
+        rclone --config={{ veggie_rclone_config_path }} --log-file={{ veggie_rclone_logfile }}
+        sync /mnt/nas/data/photos/ AWSS3Remote:{{ veggie_rclone_s3_bucket }}/backups/photos/
 
 # - name: Setup rclone music to S3
 #   ansible.builtin.cron:
 #     name: "rclone music to S3"
 #     minute: "45"
 #     hour: "1"
-#     job: "rclone --config={{veggie_rclone_config_path}} --log-file=/var/log/rclone.log sync /mnt/nas/data/music/ AWSS3Remote:{{veggie_rclone_s3_bucket}}/backups/music/"
+    # job: >
+    #     rclone --config={{ veggie_rclone_config_path }} --log-file={{ veggie_rclone_logfile }}
+    #     sync /mnt/nas/data/music/ AWSS3Remote:{{ veggie_rclone_s3_bucket }}/backups/music/
 
 # - name: Setup rclone documents to S3
 #   ansible.builtin.cron:
 #     name: "rclone documents to S3"
 #     minute: "0"
 #     hour: "2"
-#     job: "rclone --config={{veggie_rclone_config_path}} --log-file=/var/log/rclone.log sync /mnt/nas/data/docs/ AWSS3Remote:{{veggie_rclone_s3_bucket}}/backups/docs/"
+    # job: >
+    #     rclone --config={{ veggie_rclone_config_path }} --log-file={{ veggie_rclone_logfile }}
+    #     sync /mnt/nas/data/docs/ AWSS3Remote:{{ veggie_rclone_s3_bucket }}/backups/docs/
 
 # - name: Setup rclone plex to S3
 #   ansible.builtin.cron:
 #     name: "rclone plex to S3"
 #     minute: "30"
 #     hour: "2"
-#     job: "rclone --config={{veggie_rclone_config_path}} --log-file=/var/log/rclone.log sync /mnt/nas/plex_system/ AWSS3Remote:{{veggie_rclone_s3_bucket}}/plex/"
+    # job: >
+    #     rclone --config={{ veggie_rclone_config_path }} --log-file={{ veggie_rclone_logfile }}
+    #     sync /mnt/nas/plex_system/ AWSS3Remote:{{ veggie_rclone_s3_bucket }}/plex/
 

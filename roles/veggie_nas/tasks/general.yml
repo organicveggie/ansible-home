@@ -8,7 +8,7 @@
   ansible.builtin.apt_repository:
     repo: deb http://archive.ubuntu.com/ubuntu focal universe
     state: present
-    update_cache: True    
+    update_cache: True
 
 - name: Update apt-cache
   ansible.builtin.apt:
