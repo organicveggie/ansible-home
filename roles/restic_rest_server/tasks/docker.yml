@@ -3,6 +3,7 @@
   ansible.builtin.copy:
     src: htpasswd
     dest: "{{ restic_rest_server_backup_dir }}/.htpasswd"
+    mode: 0600
 
 - name: Create restic Rest Server Docker Container
   community.docker.docker_container:
