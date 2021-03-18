@@ -1,0 +1,13 @@
+---
+restic_rest_server_available_externally: "false"
+
+# Directories
+restic_rest_server_backup_dir: "/mnt/my/backups"
+
+# network
+restic_rest_server_hostname: "rest"
+restic_rest_server_host_domain: example.com
+restic_rest_server_port: "8000"
+
+# specs
+restic_rest_server_memory: 1g

@@ -13,10 +13,11 @@ Vagrant.configure("2") do |config|
     ansible.vault_password_file = "vault-passwd"
     ansible.become = true
     ansible.groups = {
-      "nas" => ["host1"],
+      "veggie_nas" => ["host1"],
     }
     ansible.host_vars = {
       "host1" => {"docker_storage_driver" => "overlay2"}
     }
+    ansible.tags = "docker,veggie_nas,restic_rest_server"
   end
 end

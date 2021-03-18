@@ -46,6 +46,13 @@ veggie_rclone_s3_bucket: "{{ veggie_nas_rclone_s3_bucket }}"
 veggie_rclone_config_path: /root/.config/rclone/rclone.conf
 
 ###
+### Restic
+###
+restic_rest_server_backup_dir: "{{ veggie_nas_restic_rest_server_backup_dir }}"
+restic_rest_server_hostname: "{{ veggie_nas_restic_rest_server_hostname }}"
+restic_rest_server_host_domain: "{{ veggie_nas_domain_name }}"
+
+###
 ### Samba
 ###
 samba_domain_master: auto
