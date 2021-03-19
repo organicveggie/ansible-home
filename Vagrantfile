@@ -18,6 +18,6 @@ Vagrant.configure("2") do |config|
     ansible.host_vars = {
       "host1" => {"docker_storage_driver" => "overlay2"}
     }
-    ansible.tags = "docker,veggie_nas,restic_rest_server"
+    ansible.tags = "docker,pip,portainer"
   end
 end

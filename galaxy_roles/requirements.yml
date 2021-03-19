@@ -1,12 +1,14 @@
 ---
-- name: bertvv.samba
+- src: bertvv.samba
   version: v2.7.1
 
-- name: geerlingguy.docker
+- src: geerlingguy.docker
   version: 3.0.0
 
-- name: geerlingguy.nfs
+- src: geerlingguy.nfs
   version: 2.0.0
+
+- src: shelleg.ansible_role_portainer
 
 - src: stefangweichinger.ansible_rclone
 

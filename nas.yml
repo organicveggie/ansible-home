@@ -8,10 +8,17 @@
       tags:
         - docker
         - skip_ansible_lint
+    - role: geerlingguy.pip
+      tags:
+        - pip
     - role: veggie_nas
     - role: bertvv.samba
       tags:
         - samba
+        - skip_ansible_lint
+    - role: shelleg.ansible_role_portainer
+      tags:
+        - portainer
         - skip_ansible_lint
     - role: glances
     - role: time_machine

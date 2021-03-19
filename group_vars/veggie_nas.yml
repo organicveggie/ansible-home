@@ -26,6 +26,19 @@ plex_docker_transcode_path: "/plex_transcode"
 plex_docker_media_path: /mnt/nas/data
 
 ###
+### Pip
+###
+pip_install_packages:
+  - docker
+
+###
+### Portainer
+###
+admin_password: "{{ vault_portainer_admin_password }}"
+endpoints:
+  - {name: local, url: ""}
+
+###
 ### RClone
 ###
 rclone_configs:
