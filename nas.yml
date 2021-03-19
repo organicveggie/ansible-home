@@ -16,6 +16,9 @@
       tags:
         - samba
         - skip_ansible_lint
+    - role: arillso.traefik
+      tags:
+        - traefik
     - role: shelleg.ansible_role_portainer
       tags:
         - portainer

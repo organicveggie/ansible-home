@@ -1,7 +1,7 @@
 ###
 ### Glances
 ###
-glances_host_domain: "{{ inventory_hostname }}.{{ veggie_nas_domain_name }}"
+glances_host_domain: "{{ veggie_nas_domain_name }}"
 
 ###
 ### Logrotate
@@ -129,3 +129,14 @@ timemachine_data_directory: "/mnt/nas/time-machine"
 timemachine_volume_size_limit: "512000"
 timemachine_share_name: "nas-time-machine"
 timemachine_smb_password: "{{ timemachine_smb_password_secret }}"
+
+###
+### Traefik
+###
+traefik_confkey_api:
+  insecure: true
+  dashboard: true # use this for enabling the dashboard
+traefik_ports:
+  - '80:80'
+  - '443:443'
+  - '8080:8080'

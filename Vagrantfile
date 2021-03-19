@@ -3,7 +3,8 @@
 Vagrant.configure("2") do |config|
   config.vm.define "host1"
   config.vm.box = "generic/ubuntu2004"
-  config.vm.network "private_network", ip: "172.30.1.5"
+  # config.vm.network "private_network", ip: "172.30.1.5"
+  config.vm.network "public_network", ip: "192.168.25.61"
   config.vm.provider "virtualbox" do |vb|
     vb.memory = 1024
     vb.cpus = 1
@@ -16,8 +17,12 @@ Vagrant.configure("2") do |config|
       "veggie_nas" => ["host1"],
     }
     ansible.host_vars = {
-      "host1" => {"docker_storage_driver" => "overlay2"}
+      "host1" => {
+        "docker_storage_driver" => "overlay2",
+        "glances_available_externally" => "true",
+        "glances_host_domain" => "vagrant.home.bealetech.com",
+      }
     }
-    ansible.tags = "docker,pip,portainer"
+    ansible.tags = "docker,pip,portainer,glances,traefik"
   end
 end

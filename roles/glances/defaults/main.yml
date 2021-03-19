@@ -1,11 +1,10 @@
 ---
-glances_available_externally: "false"
+glances_available_externally: "true"
 
 # network
 glances_hostname: "glances"
 glances_host_domain: example.com
-glances_port_one: "61208"
-glances_port_two: "61209"
+glances_port: "61208"
 
 # specs
 glances_memory: 1g
