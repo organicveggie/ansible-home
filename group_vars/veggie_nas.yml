@@ -34,9 +34,10 @@ pip_install_packages:
 ###
 ### Portainer
 ###
-admin_password: "{{ vault_portainer_admin_password }}"
-endpoints:
-  - {name: local, url: ""}
+portainer_available_externally: "true"
+portainer_admin_password: "{{ vault_portainer_admin_password }}"
+portainer_network_name: "{{ traefik_network_name }}"
+portainer_host_domain: "{{ veggie_nas_domain_name }}"
 
 ###
 ### RClone
@@ -136,6 +137,9 @@ timemachine_smb_password: "{{ timemachine_smb_password_secret }}"
 traefik_confkey_api:
   insecure: true
   dashboard: true # use this for enabling the dashboard
+# traefik_confkey_log:
+#   level: DEBUG
+#   filePath: /var/log/traefik.log
 traefik_ports:
   - '80:80'
   - '443:443'

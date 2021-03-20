@@ -1,0 +1,9 @@
+---
+- name: Configure admin user password
+  ansible.builtin.uri:
+    url: "{{ portainer_endpoint }}/users/admin/init"
+    method: POST
+    return_content: true
+    body_format: json
+    body: '{ "Username":"{{ portainer_admin_user }}", "Password":"{{ portainer_admin_password }}"}'
+    status_code: 200, 409

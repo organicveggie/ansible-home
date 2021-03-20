@@ -1,0 +1,10 @@
+---
+- import_tasks: docker.yml
+  tags:
+    - portainer
+    - portainer:docker
+
+- import_tasks: admin.yml
+  tags:
+    - portainer
+    - portainer:admin

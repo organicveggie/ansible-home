@@ -1,0 +1,71 @@
+---
+- name: Create Portainer Directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ portainer_data_directory }}"
+
+- name: Portainer Docker Container
+  community.docker.docker_container:
+    name: portainer
+    image: portainer/portainer-ce
+    pull: true
+    volumes:
+      - "{{ portainer_data_directory }}:/data:rw"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    networks:
+      - name: "{{ portainer_network_name }}"
+    ports:
+      - "{{ portainer_port }}:{{ portainer_port }}"
+    restart_policy: unless-stopped
+    memory: "{{ portainer_memory }}"
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: no
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
+    labels:
+      traefik.enable: "{{ portainer_available_externally }}"
+      traefik.http.routers.portainer.rule:
+        "Host(`{{ portainer_hostname }}.{{ portainer_host_domain }}`)"
+      # traefik.http.routers.portainer.tls.certresolver: "letsencrypt"
+      # traefik.http.routers.portainer.tls.domains[0].main: "{{ portainer_host_domain }}"
+      # traefik.http.routers.portainer.tls.domains[0].sans: "*.{{ portainer_host_domain }}"
+      traefik.http.services.portainer.loadbalancer.server.port: "{{ portainer_port }}"
+  register: portainer_docker
+
+# - name: "Debug return values from container"
+#   ansible.builtin.debug:
+#     msg: "{{ portainer_docker.container }}"
+
+- set_fact:
+    portainer_is_running: "{{ portainer_docker.container.State.Running }}"
+
+- set_fact:
+    portainer_endpoint:
+      "http://{{ portainer_docker.container.NetworkSettings.Networks.get(portainer_network_name).IPAddress }}:{{ portainer_port }}/api"
+
+- name: "Check!!!"
+  ansible.builtin.debug:
+    msg: "{{ portainer_is_running }} // {{ portainer_endpoint }}"
+
+- name: Check container status
+  ansible.builtin.fail:
+    msg: "Portainer did not start: {{ portainer_is_running }}"
+  when: not portainer_is_running
+
+# - name: Configure admin user password
+#   ansible.builtin.uri:
+#     url: "{{ portainer_endpoint }}/users/admin/init"
+#     method: POST
+#     return_content: true
+#     body_format: json
+#     body: '{ "Username":"{{ portainer_admin_user }}", "Password":"{{ portainer_admin_password }}"}'
+#     status_code: 200, 409
+#   when: portainer_is_running

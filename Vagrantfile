@@ -21,8 +21,9 @@ Vagrant.configure("2") do |config|
         "docker_storage_driver" => "overlay2",
         "glances_available_externally" => "true",
         "glances_host_domain" => "vagrant.home.bealetech.com",
+        "portainer_host_domain" => "vagrant.home.bealetech.com",
       }
     }
-    ansible.tags = "docker,pip,portainer,glances,traefik"
+    ansible.tags = "docker,pip,portainer,traefik"
   end
 end

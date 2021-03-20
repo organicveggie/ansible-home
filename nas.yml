@@ -19,10 +19,7 @@
     - role: arillso.traefik
       tags:
         - traefik
-    - role: shelleg.ansible_role_portainer
-      tags:
-        - portainer
-        - skip_ansible_lint
+    - role: portainer
     - role: glances
     - role: time_machine
     - role: plex_docker
