@@ -19,9 +19,8 @@ Vagrant.configure("2") do |config|
     ansible.host_vars = {
       "host1" => {
         "docker_storage_driver" => "overlay2",
+        "veggie_nas_domain_name" => "vagrant.home.bealetech.com", 
         "glances_available_externally" => "true",
-        "glances_host_domain" => "vagrant.home.bealetech.com",
-        "portainer_host_domain" => "vagrant.home.bealetech.com",
       }
     }
     ansible.tags = "docker,pip,portainer,traefik"

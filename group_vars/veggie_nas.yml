@@ -134,8 +134,8 @@ timemachine_smb_password: "{{ timemachine_smb_password_secret }}"
 ###
 ### Traefik
 ###
+traefik_hostname: "traefik.{{ veggie_nas_domain_name }}"
 traefik_confkey_api:
-  insecure: true
   dashboard: true # use this for enabling the dashboard
 # traefik_confkey_log:
 #   level: DEBUG
@@ -143,4 +143,10 @@ traefik_confkey_api:
 traefik_ports:
   - '80:80'
   - '443:443'
-  - '8080:8080'
+traefik_labels:
+  traefik.enable: "true"
+  traefik.http.routers.traefik.service: "api@internal"
+  traefik.http.routers.traefik.entrypoints: "web_http"
+traefik_confkey_providers:
+  docker:
+    defaultRule: "Host(`{{ traefik_hostname }}`)"
