@@ -48,9 +48,4 @@
     read_only: no
     tty: no
     labels:
-      traefik.enable: "{{ restic_rest_server_available_externally }}"
-      traefik.http.routers.restic_rest_server.rule: "Host(`{{ restic_rest_server_hostname }}.{{ restic_rest_server_host_domain }}`)"
-      traefik.http.routers.restic_rest_server.tls.certresolver: "letsencrypt"
-      traefik.http.routers.restic_rest_server.tls.domains[0].main: "{{ restic_rest_server_host_domain }}"
-      traefik.http.routers.restic_rest_server.tls.domains[0].sans: "*.{{ restic_rest_server_host_domain }}"
-      traefik.http.services.restic_rest_server.loadbalancer.server.port: "{{ restic_rest_server_port }}"
+      traefik.enable: "false"
