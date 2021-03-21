@@ -1,5 +1,7 @@
 ---
-- src: arillso.traefik
+- src: https://github.com/organicveggie/ansible.traefik
+  name: organicveggie.ansible-traefik
+  version: "master"
 
 - src: bertvv.samba
   version: v2.7.1
