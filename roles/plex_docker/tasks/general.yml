@@ -16,8 +16,8 @@
     create_home: no
     group: "plex"
     groups:
-        - media-writer
-        - music-writer
+        - media_writer
+        - music_writer
 
 - name: Create directories
   ansible.builtin.file:
