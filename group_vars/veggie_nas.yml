@@ -152,7 +152,9 @@ traefik_qs_https: "true"
 traefik_qs_https_redirect: "true"
 traefik_qs_https_le: "true"
 traefik_qs_https_le_mail: "{{ letsencrypt_email }}"
+traefik_qs_log_level: INFO
 traefik_ports:
+  - '80:80'
   - '443:443'
 traefik_labels:
   traefik.enable: "true"
@@ -163,10 +165,12 @@ traefik_labels:
 traefik_confkey_providers:
   docker:
     defaultRule: "Host(`{{ traefik_hostname }}`)"
+traefik_le_ca_server: "https://acme-v02.api.letsencrypt.org/directory"
+# traefik_le_ca_server: "https://acme-staging-v02.api.letsencrypt.org/directory"
 traefik_confkey_certificatesResolvers:
   letsencrypt:
     acme:
-      caServer: "https://acme-v02.api.letsencrypt.org/directory"
+      caServer: "{{ traefik_le_ca_server }}"
       dnsChallenge:
         provider: route53
 traefik_container_environment:

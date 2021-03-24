@@ -17,8 +17,10 @@
       - "/etc/timezone:/etc/timezone:ro"
     networks:
       - name: "{{ portainer_network_name }}"
-    ports:
-      - "{{ portainer_port }}:{{ portainer_port }}"
+    exposed_ports:
+      - "{{ portainer_port }}"
+    # ports:
+    #   - "{{ portainer_port }}:{{ portainer_port }}"
     restart_policy: unless-stopped
     memory: "{{ portainer_memory }}"
     container_default_behavior: no_defaults
@@ -32,8 +34,7 @@
     tty: no
     labels:
       traefik.enable: "{{ portainer_available_externally }}"
-      traefik.http.routers.portainer.rule:
-        "Host(`{{ portainer_hostname }}.{{ portainer_host_domain }}`)"
+      traefik.http.routers.portainer.rule: "Host(`{{ portainer_hostname }}.{{ portainer_host_domain }}`)"
       traefik.http.routers.portainer.tls.certresolver: "letsencrypt"
       traefik.http.routers.portainer.tls.domains[0].main: "*.{{ portainer_host_domain }}"
       traefik.http.services.portainer.loadbalancer.server.port: "{{ portainer_port }}"
@@ -58,13 +59,3 @@
   ansible.builtin.fail:
     msg: "Portainer did not start: {{ portainer_is_running }}"
   when: not portainer_is_running
-
-# - name: Configure admin user password
-#   ansible.builtin.uri:
-#     url: "{{ portainer_endpoint }}/users/admin/init"
-#     method: POST
-#     return_content: true
-#     body_format: json
-#     body: '{ "Username":"{{ portainer_admin_user }}", "Password":"{{ portainer_admin_password }}"}'
-#     status_code: 200, 409
-#   when: portainer_is_running
