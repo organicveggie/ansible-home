@@ -33,9 +33,13 @@
     pull: true
     volumes:
       - "{{ restic_rest_server_backup_dir }}:/data"
+      - "/etc/letsencrypt:/letsencrypt:ro"
     network_mode: host
     env:
-      OPTIONS: "--private-repos"
+      OPTIONS: >-
+        --private-repos
+        --tls --tls-cert /letsencrypt/live/{{ certbot_domain_name }}/cert.pem
+        --tls-key /letsencrypt/live/{{ certbot_domain_name }}/privkey.pem
     restart_policy: unless-stopped
     memory: "{{ restic_rest_server_memory }}"
     container_default_behavior: no_defaults

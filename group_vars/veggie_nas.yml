@@ -4,6 +4,14 @@
 glances_host_domain: "{{ veggie_nas_domain_name }}"
 
 ###
+### Let's Encrypt / Certbot
+###
+certbot_domain_name: "{{ veggie_nas_domain_name }}"
+certbot_admin_email: "{{ letsencrypt_email }}"
+certbot_aws_access_key_id: "{{ letsencrypt_aws_access_key }}"
+certbot_aws_secret_access_key: "{{ letsencrypt_aws_secret_key }}"
+
+###
 ### Logrotate
 ###
 logrotate_scripts:

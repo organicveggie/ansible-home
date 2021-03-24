@@ -32,4 +32,5 @@
         - logrotate
         - skip_ansible_lint
     - role: veggie_nas_rclone
+    - role: organicveggie.certbot-route53
     - role: restic_rest_server

@@ -3,6 +3,10 @@
   name: organicveggie.ansible-traefik
   version: "master"
 
+- src: https://github.com/organicveggie/ansible-role-certbot-route53
+  name: organicveggie.certbot-route53
+  version: "main"
+
 - src: bertvv.samba
   version: v2.7.1
 

@@ -23,6 +23,6 @@ Vagrant.configure("2") do |config|
         "glances_available_externally" => "true",
       }
     }
-    ansible.tags = "docker,pip,traefik,glances"
+    ansible.tags = "docker,pip,certbot,restic_rest_server"
   end
 end
