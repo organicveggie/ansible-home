@@ -1,0 +1,5 @@
+---
+- name: Set login banner
+  ansible.builtin.copy:
+    src: motd.txt
+    dest: /etc/motd

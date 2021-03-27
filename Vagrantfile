@@ -10,19 +10,19 @@ Vagrant.configure("2") do |config|
     vb.cpus = 1
   end
   config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "nas.yml"
+    ansible.playbook = "virt.yml"
     ansible.vault_password_file = "vault-passwd"
     ansible.become = true
     ansible.groups = {
-      "veggie_nas" => ["host1"],
+      "veggie_virt" => ["host1"],
     }
     ansible.host_vars = {
       "host1" => {
         "docker_storage_driver" => "overlay2",
-        "veggie_nas_domain_name" => "vagrant.home.bealetech.com", 
+        "veggie_virt_domain_name" => "vagrant.home.bealetech.com", 
         "glances_available_externally" => "true",
       }
     }
-    ansible.tags = "docker,pip,certbot,restic_rest_server"
+    # ansible.tags = "docker,pip,certbot,restic_rest_server"
   end
 end

@@ -1,0 +1,4 @@
+- import_tasks: general.yml
+  tags:
+    - veggie_virt
+    - veggie_virt:general

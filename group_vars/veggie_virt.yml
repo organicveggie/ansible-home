@@ -1,0 +1,70 @@
+###
+### Common
+###
+veggie_hostname: "{{ veggie_virt_domain_name }}"
+veggie_admin_username: "{{ veggie_nas_admin_username }}"
+veggie_admin_passwd: "{{ veggie_nas_admin_passwd }}"
+
+###
+### Docker
+###
+docker_home: /virtpool/docker
+docker_admin_user: "{{ veggie_admin_username }}"
+
+###
+### Glances
+###
+glances_host_domain: "{{ veggie_virt_domain_name }}"
+
+###
+### Pip
+###
+pip_install_packages:
+  - docker
+
+###
+### Portainer
+###
+portainer_available_externally: "true"
+portainer_admin_password: "{{ vault_portainer_admin_password }}"
+portainer_network_name: "{{ traefik_network_name }}"
+portainer_host_domain: "{{ veggie_virt_domain_name }}"
+
+###
+### Traefik
+###
+traefik_hostname: "traefik.{{ veggie_virt_domain_name }}"
+traefik_confkey_api:
+  dashboard: true # use this for enabling the dashboard
+# traefik_confkey_log:
+#   level: DEBUG
+#   filePath: /var/log/traefik.log
+traefik_qs_https: "true"
+traefik_qs_https_redirect: "true"
+traefik_qs_https_le: "true"
+traefik_qs_https_le_mail: "{{ letsencrypt_email }}"
+traefik_qs_log_level: INFO
+traefik_ports:
+  - '80:80'
+  - '443:443'
+traefik_labels:
+  traefik.enable: "true"
+  traefik.http.routers.traefik.service: "api@internal"
+  traefik.http.routers.traefik.entrypoints: "https"
+  traefik.http.routers.traefik.tls.certresolver: "letsencrypt"
+  traefik.http.routers.traefik.tls.domains[0].main: "*.{{ veggie_virt_domain_name }}"
+traefik_confkey_providers:
+  docker:
+    defaultRule: "Host(`{{ traefik_hostname }}`)"
+traefik_le_ca_server: "https://acme-v02.api.letsencrypt.org/directory"
+# traefik_le_ca_server: "https://acme-staging-v02.api.letsencrypt.org/directory"
+traefik_confkey_certificatesResolvers:
+  letsencrypt:
+    acme:
+      caServer: "{{ traefik_le_ca_server }}"
+      dnsChallenge:
+        provider: route53
+traefik_container_environment:
+  AWS_HOSTED_ZONE_ID: "{{ acme_route53_hosted_zone_id }}"
+  AWS_ACCESS_KEY_ID: "{{ letsencrypt_aws_access_key }}"
+  AWS_SECRET_ACCESS_KEY: "{{ letsencrypt_aws_secret_key }}"

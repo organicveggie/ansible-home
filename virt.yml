@@ -1,0 +1,25 @@
+---
+- name: Setup Veggie Virt
+  hosts: veggie_virt
+  remote_user: sean
+  become: yes
+  roles:
+    - role: geerlingguy.docker
+      tags:
+        - docker
+        - skip_ansible_lint
+    - role: geerlingguy.pip
+      tags:
+        - pip
+    - role: veggie_common
+    - role: veggie_docker
+    - role: veggie_virt
+    - role: organicveggie.ansible-traefik
+      tags:
+        - traefik
+    - role: portainer
+    - role: glances
+    - role: nickhammond.logrotate
+      tags:
+        - logrotate
+        - skip_ansible_lint
