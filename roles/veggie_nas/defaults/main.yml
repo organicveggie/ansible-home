@@ -1,46 +1,8 @@
 ---
-veggie_nas_hostname: veggie-nas
-
-# Update all apt packages when playbook is run
-keep_packages_updated: false
-
-# Extra packages to install
-veggie_nas_extra_packages:
-  - smartmontools
-  - htop
-  - zfsutils-linux
-  - bonnie++
-  - unzip
-  - lm-sensors
-  - ctop
-  - mbuffer
-  - screen
-
-# https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-veggie_nas_timezone: America/Los_Angeles
-
-veggie_nas_admin_username: admin
-
 # Plain texxt
 veggie_nas_admin_samba_passwd: secretpassword
-
-# Password must be specified as an encrypted password:
-#   python3 -c 'import crypt,getpass;pw=getpass.getpass();print(crypt.crypt(pw) if (pw==getpass.getpass("Confirm: ")) else exit())'
-veggie_nas_admin_passwd: 1mGEYMWdG0wQs
-veggie_nas_users_passwords:
-  user1: "password1"
 
 # Groups to create for use with Samba.
 veggie_nas_samba_groups:
   - group1
   - group2
-
-# Where you want Docker to store its container data.
-docker_home: /mnt/nas/docker
-
-# Where you want Docker to store images
-docker_image_directory: "{{ docker_home }}/data"
-
-# Docker storage driver, see https://docs.docker.com/storage/storagedriver/select-storage-driver/#supported-backing-filesystems
-# You might want to change this to ZFS, depending on your underlying filesystem.
-docker_storage_driver: zfs

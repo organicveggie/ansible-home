@@ -11,6 +11,8 @@
     - role: geerlingguy.pip
       tags:
         - pip
+    - role: veggie_common
+    - role: veggie_docker
     - role: veggie_nas
     - role: bertvv.samba
       tags:

@@ -1,4 +1,19 @@
 ###
+### Common
+###
+veggie_hostname: "{{ veggie_nas_domain_name }}"
+veggie_admin_username: "{{ veggie_nas_admin_username }}"
+veggie_admin_passwd: "{{ veggie_nas_admin_passwd }}"
+veggie_users_passwords:
+  retropie: "*"
+
+###
+### Docker
+###
+docker_home: /mnt/nas/docker
+docker_admin_user: "{{ veggie_admin_username }}"
+
+###
 ### Glances
 ###
 glances_host_domain: "{{ veggie_nas_domain_name }}"
@@ -128,8 +143,6 @@ veggie_nas_samba_groups:
   - photo_writer
   - rom_writer
   - source_writer
-veggie_nas_users_passwords:
-  retropie: "*"
 
 ###
 ### TimeMachine

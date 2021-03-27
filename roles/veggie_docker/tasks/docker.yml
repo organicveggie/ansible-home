@@ -28,9 +28,10 @@
 
 - name: Add user account to Docker group
   ansible.builtin.user:
-    name: "{{ veggie_nas_admin_username }}"
+    name: "{{ docker_admin_user }}"
     groups: docker
     append: yes
+  when: docker_admin_user is defined
 
 - name: Update Docker home from install default
   ansible.builtin.template:
