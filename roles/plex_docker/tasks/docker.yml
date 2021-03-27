@@ -22,7 +22,7 @@
     container_default_behavior: no_defaults
     auto_remove: no
     detach: yes
-    init: no
+    init: yes
     interactive: no
     paused: no
     privileged: no
