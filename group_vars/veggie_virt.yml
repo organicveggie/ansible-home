@@ -76,4 +76,6 @@ traefik_container_environment:
 ###
 unific_available_externally: "true"
 unific_host_domain: "{{ veggie_virt_domain_name }}"
+unific_cpus: "2"
+unific_memory: "2GB"
 unific_network_mode: "{{ traefik_network_name }}"
