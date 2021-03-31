@@ -7,6 +7,10 @@
   name: organicveggie.certbot-route53
   version: "main"
 
+- src: https://github.com/organicveggie/ansible.unific
+  name: organicveggie.unific
+  version: "main"
+
 - src: bertvv.samba
   version: v2.7.1
 

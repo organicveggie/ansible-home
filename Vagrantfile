@@ -20,9 +20,8 @@ Vagrant.configure("2") do |config|
       "host1" => {
         "docker_storage_driver" => "overlay2",
         "veggie_virt_domain_name" => "vagrant.home.bealetech.com", 
-        "glances_available_externally" => "true",
       }
     }
-    # ansible.tags = "docker,pip,certbot,restic_rest_server"
+    ansible.tags = "docker,pip,traefik,unific"
   end
 end

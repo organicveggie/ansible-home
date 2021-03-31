@@ -19,6 +19,9 @@
         - traefik
     - role: portainer
     - role: glances
+    - role: organicveggie.unific
+      tags:
+        - unific
     - role: nickhammond.logrotate
       tags:
         - logrotate

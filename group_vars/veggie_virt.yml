@@ -64,7 +64,16 @@ traefik_confkey_certificatesResolvers:
       caServer: "{{ traefik_le_ca_server }}"
       dnsChallenge:
         provider: route53
+traefik_confkey_serversTransport:
+  insecureSkipVerify: "true"
 traefik_container_environment:
   AWS_HOSTED_ZONE_ID: "{{ acme_route53_hosted_zone_id }}"
   AWS_ACCESS_KEY_ID: "{{ letsencrypt_aws_access_key }}"
   AWS_SECRET_ACCESS_KEY: "{{ letsencrypt_aws_secret_key }}"
+
+###
+### UniFi Controiller
+###
+unific_available_externally: "true"
+unific_host_domain: "{{ veggie_virt_domain_name }}"
+unific_network_mode: "{{ traefik_network_name }}"
