@@ -1,0 +1,4 @@
+- import_tasks: groups.yml
+  tags:
+    - groupadd
+    - groupadd:groups

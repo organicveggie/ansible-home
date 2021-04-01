@@ -1,0 +1,14 @@
+---
+- name: NFS Common
+  hosts: nfs
+  remote_user: sean
+  become: yes
+  vars_files:
+    - vars/user_groups
+    - vars/users
+  roles:
+    - role: groupadd
+    - role: organicveggie.ansible-users
+      tags:
+        - users
+        - skip_ansible_lint

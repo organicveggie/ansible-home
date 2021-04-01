@@ -23,3 +23,7 @@
 - src: stefangweichinger.ansible_rclone
 
 - src: nickhammond.logrotate
+
+- src: https://github.com/organicveggie/ansible.users
+  name: organicveggie.ansible-users
+  version: "master"

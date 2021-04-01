@@ -1,0 +1,7 @@
+# user_groups:
+#   - name: "foo"
+#     gid: "5000"
+#     system: "true"
+#     state: "present"
+
+user_groups: []

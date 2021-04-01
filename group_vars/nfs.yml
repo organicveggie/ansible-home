@@ -1,0 +1,5 @@
+###
+### Users / Groups
+###
+user_groups: "{{ nfs_groups }}"
+users_list_group: "{{ nfs_users }}"
