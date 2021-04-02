@@ -35,3 +35,4 @@
       tags:
         - logrotate
         - skip_ansible_lint
+    - role: calibre_web

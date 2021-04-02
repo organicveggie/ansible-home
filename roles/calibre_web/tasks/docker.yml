@@ -1,0 +1,51 @@
+---
+- name: Create Calibre user
+  ansible.builtin.user:
+    name: "{{ calibre_username }}"
+    uid: "{{ calibre_user_id | default(omit) }}"
+    append: "true"
+    create_home: "false"
+    groups: "{{ calibre_extra_groups | default(omit) }}"
+    password: "!"
+
+- name: Create Calibre-web Directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ calibre_user_id }}"
+    mode: "0770"
+  with_items:
+    - "{{ calibre_data_directory }}"
+    - "{{ calibre_data_directory }}/config"
+
+- name: Calibre-web Docker Container
+  community.docker.docker_container:
+    name: calibre
+    image: linuxserver/calibre-web:latest
+    pull: true
+    volumes:
+      - "{{ calibre_data_directory }}/config:/config"
+      - "{{ calibre_books_root }}:/books"
+    env:
+      TZ: "{{ calibre_timezone }}"
+      PUID: "{{ calibre_user_id }}"
+      PGID: "{{ calibre_group_id }}"
+      DOCKER_MODS: "{{ calibre_ebook_conversion }}"
+    network_mode: "{{ traefik_network_name }}"
+    restart_policy: unless-stopped
+    memory: 1g
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: yes
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
+    labels:
+      traefik.enable: "{{ calibre_available_externally }}"
+      traefik.http.routers.calibre.rule: "Host(`{{ calibre_hostname }}.{{ calibre_host_domain }}`)"
+      traefik.http.routers.calibre.tls.certresolver: "letsencrypt"
+      traefik.http.routers.calibre.tls.domains[0].main: "*.{{ calibre_host_domain }}"
+      traefik.http.services.calibre.loadbalancer.server.port: "8083"
