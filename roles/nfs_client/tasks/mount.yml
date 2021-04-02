@@ -1,0 +1,17 @@
+---
+- name: Create NFS mount directories
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: "directory"
+    mode: "0770"
+  loop: "{{ nfs_mounts }}"
+
+- name: Mount NFS exports
+  ansible.posix.mount:
+    path: "{{ item.path }}"
+    src: "{{ item.src }}"
+    fstype: "{{ item.fstype }}"
+    opts: "{{ item.opts | default(omit) }}"
+    state: "{{ item.state | default('present') }}"
+    backup: "{{ item.backup | default(omit) }}"
+  loop: "{{ nfs_mounts }}"

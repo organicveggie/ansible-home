@@ -1,0 +1,11 @@
+- import_tasks: install.yml
+  tags:
+    - nfs
+    - nfs_client
+    - nfs_client:install
+
+- import_tasks: mount.yml
+  tags:
+    - nfs
+    - nfs_client
+    - nfs_client:mount

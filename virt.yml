@@ -3,7 +3,16 @@
   hosts: veggie_virt
   remote_user: sean
   become: yes
+  vars_files:
+    - vars/user_groups
+    - vars/users
   roles:
+    - role: groupadd
+    - role: organicveggie.ansible-users
+      tags:
+        - users
+        - skip_ansible_lint
+    - role: nfs_client
     - role: geerlingguy.docker
       tags:
         - docker

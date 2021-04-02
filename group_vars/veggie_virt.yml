@@ -17,6 +17,15 @@ docker_admin_user: "{{ veggie_admin_username }}"
 glances_host_domain: "{{ veggie_virt_domain_name }}"
 
 ###
+### NFS mounts
+###
+nfs_mounts:
+  - src: "{{ veggie_nas_domain_name }}:/mnt/nas/data/books"
+    path: "/mnt/nas/books"
+    fstype: "nfs4"
+    opts: "auto,noatime,nolock,bg,nfsvers=4,intr,tcp,actimeo=1800"
+
+###
 ### Pip
 ###
 pip_install_packages:

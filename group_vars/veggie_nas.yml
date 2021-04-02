@@ -41,6 +41,14 @@ logrotate_scripts:
       - copytruncate
 
 ###
+### NFS
+###
+nfs_exports:
+  - "/mnt/nas/data/books {{ veggie_virt_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
+  - "/mnt/nas/data/music {{ veggie_virt_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
+  - "/mnt/nas/data/videos {{ veggie_virt_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
+
+###
 ### Plex
 ###
 plex_docker_claim: "{{ plex_claim }}"
