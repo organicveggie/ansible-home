@@ -1,0 +1,34 @@
+---
+- name: Create ZFS file systems
+  community.general.zfs:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ grafana_docker_zfs_filesystems }}"
+
+- name: Create Grafana group
+  ansible.builtin.group:
+    name: "{{ grafana_docker_group }}"
+  when: "grafana_docker_group is defined"
+
+- name: Create Grafana user
+  ansible.builtin.user:
+    name: "{{ grafana_docker_username }}"
+    uid: "{{ grafana_docker_uid | default(omit) }}"
+    group: "{{ grafana_docker_group | default(omit) }}"
+    append: "true"
+    create_home: "false"
+    groups: "{{ grafana_extra_groups | default(omit) }}"
+    password: "!"
+
+- name: Set ZFS FS ownership
+  ansible.builtin.file:
+    path: "/{{ item }}"
+    owner: "{{ grafana_docker_username }}"
+    group: "{{ grafana_docker_group | default(grafana_docker_username) }}"
+    mode: "0770"
+  loop: "{{ grafana_docker_zfs_filesystems }}"
+
+- name: Create Grafana config
+  ansible.builtin.template:
+    src: ../templates/grafana.ini.j2
+    dest: "{{ grafana_docker_conf_dir }}/grafana.ini"

@@ -29,6 +29,19 @@ docker_admin_user: "{{ veggie_admin_username }}"
 glances_host_domain: "{{ veggie_virt_domain_name }}"
 
 ###
+### Grafana
+###
+grafana_docker_data_dir: "/virtpool/grafana/lib"
+grafana_docker_log_dir: "/virtpool/grafana/log"
+grafana_docker_conf_dir: "/virtpool/grafana/etc"
+grafana_docker_zfs_filesystems:
+  - "virtpool/grafana"
+  - "virtpool/grafana/etc"
+  - "virtpool/grafana/lib"
+  - "virtpool/grafana/log"
+grafana_docker_host_domain: "{{ veggie_virt_domain_name }}"
+
+###
 ### NFS mounts
 ###
 nfs_mounts:

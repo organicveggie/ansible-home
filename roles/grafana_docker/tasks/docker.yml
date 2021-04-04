@@ -1,0 +1,30 @@
+---
+- name: Grafana Docker Container
+  community.docker.docker_container:
+    name: grafana
+    image: grafana/grafana
+    pull: true
+    volumes:
+      - "{{ grafana_docker_data_dir }}:/var/lib/grafana"
+      - "{{ grafana_docker_log_dir }}:/var/log/grafana"
+      - "{{ grafana_docker_conf_dir }}:/etc/grafana"
+    user: "{{ grafana_docker_username }}"
+    # env:
+    network_mode: "{{ traefik_network_name }}"
+    restart_policy: unless-stopped
+    memory: 1g
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: yes
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
+    labels:
+      traefik.enable: "{{ grafana_available_externally }}"
+      traefik.http.routers.grafana.rule: "Host(`{{ grafana_docker_hostname }}.{{ grafana_docker_host_domain }}`)"
+      traefik.http.routers.grafana.tls.certresolver: "letsencrypt"
+      traefik.http.routers.grafana.tls.domains[0].main: "*.{{ grafana_docker_host_domain }}"
+      traefik.http.services.grafana.loadbalancer.server.port: "{{ grafana_docker_port }}"

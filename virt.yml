@@ -31,8 +31,9 @@
     - role: organicveggie.unific
       tags:
         - unific
+    - role: calibre_web
+    - role: grafana_docker
     - role: nickhammond.logrotate
       tags:
         - logrotate
         - skip_ansible_lint
-    - role: calibre_web
