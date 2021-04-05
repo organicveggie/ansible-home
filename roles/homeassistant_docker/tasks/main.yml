@@ -1,9 +1,13 @@
 - import_tasks: setup.yml
   tags:
-    - grafana_docker
-    - grafana_docker:setup
+    - hass
+    - home_assistant
+    - home_assistant_docker
+    - home_assistant_docker:setup
 
 - import_tasks: docker.yml
   tags:
-    - grafana_docker
-    - grafana_docker:docker
+    - hass
+    - home_assistant
+    - home_assistant_docker
+    - home_assistant_docker:docker
