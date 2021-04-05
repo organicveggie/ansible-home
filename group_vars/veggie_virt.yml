@@ -42,6 +42,16 @@ grafana_docker_zfs_filesystems:
 grafana_docker_host_domain: "{{ veggie_virt_domain_name }}"
 
 ###
+### Home Assistant
+###
+home_assistant_docker_data_dir: "/virtpool/home-assistant"
+home_assistant_docker_zfs_filesystems:
+  - "virtpool/home-assistant"
+home_assistant_docker_hostname: "hass"
+home_assistant_docker_host_domain: "{{ veggie_base_domain_name }}"
+home_assistant_docker_memory: "3G"
+
+###
 ### NFS mounts
 ###
 nfs_mounts:

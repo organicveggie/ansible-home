@@ -1,0 +1,9 @@
+- import_tasks: setup.yml
+  tags:
+    - grafana_docker
+    - grafana_docker:setup
+
+- import_tasks: docker.yml
+  tags:
+    - grafana_docker
+    - grafana_docker:docker

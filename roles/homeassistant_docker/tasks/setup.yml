@@ -1,0 +1,6 @@
+---
+- name: Create ZFS file systems
+  community.general.zfs:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ home_assistant_docker_zfs_filesystems }}"

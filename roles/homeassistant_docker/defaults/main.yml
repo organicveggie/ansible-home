@@ -1,0 +1,10 @@
+home_assistant_docker_data_dir: "/var/lib/home-assistant"
+home_assistant_docker_zfs_filesystems: []
+
+home_assistant_docker_port: "8123"
+home_assistant_available_externally: "true"
+home_assistant_docker_hostname: "hass"
+home_assistant_docker_host_domain: "example.com"
+
+home_assistant_docker_memory: "2G"
+home_assistant_docker_cpus: "2"
