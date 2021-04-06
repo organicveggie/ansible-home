@@ -75,6 +75,13 @@ portainer_network_name: "{{ traefik_network_name }}"
 portainer_host_domain: "{{ veggie_virt_domain_name }}"
 
 ###
+### PostgreSQL
+###
+postgresql_docker_admin_password: "{{ veggie_postgres_admin_password }}"
+postgresql_docker_adminer_host_domain: "{{ veggie_virt_domain_name }}"
+postgresql_docker_network_mode: "{{ traefik_network_name }}"
+
+###
 ### Traefik
 ###
 traefik_hostname: "traefik.{{ veggie_virt_domain_name }}"
@@ -108,6 +115,9 @@ traefik_confkey_certificatesResolvers:
       caServer: "{{ traefik_le_ca_server }}"
       dnsChallenge:
         provider: route53
+traefik_confkey_entryPoints:
+  postgres:
+    address: ":5432"
 traefik_confkey_serversTransport:
   insecureSkipVerify: "true"
 traefik_container_environment:

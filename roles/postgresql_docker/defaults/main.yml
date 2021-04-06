@@ -1,0 +1,58 @@
+postgresql_docker_name: "postgres"
+postgresql_docker_admin_user: "postgres"
+postgresql_docker_admin_password: "changeme"
+
+postgresql_docker_user: "postgres"
+postgresql_docker_group: "postgres"
+# postgresql_docker_uid:
+# postgresql_docker_gid:
+
+postgresql_docker_home_dir: "/opt/{{ postgresql_docker_name }}"
+postgresql_docker_conf_dir: "{{ postgresql_docker_home_dir }}/conf"
+postgresql_docker_data_dir: "{{ postgresql_docker_home_dir }}/data"
+
+postgresql_docker_pgdata:
+postgresql_docker_wal_dir:
+
+postgresql_docker_memory: "4GB"
+postgresql_docker_cpu: "4"
+postgresql_docker_shm_size: "256MB"
+
+postgresql_docker_image: "postgres:latest"
+postgresql_docker_network_mode:
+postgresql_docker_networks: []
+
+postgresql_docker_timezone: "America/Los_Angeles"
+
+postgresql_docker_pg_hba_conf: |
+  # This file is managed by Ansible, all changes will be lost.
+  # TYPE  DATABASE        USER            ADDRESS                 METHOD
+  local   all             all                                     trust
+  host    all             all             127.0.0.1/32            trust
+  host    all             all             ::1/128                 trust
+  local   replication     all                                     trust
+  host    replication     all             127.0.0.1/32            trust
+  host    replication     all             ::1/128                 trust
+  host    all             all             all                     md5
+  host    replication     {{ postgresql_docker_admin_user }}        all                     md5
+postgresql_docker_postgresql_conf: |
+  # This file is managed by Ansible, all changes will be lost.
+  listen_addresses = '*'
+  max_connections = 100
+  shared_buffers = 128MB
+  dynamic_shared_memory_type = posix
+  max_wal_size = 1GB
+  min_wal_size = 80MB
+  log_timezone = '{{ postgresql_docker_timezone }}'
+  datestyle = 'iso, mdy'
+  timezone = '{{ postgresql_docker_timezone }}'
+  lc_messages = 'en_US.utf8'
+  lc_monetary = 'en_US.utf8'
+  lc_numeric = 'en_US.utf8'
+  lc_time = 'en_US.utf8'
+  default_text_search_config = 'pg_catalog.english'
+
+###
+### Traefik integration
+###
+postgresql_docker_available_externally: "true"

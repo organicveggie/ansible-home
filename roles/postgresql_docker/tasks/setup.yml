@@ -1,0 +1,39 @@
+---
+- name: Create PostgreSQL group
+  ansible.builtin.group:
+    name: "{{ postgresql_docker_group }}"
+    gid: "{{ postgresql_docker_gid | default(omit) }}"
+    state: present
+
+- name: Create PostgreSQL user
+  ansible.builtin.user:
+    name: "{{ postgresql_docker_user }}"
+    uid: "{{ postgresql_docker_uid | default(omit) }}"
+    shell: /usr/bin/false
+    state: present
+    password: "*"
+    update_password: always
+    create_home: no
+    group: "{{ postgresql_docker_group }}"
+
+- name: Create PostgreSQL directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ postgresql_docker_user }}"
+    group: "{{ postgresql_docker_group }}"
+    mode: 0770
+  loop:
+    - "{{ postgresql_docker_home_dir }}"
+    - "{{ postgresql_docker_conf_dir }}"
+    - "{{ postgresql_docker_data_dir }}"
+
+- name: Copy pg_hba config
+  copy:
+    content: "{{ postgresql_docker_pg_hba_conf }}"
+    dest: "{{ postgresql_docker_conf_dir }}/pg_hba.conf"
+
+- name: Copy postgresql config
+  copy:
+    content: "{{ postgresql_docker_postgresql_conf }}"
+    dest: "{{ postgresql_docker_conf_dir }}/postgresql.conf"
