@@ -61,6 +61,28 @@ nfs_mounts:
     opts: "auto,noatime,nolock,bg,nfsvers=4,intr,tcp,actimeo=1800"
 
 ###
+### PgAdmin
+###
+pgadmin_default_email: "{{ primary_email_address }}"
+pgadmin_docker_host_domain: "{{ veggie_virt_domain_name }}"
+pgadmin_default_password: "{{ veggie_postgres_admin_password }}"
+pgadmin_docker_email_server: "email-smtp.us-west-2.amazonaws.com"
+pgadmin_docker_email_port: "587"
+pgadmin_docker_email_use_ssl: "False"
+pgadmin_docker_email_user_tls: "True"
+pgadmin_docker_email_username: "{{ aws_ses_usw2_access_key }}"
+pgadmin_docker_email_password: "{{ aws_ses_usw2_secret_key }}"
+pgadmin_docker_servers:
+  "pg_hass":
+    Name: "Hass Postgres"
+    Group: "Servers"
+    Port: "5432"
+    Username: "postgres"
+    Host: "postgres"
+    SSLMode: "prefer"
+    MaintenanceDB: "postgres"
+
+###
 ### Pip
 ###
 pip_install_packages:
@@ -78,7 +100,6 @@ portainer_host_domain: "{{ veggie_virt_domain_name }}"
 ### PostgreSQL
 ###
 postgresql_docker_admin_password: "{{ veggie_postgres_admin_password }}"
-postgresql_docker_adminer_host_domain: "{{ veggie_virt_domain_name }}"
 postgresql_docker_network_mode: "{{ traefik_network_name }}"
 
 ###

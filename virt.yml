@@ -38,3 +38,4 @@
         - logrotate
         - skip_ansible_lint
     - role: postgresql_docker
+    - role: pgadmin_docker

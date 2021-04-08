@@ -1,0 +1,11 @@
+- import_tasks: setup.yml
+  tags:
+    - pgadmin
+    - pgadmin_docker
+    - pgadmin:setup
+
+- import_tasks: docker.yml
+  tags:
+    - pgadmin
+    - pgadmin_docker
+    - pgadmin:docker

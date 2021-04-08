@@ -1,0 +1,39 @@
+---
+- name: Create PgAdmin Docker Container
+  community.docker.docker_container:
+    name: pgadmin
+    image: dpage/pgadmin4
+    pull: true
+    volumes:
+      - "{{ pgadmin_docker_dir }}:/var/lib/pgadmin"
+      - "{{ pgadmin_docker_conf_dir }}/servers.json:/pgadmin4/servers.json"
+    networks:
+      - name: "{{ traefik_network_name }}"
+    env:
+      PGADMIN_LISTEN_PORT: "{{ pgadmin_docker_port }}"
+      PGADMIN_DEFAULT_EMAIL: "{{ pgadmin_default_email }}"
+      PGADMIN_DEFAULT_PASSWORD: "{{ pgadmin_default_password }}"
+      PGADMIN_DISABLE_POSTFIX: "True"
+      PGADMIN_CONFIG_MAIL_SERVER: "'{{ pgadmin_docker_email_server }}'"
+      PGADMIN_CONFIG_MAIL_PORT: "{{ pgadmin_docker_email_port }}"
+      PGADMIN_CONFIG_MAIL_USE_SSL: "'{{ pgadmin_docker_email_use_ssl }}'"
+      PGADMIN_CONFIG_MAIL_USE_TLS: "'{{ pgadmin_docker_email_user_tls }}'"
+      PGADMIN_CONFIG_MAIL_USERNAME: "'{{ pgadmin_docker_email_username | default(omit) }}'"
+      PGADMIN_CONFIG_MAIL_PASSWORD: "'{{ pgadmin_docker_email_password | default(omit) }}'"
+    restart_policy: unless-stopped
+    memory: "{{ pgadmin_docker_memory }}"
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: yes
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
+    labels:
+      traefik.enable: "{{ pgadmin_docker_available_externally }}"
+      traefik.http.routers.glances.rule: "Host(`{{ pgadmin_docker_host_name }}.{{ pgadmin_docker_host_domain }}`)"
+      traefik.http.routers.glances.tls.certresolver: "letsencrypt"
+      traefik.http.routers.glances.tls.domains[0].main: "*.{{ pgadmin_docker_host_domain }}"
+      traefik.http.services.glances.loadbalancer.server.port: "{{ pgadmin_docker_port }}"
