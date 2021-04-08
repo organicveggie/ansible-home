@@ -63,6 +63,8 @@ nfs_mounts:
 ###
 ### PgAdmin
 ###
+pgadmin_docker_dir: "/virtpool/pgadmin/lib"
+pgadmin_docker_conf_dir: "/virtpool/pgadmin/conf"
 pgadmin_default_email: "{{ primary_email_address }}"
 pgadmin_docker_host_domain: "{{ veggie_virt_domain_name }}"
 pgadmin_default_password: "{{ veggie_postgres_admin_password }}"
@@ -99,6 +101,9 @@ portainer_host_domain: "{{ veggie_virt_domain_name }}"
 ###
 ### PostgreSQL
 ###
+postgresql_docker_home_dir: "/virtpool/{{ postgresql_docker_name }}"
+postgresql_docker_conf_dir: "{{ postgresql_docker_home_dir }}/conf"
+postgresql_docker_data_dir: "{{ postgresql_docker_home_dir }}/data"
 postgresql_docker_admin_password: "{{ veggie_postgres_admin_password }}"
 postgresql_docker_network_mode: "{{ traefik_network_name }}"
 
