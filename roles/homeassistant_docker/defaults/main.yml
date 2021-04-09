@@ -8,3 +8,15 @@ home_assistant_docker_host_domain: "example.com"
 
 home_assistant_docker_memory: "2G"
 home_assistant_docker_cpus: "2"
+
+hass_home_latitude: 38.8977
+hass_home_longitude: 77.0365
+hass_home_timezone: "America/New_York"
+
+hass_url: "http://hass.example.com"
+
+hass_db_url: "postgresql://{{ hass_db_user }}:{{ hass_db_password }}@{{ hass_db_server_addr }}/{{ host_db_db_name }}"
+hass_db_user: "user"
+hass_db_password: "password"
+hass_db_server_addr: "postgres"
+host_db_db_name: "hass"

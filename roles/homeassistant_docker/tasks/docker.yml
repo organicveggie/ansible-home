@@ -6,14 +6,14 @@
     pull: true
     volumes:
       - "{{ home_assistant_docker_data_dir }}:/config"
-      - /etc/localtime:/etc/localtime:ro
-    user: "{{ home_assistant_docker_username }}"
+      - "/etc/localtime:/etc/localtime:ro"
+    # user: "{{ hass_docker_uid }}"
     network_mode: "{{ traefik_network_name }}"
     restart_policy: unless-stopped
     memory: "{{ home_assistant_docker_memory }}"
     cpus: "{{ home_assistant_docker_cpus }}"
-    # devices:
-    #   - "/dev/ttyACM0:/dev/ttyACM0"
+    devices:
+      - "/dev/ttyACM0:/dev/ttyACM0"
     container_default_behavior: no_defaults
     auto_remove: no
     detach: yes
@@ -25,7 +25,7 @@
     tty: no
     labels:
       traefik.enable: "{{ home_assistant_available_externally }}"
-      traefik.http.routers.homeassistant.rule: "Host(`{{ home_assistant_docker_hostname }}.{{ home_assistant_docker_host_domain }}`)"
-      traefik.http.routers.homeassistant.tls.certresolver: "letsencrypt"
-      traefik.http.routers.homeassistant.tls.domains[0].main: "*.{{ home_assistant_docker_host_domain }}"
-      traefik.http.services.homeassistant.loadbalancer.server.port: "{{ home_assistant_docker_port }}"
+      traefik.http.routers.hass.rule: "Host(`{{ home_assistant_docker_hostname }}.{{ home_assistant_docker_host_domain }}`)"
+      traefik.http.routers.hass.tls.certresolver: "letsencrypt"
+      traefik.http.routers.hass.tls.domains[0].main: "*.{{ home_assistant_docker_host_domain }}"
+      traefik.http.services.hass.loadbalancer.server.port: "{{ home_assistant_docker_port }}"

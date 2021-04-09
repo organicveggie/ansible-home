@@ -50,6 +50,12 @@ home_assistant_docker_zfs_filesystems:
 home_assistant_docker_hostname: "hass"
 home_assistant_docker_host_domain: "{{ veggie_base_domain_name }}"
 home_assistant_docker_memory: "3G"
+hass_home_latitude: "{{ home_latitude }}"
+hass_home_longitude: "{{ home_longitude }}"
+hass_home_timezone: "{{ home_timezone }}"
+hass_url: "http://{{ veggie_home_assistant_hostname }}"
+hass_db_user: "{{ veggie_hass_db_user }}"
+hass_db_password: "{{ veggie_hass_db_password }}"
 
 ###
 ### NFS mounts

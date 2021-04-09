@@ -33,9 +33,10 @@
         - unific
     - role: calibre_web
     - role: grafana_docker
+    - role: postgresql_docker
+    - role: pgadmin_docker
+    - role: homeassistant_docker
     - role: nickhammond.logrotate
       tags:
         - logrotate
         - skip_ansible_lint
-    - role: postgresql_docker
-    - role: pgadmin_docker

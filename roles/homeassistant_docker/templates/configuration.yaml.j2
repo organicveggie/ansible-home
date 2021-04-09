@@ -1,0 +1,29 @@
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+recorder:
+  db_url: "{{ hass_db_url }}"
+
+homeassistant:
+  name: Home
+  latitude: "{{ hass_home_latitude }}"
+  longitude: "{{ hass_home_longitude }}"
+  unit_system: imperial
+  time_zone: "{{ hass_home_timezone }}"
+  internal_url: "{{ hass_url }}"
+
+# Automation
+automation: !include automations.yaml
+
+# Groups
+group: !include groups.yaml
+
+# Scenes
+scene: !include scenes.yaml
+
+# Scripts
+script: !include scripts.yaml
+
+# Text to speech
+tts:
+  - platform: google_translate
