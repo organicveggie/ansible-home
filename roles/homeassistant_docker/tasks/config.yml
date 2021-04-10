@@ -4,3 +4,10 @@
     src: ../templates/configuration.yaml.j2
     dest: "{{ home_assistant_docker_data_dir }}/configuration.yaml"
     mode: "0660"
+
+- name: Install include files
+  ansible.builtin.copy:
+    src: "../files/{{ item }}"
+    dest: "{{ home_assistant_docker_data_dir }}/includes"
+  loop:
+    - "inputs.yaml"

@@ -148,6 +148,8 @@ traefik_confkey_certificatesResolvers:
       dnsChallenge:
         provider: route53
 traefik_confkey_entryPoints:
+  ecowitt:
+    address: ":4199"
   postgres:
     address: ":5432"
 traefik_confkey_serversTransport:

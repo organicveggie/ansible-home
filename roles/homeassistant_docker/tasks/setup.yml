@@ -4,3 +4,11 @@
     name: "{{ item }}"
     state: present
   loop: "{{ home_assistant_docker_zfs_filesystems }}"
+
+- name: Create directories
+  ansible.builtin.file:
+    name: "{{ home_assistant_docker_data_dir }}/{{ item }}"
+    state: directory
+    mode: 0770
+  loop:
+    - "includes"

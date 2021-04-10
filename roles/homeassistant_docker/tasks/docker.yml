@@ -29,3 +29,7 @@
       traefik.http.routers.hass.tls.certresolver: "letsencrypt"
       traefik.http.routers.hass.tls.domains[0].main: "*.{{ home_assistant_docker_host_domain }}"
       traefik.http.services.hass.loadbalancer.server.port: "{{ home_assistant_docker_port }}"
+      traefik.tcp.routers.hass.entrypoints: "ecowitt"
+      traefik.tcp.routers.hass.rule: "HostSNI(`*`)"
+      traefik.tcp.routers.hass.service: "hass"
+      traefik.tcp.services.hass.loadbalancer.server.port: "{{ hass_ecowitt_port }}"
