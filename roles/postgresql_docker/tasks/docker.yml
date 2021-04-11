@@ -29,5 +29,6 @@
     tty: no
     labels:
       traefik.enable: "{{ postgresql_docker_available_externally }}"
-      traefik.postgres.routers.postgres.rule: "*"
-      traefik.postgres.services.postgres.loadbalancer.server.port: "5432"
+      traefik.tcp.routers.postgres.entrypoints: "postgres"
+      traefik.tcp.routers.postgres.rule: "HostSNI(`*`)"
+      traefik.tcp.services.postgres.loadBalancer.server.port: "5432"
