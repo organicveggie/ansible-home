@@ -130,6 +130,8 @@ traefik_qs_log_level: INFO
 traefik_ports:
   - '80:80'
   - '443:443'
+  - "4199:4199" # Ecowitt
+  - "5432:5432" # Postgres
 traefik_labels:
   traefik.enable: "true"
   traefik.http.routers.traefik.service: "api@internal"
