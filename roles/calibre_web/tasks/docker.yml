@@ -46,6 +46,7 @@
     labels:
       traefik.enable: "{{ calibre_available_externally }}"
       traefik.http.routers.calibre.rule: "Host(`{{ calibre_hostname }}.{{ calibre_host_domain }}`)"
+      traefik.http.routers.calibre.entrypoints: "http,https"
       traefik.http.routers.calibre.tls.certresolver: "letsencrypt"
       traefik.http.routers.calibre.tls.domains[0].main: "*.{{ calibre_host_domain }}"
       traefik.http.services.calibre.loadbalancer.server.port: "8083"

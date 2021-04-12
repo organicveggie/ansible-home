@@ -25,6 +25,7 @@
     labels:
       traefik.enable: "{{ grafana_available_externally }}"
       traefik.http.routers.grafana.rule: "Host(`{{ grafana_docker_hostname }}.{{ grafana_docker_host_domain }}`)"
+      traefik.http.routers.grafana.entrypoints: "http,https"
       traefik.http.routers.grafana.tls.certresolver: "letsencrypt"
       traefik.http.routers.grafana.tls.domains[0].main: "*.{{ grafana_docker_host_domain }}"
       traefik.http.services.grafana.loadbalancer.server.port: "{{ grafana_docker_port }}"

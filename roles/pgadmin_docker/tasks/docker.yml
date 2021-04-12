@@ -34,6 +34,7 @@
     labels:
       traefik.enable: "{{ pgadmin_docker_available_externally }}"
       traefik.http.routers.pgadmin.rule: "Host(`{{ pgadmin_docker_host_name }}.{{ pgadmin_docker_host_domain }}`)"
+      traefik.http.routers.pgadmin.entrypoints: "http,https"
       traefik.http.routers.pgadmin.tls.certresolver: "letsencrypt"
       traefik.http.routers.pgadmin.tls.domains[0].main: "*.{{ pgadmin_docker_host_domain }}"
       traefik.http.services.pgadmin.loadbalancer.server.port: "{{ pgadmin_docker_port }}"

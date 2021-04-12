@@ -35,6 +35,7 @@
     labels:
       traefik.enable: "{{ portainer_available_externally }}"
       traefik.http.routers.portainer.rule: "Host(`{{ portainer_hostname }}.{{ portainer_host_domain }}`)"
+      traefik.http.routers.portainer.entrypoints: "http,https"
       traefik.http.routers.portainer.tls.certresolver: "letsencrypt"
       traefik.http.routers.portainer.tls.domains[0].main: "*.{{ portainer_host_domain }}"
       traefik.http.services.portainer.loadbalancer.server.port: "{{ portainer_port }}"
