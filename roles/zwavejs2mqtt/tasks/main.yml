@@ -1,0 +1,6 @@
+- import_tasks: docker.yml
+  tags:
+    - zwavejs2
+    - zwavejs2mqtt
+    - zwavejs2:docker
+    - zwavejs2mqtt:docker

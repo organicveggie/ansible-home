@@ -35,6 +35,7 @@
     - role: grafana_docker
     - role: postgresql_docker
     - role: pgadmin_docker
+    - role: zwavejs2mqtt
     - role: homeassistant_docker
     - role: nickhammond.logrotate
       tags:

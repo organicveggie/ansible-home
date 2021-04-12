@@ -132,6 +132,7 @@ traefik_ports:
   - '443:443'
   - "4199:4199" # Ecowitt
   - "5432:5432" # Postgres
+  - "3000:3000" # zwavejs2mqtt
 traefik_labels:
   traefik.enable: "true"
   traefik.http.routers.traefik.service: "api@internal"
@@ -154,6 +155,8 @@ traefik_confkey_entryPoints:
     address: ":4199"
   postgres:
     address: ":5432"
+  zwavejs2:
+    address: ":3000"
 traefik_confkey_serversTransport:
   insecureSkipVerify: "true"
 traefik_container_environment:
@@ -172,3 +175,9 @@ unific_network_mode: "{{ traefik_network_name }}"
 unific_dir_data: "/virtpool/unific/data"
 unific_dir_log: "/virtpool/unific/log"
 unific_dir_cert: "/virtpool/unific//cert"
+
+###
+### zwavejs2mqtt
+###
+zwavejs2mqtt_timezone: "{{ home_timezone }}"
+zwavejs2mqtt_host_domain: "{{ veggie_base_domain_name }}"

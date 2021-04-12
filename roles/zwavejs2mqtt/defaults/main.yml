@@ -1,0 +1,12 @@
+zwavejs2mqtt_data_dir: "/virtpool/zwavejs2mqtt"
+
+zwavejs2mqtt_docker_memory: "512M"
+zwavejs2mqtt_docker_cpus: "1"
+
+zwavejs2mqtt_web_port: "8091"
+zwavejs2mqtt_ws_port: "3000"
+zwavejs2mqtt_available_externally: "true"
+zwavejs2mqtt_hostname: "zwavejs2"
+zwavejs2mqtt_host_domain: "example.com"
+
+zwavejs2mqtt_timezone: "America/New_York"

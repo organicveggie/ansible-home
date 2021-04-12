@@ -1,0 +1,42 @@
+---
+- name: Create zwavejs2mqtt directory
+  ansible.builtin.file:
+    name: "{{ zwavejs2mqtt_data_dir }}"
+    state: "directory"
+    mode: "0770"
+
+- name: Zwavejs2mqtt Docker Container
+  community.docker.docker_container:
+    name: zwavejs2mqtt
+    image: zwavejs/zwavejs2mqtt:latest
+    pull: true
+    volumes:
+      - "{{ zwavejs2mqtt_data_dir }}:/usr/src/app/store"
+    env:
+      TZ: "{{ zwavejs2mqtt_timezone }}"
+    network_mode: "{{ traefik_network_name }}"
+    restart_policy: unless-stopped
+    memory: "{{ zwavejs2mqtt_docker_memory }}"
+    cpus: "{{ zwavejs2mqtt_docker_cpus }}"
+    devices:
+      - "/dev/ttyACM0:/dev/ttyACM0"
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: yes
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
+    labels:
+      traefik.enable: "{{ zwavejs2mqtt_available_externally }}"
+      traefik.http.routers.zwavejs2.rule: "Host(`{{ zwavejs2mqtt_hostname }}.{{ zwavejs2mqtt_host_domain }}`)"
+      traefik.http.routers.zwavejs2.entrypoints: "http,https"
+      traefik.http.routers.zwavejs2.tls.certresolver: "letsencrypt"
+      traefik.http.routers.zwavejs2.tls.domains[0].main: "*.{{ zwavejs2mqtt_host_domain }}"
+      traefik.http.services.zwavejs2.loadbalancer.server.port: "{{ zwavejs2mqtt_web_port }}"
+      traefik.tcp.routers.zwavejs2.entrypoints: "zwavejs2"
+      traefik.tcp.routers.zwavejs2.rule: "HostSNI(`*`)"
+      traefik.tcp.routers.zwavejs2.service: "zwavejs2"
+      traefik.tcp.services.zwavejs2.loadbalancer.server.port: "{{ zwavejs2mqtt_ws_port }}"
