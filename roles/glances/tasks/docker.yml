@@ -35,6 +35,8 @@
       GLANCES_OPT: "-w"
     restart_policy: unless-stopped
     memory: "{{ glances_memory }}"
+    security_opts:
+      - "apparmor:unconfined"
     container_default_behavior: no_defaults
     auto_remove: no
     detach: yes
