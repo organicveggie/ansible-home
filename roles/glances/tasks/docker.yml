@@ -16,6 +16,16 @@
   notify:
     - restart glances
 
+- name: Create Glances Docker network
+  community.docker.docker_network:
+    name: "{{ glances_network_name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "yes"
+    scope: "local"
+    connected:
+      - "traefik"
+
 - name: Create Glances Docker Container
   community.docker.docker_container:
     name: glances
@@ -29,8 +39,7 @@
     pid_mode: host
     exposed_ports:
       - "{{ glances_port }}"
-    networks:
-      - name: "{{ traefik_network_name }}"
+    network_mode: "{{ glances_network_name }}"
     env:
       GLANCES_OPT: "-w"
     restart_policy: unless-stopped
@@ -48,6 +57,7 @@
     tty: no
     labels:
       traefik.enable: "{{ glances_available_externally }}"
+      traefik.docker.network: "{{ glances_network_name }}"
       traefik.http.routers.glances.rule: "Host(`{{ glances_hostname }}.{{ glances_host_domain }}`)"
       traefik.http.routers.glances.entrypoints: "http,https"
       traefik.http.routers.glances.tls.certresolver: "letsencrypt"
