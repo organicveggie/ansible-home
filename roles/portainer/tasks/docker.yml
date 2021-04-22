@@ -15,8 +15,12 @@
       - "{{ portainer_data_directory }}:/data:rw"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "/etc/timezone:/etc/timezone:ro"
+    network_mode: "{{ portainer_network_name }}"
     networks:
       - name: "{{ portainer_network_name }}"
+    # network_mode: "{{ traefik_network_name }}"
+    # networks:
+    #   - name: "{{ traefik_network_name }}"
     exposed_ports:
       - "{{ portainer_port }}"
     # ports:

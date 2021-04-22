@@ -11,10 +11,7 @@
     env:
       POSTGRES_PASSWORD: "{{ postgresql_docker_admin_password }}"
       POSTGRES_USER: "{{ postgresql_docker_admin_user }}"
-      # POSTGRES_INITDB_WALDIR: "{{ postgresql_docker_wal_dir | default(omit) }}"
-      # PGDATA: "{{ postgresql_docker_pgdata | default(omit) }}"
-    network_mode: "{{ postgresql_docker_network_mode | default(omit) }}"
-    networks: "{{ postgresql_docker_networks | default(omit) }}"
+    network_mode: "{{ postgresql_docker_network_name }}"
     restart_policy: unless-stopped
     memory: "{{ postgresql_docker_memory }}"
     cpus: "{{ postgresql_docker_cpu }}"

@@ -31,7 +31,7 @@
       PUID: "{{ calibre_user_id }}"
       PGID: "{{ calibre_group_id }}"
       DOCKER_MODS: "{{ calibre_ebook_conversion }}"
-    network_mode: "{{ traefik_network_name }}"
+    network_mode: "{{ calibre_network_name }}"
     restart_policy: unless-stopped
     memory: 1g
     container_default_behavior: no_defaults

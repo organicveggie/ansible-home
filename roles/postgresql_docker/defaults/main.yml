@@ -18,9 +18,10 @@ postgresql_docker_memory: "4GB"
 postgresql_docker_cpu: "4"
 postgresql_docker_shm_size: "256MB"
 
+postgresql_docker_network_name: "postgres"
+
 postgresql_docker_image: "postgres:latest"
 postgresql_docker_network_mode:
-postgresql_docker_networks: []
 
 postgresql_docker_timezone: "America/Los_Angeles"
 

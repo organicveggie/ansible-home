@@ -7,8 +7,7 @@
     volumes:
       - "{{ pgadmin_docker_dir }}:/var/lib/pgadmin"
       - "{{ pgadmin_docker_conf_dir }}/servers.json:/pgadmin4/servers.json"
-    networks:
-      - name: "{{ traefik_network_name }}"
+    network_mode: "{{ postgresql_docker_network_name }}"
     env:
       PGADMIN_LISTEN_PORT: "{{ pgadmin_docker_port }}"
       PGADMIN_DEFAULT_EMAIL: "{{ pgadmin_default_email }}"

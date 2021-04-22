@@ -9,8 +9,7 @@
       - "{{ grafana_docker_log_dir }}:/var/log/grafana"
       - "{{ grafana_docker_conf_dir }}:/etc/grafana"
     user: "{{ grafana_docker_username }}"
-    # env:
-    network_mode: "{{ traefik_network_name }}"
+    network_mode: "{{ grafana_network_name }}"
     restart_policy: unless-stopped
     memory: 1g
     container_default_behavior: no_defaults

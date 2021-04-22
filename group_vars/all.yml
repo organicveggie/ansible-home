@@ -162,6 +162,11 @@ influxdb_admin_password: !vault |
           32323264333232633639373664336363333134646134393637326635336439643736
 
 ###
+### Networking
+###
+iot_vlan_docker_network_name: "iot-macvlan40"
+
+###
 ### Notifications
 ###
 primary_email_address: !vault |

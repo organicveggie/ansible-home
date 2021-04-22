@@ -12,7 +12,7 @@
       tags:
         - users
         - skip_ansible_lint
-    - role: nfs_client
+    # - role: nfs_client
     - role: geerlingguy.docker
       tags:
         - docker
@@ -23,21 +23,21 @@
     - role: veggie_common
     - role: veggie_docker
     - role: veggie_virt
-    - role: organicveggie.ansible-traefik
-      tags:
-        - traefik
     - role: portainer
     - role: glances
-    - role: organicveggie.unific
-      tags:
-        - unific
+    # - role: organicveggie.unific
+    #   tags:
+    #     - unific
     - role: calibre_web
     - role: grafana_docker
     - role: postgresql_docker
     - role: pgadmin_docker
-    - role: zwavejs2mqtt
-    - role: homeassistant_docker
-    - role: nickhammond.logrotate
+    # - role: zwavejs2mqtt
+    # - role: homeassistant_docker
+    - role: organicveggie.ansible-traefik
       tags:
-        - logrotate
-        - skip_ansible_lint
+        - traefik
+    # - role: nickhammond.logrotate
+    #   tags:
+    #     - logrotate
+    #     - skip_ansible_lint

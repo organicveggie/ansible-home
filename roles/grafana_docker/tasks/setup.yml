@@ -20,6 +20,18 @@
     groups: "{{ grafana_extra_groups | default(omit) }}"
     password: "!"
 
+- name: Create Grafana directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ grafana_docker_username }}"
+    group: "{{ grafana_docker_group | default(grafana_docker_username) }}"
+    mode: "0770"
+    state: "directory"
+  loop:
+    - "{{ grafana_docker_data_dir }}"
+    - "{{ grafana_docker_log_dir }}"
+    - "{{ grafana_docker_conf_dir }}"
+
 - name: Set ZFS FS ownership
   ansible.builtin.file:
     path: "/{{ item }}"

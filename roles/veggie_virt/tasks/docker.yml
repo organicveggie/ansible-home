@@ -1,0 +1,70 @@
+---
+- name: Create Glances Docker network
+  community.docker.docker_network:
+    name: "{{ glances_network_name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "yes"
+    scope: "local"
+  when: glances_network_name is defined
+
+- name: Create Portainer Docker network
+  community.docker.docker_network:
+    name: "{{ portainer_network_name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "yes"
+    scope: "local"
+  when: portainer_network_name is defined
+
+- name: Create Calibre Docker network
+  community.docker.docker_network:
+    name: "{{ calibre_network_name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "yes"
+    scope: "local"
+  when: calibre_network_name is defined
+
+- name: Create Grafana Docker network
+  community.docker.docker_network:
+    name: "{{ grafana_network_name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "yes"
+    scope: "local"
+  when: grafana_network_name is defined
+
+- name: Create PostgreSQL Docker network
+  community.docker.docker_network:
+    name: "{{ postgresql_docker_network_name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "yes"
+    scope: "local"
+  when: postgresql_docker_network_name is defined
+
+- name: Create Docker IoT network
+  community.docker.docker_network:
+    name: "{{ iot_vlan_docker_network_name }}"
+    driver: "macvlan"
+    driver_options:
+      parent: "{{ veggie_virt_iot_network_parent }}"
+    enable_ipv6: "no"
+    scope: "local"
+    ipam_config:
+      - subnet: 192.168.40.0/24
+        gateway: 192.168.40.1
+        iprange: 192.168.40.129/25
+
+- name: Build Traefik traefik_extra_networks
+  ansible.builtin.set_fact:
+    traefik_extra_networks: "{{ traefik_extra_networks | default([]) }} + [{ 'name': '{{ item }}' }]"
+  loop:
+    - "{{ glances_network_name | default('') }}"
+    - "{{ portainer_network_name | default('') }}"
+    - "{{ calibre_network_name | default('') }}"
+    - "{{ grafana_network_name | default('') }}"
+    - "{{ postgresql_docker_network_name | default('') }}"
+    # - "{{ iot_vlan_docker_network_name | default('') }}"
+  when: item != ''

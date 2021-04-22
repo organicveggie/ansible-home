@@ -16,16 +16,6 @@
   notify:
     - restart glances
 
-- name: Create Glances Docker network
-  community.docker.docker_network:
-    name: "{{ glances_network_name }}"
-    driver: "bridge"
-    enable_ipv6: "no"
-    internal: "yes"
-    scope: "local"
-    connected:
-      - "traefik"
-
 - name: Create Glances Docker Container
   community.docker.docker_container:
     name: glances

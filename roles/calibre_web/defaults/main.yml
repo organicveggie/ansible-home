@@ -7,6 +7,7 @@ calibre_extra_groups: []
 calibre_user_id: "0"
 calibre_group_id: "0"
 
+calibre_network_name: "calibre"
 calibre_hostname: "calibre"
 calibre_host_domain: "example.com"
 

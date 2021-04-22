@@ -22,6 +22,7 @@ veggie_admin_passwd: "{{ veggie_nas_admin_passwd }}"
 ###
 docker_home: /virtpool/docker
 docker_admin_user: "{{ veggie_admin_username }}"
+veggie_virt_iot_network_parent: "bond0.40" # VLAN 40
 
 ###
 ### Glances
@@ -101,7 +102,6 @@ pip_install_packages:
 ###
 portainer_available_externally: "true"
 portainer_admin_password: "{{ vault_portainer_admin_password }}"
-portainer_network_name: "{{ traefik_network_name }}"
 portainer_host_domain: "{{ veggie_virt_domain_name }}"
 
 ###
@@ -111,7 +111,6 @@ postgresql_docker_home_dir: "/virtpool/{{ postgresql_docker_name }}"
 postgresql_docker_conf_dir: "{{ postgresql_docker_home_dir }}/conf"
 postgresql_docker_data_dir: "{{ postgresql_docker_home_dir }}/data"
 postgresql_docker_admin_password: "{{ veggie_postgres_admin_password }}"
-postgresql_docker_network_mode: "{{ traefik_network_name }}"
 
 ###
 ### Traefik
@@ -127,12 +126,14 @@ traefik_qs_https_redirect: "true"
 traefik_qs_https_le: "true"
 traefik_qs_https_le_mail: "{{ letsencrypt_email }}"
 traefik_qs_log_level: INFO
+# Defined dynamically in roles/veggie_virt/tasks/docker.yml
+# traefik_extra_networks:
 traefik_ports:
-  - '80:80'
-  - '443:443'
-  - "4199:4199" # Ecowitt
-  - "5432:5432" # Postgres
-  - "3000:3000" # zwavejs2mqtt
+  - "192.168.25.20:80:80"
+  - "192.168.25.20:443:443"
+  - "192.168.25.20:4199:4199" # Ecowitt
+  - "192.168.25.20:5432:5432" # Postgres
+  - "192.168.25.20:3000:3000" # zwavejs2mqtt
 traefik_labels:
   traefik.enable: "true"
   traefik.http.routers.traefik.service: "api@internal"

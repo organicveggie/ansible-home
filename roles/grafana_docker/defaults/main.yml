@@ -2,6 +2,7 @@ grafana_docker_username: "grafana"
 grafana_docker_group: "grafana"
 grafana_docker_uid: 472
 grafana_extra_groups: []
+grafana_network_name: "grafana"
 
 grafana_docker_data_dir: "/var/lib/grafana"
 grafana_docker_log_dir: "/var/log/grafana"
