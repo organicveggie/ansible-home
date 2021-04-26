@@ -366,6 +366,11 @@ timemachine_smb_password_secret: !vault |
           38393037633265386466373765316633633038663365663436396366343864666338
 
 ###
+### Traefik
+###
+traefik_image: "traefik:latest"
+
+###
 ### Users
 ###
 veggie_kstar_password: !vault |

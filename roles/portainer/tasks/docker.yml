@@ -9,7 +9,7 @@
 - name: Portainer Docker Container
   community.docker.docker_container:
     name: portainer
-    image: portainer/portainer-ce
+    image: portainer/portainer-ce:latest
     pull: true
     volumes:
       - "{{ portainer_data_directory }}:/data:rw"

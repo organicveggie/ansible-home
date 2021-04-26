@@ -2,7 +2,7 @@
 - name: Create PgAdmin Docker Container
   community.docker.docker_container:
     name: pgadmin
-    image: dpage/pgadmin4
+    image: dpage/pgadmin4:latest
     pull: true
     volumes:
       - "{{ pgadmin_docker_dir }}:/var/lib/pgadmin"

@@ -19,7 +19,7 @@
 - name: Create Glances Docker Container
   community.docker.docker_container:
     name: glances
-    image: nicolargo/glances
+    image: nicolargo/glances:latest
     pull: true
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
