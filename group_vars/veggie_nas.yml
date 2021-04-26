@@ -7,6 +7,7 @@ veggie_admin_passwd: "{{ veggie_nas_admin_passwd }}"
 veggie_users_passwords:
   retropie: "*"
 
+
 ###
 ### Docker
 ###
@@ -114,6 +115,8 @@ samba_users:
   #   password: "{{ veggie_nas_plex_password }}"
   - name: "retropie"
     password: "{{ veggie_nas_retropie_password }}"
+  - name: "kstar"
+    password: "{{ veggie_kstar_password }}"
 samba_shares:
   - name: books
     path: /mnt/nas/data/books
@@ -143,6 +146,12 @@ samba_shares:
     path: /mnt/nas/data/videos
     group: media_writer
     write_list: +media_writer
+  - name: kstar
+    path: /mnt/nas/kstar
+    owner: kstar
+    group: kstar
+    create_mode: 0740
+    directory_mode: 0770
 veggie_nas_samba_groups:
   - book_writer
   - doc_writer
@@ -198,3 +207,8 @@ traefik_container_environment:
   AWS_HOSTED_ZONE_ID: "{{ acme_route53_hosted_zone_id }}"
   AWS_ACCESS_KEY_ID: "{{ letsencrypt_aws_access_key }}"
   AWS_SECRET_ACCESS_KEY: "{{ letsencrypt_aws_secret_key }}"
+
+###
+### Users/Groups
+###
+users_list_host: "{{ nas_users }}"
