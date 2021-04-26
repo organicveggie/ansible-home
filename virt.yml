@@ -25,19 +25,19 @@
     - role: veggie_virt
     - role: portainer
     - role: glances
-    # - role: organicveggie.unific
-    #   tags:
-    #     - unific
+    - role: organicveggie.unific
+      tags:
+        - unific
     - role: calibre_web
     - role: grafana_docker
     - role: postgresql_docker
     - role: pgadmin_docker
-    # - role: zwavejs2mqtt
-    # - role: homeassistant_docker
+    - role: zwavejs2mqtt
+    - role: homeassistant_docker
     - role: organicveggie.ansible-traefik
       tags:
         - traefik
-    # - role: nickhammond.logrotate
-    #   tags:
-    #     - logrotate
-    #     - skip_ansible_lint
+    - role: nickhammond.logrotate
+      tags:
+        - logrotate
+        - skip_ansible_lint
