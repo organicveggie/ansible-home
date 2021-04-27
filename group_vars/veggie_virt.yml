@@ -180,5 +180,6 @@ unific_dir_cert: "/virtpool/unific//cert"
 ###
 ### zwavejs2mqtt
 ###
+zwavejs2mqtt_docker_network: "{{ home_assistant_docker_network }}"
 zwavejs2mqtt_timezone: "{{ home_timezone }}"
 zwavejs2mqtt_host_domain: "{{ veggie_base_domain_name }}"

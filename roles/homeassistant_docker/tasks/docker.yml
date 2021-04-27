@@ -8,10 +8,11 @@
       - "{{ home_assistant_docker_data_dir }}:/config"
       - "/etc/localtime:/etc/localtime:ro"
     # user: "{{ hass_docker_uid }}"
-    network_mode: "{{ iot_vlan_docker_network_name }}"
+    network_mode: "{{ home_assistant_docker_network }}"
     networks:
-      - "{{ iot_vlan_docker_network_name }}"
-      - "{{ postgresql_docker_network_name }}"
+      - name: "{{ home_assistant_docker_network }}"
+      - name: "{{ postgresql_docker_network_name }}"
+      - name: "{{ iot_vlan_docker_network_name }}"
     restart_policy: unless-stopped
     memory: "{{ home_assistant_docker_memory }}"
     cpus: "{{ home_assistant_docker_cpus }}"

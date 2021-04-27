@@ -14,7 +14,7 @@
       - "{{ zwavejs2mqtt_data_dir }}:/usr/src/app/store"
     env:
       TZ: "{{ zwavejs2mqtt_timezone }}"
-    network_mode: "{{ traefik_network_name }}"
+    network_mode: "{{ zwavejs2mqtt_docker_network }}"
     restart_policy: unless-stopped
     memory: "{{ zwavejs2mqtt_docker_memory }}"
     cpus: "{{ zwavejs2mqtt_docker_cpus }}"

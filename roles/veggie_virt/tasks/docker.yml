@@ -44,6 +44,15 @@
     scope: "local"
   when: postgresql_docker_network_name is defined
 
+- name: Create Home Assistant Docker network
+  community.docker.docker_network:
+    name: "{{ home_assistant_docker_network }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "no"
+    scope: "local"
+  when: home_assistant_docker_network is defined
+
 - name: Create Docker IoT network
   community.docker.docker_network:
     name: "{{ iot_vlan_docker_network_name }}"
@@ -66,5 +75,6 @@
     - "{{ calibre_network_name | default('') }}"
     - "{{ grafana_network_name | default('') }}"
     - "{{ postgresql_docker_network_name | default('') }}"
+    - "{{ home_assistant_docker_network | default('') }}"
     # - "{{ iot_vlan_docker_network_name | default('') }}"
   when: item != ''

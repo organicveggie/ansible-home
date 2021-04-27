@@ -6,6 +6,8 @@ home_assistant_available_externally: "true"
 home_assistant_docker_hostname: "hass"
 home_assistant_docker_host_domain: "example.com"
 
+home_assistant_docker_network: "hass"
+
 home_assistant_docker_memory: "2G"
 home_assistant_docker_cpus: "2"
 
