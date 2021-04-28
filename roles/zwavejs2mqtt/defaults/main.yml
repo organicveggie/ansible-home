@@ -1,5 +1,6 @@
 zwavejs2mqtt_data_dir: "/virtpool/zwavejs2mqtt"
 
+zwavejs2mqtt_docker_network: "zwavejs2mqtt"
 zwavejs2mqtt_docker_memory: "512M"
 zwavejs2mqtt_docker_cpus: "1"
 
