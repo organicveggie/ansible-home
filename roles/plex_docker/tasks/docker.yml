@@ -8,6 +8,7 @@
     volumes:
       - "{{ plex_docker_db_path }}:/config"
       - "{{ plex_docker_transcode_path }}:/transcode"
+      - "{{ plex_docker_media_path }}/music:/media/music"
       - "{{ plex_docker_media_path }}/videos/anime:/media/anime"
       - "{{ plex_docker_media_path }}/videos/exercise:/media/exercise"
       - "{{ plex_docker_media_path }}/videos/movies:/media/movies"
