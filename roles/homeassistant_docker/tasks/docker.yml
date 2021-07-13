@@ -38,3 +38,7 @@
       traefik.tcp.routers.hass.rule: "HostSNI(`*`)"
       traefik.tcp.routers.hass.service: "hass"
       traefik.tcp.services.hass.loadbalancer.server.port: "{{ hass_ecowitt_port }}"
+      traefik.tcp.routers.hass_sonos.entrypoints: "sonos"
+      traefik.tcp.routers.hass_sonos.rule: "HostSNI(`*`)"
+      traefik.tcp.routers.hass_sonos.service: "hass_sonos"
+      traefik.tcp.services.hass_sonos.loadbalancer.server.port: "1400"

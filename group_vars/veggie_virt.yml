@@ -131,6 +131,7 @@ traefik_qs_log_level: INFO
 traefik_ports:
   - "192.168.25.20:80:80"
   - "192.168.25.20:443:443"
+  - "192.168.25.20:1400:1400" # Home Assistant: Sonos
   - "192.168.25.20:4199:4199" # Ecowitt
   - "192.168.25.20:5432:5432" # Postgres
   - "192.168.25.20:3000:3000" # zwavejs2mqtt
@@ -156,6 +157,8 @@ traefik_confkey_entryPoints:
     address: ":4199"
   postgres:
     address: ":5432"
+  sonos:
+    address: ":1400"
   zwavejs2:
     address: ":3000"
 traefik_confkey_serversTransport:

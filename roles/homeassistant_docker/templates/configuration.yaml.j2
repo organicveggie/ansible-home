@@ -31,6 +31,16 @@ scene: !include scenes.yaml
 # Scripts
 script: !include scripts.yaml
 
+# Sonos with explicit host IPs
+sonos:
+  media_player:
+    hosts:
+      - 192.168.25.80 # Patio: S1 Connect
+#      - 192.168.25.81
+#      - 192.168.25.82
+#      - 192.168.25.83
+#      - 192.168.25.84
+
 # Text to speech
 tts:
   - platform: google_translate
