@@ -12,7 +12,7 @@
       tags:
         - users
         - skip_ansible_lint
-    # - role: nfs_client
+    - role: nfs_client
     - role: geerlingguy.docker
       tags:
         - docker
