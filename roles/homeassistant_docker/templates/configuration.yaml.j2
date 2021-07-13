@@ -19,6 +19,12 @@ automation: !include automations.yaml
 # Groups
 group: !include groups.yaml
 
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - "172.28.0.5"
+    - "172.29.0.4"
+
 # Scenes
 scene: !include scenes.yaml
 
