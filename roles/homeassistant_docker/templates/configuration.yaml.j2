@@ -34,12 +34,13 @@ script: !include scripts.yaml
 # Sonos with explicit host IPs
 sonos:
   media_player:
+    advertise_addr: 192.168.25.20
     hosts:
-      - 192.168.25.80 # Patio: S1 Connect
-#      - 192.168.25.81
-#      - 192.168.25.82
-#      - 192.168.25.83
-#      - 192.168.25.84
+      - 192.168.25.80   # Patio: S1 Connect
+      - 192.168.25.81   # Garage: Play3
+      - 192.168.25.82   # MBR: Play5
+      - 192.168.25.83   # Bonus: Beam
+      - 192.168.25.84   # Dining: Five
 
 # Text to speech
 tts:
