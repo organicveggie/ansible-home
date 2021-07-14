@@ -29,6 +29,7 @@
     tty: no
     labels:
       traefik.enable: "{{ home_assistant_available_externally }}"
+      traefik.docker.network: "{{ home_assistant_docker_network }}"
       traefik.http.routers.hass.rule: "Host(`{{ home_assistant_docker_hostname }}.{{ home_assistant_docker_host_domain }}`)"
       traefik.http.routers.hass.entrypoints: "http,https"
       traefik.http.routers.hass.tls.certresolver: "letsencrypt"
