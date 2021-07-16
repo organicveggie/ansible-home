@@ -1,0 +1,113 @@
+sensor:
+  ##########
+  # SENSORS
+  ##########
+  - platform: filesize
+    file_paths:
+      - /config/home-assistant_v2.db
+      - /config/home-assistant.log
+
+  - platform: moon
+
+  - platform: systemmonitor
+    resources:
+      - type: disk_use_percent
+        arg: /
+      - type: memory_use_percent
+      - type: swap_use_percent
+      - type: processor_use
+
+  - platform: time_date
+    display_options:
+      ['time', 'date']
+
+  - platform: uptime
+
+  - platform: version
+    name: hass_version_installed
+
+  - platform: version
+    name: hass_version_latest
+    source: docker
+
+  - platform: version
+    name: hass_version_latest_beta
+    beta: true
+    source: docker
+
+  ##########
+  # TEMPLATES
+  ##########
+  - platform: template
+    sensors:
+      ##########
+      # Information
+      ##########
+      hass_uptime:
+        friendly_name: Last restart
+        icon_template: mdi:update
+        value_template: >
+          {% set uptime = states('sensor.uptime') | float %}
+          {% if uptime < 1 %} {{ (uptime * 60) | int }} seconds ago
+          {% elif uptime | int == 1 %} 1 minute ago
+          {% elif uptime | int > 1 %}
+            {% if uptime | int < 60 %} {{ uptime | int }} minutes ago
+            {% elif uptime | int / 60 == 24 %} {{ (uptime | int / 60 / 24) | int }} day ago
+            {% elif uptime | int / 60 >= 24 %} {{ (uptime | int / 60 / 24) | int }} days ago
+            {% elif uptime | int >= 60 and uptime | int < 120 %} {{ (uptime | int / 60) | int }} an hour ago
+            {% elif uptime | int >= 120 %} {{ (uptime | int / 60) | int }} hours ago
+            {% endif %}
+          {% endif %}
+
+      hass_version:
+        icon_template: mdi:home-assistant
+        friendly_name_template: >
+          Installed {{ states('sensor.hass_version_installed') }}
+        value_template: >
+          {{ 'Latest' if states('sensor.hass_version_installed') == 
+          states('sensor.hass_version_latest') else states('sensor.hass_version_latest') }}
+
+      placeholder:
+        value_template: ' '
+
+      ##########
+      # Weather
+      ##########
+      weather_wind_direction:
+        value_template: >
+          {% set wind_direction = states('sensor.wind_direction')|int %}
+          {% if wind_direction < 12 %}
+            N
+          {% elif wind_direction >= 12 and wind_direction < 34 %}
+            NNE
+          {% elif wind_direction >= 34 and wind_direction < 56 %}
+            NE
+          {% elif wind_direction >= 56 and wind_direction < 78 %}
+            ENE
+          {% elif wind_direction >= 78 and wind_direction < 102 %}
+            E
+          {% elif wind_direction >= 102 and wind_direction < 124 %}
+            ESE
+          {% elif wind_direction >= 124 and wind_direction < 146 %}
+            SE
+          {% elif wind_direction >= 146 and wind_direction < 168 %}
+            SSE
+          {% elif wind_direction >= 168 and wind_direction < 192 %}
+            S
+          {% elif wind_direction >= 192 and wind_direction < 214 %}
+            SSW
+          {% elif wind_direction >= 214 and wind_direction < 236 %}
+            SW
+          {% elif wind_direction >= 236 and wind_direction < 258 %}
+            WSW
+          {% elif wind_direction >= 258 and wind_direction < 282 %}
+            W
+          {% elif wind_direction >= 282 and wind_direction < 304 %}
+            WNW
+          {% elif wind_direction >= 304 and wind_direction < 326 %}
+            NW
+          {% elif wind_direction >= 326 and wind_direction < 348 %}
+            NNW
+          {% elif wind_direction >= 348 %}
+            N
+          {% endif %}
