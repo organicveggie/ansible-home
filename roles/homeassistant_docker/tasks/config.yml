@@ -9,5 +9,14 @@
   ansible.builtin.copy:
     src: "../files/{{ item }}"
     dest: "{{ home_assistant_docker_data_dir }}/includes"
+    mode: "0660"
   loop:
     - "inputs.yaml"
+    - "sensors.yaml"
+
+- name: Install Lovelace UI files
+  ansible.builtin.copy:
+    src: "../files/{{ item }}"
+    dest: "{{ home_assistant_docker_data_dir }}/lovelace"
+  loop:
+    - "weather.yaml"

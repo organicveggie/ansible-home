@@ -10,6 +10,8 @@ homeassistant:
   longitude: "{{ hass_home_longitude }}"
   unit_system: imperial
   time_zone: "{{ hass_home_timezone }}"
+  allowlist_external_dirs:
+    - "/config"
   internal_url: "{{ hass_url }}"
   packages: !include_dir_named includes
 
@@ -45,3 +47,24 @@ sonos:
 # Text to speech
 tts:
   - platform: google_translate
+
+# Lovelace dashboards
+lovelace:
+  mode: yaml
+  resources:
+    - url: /hacsfiles/button-card/button-card.js
+      type: module
+    - url: /hacsfiles/lovelace-card-mod/card-mod.js
+      type: module
+    - url: /hacsfiles/lovelace-layout-card/layout-card.js
+      type: module
+    - url:  /hacsfiles/mini-graph-card/mini-graph-card-bundle.js
+      type: module
+  # Add yaml dashboards
+  dashboards:
+    weather-yaml:
+      mode: yaml
+      title: Weather
+      icon: mdi:weather-sunny
+      show_in_sidebar: true
+      filename: lovelace/weather.yaml

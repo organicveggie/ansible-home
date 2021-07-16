@@ -12,3 +12,4 @@
     mode: 0770
   loop:
     - "includes"
+    - "lovelace"
