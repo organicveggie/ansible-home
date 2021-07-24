@@ -157,3 +157,28 @@ views:
                   - type: markdown
                     content: >
                       {{ states('sensor.wind_gust') }} mph
+          - type: vertical-stack
+            cards:
+              - type: markdown
+                content: >
+                  Soil
+              - type: horizontal-stack
+                cards:
+                  - type: button
+                    icon: mdi:water-percent
+                  - type: markdown
+                    content: >
+                      Lime tree
+                  - type: markdown
+                    content: >
+                      {{ states('sensor.soil_moisture_1') }} %
+              - type: horizontal-stack
+                cards:
+                  - type: button
+                    icon: mdi:water-percent
+                  - type: markdown
+                    content: >
+                      Mandarin tree
+                  - type: markdown
+                    content: >
+                      {{ states('sensor.soil_moisture_2') }} %
