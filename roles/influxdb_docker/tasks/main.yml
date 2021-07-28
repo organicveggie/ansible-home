@@ -1,0 +1,9 @@
+- import_tasks: setup.yml
+  tags:
+    - influxdb_docker
+    - influxdb_docker:setup
+
+- import_tasks: docker.yml
+  tags:
+    - influxdb_docker
+    - influxdb_docker:docker

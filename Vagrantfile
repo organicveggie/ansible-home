@@ -9,26 +9,21 @@ Vagrant.configure("2") do |config|
     vb.cpus = 1
   end
   config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "virt.yml"
+    ansible.playbook = "nas.yml"
     ansible.vault_password_file = "vault-passwd"
     ansible.become = true
     ansible.groups = {
-      "veggie_virt" => ["host1"],
-      # "veggie_nas" => ["host1"],
-      "nfs" => ["host1"],
+      # "veggie_virt" => ["host1"],
+      "veggie_nas" => ["host1"],
     }
     ansible.host_vars = {
       "host1" => {
         "docker_storage_driver" => "overlay2",
-        "grafana_docker_zfs_filesystems" => [],
-        "grafana_docker_data_dir" => "/var/lib/grafana",
-        "grafana_docker_log_dir" => "/var/log/grafana",
-        "grafana_docker_conf_dir" => "/etc/grafana",
-        "postgresql_docker_memory" => "1GB",
-        "postgresql_docker_cpu" => "1",
-        "veggie_virt_iot_network_parent" => "eth0.40",
+        "influxdb_docker_zfs_filesystems" => [],
+        "influxdb_docker_data_dir" => "/var/lib/influxdb2",
+        "influxdb_docker_conf_dir" => "/etc/influxdb2",
       }
     }
-    # ansible.tags = "docker,pip,traefik,postgres"
+    ansible.tags = "docker,pip,veggie_common,veggie_docker,veggie_nas,traefik,influxdb_docker"
   end
 end

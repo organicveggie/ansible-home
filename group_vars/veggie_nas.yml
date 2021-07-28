@@ -20,6 +20,21 @@ docker_admin_user: "{{ veggie_admin_username }}"
 glances_host_domain: "{{ veggie_nas_domain_name }}"
 
 ###
+### InfluxDB
+###
+influxdb_docker_host_domain: "{{ veggie_nas_domain_name }}"
+influxdb_docker_data_dir: "/mnt/nas/influxdb/lib"
+influxdb_docker_conf_dir: "/mnt/nas/influxdb/etc"
+influxdb_docker_zfs_filesystems:
+  - "nas/influxdb"
+  - "nas/influxdb/etc"
+  - "nas/influxdb/lib"
+influxdb_docker_superuser_name: "{{ influxdb_admin_user }}"
+influxdb_docker_superuser_password: "{{ influxdb_admin_password }}"
+influxdb_docker_superuser_org: "{{ influxdb_admin_org }}"
+influxdb_docker_init_bucket: "admin"
+
+###
 ### Let's Encrypt / Certbot
 ###
 certbot_domain_name: "{{ veggie_nas_domain_name }}"
@@ -183,6 +198,8 @@ traefik_qs_https_redirect: "true"
 traefik_qs_https_le: "true"
 traefik_qs_https_le_mail: "{{ letsencrypt_email }}"
 traefik_qs_log_level: INFO
+# Defined dynamically in roles/veggie_nas/tasks/docker.yml
+# traefik_extra_networks:
 traefik_ports:
   - '80:80'
   - '443:443'

@@ -36,6 +36,7 @@
     - role: portainer
     - role: glances
     - role: time_machine
+    - role: influxdb_docker
     - role: plex_docker
     - role: stefangweichinger.ansible_rclone
       tags:

@@ -7,3 +7,8 @@
   tags:
     - veggie_nas
     - veggie_nas:samba
+
+- import_tasks: docker.yml
+  tags:
+    - veggie_nas
+    - veggie_nas:docker

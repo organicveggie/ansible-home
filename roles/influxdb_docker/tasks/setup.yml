@@ -1,0 +1,40 @@
+---
+- name: Create ZFS file systems
+  community.general.zfs:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ influxdb_docker_zfs_filesystems }}"
+
+- name: Create InfluxDB group
+  ansible.builtin.group:
+    name: "{{ influxdb_docker_group }}"
+  when: "influxdb_docker_group is defined"
+
+- name: Create InfluxDB user
+  ansible.builtin.user:
+    name: "{{ influxdb_docker_username }}"
+    uid: "{{ influxdb_docker_uid | default(omit) }}"
+    group: "{{ influxdb_docker_group | default(omit) }}"
+    append: "true"
+    create_home: "false"
+    groups: "{{ influxdb_extra_groups | default(omit) }}"
+    password: "!"
+
+- name: Set InfluxDB directory ownership
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: "directory"
+    owner: "{{ influxdb_docker_username }}"
+    group: "{{ influxdb_docker_group | default(influxdb_docker_username) }}"
+    mode: "0770"
+  loop:
+    - "{{ influxdb_docker_data_dir }}"
+    - "{{ influxdb_docker_conf_dir }}"
+
+- name: Create InfluxDB config
+  ansible.builtin.template:
+    src: ../templates/config.yml.j2
+    dest: "{{ influxdb_docker_conf_dir }}/config.yml"
+    owner: "{{ influxdb_docker_username }}"
+    group: "{{ influxdb_docker_group | default(influxdb_docker_username) }}"
+    mode: "660"
