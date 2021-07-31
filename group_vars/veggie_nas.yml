@@ -32,6 +32,7 @@ influxdb_docker_zfs_filesystems:
 influxdb_docker_superuser_name: "{{ influxdb_admin_user }}"
 influxdb_docker_superuser_password: "{{ influxdb_admin_password }}"
 influxdb_docker_superuser_org: "{{ influxdb_admin_org }}"
+influxdb_docker_superuser_token: "{{ influxdb_admin_token }}"
 influxdb_docker_init_bucket: "admin"
 
 ###
