@@ -15,5 +15,6 @@ influxdb_docker_port: "8086"
 
 influxdb_docker_superuser_name: "superuser"
 influxdb_docker_superuser_password: "secret"
+influxdb_docker_superuser_token: "token"
 influxdb_docker_superuser_org: "my-org"
 influxdb_docker_init_bucket: "bucket"
