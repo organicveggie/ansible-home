@@ -14,3 +14,10 @@
     - telegraf:plugins
     - telegraf:plugins:docker
   when: telegraf_plugin_docker
+
+- import_tasks: plugin_smartctl.yml
+  tags:
+    - telegraf
+    - telegraf:plugins
+    - telegraf:plugins:smartctl
+  when: telegraf_plugin_smartctl

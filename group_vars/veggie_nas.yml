@@ -185,6 +185,7 @@ telegraf_influxdb_url: "{{ influxdb_url }}"
 telegraf_influxdb_token: "{{ influxdb_telegraf_token }}"
 telegraf_influxdb_org: "{{ influxdb_admin_org }}"
 telegraf_plugin_docker: true
+telegraf_plugin_smartctl: true
 telegraf_plugins_extra:
   - name: zfs
     options:

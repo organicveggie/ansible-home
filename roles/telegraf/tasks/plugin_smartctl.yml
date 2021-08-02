@@ -1,0 +1,40 @@
+---
+- name: "Telegraf Plugin: SMART | create smartctl group for sudo"
+  ansible.builtin.group:
+    name: "smartctl"
+
+- name: "Telegraf Plugin: SMART | Add Telegraf user to smartctl group"
+  ansible.builtin.user:
+    name: "telegraf"
+    append: true
+    groups:
+      - "smartctl"
+  when: telegraf_plugin_smartctl
+
+- name: "Telegraf Plugin: SMART | Copy the smartctl sudoer file"
+  ansible.builtin.copy:
+    src: "../files/smartctl.sudo"
+    dest: "/home/sean/"
+    mode: "0440"
+    owner: "sean"
+    group: "sean"
+
+- name: "Telegraf Plugin: SMART | Copy the smartctl sudoer file"
+  ansible.builtin.copy:
+    src: "../files/smartctl.sudo"
+    dest: "/etc/sudoers.d/"
+    mode: "0440"
+    owner: "root"
+    group: "root"
+    validate: "/usr/sbin/visudo -csf %s"
+  when: telegraf_plugin_smartctl
+
+- name: "Telegraf Plugin: SMART | Create SMART input config"
+  ansible.builtin.template:
+    src: ../templates/smartctl.conf.j2
+    dest: /etc/telegraf/telegraf.d/smartctl.conf
+    owner: telegraf
+    group: telegraf
+    mode: 0640
+  when: telegraf_plugin_smartctl
+  notify: Restart Telegraf

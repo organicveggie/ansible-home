@@ -1,0 +1,4 @@
+# Allow members of the smartctl group can run smartctl as root without a
+# password.
+
+%smartctl ALL = (root) NOPASSWD : /usr/sbin/smartctl *

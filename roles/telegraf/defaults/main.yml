@@ -33,6 +33,7 @@ telegraf_snmp_net_community: "secret"
 telegraf_snmp_net_interval: "30s"
 
 telegraf_plugin_docker: false
+telegraf_plugin_smartctl: false
 
 telegraf_plugins_base:
   - name: mem
