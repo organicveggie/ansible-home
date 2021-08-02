@@ -1,9 +1,9 @@
-- import_tasks: telegraf-install.yml
+- import_tasks: install.yml
   tags:
     - telegraf
     - telegraf:install
 
-- import_tasks: telegraf-config.yml
+- import_tasks: config.yml
   tags:
     - telegraf
     - telegraf:config

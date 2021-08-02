@@ -111,7 +111,7 @@
   hostname = "{{ ansible_hostname }}"
 {% endif %}
 
-  ## If set to true, do no set the "host" tag in the telegraf agent.
+  ## If set to true, do not set the "host" tag in the telegraf agent.
   omit_hostname = {{ telegraf_omit_hostname }}
 
 ###############################################################################
@@ -119,21 +119,22 @@
 ###############################################################################
 
 # Configuration for sending metrics to InfluxDB
-[[outputs.influxdb]]
-  urls = ["{{telegraf_influxdb_url}}"]
-  database = "{{telegraf_influxdb_dbname}}"
-  skip_database_creation = true
+[[outputs.influxdb_v2]]
+  ## The URLs of the InfluxDB cluster nodes.
+  ##
+  ## Multiple URLs can be specified for a single cluster, only ONE of the
+  ## urls will be written to each interval.
+  ## urls exp: http://127.0.0.1:9999
+  urls = ["$INFLUX_URL"]
 
-  ## HTTP Basic Auth
-  username = "{{ telegraf_influxdb_user }}"
-  password = "{{ telegraf_influxdb_password }}"
+  ## Token for authentication.
+  token = "$INFLUX_TOKEN"
 
-  ## Optional TLS Config for use on HTTP connections.
-  # tls_ca = "/etc/telegraf/ca.pem"
-  # tls_cert = "/etc/telegraf/cert.pem"
-  # tls_key = "/etc/telegraf/key.pem"
-  ## Use TLS but skip chain & host verification
-  # insecure_skip_verify = false
+  ## Organization is the name of the organization you wish to write to; must exist.
+  organization = "$INFLUX_ORG"
+
+  ## Destination bucket to write into.
+  bucket = "telegraf"
 
 ###############################################################################
 #                                  PLUGINS                                    #

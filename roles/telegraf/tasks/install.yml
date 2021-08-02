@@ -8,6 +8,14 @@
 
 - name: Install Telegraf packages
   ansible.builtin.apt:
-    name: telegraf
+    name: "telegraf"
   notify:
     - Restart Telegraf
+
+- name: Add Telegraf user to Docker group
+  ansible.builtin.user:
+    name: "telegraf"
+    append: true
+    groups:
+      - "docker"
+  when: telegraf_plugin_docker

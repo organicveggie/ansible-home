@@ -1,7 +1,8 @@
 ---
-# defaults file for Telegraf
+telegraf_influxdb_url: "http://influxdb.example.com:8086"
+telegraf_influxdb_token: "secret-token"
+telegraf_influxdb_org: "my-org"
 
-# Configuration Variables
 telegraf_tags:
 
 telegraf_agent_interval: 10s
@@ -17,11 +18,6 @@ telegraf_quiet: "false"
 telegraf_hostname:
 telegraf_omit_hostname: "false"
 
-telegraf_influxdb_url: http://influxdb.example.com:8086
-telegraf_influxdb_dbname: telegraf
-telegraf_influxdb_user: telegraf
-telegraf_influxdb_password: password
-
 telegraf_logging_debug: false
 telegraf_logging_file: ""
 telegraf_logfile_rotation_interval: ""
@@ -36,6 +32,8 @@ telegraf_snmp_net: ["192.168.1.1"]
 telegraf_snmp_net_community: "secret"
 telegraf_snmp_net_interval: "30s"
 
+telegraf_plugin_docker: false
+
 telegraf_plugins_base:
   - name: mem
   - name: system
@@ -45,20 +43,20 @@ telegraf_plugins_base:
       totalcpu: "true"
       fielddrop:
         - "time_*"
-  - name: disk
-    options:
-      mountpoints:
-        - "/"
+  # - name: disk
+  #   options:
+  #     mountpoints:
+  #       - "/"
   - name: diskio
     options:
       skip_serial_number: "true"
-  - name: procstat
-    options:
-      exe: "influxd"
-      prefix: "influxdb"
-  - name: net
-    options:
-      interfaces:
-        - "eth0"
+  # - name: procstat
+  #   options:
+  #     exe: "influxd"
+  #     prefix: "influxdb"
+  # - name: net
+  #   options:
+  #     interfaces:
+  #       - "eth0"
 
 telegraf_plugins: "{{ telegraf_plugins_base }} + {{ telegraf_plugins_extra | default([]) }}"

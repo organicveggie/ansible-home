@@ -24,6 +24,6 @@ Vagrant.configure("2") do |config|
         "influxdb_docker_conf_dir" => "/etc/influxdb2",
       }
     }
-    ansible.tags = "docker,pip,veggie_common,veggie_docker,veggie_nas,traefik,influxdb_docker"
+    ansible.tags = "telegraf"
   end
 end
