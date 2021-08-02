@@ -7,3 +7,10 @@
   tags:
     - telegraf
     - telegraf:config
+
+- import_tasks: plugin_docker.yml
+  tags:
+    - telegraf
+    - telegraf:plugins
+    - telegraf:plugins:docker
+  when: telegraf_plugin_docker

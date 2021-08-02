@@ -1,0 +1,19 @@
+---
+- name: Add Telegraf user to Docker group
+  ansible.builtin.user:
+    name: "telegraf"
+    append: true
+    groups:
+      - "docker"
+  when: telegraf_plugin_docker
+
+- name: Create Docker input config
+  ansible.builtin.template:
+    src: ../templates/docker.conf.j2
+    dest: /etc/telegraf/telegraf.d/docker.conf
+    owner: telegraf
+    group: telegraf
+    mode: 0640
+  when: telegraf_plugin_docker
+  notify: Restart Telegraf
+

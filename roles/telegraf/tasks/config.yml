@@ -8,16 +8,6 @@
     mode: 0640
   register: t_env
 
-- name: Create Docker input config
-  ansible.builtin.template:
-    src: ../templates/docker.conf.j2
-    dest: /etc/telegraf/telegraf.d/docker.conf
-    owner: telegraf
-    group: telegraf
-    mode: 0640
-  when: telegraf_plugin_docker
-  register: tp_docker
-
 - name: Create Telegraf config
   ansible.builtin.template:
     src: ../templates/telegraf.conf.j2
@@ -31,6 +21,6 @@
   ansible.builtin.service:
     name: telegraf
     state: restarted
-  when: t_env.changed or tp_docker.changed or t_config.changed
+  when: t_env.changed or t_config.changed
   tags:
     - skip_ansible_lint
