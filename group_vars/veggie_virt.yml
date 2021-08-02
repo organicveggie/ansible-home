@@ -113,6 +113,19 @@ postgresql_docker_data_dir: "{{ postgresql_docker_home_dir }}/data"
 postgresql_docker_admin_password: "{{ veggie_postgres_admin_password }}"
 
 ###
+### Telegraf
+###
+telegraf_influxdb_url: "https://influxdb.{{ veggie_nas_domain_name }}"
+telegraf_influxdb_token: "{{ influxdb_telegraf_token }}"
+telegraf_influxdb_org: "{{ influxdb_admin_org }}"
+telegraf_plugin_docker: true
+telegraf_plugin_smartctl: true
+telegraf_plugins_extra:
+  - name: zfs
+    options:
+      poolMetrics: true
+
+###
 ### Traefik
 ###
 traefik_hostname: "traefik.{{ veggie_virt_domain_name }}"
