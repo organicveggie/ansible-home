@@ -1,5 +1,13 @@
 ---
-- name: "Telegraf Plugin: SMART | create smartctl group for sudo"
+- name: "Telegraf Plugin: SMART | Install tooling"
+  ansible.builtin.apt:
+    name: "{{ item }}"
+  loop:
+    - "smartmontools"
+    - "nvme-cli"
+  when: telegraf_plugin_smartctl == true
+
+- name: "Telegraf Plugin: SMART | Create smartctl group for sudo"
   ansible.builtin.group:
     name: "smartctl"
 
@@ -9,7 +17,7 @@
     append: true
     groups:
       - "smartctl"
-  when: telegraf_plugin_smartctl
+  when: telegraf_plugin_smartctl == true
 
 - name: "Telegraf Plugin: SMART | Copy the smartctl sudoer file"
   ansible.builtin.copy:
@@ -19,7 +27,7 @@
     owner: "root"
     group: "root"
     validate: "/usr/sbin/visudo -csf %s"
-  when: telegraf_plugin_smartctl
+  when: telegraf_plugin_smartctl == true
 
 - name: "Telegraf Plugin: SMART | Create SMART input config"
   ansible.builtin.template:
@@ -28,5 +36,5 @@
     owner: telegraf
     group: telegraf
     mode: 0640
-  when: telegraf_plugin_smartctl
+  when: telegraf_plugin_smartctl == true
   notify: Restart Telegraf

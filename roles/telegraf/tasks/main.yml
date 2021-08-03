@@ -13,11 +13,11 @@
     - telegraf
     - telegraf:plugins
     - telegraf:plugins:docker
-  when: telegraf_plugin_docker
+  when: telegraf_plugin_smartctl == true
 
 - import_tasks: plugin_smartctl.yml
   tags:
     - telegraf
     - telegraf:plugins
     - telegraf:plugins:smartctl
-  when: telegraf_plugin_smartctl
+  when: telegraf_plugin_smartctl == true
