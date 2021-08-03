@@ -136,6 +136,10 @@
   ## Destination bucket to write into.
   bucket = "telegraf"
 
+  ## The value of this tag will be used to determine the bucket.  If this
+  ## tag is not set the 'bucket' option is used as the default.
+  bucket_tag = "influxdb_bucket"
+
 ###############################################################################
 #                                  PLUGINS                                    #
 ###############################################################################

@@ -192,7 +192,7 @@ telegraf_plugins_extra:
       urls:
         - "$INFLUX_URL"
     tags:
-      target: "influxdb"
+      influxdb_bucket: "influxdb"
   - name: zfs
     options:
       poolMetrics: true
