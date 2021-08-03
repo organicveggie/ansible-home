@@ -187,6 +187,12 @@ telegraf_influxdb_org: "{{ influxdb_admin_org }}"
 telegraf_plugin_docker: true
 telegraf_plugin_smartctl: true
 telegraf_plugins_extra:
+  - name: prometheus
+    options:
+      urls:
+        - "$INFLUX_URL"
+    tags:
+      target: "influxdb"
   - name: zfs
     options:
       poolMetrics: true

@@ -22,6 +22,7 @@ Vagrant.configure("2") do |config|
         "influxdb_docker_zfs_filesystems" => [],
         "influxdb_docker_data_dir" => "/var/lib/influxdb2",
         "influxdb_docker_conf_dir" => "/etc/influxdb2",
+        "telegraf_plugin_smartctl" => false,
       }
     }
     ansible.tags = "telegraf"
