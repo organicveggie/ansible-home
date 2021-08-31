@@ -30,7 +30,7 @@
       TZ: "{{ calibre_timezone }}"
       PUID: "{{ calibre_user_id }}"
       PGID: "{{ calibre_group_id }}"
-      DOCKER_MODS: "{{ calibre_ebook_conversion }}"
+      # DOCKER_MODS: "{{ calibre_ebook_conversion }}"
     network_mode: "{{ calibre_network_name }}"
     restart_policy: unless-stopped
     memory: 1g

@@ -3,7 +3,7 @@
 ###
 calibre_available_externally: "true"
 calibre_data_directory: "/virtpool/calibre"
-calibre_books_root: "/mnt/nas/books"
+calibre_books_root: "/mnt/nas/books/Calibre Shared Library"
 calibre_host_domain: "{{ veggie_base_domain_name }}"
 calibre_extra_groups:
   - "book_writer"
