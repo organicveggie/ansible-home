@@ -41,6 +41,11 @@ grafana_docker_zfs_filesystems:
   - "virtpool/grafana/lib"
   - "virtpool/grafana/log"
 grafana_docker_host_domain: "{{ veggie_virt_domain_name }}"
+grafana_docker_admin_password: "{{ grafana_admin_password }}"
+grafana_docker_smtp_enabled: "true"
+grafana_docker_smtp_host: "{{ grafana_smtp_server }}"
+grafana_docker_smtp_user: "{{ grafana_smtp_user }}"
+grafana_docker_smtp_password: "{{ grafana_smtp_password }}"
 
 ###
 ### Home Assistant
