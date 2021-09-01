@@ -46,6 +46,7 @@ grafana_docker_smtp_enabled: "true"
 grafana_docker_smtp_host: "{{ grafana_smtp_server }}"
 grafana_docker_smtp_user: "{{ grafana_smtp_user }}"
 grafana_docker_smtp_password: "{{ grafana_smtp_password }}"
+grafana_docker_smtp_from_address: "{{ primary_email_address }}"
 
 ###
 ### Home Assistant
