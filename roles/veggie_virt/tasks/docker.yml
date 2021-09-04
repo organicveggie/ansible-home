@@ -28,7 +28,7 @@
     name: "{{ calibre_network_name }}"
     driver: "bridge"
     enable_ipv6: "no"
-    internal: "yes"
+    internal: "no"
     scope: "local"
     ipam_config:
       - subnet: 172.19.0.0/16
