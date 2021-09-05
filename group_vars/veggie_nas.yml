@@ -22,7 +22,6 @@ glances_host_domain: "{{ veggie_nas_domain_name }}"
 ###
 ### InfluxDB
 ###
-influxdb_url: "https://{{ influxdb_docker_hostname }}.{{ influxdb_docker_host_domain }}"
 influxdb_docker_host_domain: "{{ veggie_nas_domain_name }}"
 influxdb_docker_data_dir: "/mnt/nas/influxdb/lib"
 influxdb_docker_conf_dir: "/mnt/nas/influxdb/etc"

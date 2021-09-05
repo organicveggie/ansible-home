@@ -6,7 +6,7 @@
     owner: root
     group: root
     mode: 0640
-  register: t_env
+  notify: Restart Telegraf
 
 - name: Create Telegraf config
   ansible.builtin.template:
@@ -15,12 +15,4 @@
     owner: telegraf
     group: telegraf
     mode: 0640
-  register: t_config
-
-- name: Restart Telegraf
-  ansible.builtin.service:
-    name: telegraf
-    state: restarted
-  when: t_env.changed or t_config.changed
-  tags:
-    - skip_ansible_lint
+  notify: Restart Telegraf
