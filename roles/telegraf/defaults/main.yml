@@ -44,6 +44,7 @@ telegraf_plugins_base:
       totalcpu: "true"
       fielddrop:
         - "time_*"
+  - name: temp
   # - name: disk
   #   options:
   #     mountpoints:
