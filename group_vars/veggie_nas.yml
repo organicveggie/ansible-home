@@ -185,7 +185,27 @@ telegraf_influxdb_token: "{{ influxdb_telegraf_token }}"
 telegraf_influxdb_org: "{{ influxdb_admin_org }}"
 telegraf_plugin_docker: true
 telegraf_plugin_smartctl: true
+telegraf_plugin_zfs_pool_sizes: true
 telegraf_plugins_extra:
+  - name: disk
+    options:
+      mount_points:
+        - "/"
+        - "/boot"
+        - "/var/log"
+        - "/mnt/nas"
+        - "/mnt/nas/backups"
+        - "/mnt/nas/data"
+        - "/mnt/nas/data/books"
+        - "/mnt/nas/data/documents"
+        - "/mnt/nas/data/music"
+        - "/mnt/nas/data/photos"
+        - "/mnt/nas/data/roms"
+        - "/mnt/nas/data/videos"
+        - "/mnt/nas/docker"
+        - "/mnt/nas/influxdb/lib"
+        - "/mnt/nas/plex"
+        - "/mnt/nas/time-machine"
   - name: prometheus
     options:
       urls:
@@ -195,6 +215,7 @@ telegraf_plugins_extra:
   - name: zfs
     options:
       poolMetrics: true
+
 
 ###
 ### TimeMachine

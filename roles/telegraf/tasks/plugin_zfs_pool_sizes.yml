@@ -1,0 +1,19 @@
+---
+- name: "Telegraf Plugin: ZFS Pool Sizes | Copy the scripts"
+  ansible.builtin.copy:
+    src: "../files/zfs_pool_sizes.sh"
+    dest: "/etc/telegraf/zfs_pool_sizes.sh"
+    mode: "0550"
+    owner: "telegraf"
+    group: "telegraf"
+  when: telegraf_plugin_zfs_pool_sizes == true
+
+- name: "Telegraf Plugin: ZFS Pool Sizes | Create input config"
+  ansible.builtin.template:
+    src: ../templates/zfs_pool_sizes.conf.j2
+    dest: /etc/telegraf/telegraf.d/zfs_pool_sizes.conf
+    owner: telegraf
+    group: telegraf
+    mode: 0640
+  when: telegraf_plugin_zfs_pool_sizes == true
+  notify: Restart Telegraf

@@ -126,7 +126,18 @@ telegraf_influxdb_token: "{{ influxdb_telegraf_token }}"
 telegraf_influxdb_org: "{{ influxdb_admin_org }}"
 telegraf_plugin_docker: true
 telegraf_plugin_smartctl: true
+telegraf_plugin_zfs_pool_sizes: true
 telegraf_plugins_extra:
+  - name: disk
+    options:
+      mount_points:
+        - "/"
+        - "/boot"
+        - "/var/log"
+        - "/virtpool"
+        - "/virtpool/docker"
+        - "/virtpool/grafana"
+        - "/virtpool/home-assistant"
   - name: zfs
     options:
       poolMetrics: true

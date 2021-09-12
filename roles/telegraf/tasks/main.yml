@@ -21,3 +21,10 @@
     - telegraf:plugins
     - telegraf:plugins:smartctl
   when: telegraf_plugin_smartctl == true
+
+- import_tasks: plugin_zfs_pool_sizes.yml
+  tags:
+    - telegraf
+    - telegraf:plugins
+    - telegraf:plugins:zfs_pool_sizes
+  when: telegraf_plugin_zfs_pool_sizes == true
