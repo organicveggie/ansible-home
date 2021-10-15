@@ -1,0 +1,9 @@
+- import_tasks: install.yml
+  tags:
+    - restic_rest_server
+    - restic_rest_server:install
+
+- import_tasks: setup.yml
+  tags:
+    - restic_rest_server
+    - restic_rest_server:setup

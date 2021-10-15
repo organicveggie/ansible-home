@@ -3,3 +3,4 @@
 - import_playbook: nas.yml
 - import_playbook: virt.yml
 - import_playbook: nfs.yml
+- import_playbook: desktop.yml

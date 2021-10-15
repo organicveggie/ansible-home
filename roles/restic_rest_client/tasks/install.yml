@@ -1,0 +1,29 @@
+---
+- name: Install restic
+  ansible.builtin.apt:
+    name: restic
+    state: present
+
+- name: Create restic group
+  ansible.builtin.group:
+    name: "{{ restic_group }}"
+
+- name: Create restic user
+  ansible.builtin.user:
+    name: "{{ restic_user }}"
+    group: "{{ restic_group }}"
+    create_home: "no"
+    password: "!"
+
+- name: Restrict restic binary permissions
+  ansible.builtin.file:
+    path: "/usr/bin/restic"
+    owner: "{{ restic_user }}"
+    group: "{{ restic_group }}"
+    mode: "0750"
+
+- name: Set restic binary capabilities
+  community.general.capabilities:
+    path: "/usr/bin/restic"
+    capability: "cap_dac_read_search=+ep"
+    state: "present"

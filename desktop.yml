@@ -1,0 +1,7 @@
+---
+- name: Setup Desktop
+  hosts: desktop
+  remote_user: sean
+  become: yes
+  roles:
+    - role: restic_rest_client

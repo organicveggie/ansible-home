@@ -1,0 +1,5 @@
+###
+### Restic
+###
+restic_server_name: "{{ veggie_desktop_restic_server }}"
+restic_repo_password: "{{ veggie_desktop_restic_password }}"
