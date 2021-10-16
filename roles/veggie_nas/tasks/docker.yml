@@ -35,6 +35,18 @@
         gateway: 172.21.0.1
   when: influxdb_network_name is defined
 
+- name: Create restic rest-server Docker network
+  community.docker.docker_network:
+    name: "{{ restic_rest_server_network_name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "no"
+    scope: "local"
+    ipam_config:
+      - subnet: 172.22.0.0/16
+        gateway: 172.22.0.1
+  when: restic_rest_server_network_name is defined
+
 - name: Build Traefik traefik_extra_networks
   ansible.builtin.set_fact:
     traefik_extra_networks: "{{ traefik_extra_networks | default([]) }} + [{ 'name': '{{ item }}' }]"
@@ -42,4 +54,5 @@
     - "{{ glances_network_name | default('') }}"
     - "{{ portainer_network_name | default('') }}"
     - "{{ influxdb_network_name | default('') }}"
+    - "{{ restic_rest_server_network_name | default('') }}"
   when: item != ''

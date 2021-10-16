@@ -113,6 +113,11 @@ veggie_rclone_config_path: /root/.config/rclone/rclone.conf
 restic_rest_server_backup_dir: "{{ veggie_nas_restic_rest_server_backup_dir }}"
 restic_rest_server_hostname: "{{ veggie_nas_restic_rest_server_hostname }}"
 restic_rest_server_host_domain: "{{ veggie_nas_domain_name }}"
+restic_server_users:
+  - name: "{{ restic_user_desktop | default('') }}"
+    password: "{{ restic_htpasswd_desktop | default('') }}"
+  - name: "{{ restic_user_unific | default('') }}"
+    password: "{{ restic_htpasswd_unific | default('') }}"
 
 ###
 ### Samba

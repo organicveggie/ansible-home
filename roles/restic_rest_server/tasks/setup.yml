@@ -1,0 +1,38 @@
+---
+- name: Install python3-pip
+  ansible.builtin.apt:
+    name: python3-pip
+    state: present
+  register: result
+  until: result is succeeded
+
+- name: Remove docker-py python module
+  ansible.builtin.pip:
+    name: docker-py
+    state: absent
+  register: result
+  until: result is succeeded
+
+- name: Install docker python module
+  ansible.builtin.pip:
+    name: docker
+    state: present
+  register: result
+  until: result is succeeded
+
+- name: Build htpasswd dictionary
+  ansible.builtin.set_fact: 
+    restic_server_users_passwds: >
+      {{ 
+        restic_server_users | 
+        unique | 
+        rejectattr('name', 'equalto', '')
+      }}
+
+- name: Create htpasswd file
+  ansible.builtin.template:
+    src: "../templates/htpasswd.j2"
+    dest: "{{ restic_rest_server_backup_dir }}/.htpasswd"
+    owner: "root"
+    group: "root"
+    mode: "600"

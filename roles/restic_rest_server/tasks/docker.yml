@@ -1,31 +1,4 @@
 ---
-- name: Install python3-pip
-  ansible.builtin.apt:
-    name: python3-pip
-    state: present
-  register: result
-  until: result is succeeded
-
-- name: Remove docker-py python module
-  ansible.builtin.pip:
-    name: docker-py
-    state: absent
-  register: result
-  until: result is succeeded
-
-- name: Install docker python module
-  ansible.builtin.pip:
-    name: docker
-    state: present
-  register: result
-  until: result is succeeded
-
-- name: Copy htpasswd
-  ansible.builtin.copy:
-    src: htpasswd
-    dest: "{{ restic_rest_server_backup_dir }}/.htpasswd"
-    mode: 0600
-
 - name: Create restic Rest Server Docker Container
   community.docker.docker_container:
     name: rest-server
@@ -34,12 +7,10 @@
     volumes:
       - "{{ restic_rest_server_backup_dir }}:/data"
       - "/etc/letsencrypt:/letsencrypt:ro"
-    network_mode: host
+    network_mode: "{{ restic_rest_server_network_name }}"
     env:
       OPTIONS: >-
         --private-repos
-        --tls --tls-cert /letsencrypt/live/{{ certbot_domain_name }}/cert.pem
-        --tls-key /letsencrypt/live/{{ certbot_domain_name }}/privkey.pem
     restart_policy: unless-stopped
     memory: "{{ restic_rest_server_memory }}"
     container_default_behavior: no_defaults
@@ -52,4 +23,10 @@
     read_only: no
     tty: no
     labels:
-      traefik.enable: "false"
+      traefik.enable: "{{ restic_rest_server_available_externally }}"
+      traefik.docker.network: "{{ restic_rest_server_network_name }}"
+      traefik.http.routers.rest-server.rule: "Host(`{{ restic_rest_server_hostname }}.{{ restic_rest_server_host_domain }}`)"
+      traefik.http.routers.rest-server.entrypoints: "https"
+      traefik.http.routers.rest-server.tls.certresolver: "letsencrypt"
+      traefik.http.routers.rest-server.tls.domains[0].main: "*.{{ restic_rest_server_host_domain }}"
+      traefik.http.services.rest-server.loadbalancer.server.port: "{{ restic_rest_server_port }}"

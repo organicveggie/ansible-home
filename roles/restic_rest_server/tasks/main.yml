@@ -1,3 +1,8 @@
+---
+- import_tasks: setup.yml
+  tags:
+    - restic_rest_server
+    - restic_rest_server:setup
 - import_tasks: docker.yml
   tags:
     - restic_rest_server
