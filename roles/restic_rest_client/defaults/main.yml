@@ -5,6 +5,9 @@ restic_repo_password: "secret"
 restic_client_user: "user"
 restic_client_passwd: "password"
 
+restic_client_include_paths: []
+restic_client_exclude_paths: []
+
 restic_user: "restic"
 restic_group: "restic"
 
