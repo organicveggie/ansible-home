@@ -1,7 +1,7 @@
 ---
 - name: Build restic repository URL
   ansible.builtin.set_fact:
-    restic_repo_url: "rest:https://{{ restic_server_name }}/{{ restic_repo_name }}"
+    restic_repo_url: "rest:https://{{ restic_client_user }}:{{ restic_client_passwd }}@{{ restic_server_name }}/{{ restic_repo_name }}"
 
 - name: Create restic config folder
   ansible.builtin.file:
@@ -15,6 +15,17 @@
   ansible.builtin.copy:
     content: "{{ restic_repo_url }}"
     dest: "{{ restic_config_location_file }}"
+    owner: "{{ restic_user }}"
+    group: "{{ restic_group }}"
+    mode: 0640
+
+- name: Create repository location shell script
+  ansible.builtin.copy:
+    content: >
+      #!/bin/sh
+
+      export RESTIC_REPOSITORY='{{ restic_repo_url }}'
+    dest: "{{ restic_config_location_script_file }}"
     owner: "{{ restic_user }}"
     group: "{{ restic_group }}"
     mode: 0640

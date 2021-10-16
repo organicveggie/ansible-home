@@ -2,9 +2,13 @@ restic_server_name: "restic.example.com"
 restic_repo_name: "{{ inventory_hostname }}"
 restic_repo_password: "secret"
 
+restic_client_user: "user"
+restic_client_passwd: "password"
+
 restic_user: "restic"
 restic_group: "restic"
 
 restic_config_folder: "/etc/restic"
 restic_config_location_file: "{{ restic_config_folder }}/repo.txt"
+restic_config_location_script_file: "{{ restic_config_folder }}/repo-export.sh"
 restic_config_password_file: "{{ restic_config_folder }}/password.txt"
