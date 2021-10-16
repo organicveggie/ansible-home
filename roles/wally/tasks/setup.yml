@@ -1,0 +1,23 @@
+---
+- name: Install depdendencies
+  ansible.builtin.apt:
+    name: libusb-dev
+
+- name: Copy udev rule file
+  ansible.builtin.copy:
+    src: "../files/wally.rules"
+    dest: "/etc/udev/rules.d/50-wally.rules"
+    mode: 0644
+
+- name: Create plugdev group
+  ansible.builtin.group:
+    name: "plugdev"
+    state: "present"
+
+- name: Add users to plugdev group
+  ansible.builtin.user:
+    name: "{{ item }}"
+    append: "yes"
+    groups:
+      - "plugdev"
+  loop: "{{ wally_plugdev_users }}"
