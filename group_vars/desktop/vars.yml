@@ -5,6 +5,7 @@ restic_client_user: "{{ restic_user_desktop }}"
 restic_client_passwd: "{{ restic_passwd_desktop }}"
 restic_server_name: "{{ veggie_desktop_restic_server }}"
 restic_repo_password: "{{ veggie_desktop_restic_password }}"
+restic_client_exclude_paths: "{{ vault_restic_client_exclude_paths }}"
 restic_client_include_paths: "{{ vault_restic_client_include_paths }}"
 
 ###

@@ -46,7 +46,7 @@
     group: "{{ restic_group }}"
     mode: 0640
   vars:
-    restic_client_file_paths: restic_client_include_paths
+    restic_client_file_paths: "{{ restic_client_include_paths }}"
 
 - name: Create backup excludes file
   ansible.builtin.template:
@@ -56,4 +56,4 @@
     group: "{{ restic_group }}"
     mode: 0640
   vars:
-    restic_client_file_paths: restic_client_exclude_paths
+    restic_client_file_paths: "{{ restic_client_exclude_paths }}"
