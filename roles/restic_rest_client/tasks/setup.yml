@@ -38,7 +38,7 @@
 - name: Create backup includes file
   ansible.builtin.template:
     src: "../templates/include_exclude.j2"
-    dest: "{{ restic_config_folder }}/includes"
+    dest: "{{ restic_client_backup_includes_file }}"
     owner: "{{ restic_user }}"
     group: "{{ restic_group }}"
     mode: 0640
@@ -48,9 +48,17 @@
 - name: Create backup excludes file
   ansible.builtin.template:
     src: "../templates/include_exclude.j2"
-    dest: "{{ restic_config_folder }}/excludes"
+    dest: "{{ restic_client_backup_excludes_file }}"
     owner: "{{ restic_user }}"
     group: "{{ restic_group }}"
     mode: 0640
   vars:
     restic_client_file_paths: "{{ restic_client_exclude_paths }}"
+
+- name: Create backup script
+  ansible.builtin.template:
+    src: "../templates/restic-backup.sh"
+    dest: "{{ restic_client_backup_script }}"
+    owner: "{{ restic_user }}"
+    group: "{{ restic_group }}"
+    mode: 0750
