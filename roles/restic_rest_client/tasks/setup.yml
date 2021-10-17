@@ -19,16 +19,13 @@
     group: "{{ restic_group }}"
     mode: 0640
 
-- name: Create repository location shell script
-  ansible.builtin.copy:
-    content: >
-      #!/bin/sh
-
-      export RESTIC_REPOSITORY='{{ restic_repo_url }}'
+- name: Create restic environment shell script
+  ansible.builtin.template:
+    src: "../templates/restic-env.sh.j2"
     dest: "{{ restic_config_location_script_file }}"
     owner: "{{ restic_user }}"
     group: "{{ restic_group }}"
-    mode: 0640
+    mode: 0600
 
 - name: Create repository password file
   ansible.builtin.copy:
