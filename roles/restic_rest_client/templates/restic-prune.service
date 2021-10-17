@@ -1,0 +1,27 @@
+# /etc/systemd/system/restic-prune.service
+[Unit]
+Description=Run backup prune job
+Documentation=man:restic(1)
+Documentation=https://restic.readthedocs.io/en/stable/
+Requires=local-fs.target
+Requires=network.target
+#OnFailure=restic-backup-failure.service
+
+[Service]
+Type=oneshot
+Environment="RESTIC_CACHE_DIR={{ restic_client_cache_dir }}"
+ExecStartPre={{ restic_client_forget_script }}
+ExecStart={{ restic_client_prune_script }}
+#ExecStartPost=/usr/local/sbin/restic-exporter.sh
+
+# Security hardening (see man 7 systemd.exec)
+PrivateTmp=true
+ProtectHome=read-only
+ProtectSystem=full
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+ProtectControlGroups=true
+PrivateDevices=true
+MemoryDenyWriteExecute=true
+ReadWritePaths={{ restic_client_cache_dir }} /var/lib/node-exporter

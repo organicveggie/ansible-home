@@ -16,6 +16,7 @@ restic_config_location_file: "{{ restic_config_folder }}/repo.txt"
 restic_config_location_script_file: "{{ restic_config_folder }}/repo-env.sh"
 restic_config_password_file: "{{ restic_config_folder }}/password.txt"
 
+restic_client_cache_dir: "/var/cache/restic"
 restic_client_backup_script: "/usr/local/sbin/restic-backup.sh"
 restic_client_forget_script: "/usr/local/sbin/restic-forget.sh"
 restic_client_prune_script: "/usr/local/sbin/restic-prune.sh"
