@@ -1,4 +1,10 @@
 ###
+### Common
+###
+real_hostname: "{{ vault_real_hostname }}"
+real_hostname_short: "{{ vault_real_hostname_short }}"
+
+###
 ### Restic
 ###
 restic_client_user: "{{ restic_user_desktop }}"

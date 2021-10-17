@@ -25,7 +25,7 @@
     dest: "{{ restic_config_location_script_file }}"
     owner: "{{ restic_user }}"
     group: "{{ restic_group }}"
-    mode: 0600
+    mode: 0640
 
 - name: Create repository password file
   ansible.builtin.copy:
@@ -55,10 +55,17 @@
   vars:
     restic_client_file_paths: "{{ restic_client_exclude_paths }}"
 
-- name: Create backup script
+- name: Create scripts
   ansible.builtin.template:
-    src: "../templates/restic-backup.sh"
-    dest: "{{ restic_client_backup_script }}"
+    src: "../templates/{{ item.src }}"
+    dest: "{{ item.dest }}"
     owner: "{{ restic_user }}"
     group: "{{ restic_group }}"
     mode: 0750
+  loop:
+    - src: "restic-backup.sh"
+      dest: "{{ restic_client_backup_script }}"
+    - src: "restic-forget.sh"
+      dest: "{{ restic_client_forget_script }}"
+    - src: "restic-prune.sh"
+      dest: "{{ restic_client_prune_script }}"

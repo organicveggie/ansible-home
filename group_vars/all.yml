@@ -70,6 +70,8 @@ aws_ses_usw2_secret_key: !vault |
 ###
 ### Common
 ###
+real_hostname: "{{ inventory_hostname }}"
+real_hostname_short: "{{ inventory_hostname_short }}"
 home_latitude: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           64323833663637376262656436663132366562343466303838346138383262653633306637313265
