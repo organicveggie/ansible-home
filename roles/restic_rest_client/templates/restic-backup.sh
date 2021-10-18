@@ -13,8 +13,8 @@ restic check
 restic backup \
        --one-file-system \
        --exclude-caches \
-       --files-from '{{ restic_client_backup_includes_file }}'
-       --exclude-file '{{ restic_client_backup_excludes_file }}'
+       --files-from '{{ restic_client_backup_includes_file }}' \
+       --exclude-file '{{ restic_client_backup_excludes_file }}' \
        --tag automated
 
 echo "Finished restic backup"

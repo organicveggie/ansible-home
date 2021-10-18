@@ -10,10 +10,10 @@ echo "Removing old restic snaphots for {{ real_hostname_short }}"
 restic check
 
 restic forget \
-       --keep-hourly 24
-       --keep-daily 7
-       --keep-weekly 4
-       --keep-monthly 6
+       --keep-hourly 24 \
+       --keep-daily 7 \
+       --keep-weekly 4 \
+       --keep-monthly 6 \
        --host {{ real_hostname_short }}
 
 # Check if repository is okay
