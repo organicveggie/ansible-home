@@ -4,5 +4,6 @@
   remote_user: sean
   become: yes
   roles:
+    - role: msmtp
     - role: restic_rest_client
     - role: wally

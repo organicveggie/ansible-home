@@ -1,0 +1,14 @@
+---
+- name: Create msmtprc
+  ansible.builtin.template:
+    src: "../templates/msmtprc"
+    dest: "/etc/msmtprc"
+    owner: "root"
+    group: "root"
+    mode: "0640"
+
+- name: Set msmtp as mta for mailx
+  ansible.builtin.lineinfile:
+    path: "/etc/mail.rc"
+    regexp: "^set mta="
+    line: "set mta=/usr/bin/msmtp"

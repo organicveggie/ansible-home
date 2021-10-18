@@ -1,0 +1,5 @@
+msmtp_host: "example.com"
+msmtp_port: "25"
+msmtp_user: "user"
+msmtp_passwd: "password"
+msmtp_from: "me@example.com"

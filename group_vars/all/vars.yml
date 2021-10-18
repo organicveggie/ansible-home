@@ -230,6 +230,15 @@ influxdb_telegraf_token: !vault |
 influxdb_url: "https://influxdb.{{ veggie_nas_domain_name }}"
 
 ###
+### msmtp
+###
+msmtp_host: "{{ vault_msmtp_host }}"
+msmtp_port: "{{ vault_msmtp_port }}"
+msmtp_user: "{{ vault_msmtp_user }}"
+msmtp_passwd: "{{ vault_msmtp_passwd }}"
+msmtp_from: "{{ vault_msmtp_from }}"
+
+###
 ### Networking
 ###
 iot_vlan_docker_network_name: "iot-macvlan40"

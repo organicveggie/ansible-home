@@ -1,0 +1,10 @@
+---
+- import_tasks: install.yml
+  tags:
+    - msmtp
+    - msmtp:install
+
+- import_tasks: setup.yml
+  tags:
+    - msmtp
+    - msmtp:setup
