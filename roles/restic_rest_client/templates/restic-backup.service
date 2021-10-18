@@ -5,7 +5,7 @@ Documentation=man:restic(1)
 Documentation=https://restic.readthedocs.io/en/stable/
 Requires=local-fs.target
 Requires=network.target
-#OnFailure=restic-backup-failure.service
+OnFailure=restic-backup-failure.service
 
 [Service]
 Type=oneshot
