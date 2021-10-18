@@ -1,0 +1,11 @@
+[Unit]
+Description=Activates Restic Backup Job
+
+[Timer]
+# See man 7 systemd.time for possible formats
+# Every 2 hours
+OnCalendar=0/2:00:00
+RandomizedDelaySec=120
+
+[Install]
+WantedBy=timers.target

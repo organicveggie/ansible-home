@@ -1,5 +1,13 @@
 ---
-- name: Create Systemd services
+- name: Create systemd failure handling script
+  ansible.builtin.copy:
+    src: "../files/systemd-unit-failure.sh"
+    dest: "/usr/local/sbin/systemd-unit-failure.sh"
+    owner: "root"
+    group: "root"
+    mode: "0750"
+
+- name: Create systemd services
   ansible.builtin.template:
     src: "../templates/{{ item }}"
     dest: "/etc/systemd/system/{{ item }}"
@@ -8,4 +16,29 @@
     mode: 0644
   loop:
     - "restic-backup.service"
+    - "restic-backup-failure.service"
     - "restic-prune.service"
+  notify: Reload systemd
+
+- name: Create systemd timers
+  ansible.builtin.template:
+    src: "../templates/{{ item }}"
+    dest: "/etc/systemd/system/{{ item }}"
+    owner: "root"
+    group: "root"
+    mode: "0640"
+  loop:
+    - "restic-backup.timer"
+    - "restic-prune.timer"
+  notify: Reload systemd
+
+- name: Enable systemd timers
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+    masked: false
+    daemon_reload: true
+  loop:
+    - "restic-backup.timer"
+    - "restic-prune.timer"

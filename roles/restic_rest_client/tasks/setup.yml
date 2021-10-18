@@ -65,6 +65,8 @@
   loop:
     - src: "restic-backup.sh"
       dest: "{{ restic_client_backup_script }}"
+    - src: "restic-exporter.sh"
+      dest: "{{ restic_client_export_script }}"
     - src: "restic-forget.sh"
       dest: "{{ restic_client_forget_script }}"
     - src: "restic-prune.sh"

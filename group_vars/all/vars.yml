@@ -70,6 +70,7 @@ aws_ses_usw2_secret_key: !vault |
 ###
 ### Common
 ###
+default_admin_email: "{{ vault_default_admin_email }}"
 real_hostname: "{{ inventory_hostname }}"
 real_hostname_short: "{{ inventory_hostname_short }}"
 home_latitude: !vault |
@@ -303,6 +304,7 @@ veggie_nas_rclone_s3_bucket: !vault |
 ###
 ### Restic
 ###
+restic_client_admin_email: "{{ default_admin_email }}"
 restic_htpasswd_desktop: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           65376537616135623733386663303063346436396331303538396162333363656530303531316134

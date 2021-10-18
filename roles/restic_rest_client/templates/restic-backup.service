@@ -12,7 +12,7 @@ Type=oneshot
 Environment="RESTIC_CACHE_DIR={{ restic_client_cache_dir }}"
 ExecStartPre={{ restic_client_forget_script }}
 ExecStart={{ restic_client_backup_script }}
-#ExecStartPost=/usr/local/sbin/restic-exporter.sh
+ExecStartPost={{ restic_client_export_script }}
 
 # Security hardening (see man 7 systemd.exec)
 PrivateTmp=true

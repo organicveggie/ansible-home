@@ -1,0 +1,11 @@
+[Unit]
+Description=Activates Restic Prune Job
+
+[Timer]
+# See man 7 systemd.time for possible formats
+# Sundays at 1am
+OnCalendar=Sun *-*-* 01:00:00
+RandomizedDelaySec=120
+
+[Install]
+WantedBy=timers.target
