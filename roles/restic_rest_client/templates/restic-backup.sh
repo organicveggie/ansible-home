@@ -15,7 +15,9 @@ restic backup \
        --exclude-caches \
        --files-from '{{ restic_client_backup_includes_file }}' \
        --exclude-file '{{ restic_client_backup_excludes_file }}' \
-       --tag automated
+       --tag automated \
+       --quiet \
+       --json
 
 echo "Finished restic backup"
 

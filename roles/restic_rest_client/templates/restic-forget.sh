@@ -14,7 +14,8 @@ restic forget \
        --keep-daily 7 \
        --keep-weekly 4 \
        --keep-monthly 6 \
-       --host {{ real_hostname_short }}
+       --host {{ real_hostname_short }} \
+       --json
 
 # Check if repository is okay
 restic check
