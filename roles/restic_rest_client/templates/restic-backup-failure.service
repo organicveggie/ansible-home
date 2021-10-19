@@ -5,7 +5,7 @@ Requires=network.target
 [Service]
 Type=oneshot
 # Email notification with logs (%n is systemd unit name)
-ExecStartPre=-{{ restic_client_failure_script }} "%n" "{{ restic_client_admin_email }}"
+ExecStartPre={{ restic_client_failure_script }} "%n" "{{ restic_client_admin_email }}"
 ExecStart={{ restic_client_export_script }}
 
 # Security hardening (see man 7 systemd.exec)
@@ -15,7 +15,11 @@ ProtectSystem=full
 ProtectKernelModules=true
 ProtectKernelTunables=true
 ProtectControlGroups=true
-ProtectControlGroups=true
 PrivateDevices=true
 MemoryDenyWriteExecute=true
-ReadWritePaths=/var/lib/node-exporter
+ExecPaths={{ restic_client_export_script }}
+ExecPaths={{ restic_client_failure_script }}
+ReadOnlyPaths={{ restic_config_folder }}
+ReadOnlyPaths={{ restic_client_export_script }}
+ReadOnlyPaths={{ restic_client_failure_script }}
+ReadWritePaths=-/var/lib/node-exporter
