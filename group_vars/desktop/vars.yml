@@ -15,6 +15,22 @@ restic_client_exclude_paths: "{{ vault_restic_client_exclude_paths }}"
 restic_client_include_paths: "{{ vault_restic_client_include_paths }}"
 
 ###
+### Telegraf
+###
+telegraf_influxdb_url: "{{ influxdb_url }}"
+telegraf_influxdb_token: "{{ influxdb_telegraf_token }}"
+telegraf_influxdb_org: "{{ influxdb_admin_org }}"
+telegraf_plugin_zfs_pool_sizes: true
+telegraf_plugins_extra:
+  - name: "systemd_units"
+    options:
+      unittype: "service"
+      pattern: "restic-*"
+  - name: zfs
+    options:
+      poolMetrics: true
+
+###
 ### Wally
 ###
 wally_plugdev_users: "{{ vault_wally_plugdev_users }}"

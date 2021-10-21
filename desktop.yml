@@ -7,3 +7,4 @@
     - role: msmtp
     - role: restic_rest_client
     - role: wally
+    - role: telegraf
