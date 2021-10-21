@@ -10,13 +10,13 @@ echo "Starting restic backup"
 restic check
 
 # Create new backup
+export RESTIC_PROGRESS_FPS=0.016666
 restic backup \
        --one-file-system \
        --exclude-caches \
        --files-from '{{ restic_client_backup_includes_file }}' \
        --exclude-file '{{ restic_client_backup_excludes_file }}' \
        --tag automated \
-       --quiet \
        --json
 
 echo "Finished restic backup"
