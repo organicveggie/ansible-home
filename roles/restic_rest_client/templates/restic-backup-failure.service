@@ -10,16 +10,16 @@ ExecStart={{ restic_client_export_script }}
 
 # Security hardening (see man 7 systemd.exec)
 PrivateTmp=true
-ProtectHome=full
-ProtectSystem=full
+ProtectHome=true
+ProtectSystem=strict
+ProtectKernelLogs=true
 ProtectKernelModules=true
 ProtectKernelTunables=true
 ProtectControlGroups=true
 PrivateDevices=true
 MemoryDenyWriteExecute=true
-ExecPaths={{ restic_client_export_script }}
-ExecPaths={{ restic_client_failure_script }}
 ReadOnlyPaths={{ restic_config_folder }}
 ReadOnlyPaths={{ restic_client_export_script }}
 ReadOnlyPaths={{ restic_client_failure_script }}
 ReadWritePaths=-/var/lib/node-exporter
+StandardOutput=journal+console
