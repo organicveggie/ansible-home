@@ -26,6 +26,10 @@ telegraf_plugins_extra:
     options:
       unittype: "service"
       pattern: "restic-*"
+  - name: "systemd_units"
+    options:
+      unittype: "timer"
+      pattern: "restic-*"
   - name: zfs
     options:
       poolMetrics: true
