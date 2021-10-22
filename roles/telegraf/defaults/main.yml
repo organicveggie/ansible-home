@@ -33,7 +33,7 @@ telegraf_snmp_net_community: "secret"
 telegraf_snmp_net_interval: "30s"
 
 telegraf_plugin_docker: false
-telegraf_plugin_influxdb2_v2_port: ":8086"
+telegraf_plugin_influxdb2_v2_port: "8086"
 telegraf_plugin_influxdb2_v2_tls_cert: "/etc/telegraf/cert.pem"
 telegraf_plugin_influxdb2_v2_tls_key: "/etc/telegraf/key.pem"
 telegraf_plugin_influxdb2_v2_token: "some-long-shared-secret-token"

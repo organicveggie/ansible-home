@@ -24,7 +24,7 @@ telegraf_plugin_zfs_pool_sizes: true
 telegraf_plugins_extra:
   - name: "influxdb_v2_listener"
     options:
-      service_address: "{{ telegraf_plugin_influxdb2_v2_port }}"
+      service_address: ":{{ telegraf_plugin_influxdb2_v2_port }}"
       ## Add service certificate and key
       # tls_cert: "{{ telegraf_plugin_influxdb2_v2_tls_cert }}"
       # tls_key: "{{ telegraf_plugin_influxdb2_v2_tls_key }}"
