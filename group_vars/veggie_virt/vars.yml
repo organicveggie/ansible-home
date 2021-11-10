@@ -209,6 +209,7 @@ unific_network_mode: "{{ traefik_network_name }}"
 unific_dir_data: "/virtpool/unific/data"
 unific_dir_log: "/virtpool/unific/log"
 unific_dir_cert: "/virtpool/unific//cert"
+unific_traefik_router_rule: "Host(`{{ unific_hostname }}.{{ unific_host_domain }}`) || Host(`{{ unific_hostname }}.{{ veggie_base_domain_name }}`)"
 
 ###
 ### zwavejs2mqtt
