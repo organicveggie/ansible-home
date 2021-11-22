@@ -20,6 +20,9 @@
 - src: geerlingguy.nfs
   version: 2.0.0
 
+- src: geerlingguy.pip
+  version: 2.1.0
+
 - src: stefangweichinger.ansible_rclone
 
 - src: nickhammond.logrotate
