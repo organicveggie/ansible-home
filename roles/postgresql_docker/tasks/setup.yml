@@ -31,7 +31,7 @@
 - name: Copy pg_hba config
   copy:
     content: "{{ postgresql_docker_pg_hba_conf }}"
-    dest: "{{ postgresql_docker_conf_dir }}/pg_hba.conf"
+    dest: "{{ postgresql_docker_data_dir }}/pg_hba.conf"
 
 - name: Copy postgresql config
   copy:
