@@ -18,6 +18,11 @@ homeassistant:
 # Automation
 automation: !include automations.yaml
 
+# Frontend modules
+frontend:
+  extra_module_url:
+    - /hacsfiles/lovelace-card-mod/card-mod.js
+
 # Groups
 group: !include groups.yaml
 
@@ -38,7 +43,7 @@ sonos:
   media_player:
     advertise_addr: 192.168.25.20
     hosts:
-      - 192.168.25.80   # Patio: S1 Connect
+      - 192.168.25.80   # Patio: SonosAmp
       - 192.168.25.81   # Garage: Play3
       - 192.168.25.82   # MBR: Play5
       - 192.168.25.83   # Bonus: Beam
@@ -53,8 +58,6 @@ lovelace:
   mode: yaml
   resources:
     - url: /hacsfiles/button-card/button-card.js
-      type: module
-    - url: /hacsfiles/lovelace-card-mod/card-mod.js
       type: module
     - url: /hacsfiles/lovelace-layout-card/layout-card.js
       type: module
