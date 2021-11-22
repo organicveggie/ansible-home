@@ -47,15 +47,16 @@ sensor:
         friendly_name: Last restart
         icon_template: mdi:update
         value_template: >
-          {% set uptime = states('sensor.uptime') | float %}
-          {% if uptime < 1 %} {{ (uptime * 60) | int }} seconds ago
-          {% elif uptime | int == 1 %} 1 minute ago
-          {% elif uptime | int > 1 %}
-            {% if uptime | int < 60 %} {{ uptime | int }} minutes ago
-            {% elif uptime | int / 60 == 24 %} {{ (uptime | int / 60 / 24) | int }} day ago
-            {% elif uptime | int / 60 >= 24 %} {{ (uptime | int / 60 / 24) | int }} days ago
-            {% elif uptime | int >= 60 and uptime | int < 120 %} {{ (uptime | int / 60) | int }} an hour ago
-            {% elif uptime | int >= 120 %} {{ (uptime | int / 60) | int }} hours ago
+          {% set uptime = states('sensor.uptime') | float(0) %}
+          {% set uptime_int = uptime | int(0) %}
+          {% if uptime < 1 %} {{ (uptime * 60) | int(0) }} seconds ago
+          {% elif uptime_int == 1 %} 1 minute ago
+          {% elif uptime_int > 1 %}
+            {% if uptime_int < 60 %} {{ uptime_int }} minutes ago
+            {% elif uptime_int / 60 == 24 %} {{ (uptime_int / 60 / 24) | int(1) }} day ago
+            {% elif uptime_int / 60 >= 24 %} {{ (uptime_int / 60 / 24) | int(1) }} days ago
+            {% elif uptime_int >= 60 and uptime_int < 120 %} an hour ago
+            {% elif uptime_int >= 120 %} {{ (uptime_int / 60) | int(1) }} hours ago
             {% endif %}
           {% endif %}
 
@@ -75,7 +76,7 @@ sensor:
       ##########
       weather_wind_direction:
         value_template: >
-          {% set wind_direction = states('sensor.wind_direction')|int %}
+          {% set wind_direction = states('sensor.wind_direction') | int(0) %}
           {% if wind_direction < 12 %}
             N
           {% elif wind_direction >= 12 and wind_direction < 34 %}
