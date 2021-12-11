@@ -1,0 +1,17 @@
+nodered_data_dir: "/var/lib/node-red"
+nodered_zfs_filesystems: []
+
+nodered_user: "node-red"
+nodered_uid: 2400
+nodered_group: "node-red"
+nodered_extra_groups: []
+
+nodered_port: "1880"
+nodered_available_externally: "true"
+nodered_hostname: "nodered"
+nodered_host_domain: "example.com"
+
+nodered_docker_network_name: "nodered"
+
+nodered_docker_memory: "2G"
+nodered_docker_cpus: "2"

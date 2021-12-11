@@ -66,6 +66,15 @@ nfs_exports:
   - "/mnt/nas/data/videos {{ veggie_virt_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
 
 ###
+### Node-RED
+###
+nodered_data_dir: "{{ vault_nodered_data_dir }}"
+nodered_host_domain: "{{ veggie_nas_domain_name }}"
+nodered_zfs_filesystems:
+  - "nas/nodred"
+  - "nas/nodred/data"
+
+###
 ### Plex
 ###
 plex_docker_claim: "{{ plex_claim }}"

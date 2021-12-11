@@ -1,0 +1,30 @@
+---
+- name: Create ZFS file systems
+  community.general.zfs:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ nodered_zfs_filesystems }}"
+
+- name: Create Node-RED group
+  ansible.builtin.group:
+    name: "{{ nodered_group }}"
+
+- name: Create Node-RED user
+  ansible.builtin.user:
+    name: "{{ nodered_user }}"
+    uid: "{{ nodered_uid | default(omit) }}"
+    group: "{{ nodered_group }}"
+    append: "true"
+    create_home: "false"
+    groups: "{{ nodered_extra_groups | default(omit) }}"
+    password: "!"
+
+- name: Create Node-RED directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ nodered_user }}"
+    group: "{{ nodered_group }}"
+    mode: "0770"
+  with_items:
+    - "{{ nodered_data_dir }}"

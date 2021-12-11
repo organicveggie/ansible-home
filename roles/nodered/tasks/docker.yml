@@ -1,0 +1,34 @@
+---
+- name: Node-RED Docker Container
+  community.docker.docker_container:
+    name: nodered
+    image: nodered/node-red:latest
+    pull: true
+    volumes:
+      - "{{ nodered_data_dir }}:/data"
+    user: "{{ nodered_user }}"
+    groups:
+      - "{{ nodered_group }}"
+    network_mode: "{{ nodered_docker_network_name }}"
+    networks:
+      - name: "{{ nodered_docker_network_name }}"
+    restart_policy: unless-stopped
+    memory: "{{ nodered_docker_memory }}"
+    cpus: "{{ nodered_docker_cpus }}"
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: yes
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
+    labels:
+      traefik.enable: "{{ nodered_available_externally }}"
+      traefik.docker.network: "{{ nodered_docker_network_name }}"
+      traefik.http.routers.hass.rule: "Host(`{{ nodered_hostname }}.{{ nodered_host_domain }}`)"
+      traefik.http.routers.hass.entrypoints: "http,https"
+      traefik.http.routers.hass.tls.certresolver: "letsencrypt"
+      traefik.http.routers.hass.tls.domains[0].main: "*.{{ nodered_host_domain }}"
+      traefik.http.services.hass.loadbalancer.server.port: "{{ nodered_port }}"
