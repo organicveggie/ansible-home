@@ -1,0 +1,31 @@
+regopts:
+  - name: "docker.io"
+    selector: image
+    username: "{{ diun_regopts_dockerio_user }}"
+    password: "{{ diun_regopts_dockerio_passwd }}"
+
+watch:
+  workers: {{ diun_workers }}
+  schedule: "{{ diun_schedule }}"
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    watchByDefault: true
+    watchStopped: true
+  file:
+    filename: "/provider.yml"
+
+notif:
+  mail:
+    host: "{{ diun_notify_mail_host }}"
+    port: {{ diun_notify_mail_port }}
+    ssl: {{ diun_notify_mail_ssl }}
+    insecureSkipVerify: {{ diun_notify_mail_insecure_skip_verify }}
+    username: "{{ diun_notify_mail_username }}"
+    password: "{{ diun_notify_mail_password }}"
+    from: "{{ diun_notify_mail_from }}"
+    to:
+{% for dest in diun_notify_mail_to %}
+      - "{{ dest }}"
+{% endfor %}

@@ -50,4 +50,5 @@
     - role: organicveggie.certbot-route53
     - role: restic_rest_server
     # - role: nodered
+    - role: diun
     - role: telegraf

@@ -1,0 +1,29 @@
+---
+- name: Diun Docker Container
+  community.docker.docker_container:
+    name: diun
+    image: crazymax/diun:latest
+    pull: true
+    volumes:
+      - "{{ diun_data_dir }}:/data"
+      - "{{ diun_config_file }}:/diun.yml:ro"
+      - "{{ diun_provider_file_name }}:/provider.yml:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    # user: "{{ diun_uid }}"
+    # groups:
+    #   - "{{ diun_group }}"
+    network_mode: "{{ diun_docker_network_name }}"
+    networks:
+      - name: "{{ diun_docker_network_name }}"
+    restart_policy: unless-stopped
+    memory: "{{ diun_docker_memory }}"
+    cpus: "{{ diun_docker_cpus }}"
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: yes
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no

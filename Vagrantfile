@@ -13,7 +13,6 @@ Vagrant.configure("2") do |config|
     ansible.vault_password_file = "vault-passwd"
     ansible.become = true
     ansible.groups = {
-      # "veggie_virt" => ["host1"],
       "veggie_nas" => ["host1"],
     }
     ansible.host_vars = {
@@ -25,6 +24,6 @@ Vagrant.configure("2") do |config|
         "telegraf_plugin_smartctl" => false,
       }
     }
-    ansible.tags = "telegraf"
+    ansible.tags = "diun"
   end
 end

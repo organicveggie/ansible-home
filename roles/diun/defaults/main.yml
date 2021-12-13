@@ -1,0 +1,32 @@
+diun_data_dir: "/var/lib/diun"
+diun_zfs_filesystems: []
+
+diun_user: "diun"
+diun_uid: 2450
+diun_group: "diun"
+diun_extra_groups: []
+
+diun_workers: 20
+diun_schedule: "0 */6 * * *"
+
+diun_regopts_dockerio_user: "example"
+diun_regopts_dockerio_passwd: "secret"
+
+diun_notify_mail_host: "localhost"
+diun_notify_mail_port: 25
+diun_notify_mail_ssl: false
+diun_notify_mail_insecure_skip_verify: false
+diun_notify_mail_username: "user"
+diun_notify_mail_password: "secret"
+diun_notify_mail_from: "diun@example.com"
+diun_notify_mail_to: "webmaster@example.com"
+
+diun_provider_file_name: "{{ diun_config_dir }}/provider.yml"
+
+diun_docker_network_name: "diun"
+
+diun_docker_memory: "512M"
+diun_docker_cpus: "1"
+
+diun_config_dir: "/etc/diun"
+diun_config_file: "{{ diun_config_dir }}/diun.yml"

@@ -13,6 +13,7 @@
   loop:
     - "inputs.yaml"
     - "sensors.yaml"
+    - "templates.yaml"
 
 - name: Install Lovelace UI files
   ansible.builtin.copy:

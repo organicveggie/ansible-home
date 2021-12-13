@@ -7,6 +7,19 @@ veggie_admin_passwd: "{{ veggie_nas_admin_passwd }}"
 veggie_users_passwords:
   retropie: "*"
 
+###
+### Diun
+###
+diun_notify_mail_host: "{{ vault_diun_notify_mail_host }}"
+diun_notify_mail_port: "{{ vault_diun_notify_mail_port }}"
+diun_notify_mail_ssl: false
+diun_notify_mail_insecure_skip_verify: false
+diun_notify_mail_username: "{{ vault_diun_notify_mail_username }}"
+diun_notify_mail_password: "{{ vault_diun_notify_mail_password }}"
+diun_notify_mail_from: "{{ vault_diun_notify_mail_from }}"
+diun_notify_mail_to: "{{ vault_diun_notify_mail_to }}"
+diun_regopts_dockerio_user: "{{ vault_diun_regopts_dockerio_user }}"
+diun_regopts_dockerio_passwd: "{{ vault_diun_regopts_dockerio_passwd }}"
 
 ###
 ### Docker
