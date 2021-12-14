@@ -12,7 +12,7 @@ veggie_users_passwords:
 ###
 diun_notify_mail_host: "{{ vault_diun_notify_mail_host }}"
 diun_notify_mail_port: "{{ vault_diun_notify_mail_port }}"
-diun_notify_mail_ssl: false
+diun_notify_mail_ssl: true
 diun_notify_mail_insecure_skip_verify: false
 diun_notify_mail_username: "{{ vault_diun_notify_mail_username }}"
 diun_notify_mail_password: "{{ vault_diun_notify_mail_password }}"

@@ -14,7 +14,7 @@ diun_regopts_dockerio_passwd: "secret"
 
 diun_notify_mail_host: "localhost"
 diun_notify_mail_port: 25
-diun_notify_mail_ssl: false
+diun_notify_mail_ssl: true
 diun_notify_mail_insecure_skip_verify: false
 diun_notify_mail_username: "user"
 diun_notify_mail_password: "secret"
