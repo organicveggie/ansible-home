@@ -27,8 +27,8 @@
     labels:
       traefik.enable: "{{ nodered_available_externally }}"
       traefik.docker.network: "{{ nodered_docker_network_name }}"
-      traefik.http.routers.hass.rule: "Host(`{{ nodered_hostname }}.{{ nodered_host_domain }}`)"
-      traefik.http.routers.hass.entrypoints: "http,https"
-      traefik.http.routers.hass.tls.certresolver: "letsencrypt"
-      traefik.http.routers.hass.tls.domains[0].main: "*.{{ nodered_host_domain }}"
-      traefik.http.services.hass.loadbalancer.server.port: "{{ nodered_port }}"
+      traefik.http.routers.nodered.rule: "Host(`{{ nodered_hostname }}.{{ nodered_host_domain }}`)"
+      traefik.http.routers.nodered.entrypoints: "http,https"
+      traefik.http.routers.nodered.tls.certresolver: "letsencrypt"
+      traefik.http.routers.nodered.tls.domains[0].main: "*.{{ nodered_host_domain }}"
+      traefik.http.services.nodered.loadbalancer.server.port: "{{ nodered_port }}"

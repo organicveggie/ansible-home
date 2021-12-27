@@ -23,7 +23,7 @@
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    owner: "{{ nodered_user }}"
+    owner: "1000"
     group: "{{ nodered_group }}"
     mode: "0770"
   with_items:
