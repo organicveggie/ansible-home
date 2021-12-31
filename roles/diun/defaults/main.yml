@@ -1,6 +1,3 @@
-diun_data_dir: "/var/lib/diun"
-diun_zfs_filesystems: []
-
 diun_user: "diun"
 diun_uid: 2450
 diun_group: "diun"

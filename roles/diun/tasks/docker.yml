@@ -2,10 +2,6 @@
 - name: Diun Docker Volume
   community.docker.docker_volume:
     name: "{{ diun_docker_volume_name }}"
-    driver_options:
-      type: "none"
-      device: "{{ diun_data_dir }}"
-      o: "bind"
 
 - name: Diun Docker Container
   community.docker.docker_container:
