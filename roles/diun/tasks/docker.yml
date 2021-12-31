@@ -1,17 +1,32 @@
 ---
+- name: Diun Docker Volume
+  community.docker.docker_volume:
+    name: "{{ diun_docker_volume_name }}"
+    driver_options:
+      type: "none"
+      device: "{{ diun_data_dir }}"
+      o: "bind"
+
 - name: Diun Docker Container
   community.docker.docker_container:
     name: diun
     image: crazymax/diun:latest
     pull: true
-    volumes:
-      - "{{ diun_data_dir }}:/data"
-      - "{{ diun_config_file }}:/diun.yml:ro"
-      - "{{ diun_provider_file_name }}:/provider.yml:ro"
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    # user: "{{ diun_uid }}"
-    # groups:
-    #   - "{{ diun_group }}"
+    mounts:
+      - source: "{{ diun_docker_volume_name }}"
+        target: "/data"
+        type: "volume"
+      - source: "{{ diun_config_file }}"
+        target: "/diun.yml"
+        type: "bind"
+        read_only: "true"
+      - source: "{{ diun_provider_file_name }}"
+        target: "/provider.yml"
+        type: "bind"
+        read_only: "true"
+      - source: "/var/run/docker.sock"
+        target: "/var/run/docker.sock"
+        type: "bind"
     network_mode: "{{ diun_docker_network_name }}"
     networks:
       - name: "{{ diun_docker_network_name }}"

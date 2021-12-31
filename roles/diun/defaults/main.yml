@@ -21,8 +21,7 @@ diun_notify_mail_password: "secret"
 diun_notify_mail_from: "diun@example.com"
 diun_notify_mail_to: "webmaster@example.com"
 
-diun_provider_file_name: "{{ diun_config_dir }}/provider.yml"
-
+diun_docker_volume_name: "diun-data"
 diun_docker_network_name: "diun"
 
 diun_docker_memory: "512M"
@@ -30,3 +29,4 @@ diun_docker_cpus: "1"
 
 diun_config_dir: "/etc/diun"
 diun_config_file: "{{ diun_config_dir }}/diun.yml"
+diun_provider_file_name: "{{ diun_config_dir }}/provider.yml"
