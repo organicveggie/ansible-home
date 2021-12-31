@@ -8,11 +8,12 @@
 - name: Create Node-RED group
   ansible.builtin.group:
     name: "{{ nodered_group }}"
+    gid: "{{ nodered_gid }}"
 
 - name: Create Node-RED user
   ansible.builtin.user:
     name: "{{ nodered_user }}"
-    uid: "{{ nodered_uid | default(omit) }}"
+    uid: "{{ nodered_uid }}"
     group: "{{ nodered_group }}"
     append: "true"
     create_home: "false"
@@ -23,7 +24,7 @@
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    owner: "1000"
+    owner: "{{ nodered_user }}"
     group: "{{ nodered_group }}"
     mode: "0770"
   with_items:

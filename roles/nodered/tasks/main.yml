@@ -5,13 +5,6 @@
     - nodered_docker
     - nodered_docker:setup
 
-- import_tasks: config.yml
-  tags:
-    - nodered
-    - nodered:config
-    - nodered_docker
-    - nodered_docker:config
-
 - import_tasks: docker.yml
   tags:
     - nodered

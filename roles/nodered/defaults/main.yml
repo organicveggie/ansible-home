@@ -2,9 +2,12 @@ nodered_data_dir: "/var/lib/node-red"
 nodered_zfs_filesystems: []
 
 nodered_user: "node-red"
-nodered_uid: 2400
+nodered_uid: "2400"
+nodered_gid: "2400"
 nodered_group: "node-red"
 nodered_extra_groups: []
+
+nodered_docker_image: "nodered/node-red:latest"
 
 nodered_port: "1880"
 nodered_available_externally: "true"

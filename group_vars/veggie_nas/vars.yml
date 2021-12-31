@@ -82,6 +82,7 @@ nfs_exports:
 ### Node-RED
 ###
 nodered_data_dir: "{{ vault_nodered_data_dir }}"
+nodered_docker_image: "{{ vault_nodered_docker_image }}"
 nodered_host_domain: "{{ veggie_nas_domain_name }}"
 nodered_zfs_filesystems:
   - "nas/nodred"

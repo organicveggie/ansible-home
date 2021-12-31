@@ -2,16 +2,16 @@
 - name: Node-RED Docker Container
   community.docker.docker_container:
     name: nodered
-    image: nodered/node-red:latest
+    image: "{{ nodered_docker_image }}"
     pull: true
     volumes:
       - "{{ nodered_data_dir }}:/data"
-    user: "{{ nodered_user }}"
-    groups:
-      - "{{ nodered_group }}"
     network_mode: "{{ nodered_docker_network_name }}"
     networks:
       - name: "{{ nodered_docker_network_name }}"
+    env:
+      "NODERED_UID": "{{ nodered_uid }}"
+      "NODERED_GID": "{{ nodered_gid }}"
     restart_policy: unless-stopped
     memory: "{{ nodered_docker_memory }}"
     cpus: "{{ nodered_docker_cpus }}"
