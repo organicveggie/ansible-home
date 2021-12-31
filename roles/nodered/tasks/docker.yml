@@ -2,10 +2,6 @@
 - name: Node-RED Docker Volume
   community.docker.docker_volume:
     name: "{{ nodered_docker_volume_name }}"
-    driver_options:
-      type: "none"
-      device: "{{ nodered_data_dir }}"
-      o: "bind"
 
 - name: Node-RED Docker Container
   community.docker.docker_container:
