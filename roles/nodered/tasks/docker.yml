@@ -1,11 +1,20 @@
 ---
+- name: Node-RED Docker Volume
+  community.docker.docker_volume:
+    name: "{{ nodered_docker_volume_name }}"
+    driver_options:
+      type: "none"
+      device: "{{ nodered_data_dir }}"
+      o: "bind"
+
 - name: Node-RED Docker Container
   community.docker.docker_container:
     name: nodered
     image: "{{ nodered_docker_image }}"
     pull: true
-    volumes:
-      - "{{ nodered_data_dir }}:/data"
+    mounts:
+      - source: "{{ nodered_docker_volume_name }}"
+        target: "/data"
     network_mode: "{{ nodered_docker_network_name }}"
     networks:
       - name: "{{ nodered_docker_network_name }}"
