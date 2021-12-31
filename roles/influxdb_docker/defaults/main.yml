@@ -1,10 +1,10 @@
 influxdb_docker_username: "influxdb"
 influxdb_docker_group: "influxdb"
-influxdb_docker_uid: 2300
+influxdb_docker_uid: "2300"
 influxdb_docker_image_version: "2.0"
 influxdb_network_name: "influxdb"
+influxdb_docker_volume_name: "influxdb-data"
 
-influxdb_docker_data_dir: "/var/lib/influxdb2"
 influxdb_docker_conf_dir: "/etc/influxdb2"
 influxdb_docker_zfs_filesystems: []
 

@@ -28,7 +28,6 @@
     group: "{{ influxdb_docker_group | default(influxdb_docker_username) }}"
     mode: "0770"
   loop:
-    - "{{ influxdb_docker_data_dir }}"
     - "{{ influxdb_docker_conf_dir }}"
 
 - name: Create InfluxDB config
