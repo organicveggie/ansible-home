@@ -5,26 +5,37 @@
     state: directory
   with_items:
     - "{{ portainer_data_directory }}"
+  
+- name: Portainer Docker Volume
+  community.docker.docker_volume:
+    name: "{{ portainer_docker_volume_name }}"
+    driver_options:
+      type: "none"
+      device: "{{ portainer_data_directory }}"
+      o: "bind"
 
 - name: Portainer Docker Container
   community.docker.docker_container:
     name: portainer
     image: portainer/portainer-ce:latest
     pull: true
-    volumes:
-      - "{{ portainer_data_directory }}:/data:rw"
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "/etc/timezone:/etc/timezone:ro"
+    mounts:
+      - source: "{{ portainer_docker_volume_name }}"
+        target: "/data"
+        type: "volume"
+      - source: "/var/run/docker.sock"
+        target: "/var/run/docker.sock"
+        type: "bind"
+        read_only: "true"
+      - source: "/etc/timezone"
+        target: "/etc/timezone"
+        type: "bind"
+        read_only: "true"
     network_mode: "{{ portainer_network_name }}"
     networks:
       - name: "{{ portainer_network_name }}"
-    # network_mode: "{{ traefik_network_name }}"
-    # networks:
-    #   - name: "{{ traefik_network_name }}"
     exposed_ports:
       - "{{ portainer_port }}"
-    # ports:
-    #   - "{{ portainer_port }}:{{ portainer_port }}"
     restart_policy: unless-stopped
     memory: "{{ portainer_memory }}"
     container_default_behavior: no_defaults
