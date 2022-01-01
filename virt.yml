@@ -28,7 +28,6 @@
     - role: organicveggie.unific
       tags:
         - unific
-    - role: calibre_web
     - role: grafana_docker
     - role: postgresql_docker
     - role: pgadmin_docker

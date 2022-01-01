@@ -1,39 +1,58 @@
 ---
+- name: Create Calibre group
+  ansible.builtin.group:
+    name: "{{ calibre_groupname }}"
+    gid: "{{ calibre_group_id | default(omit) }}"
+    state: present
+
 - name: Create Calibre user
   ansible.builtin.user:
     name: "{{ calibre_username }}"
     uid: "{{ calibre_user_id | default(omit) }}"
     append: "true"
     create_home: "false"
+    group: "{{ calibre_groupname }}"
     groups: "{{ calibre_extra_groups | default(omit) }}"
     password: "!"
+    shell: "/bin/false"
 
-- name: Create Calibre-web Directories
-  ansible.builtin.file:
-    path: "{{ item }}"
-    state: directory
-    owner: "{{ calibre_user_id }}"
-    mode: "0770"
-  with_items:
-    - "{{ calibre_data_directory }}"
-    - "{{ calibre_data_directory }}/config"
+- name: Calibre config volume
+  community.docker.docker_volume:
+    name: "{{ calibre_docker_volume_name_config }}"
+
+- name: Calibre book volume
+  community.docker.docker_volume:
+    name: "{{ calibre_docker_volume_name_books }}"
+    driver_options:
+      type: "none"
+      device: "{{ calibre_books_root }}"
+      o: "bind"
 
 - name: Calibre-web Docker Container
   community.docker.docker_container:
     name: calibre
     image: linuxserver/calibre-web:latest
     pull: true
-    volumes:
-      - "{{ calibre_data_directory }}/config:/config"
-      - "{{ calibre_books_root }}:/books"
+    mounts:
+      - source: "{{ calibre_docker_volume_name_config }}"
+        target: "/config"
+        type: "volume"
+      - source: "{{ calibre_docker_volume_name_books }}"
+        target: "/books"
+        type: "volume"
     env:
       TZ: "{{ calibre_timezone }}"
       PUID: "{{ calibre_user_id }}"
       PGID: "{{ calibre_group_id }}"
       DOCKER_MODS: "{{ calibre_ebook_conversion }}"
-    network_mode: "{{ calibre_network_name }}"
+    network_mode: "{{ calibre_docker_network_name }}"
+    networks:
+      - name: "{{ calibre_docker_network_name }}"
+    exposed_ports:
+      - "8083"
     restart_policy: unless-stopped
-    memory: 1g
+    cpus: "{{ calibre_docker_cpus }}"
+    memory: "{{ calibre_docker_memory }}"
     container_default_behavior: no_defaults
     auto_remove: no
     detach: yes

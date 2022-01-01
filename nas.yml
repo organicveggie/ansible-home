@@ -51,4 +51,5 @@
     - role: restic_rest_server
     - role: nodered
     - role: diun
+    - role: calibre_web
     - role: telegraf

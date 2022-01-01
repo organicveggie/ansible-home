@@ -1,4 +1,14 @@
 ###
+### Calibre
+###
+calibre_books_root: "{{ vault_calibre_books_root }}"
+calibre_host_domain: "{{ veggie_base_domain_name }}"
+calibre_extra_groups:
+  - "book_writer"
+calibre_user_id: "{{ vault_calibre_user_id }}"
+calibre_group_id: "{{ vault_calibre_group_id }}"
+
+###
 ### Common
 ###
 veggie_hostname: "{{ veggie_nas_domain_name }}"
