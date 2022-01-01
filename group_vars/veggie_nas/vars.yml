@@ -85,10 +85,9 @@ nodered_host_domain: "{{ veggie_nas_domain_name }}"
 ###
 ### Plex
 ###
-plex_docker_claim: "{{ plex_claim }}"
-plex_docker_db_path: "/mnt/nas/plex"
-plex_docker_transcode_path: "/plex_transcode"
-plex_docker_media_path: /mnt/nas/data
+plex_docker_claim: "{{ vault_plex_docker_claim }}"
+plex_docker_cpus: "8"
+plex_docker_memory: "4GB"
 
 ###
 ### Pip

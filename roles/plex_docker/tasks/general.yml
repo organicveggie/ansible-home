@@ -18,14 +18,3 @@
     groups:
         - media_writer
         - music_writer
-
-- name: Create directories
-  ansible.builtin.file:
-    name: "{{ item }}"
-    state: directory
-    owner: "plex"
-    group: "plex"
-    mode: 0755
-  loop:
-    - "{{ plex_docker_db_path }}"
-    - "{{ plex_docker_transcode_path }}"
