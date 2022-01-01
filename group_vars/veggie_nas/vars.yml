@@ -100,7 +100,6 @@ pip_install_packages:
 ###
 portainer_available_externally: "true"
 portainer_admin_password: "{{ vault_portainer_admin_password }}"
-portainer_network_name: "{{ traefik_network_name }}"
 portainer_host_domain: "{{ veggie_nas_domain_name }}"
 
 ###
