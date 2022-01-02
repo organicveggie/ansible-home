@@ -1,6 +1,0 @@
----
-# defaults file for grafana_apache
-grafana_apache_fqdn: grafana.example.com
-grafana_apache_admin: admin@example.com
-grafana_apache_root: /etc/grafana
-grafana_apache_cert_fqdn: example.com
