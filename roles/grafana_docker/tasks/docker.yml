@@ -1,17 +1,30 @@
 ---
+- name: Grafana Docker volumes
+  community.docker.docker_volume:
+    name: "{{ grafana_docker_volume_data_name }}"
+
 - name: Grafana Docker Container
   community.docker.docker_container:
     name: grafana
-    image: grafana/grafana:latest
+    image: "{{ grafana_docker_image }}:{{ grafana_docker_image_tag }}"
     pull: true
-    volumes:
-      - "{{ grafana_docker_data_dir }}:/var/lib/grafana"
-      - "{{ grafana_docker_log_dir }}:/var/log/grafana"
-      - "{{ grafana_docker_conf_dir }}:/etc/grafana"
+    mounts:
+      - source: "{{ grafana_docker_config_dir }}/grafana.ini"
+        target: "/etc/grafana/grafana.ini"
+        type: "bind"
+        read_only: "true"
+      - source: "{{ grafana_docker_volume_data_name }}"
+        target: "/var/lib/grafana"
+        type: "volume"
     user: "{{ grafana_docker_username }}"
     network_mode: "{{ grafana_network_name }}"
+    networks:
+      - name: "{{ grafana_network_name }}"
+    exposed_ports:
+      - "{{ grafana_docker_port }}"
     restart_policy: unless-stopped
-    memory: 1g
+    cpus: "{{ grafana_docker_cpus }}"
+    memory: "{{ grafana_docker_memory }}"
     container_default_behavior: no_defaults
     auto_remove: no
     detach: yes

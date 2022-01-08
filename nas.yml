@@ -52,4 +52,5 @@
     - role: nodered
     - role: diun
     - role: calibre_web
+    - role: grafana_docker
     - role: telegraf

@@ -43,6 +43,22 @@ docker_admin_user: "{{ veggie_admin_username }}"
 glances_host_domain: "{{ veggie_nas_domain_name }}"
 
 ###
+### Grafana
+###
+grafana_docker_memory: "1G"
+grafana_docker_config_dir: "/mnt/nas/grafana/etc"
+grafana_docker_zfs_filesystems:
+  - "nas/grafana"
+  - "nas/grafana/etc"
+grafana_docker_host_domain: "{{ veggie_base_domain_name }}"
+grafana_docker_admin_password: "{{ vault_grafana_docker_admin_password }}"
+grafana_docker_smtp_enabled: "true"
+grafana_docker_smtp_host: "{{ vault_grafana_docker_smtp_host }}"
+grafana_docker_smtp_user: "{{ vault_grafana_docker_smtp_user }}"
+grafana_docker_smtp_password: "{{ vault_grafana_docker_smtp_password }}"
+grafana_docker_smtp_from_address: "{{ primary_email_address }}"
+
+###
 ### InfluxDB
 ###
 influxdb_docker_host_domain: "{{ veggie_nas_domain_name }}"
