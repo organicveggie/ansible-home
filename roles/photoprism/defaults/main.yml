@@ -1,0 +1,29 @@
+## Use photoprism/photoprism:preview for testing preview builds:
+photoprism_docker_image: "photoprism/photoprism"
+photoprism_docker_image_tag: "latest"
+
+photoprism_docker_memory: "4GB"
+photoprism_docker_cpus: "4"
+photoprism_docker_port: "2342"
+photoprism_network_name: "photoprism"
+photoprism_docker_volume_data_name: "photoprism-storage"
+
+photoprism_available_externally: "true"
+photoprism_docker_hostname: "photoprism"
+photoprism_docker_host_domain: "photoprism.com"
+
+photoprism_zfs_filesystems: []
+photoprism_username: "photoprism"
+photoprism_uid: "2500"
+photoprism_extra_groups: ""
+photoprism_dir: "/var/lib/photoprism"
+
+photoprism_admin_password: "adminsecretpassword"
+
+photoprism_mariadb_docker_memory: "4GB"
+photoprism_mariadb_docker_cpus: "2"
+photoprism_mariadb_dir: "/var/lib/photoprism-mariadb"
+photoprism_mariadb_volume_name: "photoprism-mariadb"
+photoprism_mariadb_user: "photoprism"
+photoprism_mariadb_password: "secret"
+photoprism_mariadb_root_password: "insecure"

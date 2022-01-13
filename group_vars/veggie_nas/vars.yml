@@ -109,6 +109,22 @@ nodered_docker_image: "{{ vault_nodered_docker_image }}"
 nodered_host_domain: "{{ veggie_nas_domain_name }}"
 
 ###
+### Photoprism
+###
+photoprism_admin_password: "{{ vault_photoprism_admin_password }}"
+photoprism_docker_host_domain: "{{ veggie_base_domain_name }}"
+photoprism_dir: "/mnt/nas/photoprism"
+photoprism_extra_groups: "photo_writer"
+photoprism_mariadb_dir: "/mnt/nas/photoprism-mariadb"
+photoprism_mariadb_root_password: "{{ vault_photoprism_mariadb_root_password }}"
+photoprism_mariadb_password: "{{ vault_photoprism_mariadb_password }}"
+photoprism_zfs_filesystems:
+  - dataset: "nas/photoprism"
+    path: "/mnt/nas/photoprism"
+  - dataset: "nas/photoprism-mariadb"
+    path: "/mnt/nas/photoprism-mariadb"
+
+###
 ### Plex
 ###
 plex_docker_claim: "{{ vault_plex_docker_claim }}"

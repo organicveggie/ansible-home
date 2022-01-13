@@ -1,0 +1,138 @@
+---
+- name: Photoprism Docker volume
+  community.docker.docker_volume:
+    name: "{{ photoprism_docker_volume_data_name }}"
+    driver_options:
+      type: "none"
+      o: "bind"
+      device: "{{ photoprism_dir }}"
+
+- name: Photoprism MariaDB Docker volume
+  community.docker.docker_volume:
+    name: "{{ photoprism_mariadb_volume_name }}"
+    driver_options:
+      type: "none"
+      o: "bind"
+      device: "{{ photoprism_mariadb_dir }}"
+
+- name: Photoprism MariaDB Docker Container
+  community.docker.docker_container:
+    name: "photoprism-mariadb"
+    image: "mariadb:10.6"
+    pull: true
+    mounts:
+      - type: volume
+        source: "{{ photoprism_mariadb_volume_name }}"
+        target: "/var/lib/mysql"
+    network_mode: "{{ photoprism_network_name }}"
+    networks:
+      - name: "{{ photoprism_network_name }}"
+    env:
+      MYSQL_ROOT_PASSWORD: "{{ photoprism_mariadb_root_password }}"
+      MYSQL_DATABASE: "photoprism"
+      MYSQL_USER: "{{ photoprism_mariadb_user }}"
+      MYSQL_PASSWORD: "{{ photoprism_mariadb_password }}"
+    command: mysqld --innodb-buffer-pool-size=128M --transaction-isolation=READ-COMMITTED --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max-connections=512 --innodb-rollback-on-timeout=OFF --innodb-lock-wait-timeout=120
+    restart_policy: unless-stopped
+    memory: "{{ photoprism_mariadb_docker_memory }}"
+    cpus: "{{ photoprism_mariadb_docker_cpus }}"
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: yes
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
+
+- name: Photoprism Docker Container
+  community.docker.docker_container:
+    name: photoprism
+    image: "{{ photoprism_docker_image }}:{{ photoprism_docker_image_tag }}"
+    pull: true
+    mounts:
+      ## The *originals* folder contains your original photo and video files (- "[host folder]:/photoprism/originals"):
+      - type: bind
+        source: "/mnt/nas/data/photos"
+        target: "/photoprism/originals"
+        read_only: "true"
+      ## Multiple folders can be made accessible by mounting them as subfolders of /photoprism/originals:
+      # - "/mnt/Family:/photoprism/originals/Family"    # [folder 1]:/photoprism/originals/[folder 1]
+      # - "/mnt/Friends:/photoprism/originals/Friends"  # [folder 2]:/photoprism/originals/[folder 2]
+      ## You may mount an *import* folder from which files can be transferred to *originals* (optional):
+      # - "~/Import:/photoprism/import"
+      ## Cache, session, thumbnail, and sidecar files will be created in the *storage* folder (never remove):
+      - type: volume
+        source: "{{ photoprism_docker_volume_data_name }}"
+        target: "/photoprism/storage"
+    network_mode: "{{ photoprism_network_name }}"
+    networks:
+      - name: "{{ photoprism_network_name }}"
+    security_opts:
+      - seccomp:unconfined
+      - apparmor:unconfined
+    env:
+      PHOTOPRISM_ADMIN_PASSWORD: "{{ photoprism_admin_password }}"
+      PHOTOPRISM_SITE_URL: "https:///{{ photoprism_docker_hostname }}.{{ photoprism_docker_host_domain }}"  # Public server URL incl http:// or https:// and /path, :port is optional
+      PHOTOPRISM_ORIGINALS_LIMIT: "5000"               # File size limit for originals in MB (increase for high-res video)
+      PHOTOPRISM_HTTP_COMPRESSION: "gzip"            # Improves transfer speed and bandwidth utilization (none or gzip)
+      PHOTOPRISM_DEBUG: "false"                      # Run in debug mode (shows additional log messages)
+      PHOTOPRISM_PUBLIC: "false"                     # No authentication required (disables password protection)
+      PHOTOPRISM_READONLY: "true"                    # Don't modify originals directory (reduced functionality)
+      PHOTOPRISM_EXPERIMENTAL: "false"               # Enables experimental features
+      PHOTOPRISM_DISABLE_CHOWN: "false"              # Disables storage permission updates on startup
+      PHOTOPRISM_DISABLE_WEBDAV: "false"             # Disables built-in WebDAV server
+      PHOTOPRISM_DISABLE_SETTINGS: "false"           # Disables Settings in Web UI
+      PHOTOPRISM_DISABLE_TENSORFLOW: "false"         # Disables all features depending on TensorFlow
+      PHOTOPRISM_DISABLE_FACES: "false"              # Disables facial recognition
+      PHOTOPRISM_DISABLE_CLASSIFICATION: "false"     # Disables image classification
+      PHOTOPRISM_DARKTABLE_PRESETS: "false"          # Enables Darktable presets and disables concurrent RAW conversion
+      PHOTOPRISM_DETECT_NSFW: "false"                # Flag photos as private that MAY be offensive (requires TensorFlow)
+      PHOTOPRISM_UPLOAD_NSFW: "true"                 # Allow uploads that MAY be offensive
+      # PHOTOPRISM_DATABASE_DRIVER: "sqlite"         # SQLite is an embedded database that doesn't require a server
+      PHOTOPRISM_DATABASE_DRIVER: "mysql"            # Use MariaDB 10.5+ or MySQL 8+ instead of SQLite for improved performance
+      PHOTOPRISM_DATABASE_SERVER: "photoprism-mariadb:3306"               # MariaDB or MySQL database server (hostname:port)
+      PHOTOPRISM_DATABASE_NAME: "photoprism"         # MariaDB or MySQL database schema name
+      PHOTOPRISM_DATABASE_USER: "{{ photoprism_mariadb_user }}"           # MariaDB or MySQL database user name
+      PHOTOPRISM_DATABASE_PASSWORD: "{{ photoprism_mariadb_password }}"   # MariaDB or MySQL database user password
+      PHOTOPRISM_SITE_TITLE: "PhotoPrism"
+      PHOTOPRISM_SITE_CAPTION: "Browse Your Life"
+      PHOTOPRISM_SITE_DESCRIPTION: ""
+      PHOTOPRISM_SITE_AUTHOR: "Sean Laurent"
+      ## Set a non-root user, group, or custom umask if your Docker environment doesn't support this natively:
+      # PHOTOPRISM_UID: "{{ photoprism_uid }}"
+      # PHOTOPRISM_GID: 1000
+      # PHOTOPRISM_UMASK: 0000
+      ## Enable TensorFlow AVX2 support for modern Intel CPUs (requires starting the container as root):
+      # PHOTOPRISM_INIT: "tensorflow-amd64-avx2"
+      PHOTOPRISM_INIT: "tensorflow-amd64-avx"
+      ## Hardware video transcoding config (optional):
+      # PHOTOPRISM_FFMPEG_BUFFERS: "64"              # FFmpeg capture buffers (default: 32)
+      # PHOTOPRISM_FFMPEG_BITRATE: "32"              # FFmpeg encoding bitrate limit in Mbit/s (default: 50)
+      # PHOTOPRISM_FFMPEG_ENCODER: "h264_v4l2m2m"    # Use Video4Linux for AVC transcoding (default: libx264)
+      # PHOTOPRISM_FFMPEG_ENCODER: "h264_qsv"        # Use Intel Quick Sync Video for AVC transcoding (default: libx264)
+      # PHOTOPRISM_INIT: "intel-graphics tensorflow-amd64-avx2" # Enable TensorFlow AVX2 & Intel Graphics support
+      HOME: "/photoprism"
+    ports:
+      - "{{ photoprism_docker_port }}:{{ photoprism_docker_port }}"
+    working_dir: "/photoprism"
+    restart_policy: unless-stopped
+    memory: "{{ photoprism_docker_memory }}"
+    cpus: "{{ photoprism_docker_cpus }}"
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: yes
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
+    labels:
+      traefik.enable: "{{ photoprism_available_externally }}"
+      traefik.http.routers.photoprism.entrypoints: "http,https"
+      traefik.http.routers.photoprism.rule:	"Host(`{{ photoprism_docker_hostname }}.{{ photoprism_docker_host_domain }}`)"
+      traefik.http.routers.photoprism.tls.certresolver: "letsencrypt"
+      traefik.http.routers.photoprism.tls.domains[0].main: "*.{{ photoprism_docker_host_domain }}"
+      traefik.http.services.photoprism.loadbalancer.server.port: "{{ photoprism_docker_port }}"

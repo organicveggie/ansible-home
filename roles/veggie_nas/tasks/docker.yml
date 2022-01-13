@@ -96,6 +96,18 @@
         gateway: 172.100.2.1
   when: grafana_network_name is defined
 
+- name: Create Photoprism Docker network
+  community.docker.docker_network:
+    name: "{{ photoprism_network_name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "no"
+    scope: "local"
+    ipam_config:
+      - subnet: 172.100.3.0/24
+        gateway: 172.100.3.1
+  when: photoprism_network_name is defined
+
 - name: Build Traefik traefik_extra_networks
   ansible.builtin.set_fact:
     traefik_extra_networks: "{{ traefik_extra_networks | default([]) }} + [{ 'name': '{{ item }}' }]"
@@ -107,4 +119,5 @@
     - "{{ nodered_docker_network_name | default('') }}"
     - "{{ calibre_docker_network_name | default('') }}"
     - "{{ grafana_network_name | default('') }}"
+    - "{{ photoprism_network_name | default('') }}"
   when: item != ''

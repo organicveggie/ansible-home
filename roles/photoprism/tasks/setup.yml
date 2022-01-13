@@ -1,0 +1,33 @@
+---
+- name: Create ZFS file systems
+  community.general.zfs:
+    name: "{{ item.dataset }}"
+    state: present
+  loop: "{{ photoprism_zfs_filesystems }}"
+
+- name: Create Photoprism user
+  ansible.builtin.user:
+    name: "{{ photoprism_username }}"
+    uid: "{{ photoprism_uid | default(omit) }}"
+    create_home: "false"
+    password: "!"
+    groups: "{{ photoprism_extra_groups | default(omit) }}"
+
+- name: Create Photoprism directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    # owner: "{{ photoprism_username }}"
+    owner: "root"
+    group: "root"
+    mode: "0770"
+    state: "directory"
+  loop:
+    - "{{ photoprism_dir }}"
+
+# - name: Set ZFS FS ownership
+#   ansible.builtin.file:
+#     path: "{{ item.path }}"
+#     owner: "{{ photoprism_username }}"
+#     group: "root"
+#     mode: "0770"
+#   loop: "{{ photoprism_zfs_filesystems }}"

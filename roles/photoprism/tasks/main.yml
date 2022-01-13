@@ -1,0 +1,10 @@
+---
+- import_tasks: setup.yml
+  tags:
+    - photoprism
+    - photoprism:setup
+
+- import_tasks: docker.yml
+  tags:
+    - photoprism
+    - photoprism:docker
