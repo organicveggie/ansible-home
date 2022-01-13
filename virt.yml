@@ -24,11 +24,9 @@
     - role: veggie_docker
     - role: veggie_virt
     - role: portainer
-    - role: glances
     - role: organicveggie.unific
       tags:
         - unific
-    - role: grafana_docker
     - role: postgresql_docker
     - role: pgadmin_docker
     - role: zwavejs2mqtt
