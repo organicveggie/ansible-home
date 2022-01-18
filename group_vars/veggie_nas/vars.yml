@@ -57,6 +57,8 @@ grafana_docker_smtp_host: "{{ vault_grafana_docker_smtp_host }}"
 grafana_docker_smtp_user: "{{ vault_grafana_docker_smtp_user }}"
 grafana_docker_smtp_password: "{{ vault_grafana_docker_smtp_password }}"
 grafana_docker_smtp_from_address: "{{ primary_email_address }}"
+grafana_docker_extra_networks:
+  - "influxdb"
 
 ###
 ### InfluxDB

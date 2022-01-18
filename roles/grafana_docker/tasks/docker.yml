@@ -41,3 +41,11 @@
       traefik.http.routers.grafana.tls.certresolver: "letsencrypt"
       traefik.http.routers.grafana.tls.domains[0].main: "*.{{ grafana_docker_host_domain }}"
       traefik.http.services.grafana.loadbalancer.server.port: "{{ grafana_docker_port }}"
+
+- name: Add Grafana container to any extra networks
+  community.docker.docker_network:
+    name: "{{ item }}"
+    connected:
+      - "grafana"
+    appends: yes
+  loop: "{{ grafana_docker_extra_networks }}"
