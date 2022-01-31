@@ -2,7 +2,7 @@ grafana_docker_username: "grafana"
 grafana_docker_uid: 472
 
 grafana_network_name: "grafana"
-grafana_extra_networks: []
+grafana_docker_extra_networks: []
 
 grafana_docker_image: "grafana/grafana-oss"
 grafana_docker_image_tag: "latest"
