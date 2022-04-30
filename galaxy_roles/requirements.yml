@@ -1,11 +1,11 @@
 ---
 - src: https://github.com/organicveggie/ansible.traefik
   name: organicveggie.ansible-traefik
-  version: "master"
+  version: 2.0.0
 
 - src: https://github.com/organicveggie/ansible-role-certbot-route53
   name: organicveggie.certbot-route53
-  version: "main"
+  version: 1.0.0
 
 - src: https://github.com/organicveggie/ansible.unific
   name: organicveggie.unific
