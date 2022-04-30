@@ -9,7 +9,7 @@
 
 - src: https://github.com/organicveggie/ansible.unific
   name: organicveggie.unific
-  version: "main"
+  version: 1.0.0
 
 - src: bertvv.samba
   version: v2.7.1
