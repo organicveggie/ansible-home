@@ -35,7 +35,9 @@ diun_regopts_dockerio_passwd: "{{ vault_diun_regopts_dockerio_passwd }}"
 ### Docker
 ###
 docker_home: /mnt/nas/docker
-docker_admin_user: "{{ veggie_admin_username }}"
+docker_daemon_options:
+  storage-driver: "zfs"
+  data-root: "{{ docker_home }}/data"
 
 ###
 ### Glances
@@ -109,6 +111,15 @@ nfs_exports:
 ###
 nodered_docker_image: "{{ vault_nodered_docker_image }}"
 nodered_host_domain: "{{ veggie_nas_domain_name }}"
+
+###
+### organicveggie.folders
+###
+organicveggie_folders_create:
+  - path: "{{ docker_home }}"
+    owner: root
+    group: root
+    mode: "755"
 
 ###
 ### Photoprism
@@ -329,6 +340,19 @@ traefik_container_environment:
   AWS_HOSTED_ZONE_ID: "{{ acme_route53_hosted_zone_id }}"
   AWS_ACCESS_KEY_ID: "{{ letsencrypt_aws_access_key }}"
   AWS_SECRET_ACCESS_KEY: "{{ letsencrypt_aws_secret_key }}"
+
+###
+### UniFi Controiller
+###
+unific_available_externally: "true"
+unific_host_domain: "{{ veggie_nas_domain_name }}"
+unific_cpus: "2"
+unific_memory: "2GB"
+unific_network_mode: "{{ traefik_network_name }}"
+unific_dir_data: "/virtpool/unific/data"
+unific_dir_log: "/virtpool/unific/log"
+unific_dir_cert: "/virtpool/unific//cert"
+unific_traefik_router_rule: "Host(`{{ unific_hostname }}.{{ unific_host_domain }}`) || Host(`{{ unific_hostname }}.{{ veggie_base_domain_name }}`)"
 
 ###
 ### Users/Groups

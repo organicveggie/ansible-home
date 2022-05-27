@@ -12,15 +12,18 @@
       tags:
         - users
         - skip_ansible_lint
-    - role: geerlingguy.docker
+    - role: organicveggie.folders
       tags:
-        - docker
+        - folders
         - skip_ansible_lint
     - role: geerlingguy.pip
       tags:
         - pip
+    - role: geerlingguy.docker
+      tags:
+        - docker
+        - skip_ansible_lint
     - role: veggie_common
-    - role: veggie_docker
     - role: veggie_nas
     - role: bertvv.samba
       tags:
@@ -54,4 +57,7 @@
     - role: calibre_web
     - role: grafana_docker
     - role: photoprism
+    - role: organicveggie.unific
+      tags:
+        - unific
     - role: telegraf

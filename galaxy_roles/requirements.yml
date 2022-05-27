@@ -7,6 +7,10 @@
   name: organicveggie.certbot-route53
   version: 1.0.0
 
+- src: https://github.com/organicveggie/ansible-role-folders
+  name: organicveggie.folders
+  version: 1.0.0
+
 - src: https://github.com/organicveggie/ansible.unific
   name: organicveggie.unific
   version: 1.0.0
