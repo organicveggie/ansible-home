@@ -1,0 +1,11 @@
+---
+driver:
+  name: docker
+
+provisioner:
+  name: ansible
+  env:
+    ANSIBLE_ROLES_PATH: "../../roles"
+
+verifier:
+  name: ansible

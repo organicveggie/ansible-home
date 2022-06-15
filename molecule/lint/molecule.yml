@@ -1,0 +1,21 @@
+---
+scenario:
+  name: lint
+  test_sequence:
+    - lint
+
+platforms:
+  - name: instance
+    image: geerlingguy/docker-${MOLECULE_DISTRO}-ansible:latest
+    command: ""
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    pre_build_image: true
+
+lint: |
+  set -e
+  echo "Run yamllint"
+  yamllint .
+  echo "Run ansible-lint"
+  ansible-lint
