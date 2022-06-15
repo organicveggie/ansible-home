@@ -1,0 +1,25 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+
+  tasks:
+  - name: Check network_one
+    community.docker.docker_network_info:
+      name: "network_one"
+    register: d_network_one
+  - name: Check network_two
+    community.docker.docker_network_info:
+      name: "network_two"
+    register: d_network_two
+  - name: Check network_three
+    community.docker.docker_network_info:
+      name: "network_three"
+    register: d_network_three
+
+  - name: Verify networks exist
+    ansible.builtin.assert:
+      that:
+        - d_network_one.exists
+        - d_network_two.exists
+        - d_network_three.exists

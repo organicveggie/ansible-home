@@ -1,0 +1,58 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+
+  vars:
+    pip_install_packages:
+      - name: docker
+    organicveggie_docker_networks:
+      - name: network_one
+        subnet: "172.1.0.0/16"
+        gateway: "172.1.0.1"
+      - name: network_two
+        driver: "bridge"
+        enable_ipv6: "no"
+        internal: "no"
+        scope: "local"
+        subnet: "172.2.0.0/16"
+        gateway: "172.2.0.1"
+      - name: network_three
+        internal: "yes"
+        subnet: "172.3.0.0/16"
+        gateway: "172.3.0.1"
+
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt: update_cache=yes cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+
+    - name: Wait for systemd to complete initialization
+      command: systemctl is-system-running
+      register: systemctl_status
+      until: >
+        'running' in systemctl_status.stdout or
+        'degraded' in systemctl_status.stdout
+      retries: 30
+      delay: 5
+      when: ansible_service_mgr == 'systemd'
+      changed_when: false
+      failed_when: systemctl_status.rc > 1
+
+    - name: Install timezone data
+      ansible.builtin.apt:
+        name: tzdata
+        state: present
+      when: ansible_os_family == 'Debian'
+
+    - name: Set timezone to Asia/Tokyo
+      community.general.timezone:
+        name: Asia/Tokyo
+      when: ansible_os_family == 'Debian'
+
+  roles:
+    - role: geerlingguy.repo-epel
+      when: ansible_os_family == 'CentOS'
+    - geerlingguy.pip
+    - geerlingguy.docker
+    - docker_networks
