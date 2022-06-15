@@ -24,6 +24,7 @@
         - docker
         - skip_ansible_lint
     - role: veggie_common
+    - role: docker_networks
     - role: veggie_nas
     - role: bertvv.samba
       tags:
