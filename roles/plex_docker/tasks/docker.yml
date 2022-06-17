@@ -50,3 +50,5 @@
     paused: no
     privileged: no
     read_only: no
+    labels:
+      traefik.enable: "no"
