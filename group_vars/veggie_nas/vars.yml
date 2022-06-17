@@ -94,6 +94,12 @@ organicveggie_docker_networks:
     scope: "local"
     subnet: "172.100.3.0/24"
     gateway: "172.100.3.1"
+  - name: "{{ unific_network_name }}"
+    enable_ipv6: "no"
+    internal: "no"
+    scope: "local"
+    subnet: "{{ unific_network_subnet }}"
+    gateway: "{{ unific_network_gateway }}"
 
 ###
 ### Glances
@@ -370,11 +376,12 @@ traefik_qs_https_redirect: "true"
 traefik_qs_https_le: "true"
 traefik_qs_https_le_mail: "{{ letsencrypt_email }}"
 traefik_qs_log_level: INFO
-# Defined dynamically in roles/veggie_nas/tasks/docker.yml
-# traefik_extra_networks:
 traefik_ports:
   - '80:80'
   - '443:443'
+  - '3478:3478'
+  - '10001:10001'
+  - '19000:19000'
 traefik_labels:
   traefik.enable: "true"
   traefik.http.routers.traefik.service: "api@internal"
@@ -392,6 +399,17 @@ traefik_confkey_certificatesResolvers:
       caServer: "{{ traefik_le_ca_server }}"
       dnsChallenge:
         provider: route53
+traefik_confkey_entryPoints:
+  unific_speed_test:
+    address: ":6789"
+  unific_stun:
+    address: ":3478/udp"
+  unific_dev_discovery:
+    address: ":10001/udp"
+  unific_controller_discovery:
+    address: ":19000/udp"
+traefik_confkey_serversTransport:
+  insecureSkipVerify: "true"
 traefik_container_environment:
   AWS_HOSTED_ZONE_ID: "{{ acme_route53_hosted_zone_id }}"
   AWS_ACCESS_KEY_ID: "{{ letsencrypt_aws_access_key }}"
@@ -407,6 +425,7 @@ traefik_extra_networks:
   - name: "{{ photoprism_network_name }}"
   - name: "{{ portainer_network_name }}"
   - name: "{{ restic_rest_server_network_name }}"
+  - name: "{{ unific_network_name }}"
 
 ###
 ### UniFi Controiller
@@ -415,11 +434,11 @@ unific_available_externally: "true"
 unific_host_domain: "{{ veggie_nas_domain_name }}"
 unific_cpus: "2"
 unific_memory: "2GB"
-unific_network_mode: "{{ traefik_network_name }}"
-unific_dir_data: "/virtpool/unific/data"
-unific_dir_log: "/virtpool/unific/log"
-unific_dir_cert: "/virtpool/unific//cert"
 unific_traefik_router_rule: "Host(`{{ unific_hostname }}.{{ unific_host_domain }}`) || Host(`{{ unific_hostname }}.{{ veggie_base_domain_name }}`)"
+unific_docker_extra_networks: ["{{ traefik_network_name }}"]
+unific_docker_network_created: true
+unific_network_subnet: "172.100.4.0/24"
+unific_network_gateway: "172.100.4.1"
 
 ###
 ### Users/Groups

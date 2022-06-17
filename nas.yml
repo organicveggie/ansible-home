@@ -34,9 +34,6 @@
       tags:
         - nfs_server
         - skip_ansible_lint
-    - role: organicveggie.ansible-traefik
-      tags:
-        - traefik
     - role: portainer
     - role: glances
     - role: time_machine
@@ -61,4 +58,7 @@
     - role: organicveggie.unific
       tags:
         - unific
+    - role: organicveggie.ansible-traefik
+      tags:
+        - traefik
     - role: telegraf
