@@ -39,4 +39,4 @@
     read_only: no
     tty: no
     labels:
-      traefik.enable: "no"
+      traefik.enable: "false"

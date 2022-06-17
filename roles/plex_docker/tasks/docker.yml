@@ -51,4 +51,4 @@
     privileged: no
     read_only: no
     labels:
-      traefik.enable: "no"
+      traefik.enable: "false"
