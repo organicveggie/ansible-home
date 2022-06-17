@@ -144,8 +144,6 @@ traefik_qs_https_redirect: "true"
 traefik_qs_https_le: "true"
 traefik_qs_https_le_mail: "{{ letsencrypt_email }}"
 traefik_qs_log_level: INFO
-# Defined dynamically in roles/veggie_virt/tasks/docker.yml
-# traefik_extra_networks:
 traefik_ports:
   - "192.168.25.20:80:80"
   - "192.168.25.20:443:443"
