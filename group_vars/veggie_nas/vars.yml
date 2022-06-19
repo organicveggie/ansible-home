@@ -380,6 +380,7 @@ traefik_ports:
   - '80:80'
   - '443:443'
   - '3478:3478'
+  - '8080:8080'
   - '10001:10001'
   - '19000:19000'
 traefik_labels:
@@ -400,6 +401,8 @@ traefik_confkey_certificatesResolvers:
       dnsChallenge:
         provider: route53
 traefik_confkey_entryPoints:
+  java_http:
+    address: ":8080"
   unific_speed_test:
     address: ":6789"
   unific_stun:
@@ -434,7 +437,8 @@ unific_available_externally: "true"
 unific_host_domain: "{{ veggie_nas_domain_name }}"
 unific_cpus: "2"
 unific_memory: "2GB"
-unific_traefik_router_rule: "Host(`{{ unific_hostname }}.{{ unific_host_domain }}`) || Host(`{{ unific_hostname }}.{{ veggie_base_domain_name }}`)"
+# unific_traefik_router_rule: "Host(`{{ unific_hostname }}.{{ unific_host_domain }}`) || Host(`{{ unific_hostname }}.{{ veggie_base_domain_name }}`)"
+unific_traefik_router_rule: "Host(`{{ unific_hostname }}.{{ unific_host_domain }}`)"
 unific_docker_network_created: true
 unific_network_subnet: "172.100.4.0/24"
 unific_network_gateway: "172.100.4.1"
