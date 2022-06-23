@@ -1,0 +1,32 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+
+  tasks:
+  - name: Get info on conf volume
+    community.docker.docker_volume_info:
+      name: "{{ postgresql_docker_volume_conf_name }}"
+    register: vol_conf
+
+  - name: Get info on data volume
+    community.docker.docker_volume_info:
+      name: "{{ postgresql_docker_volume_data_name }}"
+    register: vol_data
+
+  - name: Verify volumes exists
+    assert:
+      that:
+        - vol_conf.exists
+        - vol_data.exists
+
+  - name: Get info on container
+    community.docker.docker_container_info:
+      name: "{{ postgresql_docker_name }}"
+    register: cinfo
+
+  - name: Verify container exists and is running
+    assert:
+      that:
+        - cinfo.exists
+        - cinfo.container['State']['Running']

@@ -26,14 +26,130 @@
   loop:
     - "{{ postgresql_docker_home_dir }}"
     - "{{ postgresql_docker_conf_dir }}"
-    - "{{ postgresql_docker_data_dir }}"
 
-- name: Copy pg_hba config
-  copy:
-    content: "{{ postgresql_docker_pg_hba_conf }}"
-    dest: "{{ postgresql_docker_data_dir }}/pg_hba.conf"
+- name: Create PostgreSQL data directory
+  ansible.builtin.file:
+    path: "{{ postgresql_docker_data_dir }}"
+    state: directory
+    owner: "{{ postgresql_docker_user }}"
+    group: "{{ postgresql_docker_group }}"
+    mode: 0700
 
 - name: Copy postgresql config
   copy:
     content: "{{ postgresql_docker_postgresql_conf }}"
     dest: "{{ postgresql_docker_conf_dir }}/postgresql.conf"
+
+- name: PostgreSQL conf volume
+  community.docker.docker_volume:
+    name: "{{ postgresql_docker_volume_conf_name }}"
+    driver_options:
+      type: "none"
+      o: "bind"
+      device: "{{ postgresql_docker_conf_dir }}"
+  when: postgresql_docker_use_volumes
+
+- name: PostgreSQL data volume
+  community.docker.docker_volume:
+    name: "{{ postgresql_docker_volume_data_name }}"
+    driver_options:
+      type: "none"
+      o: "bind"
+      device: "{{ postgresql_docker_data_dir }}"
+  when: postgresql_docker_use_volumes
+
+- name: Create PostgreSQL Docker Container w/out volumes
+  community.docker.docker_container:
+    name: "{{ postgresql_docker_name }}"
+    image: "{{ postgresql_docker_image }}"
+    mounts:
+      - type: bind
+        source: "{{ postgresql_docker_conf_dir }}"
+        target: "/etc/postgresql"
+      - type: bind
+        source: "{{ postgresql_docker_data_dir }}"
+        target: "/var/lib/postgresql/data"
+      - type: "bind"
+        source: "/etc/passwd"
+        target: "/etc/passwd"
+        read_only: true
+    shm_size: "{{ postgresql_docker_shm_size | default(omit) }}"
+    env:
+      POSTGRES_PASSWORD: "{{ postgresql_docker_admin_password }}"
+      POSTGRES_USER: "{{ postgresql_docker_admin_user }}"
+    network_mode: "{{ postgresql_docker_network_name }}"
+    restart_policy: unless-stopped
+    memory: "{{ postgresql_docker_memory }}"
+    cpus: "{{ postgresql_docker_cpu }}"
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: yes
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
+    labels:
+      traefik.enable: "{{ postgresql_docker_available_externally }}"
+      traefik.tcp.routers.postgres.entrypoints: "postgres"
+      traefik.tcp.routers.postgres.rule: "HostSNI(`*`)"
+      traefik.tcp.services.postgres.loadBalancer.server.port: "5432"
+  when: not postgresql_docker_use_volumes
+  register: pgc
+
+- name: Create PostgreSQL Docker Container with volumes
+  community.docker.docker_container:
+    name: "{{ postgresql_docker_name }}"
+    image: "{{ postgresql_docker_image }}"
+    mounts:
+      - type: volume
+        source: "{{ postgresql_docker_volume_conf_name }}"
+        target: "/etc/postgresql"
+      - type: "volume"
+        source: "{{ postgresql_docker_volume_data_name }}"
+        target: "/var/lib/postgresql/data"
+      - type: bind
+        source: "/etc/passwd"
+        target: "/etc/passwd"
+        read_only: true
+    env:
+      POSTGRES_PASSWORD: "{{ postgresql_docker_admin_password }}"
+      POSTGRES_USER: "{{ postgresql_docker_admin_user }}"
+    shm_size: "{{ postgresql_docker_shm_size | default(omit) }}"
+    network_mode: "{{ postgresql_docker_network_name }}"
+    restart_policy: unless-stopped
+    memory: "{{ postgresql_docker_memory }}"
+    cpus: "{{ postgresql_docker_cpu }}"
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: yes
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
+    labels:
+      traefik.enable: "{{ postgresql_docker_available_externally }}"
+      traefik.tcp.routers.postgres.entrypoints: "postgres"
+      traefik.tcp.routers.postgres.rule: "HostSNI(`*`)"
+      traefik.tcp.services.postgres.loadBalancer.server.port: "5432"
+  when: postgresql_docker_use_volumes
+  register: pgc
+
+- name: Wait until PostgreSQL is healthy
+  community.docker.docker_container_exec:
+    container: "{{ postgresql_docker_name }}"
+    command: "pg_isready"
+  register: pg_isready
+  until: pg_isready.rc == 0
+  retries: 12
+  delay: 5
+  changed_when: false
+
+- name: Copy pg_hba config
+  copy:
+    content: "{{ postgresql_docker_pg_hba_conf }}"
+    dest: "{{ postgresql_docker_data_dir }}/pg_hba.conf"
+  notify: Restart PostgreSQL Docker Container

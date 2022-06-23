@@ -100,6 +100,12 @@ organicveggie_docker_networks:
     scope: "local"
     subnet: "{{ unific_network_subnet }}"
     gateway: "{{ unific_network_gateway }}"
+  - name: "{{ postgresql_docker_network_name }}"
+    enable_ipv6: "no"
+    internal: "yes"
+    scope: "local"
+    subnet: "{{ postgresql_docker_network_subnet }}"
+    gateway: "{{ postgresql_docker_network_gateway }}"
 
 ###
 ### Glances
@@ -218,6 +224,15 @@ pip_install_packages:
 portainer_available_externally: "true"
 portainer_admin_password: "{{ default_portainer_admin_password }}"
 portainer_host_domain: "{{ veggie_nas_domain_name }}"
+
+###
+### PostgreSQL
+###
+postgresql_docker_use_volumes: true
+postgresql_docker_home_dir: "/mnt/nas/{{ postgresql_docker_name }}"
+postgresql_docker_conf_dir: "{{ postgresql_docker_home_dir }}/conf"
+postgresql_docker_data_dir: "{{ postgresql_docker_home_dir }}/data"
+postgresql_docker_admin_password: "{{ veggie_postgres_admin_password }}"
 
 ###
 ### RClone
@@ -427,6 +442,7 @@ traefik_extra_networks:
   - name: "{{ nodered_docker_network_name }}"
   - name: "{{ photoprism_network_name }}"
   - name: "{{ portainer_network_name }}"
+  # - name: "{{ postgres_docker_network_name }}"
   - name: "{{ restic_rest_server_network_name }}"
   - name: "{{ unific_network_name }}"
 

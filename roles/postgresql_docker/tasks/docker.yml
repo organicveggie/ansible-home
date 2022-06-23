@@ -1,12 +1,37 @@
 ---
-- name: Create PostgreSQL Docker Container
+- name: PostgreSQL conf volume
+  community.docker.docker_volume:
+    name: "{{ postgresql_docker_volume_conf_name }}"
+    driver_options:
+      type: "none"
+      o: "bind"
+      device: "{{ postgresql_docker_conf_dir }}"
+  when: postgresql_docker_use_volumes
+
+- name: PostgreSQL data volume
+  community.docker.docker_volume:
+    name: "{{ postgresql_docker_volume_data_name }}"
+    driver_options:
+      type: "none"
+      o: "bind"
+      device: "{{ postgresql_docker_data_dir }}"
+  when: postgresql_docker_use_volumes
+
+- name: Create PostgreSQL Docker Container w/out volumes
   community.docker.docker_container:
     name: "postgres"
     image: "{{ postgresql_docker_image }}"
-    volumes:
-      - "{{ postgresql_docker_conf_dir }}:/etc/postgresql"
-      - "{{ postgresql_docker_data_dir }}:/var/lib/postgresql/data"
-      - "/etc/passwd:/etc/passwd:ro"
+    mounts:
+      - type: bind
+        source: "{{ postgresql_docker_conf_dir }}"
+        target: "/etc/postgresql"
+      - type: bind
+        source: "{{ postgresql_docker_data_dir }}"
+        target: "/var/lib/postgresql/data"
+      - type: "bind"
+        source: "/etc/passwd"
+        target: "/etc/passwd"
+        read_only: true
     shm_size: "{{ postgresql_docker_shm_size | default(omit) }}"
     env:
       POSTGRES_PASSWORD: "{{ postgresql_docker_admin_password }}"
@@ -29,3 +54,43 @@
       traefik.tcp.routers.postgres.entrypoints: "postgres"
       traefik.tcp.routers.postgres.rule: "HostSNI(`*`)"
       traefik.tcp.services.postgres.loadBalancer.server.port: "5432"
+  when: not postgresql_docker_use_volumes
+
+- name: Create PostgreSQL Docker Container with volumes
+  community.docker.docker_container:
+    name: "postgres"
+    image: "{{ postgresql_docker_image }}"
+    mounts:
+      - type: volume
+        source: "{{ postgresql_docker_volume_conf_name }}"
+        target: "/etc/postgresql"
+      - type: "volume"
+        source: "{{ postgresql_docker_volume_data_name }}"
+        target: "/var/lib/postgresql/data"
+      - type: bind
+        source: "/etc/passwd"
+        target: "/etc/passwd"
+        read_only: true
+    shm_size: "{{ postgresql_docker_shm_size | default(omit) }}"
+    env:
+      POSTGRES_PASSWORD: "{{ postgresql_docker_admin_password }}"
+      POSTGRES_USER: "{{ postgresql_docker_admin_user }}"
+    network_mode: "{{ postgresql_docker_network_name }}"
+    restart_policy: unless-stopped
+    memory: "{{ postgresql_docker_memory }}"
+    cpus: "{{ postgresql_docker_cpu }}"
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: yes
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
+    labels:
+      traefik.enable: "{{ postgresql_docker_available_externally }}"
+      traefik.tcp.routers.postgres.entrypoints: "postgres"
+      traefik.tcp.routers.postgres.rule: "HostSNI(`*`)"
+      traefik.tcp.services.postgres.loadBalancer.server.port: "5432"
+  when: postgresql_docker_use_volumes
