@@ -1,0 +1,36 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+
+  tasks:
+  - name: Check network
+    community.docker.docker_network_info:
+      name: "postgres"
+    register: d_network_pg
+  
+  - name: Verify network exists
+    ansible.builtin.assert:
+      that:
+        - d_network_pg.exists
+
+  - name: Get info on data volume
+    community.docker.docker_volume_info:
+      name: "pgadmin-data"
+    register: vol_data
+
+  - name: Verify volumes exist
+    assert:
+      that:
+        - vol_data.exists
+
+  - name: Get info on container
+    community.docker.docker_container_info:
+      name: "pgadmin"
+    register: cinfo
+
+  - name: Verify container exists and is running
+    assert:
+      that:
+        - cinfo.exists
+        - cinfo.container['State']['Running']

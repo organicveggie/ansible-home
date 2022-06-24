@@ -1,3 +1,4 @@
+pgadmin_docker_name: "pgadmin"
 pgadmin_docker_port: "5050"
 pgadmin_docker_memory: "1GB"
 
@@ -6,6 +7,11 @@ pgadmin_default_password: "changeme"
 
 pgadmin_docker_dir: "/opt/pgadmin/lib"
 pgadmin_docker_conf_dir: "/opt/pgadmin/conf"
+
+pgadmin_docker_use_volumes: false
+pgadmin_docker_volume_data_name: "pgadmin-data"
+
+pgadmin_docker_network_name: "{{ postgresql_docker_network_name }}"
 
 # pgadmin_docker_servers:
 #   postgres:

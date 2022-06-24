@@ -59,6 +59,7 @@
       tags:
         - unific
     # - role: postgresl_docker
+    # - role: pgadmin_docker
     - role: organicveggie.ansible-traefik
       tags:
         - traefik

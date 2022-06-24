@@ -1,0 +1,72 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+
+  vars:
+    pip_install_packages:
+      - name: docker
+    organicveggie_docker_networks:
+      - name: "postgres"
+        enable_ipv6: "no"
+        internal: "yes"
+        scope: "local"
+        subnet: "172.1.0.0/16"
+        gateway: "172.1.0.1"
+    pgadmin_docker_use_volumes: true
+    pgadmin_docker_network_name: "postgres"
+    pgadmin_docker_dir: "/mnt/pgadmin/lib"
+    pgadmin_docker_conf_dir: "/mnt/pgadmin/conf"
+    pgadmin_default_email: "pgadmin@example.com"
+    pgadmin_docker_host_domain: "molecule.example.com"
+    pgadmin_default_password: "moleculepassword"
+    pgadmin_docker_email_server: "email-smtp.example.com"
+    pgadmin_docker_email_port: "587"
+    pgadmin_docker_email_use_ssl: "False"
+    pgadmin_docker_email_user_tls: "True"
+    pgadmin_docker_email_username: "emailuser"
+    pgadmin_docker_email_password: "emailpassword"
+    pgadmin_docker_servers:
+      "pg_molecule_test":
+        Name: "Molecule Test Postgres"
+        Group: "Servers"
+        Port: "5432"
+        Username: "postgres"
+        Host: "postgres"
+        SSLMode: "prefer"
+        MaintenanceDB: "postgres"
+
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt: update_cache=yes cache_valid_time=600
+      changed_when: false
+      when: ansible_os_family == 'Debian'
+
+    - name: Wait for systemd to complete initialization
+      command: systemctl is-system-running
+      register: systemctl_status
+      until: >
+        'running' in systemctl_status.stdout or
+        'degraded' in systemctl_status.stdout
+      retries: 30
+      delay: 5
+      when: ansible_service_mgr == 'systemd'
+      changed_when: false
+      failed_when: systemctl_status.rc > 1
+
+    - name: Install timezone data
+      ansible.builtin.apt:
+        name: tzdata
+        state: present
+      when: ansible_os_family == 'Debian'
+
+    - name: Set timezone to Asia/Tokyo
+      community.general.timezone:
+        name: Asia/Tokyo
+      when: ansible_os_family == 'Debian'
+
+  roles:
+    - geerlingguy.pip
+    - geerlingguy.docker
+    - docker_networks
+    - pgadmin_docker

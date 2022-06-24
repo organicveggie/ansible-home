@@ -1,0 +1,21 @@
+---
+dependency:
+  name: galaxy
+  options:
+    requirements-file: molecule/postgresql_docker/requirements.yml
+    role-file: molecule/postgresql_docker/requirements.yml
+
+platforms:
+  - name: instance
+    image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2004}-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    privileged: true
+    pre_build_image: true
+
+provisioner:
+  name: ansible
+  options:
+    diff: True
+    verbose: True

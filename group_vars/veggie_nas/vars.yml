@@ -190,6 +190,30 @@ organicveggie_folders_create:
     mode: "755"
 
 ###
+### PgAdmin
+###
+pgadmin_docker_dir: "/mnt/nas/pgadmin/lib"
+pgadmin_docker_conf_dir: "/mnt/nas/pgadmin/conf"
+pgadmin_default_email: "{{ primary_email_address }}"
+pgadmin_docker_host_domain: "{{ veggie_nas_domain_name }}"
+pgadmin_default_password: "{{ veggie_postgres_admin_password }}"
+pgadmin_docker_email_server: "email-smtp.us-west-2.amazonaws.com"
+pgadmin_docker_email_port: "587"
+pgadmin_docker_email_use_ssl: "False"
+pgadmin_docker_email_user_tls: "True"
+pgadmin_docker_email_username: "{{ aws_ses_usw2_access_key }}"
+pgadmin_docker_email_password: "{{ aws_ses_usw2_secret_key }}"
+pgadmin_docker_servers:
+  "pg_hass":
+    Name: "Hass Postgres"
+    Group: "Servers"
+    Port: "5432"
+    Username: "postgres"
+    Host: "postgres"
+    SSLMode: "prefer"
+    MaintenanceDB: "postgres"
+
+###
 ### Photoprism
 ###
 photoprism_admin_password: "{{ vault_photoprism_admin_password }}"
