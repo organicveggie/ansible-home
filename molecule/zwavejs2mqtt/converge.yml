@@ -70,8 +70,9 @@
     
     - name: Start socat vsp
       ansible.builtin.systemd:
-        state: started
         name: socat-vsp
+        state: started
+        daemon_reload: true
 
   roles:
     - zwavejs2mqtt
