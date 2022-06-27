@@ -106,6 +106,12 @@ organicveggie_docker_networks:
     scope: "local"
     subnet: "{{ postgresql_docker_network_subnet }}"
     gateway: "{{ postgresql_docker_network_gateway }}"
+  - name: "{{ home_assistant_docker_network }}"
+    enable_ipv6: "no"
+    internal: "yes"
+    scope: "local"
+    subnet: "{{ home_assistant_docker_network_subnet }}"
+    gateway: "{{ home_assistant_docker_network_gateway }}"
 
 ###
 ### Glances
@@ -129,6 +135,12 @@ grafana_docker_smtp_password: "{{ vault_grafana_docker_smtp_password }}"
 grafana_docker_smtp_from_address: "{{ primary_email_address }}"
 grafana_docker_extra_networks:
   - "influxdb"
+
+###
+### Home Assistant
+###
+home_assistant_docker_network_subnet: "172.100.6.0/24"
+home_assistant_docker_network_gateway: "172.100.6.1/24"
 
 ###
 ### InfluxDB
@@ -462,11 +474,12 @@ traefik_extra_networks:
   - name: "{{ diun_docker_network_name }}"
   - name: "{{ glances_network_name }}"
   - name: "{{ grafana_network_name }}"
+  - name: "{{ home_assistant_docker_network }}"
   - name: "{{ influxdb_network_name }}"
   - name: "{{ nodered_docker_network_name }}"
   - name: "{{ photoprism_network_name }}"
   - name: "{{ portainer_network_name }}"
-  # - name: "{{ postgres_docker_network_name }}"
+  - name: "{{ postgres_docker_network_name }}"
   - name: "{{ restic_rest_server_network_name }}"
   - name: "{{ unific_network_name }}"
 
@@ -487,3 +500,11 @@ unific_network_gateway: "172.100.4.1"
 ### Users/Groups
 ###
 users_list_host: "{{ nas_users }}"
+
+###
+### zwavejs2mqtt
+###
+zwavejs2mqtt_docker_use_volumes: true
+zwavejs2mqtt_docker_network: "{{ home_assistant_docker_network }}"
+zwavejs2mqtt_host_domain: "{{ veggie_base_domain_name }}"
+zwavejs2mqtt_timezone: "{{ home_timezone }}"

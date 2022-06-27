@@ -7,6 +7,8 @@ home_assistant_docker_hostname: "hass"
 home_assistant_docker_host_domain: "example.com"
 
 home_assistant_docker_network: "hass"
+home_assistant_docker_network_subnet: "172.100.1.0/24"
+home_assistant_docker_network_gateway: "172.100.1.1/24"
 
 home_assistant_docker_memory: "2G"
 home_assistant_docker_cpus: "2"
