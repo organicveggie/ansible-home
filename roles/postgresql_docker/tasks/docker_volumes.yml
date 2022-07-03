@@ -1,23 +1,35 @@
 ---
-- name: Create PostgreSQL Docker Container w/out volumes
+- name: Create PostgreSQL conf volume
+  community.docker.docker_volume:
+    name: "{{ postgresql_docker_volume_conf_name }}"
+    driver_options:
+      type: "none"
+      o: "bind"
+      device: "{{ postgresql_docker_conf_dir }}"
+
+- name: Create PostgreSQL data volume
+  community.docker.docker_volume:
+    name: "{{ postgresql_docker_volume_data_name }}"
+
+- name: Create PostgreSQL Docker Container with volumes
   community.docker.docker_container:
     name: "{{ postgresql_docker_name }}"
     image: "{{ postgresql_docker_image }}"
     mounts:
-      - type: bind
-        source: "{{ postgresql_docker_conf_dir }}"
+      - type: volume
+        source: "{{ postgresql_docker_volume_conf_name }}"
         target: "/etc/postgresql"
-      - type: bind
-        source: "{{ postgresql_docker_data_dir }}"
+      - type: "volume"
+        source: "{{ postgresql_docker_volume_data_name }}"
         target: "/var/lib/postgresql/data"
-      - type: "bind"
+      - type: bind
         source: "/etc/passwd"
         target: "/etc/passwd"
         read_only: true
-    shm_size: "{{ postgresql_docker_shm_size | default(omit) }}"
     env:
       POSTGRES_PASSWORD: "{{ postgresql_docker_admin_password }}"
       POSTGRES_USER: "{{ postgresql_docker_admin_user }}"
+    shm_size: "{{ postgresql_docker_shm_size | default(omit) }}"
     network_mode: "{{ postgresql_docker_network_name }}"
     restart_policy: unless-stopped
     memory: "{{ postgresql_docker_memory }}"
@@ -48,8 +60,13 @@
   delay: 5
   changed_when: false
 
+- name: Get info on data volume
+  community.docker.docker_volume_info:
+    name: "postgresql-data"
+  register: vol_data
+
 - name: Copy pg_hba config
-  copy:
+  ansible.builtin.copy:
     content: "{{ postgresql_docker_pg_hba_conf }}"
-    dest: "{{ postgresql_docker_data_dir }}/pg_hba.conf"
+    dest: "{{ vol_data['volume']['Mountpoint'] }}/pg_hba.conf"
   notify: Restart PostgreSQL Docker Container

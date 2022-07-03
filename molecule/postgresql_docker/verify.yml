@@ -6,12 +6,12 @@
   tasks:
   - name: Get info on conf volume
     community.docker.docker_volume_info:
-      name: "{{ postgresql_docker_volume_conf_name }}"
+      name: "postgresql-conf"
     register: vol_conf
 
   - name: Get info on data volume
     community.docker.docker_volume_info:
-      name: "{{ postgresql_docker_volume_data_name }}"
+      name: "postgresql-data"
     register: vol_data
 
   - name: Verify volumes exists
@@ -22,7 +22,7 @@
 
   - name: Get info on container
     community.docker.docker_container_info:
-      name: "{{ postgresql_docker_name }}"
+      name: "postgres"
     register: cinfo
 
   - name: Verify container exists and is running
