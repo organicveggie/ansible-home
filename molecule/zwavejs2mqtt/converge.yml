@@ -64,7 +64,7 @@
 
     - name: Copy socat virtual serial port service definition
       ansible.builtin.copy:
-        src: "socat.service"
+        src: "../common/socat.service"
         dest: "/etc/systemd/system/socat-vsp.service"
         mode: "0644"
     
