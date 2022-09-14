@@ -141,6 +141,15 @@ grafana_docker_extra_networks:
 ###
 home_assistant_docker_network_subnet: "172.100.6.0/24"
 home_assistant_docker_network_gateway: "172.100.6.1/24"
+home_assistant_docker_hostname: "hass"
+home_assistant_docker_host_domain: "{{ veggie_base_domain_name }}"
+home_assistant_docker_memory: "3G"
+hass_home_latitude: "{{ home_latitude }}"
+hass_home_longitude: "{{ home_longitude }}"
+hass_home_timezone: "{{ home_timezone }}"
+hass_url: "http://{{ vault_hass_hostname }}"
+hass_db_user: "{{ vault_hass_db_user }}"
+hass_db_password: "{{ vault_hass_db_password }}"
 
 ###
 ### InfluxDB
