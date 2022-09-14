@@ -14,6 +14,8 @@ echo py38/bin/python3 -m pip install "ansible-lint"
 py38/bin/python3 -m pip install "ansible-lint"
 echo py38/bin/python3 -m pip install "molecule[docker]"
 py38/bin/python3 -m pip install "molecule[docker]"
+echo py38/bin/python3 -m pip install "argcomplete"
+py38/bin/python3 -m pip install "argcomplete"
 
 # Package            Version
 # ------------------ ---------
