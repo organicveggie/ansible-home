@@ -1,6 +1,9 @@
 home_assistant_docker_data_dir: "/var/lib/home-assistant"
 home_assistant_docker_zfs_filesystems: []
 
+home_assistant_docker_use_volumes: false
+home_assistant_docker_volume_name: "hass-config"
+
 home_assistant_docker_port: "8123"
 home_assistant_available_externally: "true"
 home_assistant_docker_hostname: "hass"
@@ -12,6 +15,8 @@ home_assistant_docker_network_gateway: "172.100.1.1/24"
 
 home_assistant_docker_memory: "2G"
 home_assistant_docker_cpus: "2"
+
+home_assistant_docker_zwave_device: "/dev/ttyACM0"
 
 hass_home_latitude: 38.8977
 hass_home_longitude: 77.0365

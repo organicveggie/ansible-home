@@ -1,17 +1,25 @@
 ---
-- name: Home Assistant Docker Container w/out volumes 
+- name: Create Home Assistant volume
+  community.docker.docker_volume:
+    name: "{{ home_assistant_docker_volume_name }}"
+
+- name: Home Assistant Docker Container w/volumes
   community.docker.docker_container:
     name: homeassistant
     image: homeassistant/home-assistant:stable
     pull: true
-    volumes:
-      - "{{ home_assistant_docker_data_dir }}:/config"
-      - "/etc/localtime:/etc/localtime:ro"
+    mounts:
+      - source: "{{ home_assistant_docker_volume_name }}"
+        target: "/config"
+        type: "volume"
+      - source: "/etc/localtime"
+        target: "/etc/localtime"
+        type: "bind"
+        read_only: true
     network_mode: "{{ home_assistant_docker_network }}"
     networks:
       - name: "{{ home_assistant_docker_network }}"
       - name: "{{ postgresql_docker_network_name }}"
-      - name: "{{ iot_vlan_docker_network_name }}"
     restart_policy: unless-stopped
     memory: "{{ home_assistant_docker_memory }}"
     cpus: "{{ home_assistant_docker_cpus }}"
@@ -42,3 +50,4 @@
       traefik.tcp.routers.hass_sonos.rule: "HostSNI(`*`)"
       traefik.tcp.routers.hass_sonos.service: "hass_sonos"
       traefik.tcp.services.hass_sonos.loadbalancer.server.port: "1400"
+  

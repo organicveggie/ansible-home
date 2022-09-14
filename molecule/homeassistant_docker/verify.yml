@@ -1,0 +1,36 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+
+  tasks:
+  - name: Check network
+    community.docker.docker_network_info:
+      name: "hass"
+    register: d_network
+  
+  - name: Verify network exists
+    ansible.builtin.assert:
+      that:
+        - d_network.exists
+
+  - name: Get info on conf volume
+    community.docker.docker_volume_info:
+      name: "hass-config"
+    register: vol_conf
+
+  - name: Verify volumes exists
+    assert:
+      that:
+        - vol_conf.exists
+
+  - name: Get info on container
+    community.docker.docker_container_info:
+      name: "homeassistant"
+    register: cinfo
+
+  - name: Verify container exists and is running
+    assert:
+      that:
+        - cinfo.exists
+        - cinfo.container['State']['Running']

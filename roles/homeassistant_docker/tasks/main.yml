@@ -19,3 +19,12 @@
     - home_assistant
     - home_assistant_docker
     - home_assistant_docker:docker
+  when: not home_assistant_docker_use_volumes
+
+- import_tasks: docker_volumes.yml
+  tags:
+    - hass
+    - home_assistant
+    - home_assistant_docker
+    - home_assistant_docker:docker
+  when: home_assistant_docker_use_volumes

@@ -1,0 +1,87 @@
+---
+- name: Converge - Preinstall
+  hosts: all
+  become: true
+
+  vars:
+    pip_install_packages:
+      - name: docker
+    organicveggie_docker_networks:
+      - name: "postgres"
+        enable_ipv6: "no"
+        internal: "yes"
+        scope: "local"
+        subnet: "172.1.1.0/24"
+        gateway: "172.1.1.1"
+      - name: "hass"
+        enable_ipv6: "no"
+        internal: "yes"
+        scope: "local"
+        subnet: "172.1.2.0/24"
+        gateway: "172.1.2.1"
+
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt: update_cache=yes cache_valid_time=600
+      changed_when: false
+      when: ansible_os_family == 'Debian'
+
+    - name: Wait for systemd to complete initialization
+      command: systemctl is-system-running
+      register: systemctl_status
+      until: >
+        'running' in systemctl_status.stdout or
+        'degraded' in systemctl_status.stdout
+      retries: 30
+      delay: 5
+      when: ansible_service_mgr == 'systemd'
+      changed_when: false
+      failed_when: systemctl_status.rc > 1
+
+    - name: Install timezone data
+      ansible.builtin.apt:
+        name: tzdata
+        state: present
+      when: ansible_os_family == 'Debian'
+
+    - name: Set timezone to Asia/Tokyo
+      community.general.timezone:
+        name: Asia/Tokyo
+      when: ansible_os_family == 'Debian'
+
+  roles:
+    - role: geerlingguy.repo-epel
+      when: ansible_os_family == 'CentOS'
+    - geerlingguy.pip
+    - geerlingguy.docker
+    - docker_networks
+
+- name: Converge
+  hosts: all
+  become: true
+
+  vars:
+    home_assistant_docker_zwave_device: "/dev/ttyVSP1"
+    home_assistant_docker_use_volumes: true
+    postgresql_docker_network_name: "postgres"
+  
+  pre_tasks:
+    - name: Install socat
+      ansible.builtin.apt:
+        name: socat
+        state: present
+
+    - name: Copy socat virtual serial port service definition
+      ansible.builtin.copy:
+        src: "../common/socat.service"
+        dest: "/etc/systemd/system/socat-vsp.service"
+        mode: "0644"
+    
+    - name: Start socat vsp
+      ansible.builtin.systemd:
+        name: socat-vsp
+        state: started
+        daemon_reload: true
+
+  roles:
+    - homeassistant_docker
