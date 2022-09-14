@@ -106,12 +106,12 @@ organicveggie_docker_networks:
     scope: "local"
     subnet: "{{ postgresql_docker_network_subnet }}"
     gateway: "{{ postgresql_docker_network_gateway }}"
-  - name: "{{ home_assistant_docker_network }}"
-    enable_ipv6: "no"
-    internal: "yes"
-    scope: "local"
-    subnet: "{{ home_assistant_docker_network_subnet }}"
-    gateway: "{{ home_assistant_docker_network_gateway }}"
+  # - name: "{{ home_assistant_docker_network }}"
+  #   enable_ipv6: "no"
+  #   internal: "yes"
+  #   scope: "local"
+  #   subnet: "{{ home_assistant_docker_network_subnet }}"
+  #   gateway: "{{ home_assistant_docker_network_gateway }}"
 
 ###
 ### Glances
@@ -186,6 +186,15 @@ logrotate_scripts:
       - compress
       - delaycompress
       - copytruncate
+
+###
+### NAS
+###
+veggie_nas_admin_passwd: "{{ vault_nas_admin_passwd }}"
+veggie_nas_admin_samba_passwd: "{{ vault_nas_admin_samba_passwd }}"
+veggie_nas_admin_username: "{{ vault_nas_admin_username }}"
+veggie_nas_plex_password: "{{ vault_nas_plex_password }}"
+veggie_nas_retropie_password: "{{ vault_nas_retropie_password }}"
 
 ###
 ### NFS
@@ -483,12 +492,12 @@ traefik_extra_networks:
   - name: "{{ diun_docker_network_name }}"
   - name: "{{ glances_network_name }}"
   - name: "{{ grafana_network_name }}"
-  - name: "{{ home_assistant_docker_network }}"
+  # - name: "{{ home_assistant_docker_network }}"
   - name: "{{ influxdb_network_name }}"
   - name: "{{ nodered_docker_network_name }}"
   - name: "{{ photoprism_network_name }}"
   - name: "{{ portainer_network_name }}"
-  - name: "{{ postgres_docker_network_name }}"
+  # - name: "{{ postgres_docker_network_name }}"
   - name: "{{ restic_rest_server_network_name }}"
   - name: "{{ unific_network_name }}"
 
