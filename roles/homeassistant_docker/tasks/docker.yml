@@ -1,22 +1,49 @@
 ---
-- name: Home Assistant Docker Container w/out volumes 
+- name: Create Home Assistant Docker volume
+  community.docker.docker_volume:
+    name: "{{ home_assistant_docker_volume_name }}"
+  when: home_assistant_docker_use_volumes
+
+- name: Set Docker volume list for bind mounts
+  ansible.builtin.set_fact:
+    home_assistant_docker_volume_list:
+      - "{{ home_assistant_docker_data_dir }}:/config"
+      - "/etc/localtime:/etc/localtime:ro"
+  when: not home_assistant_docker_use_volumes
+
+- name: Set Docker mount list for volume mounts
+  ansible.builtin.set_fact:
+    home_assistant_docker_mount_list:
+      - source: "{{ home_assistant_docker_volume_name }}"
+        target: "/config"
+        type: "volume"
+      - source: "/etc/localtime"
+        target: "/etc/localtime"
+        type: "bind"
+        read_only: true
+  when: home_assistant_docker_use_volumes
+
+- name: Set Docker device list with zwave device
+  ansible.builtin.set_fact:
+    home_assistant_docker_device_list:
+      - "{{ home_assistant_docker_zwave_device }}:/dev/ttyACM0"
+  when: home_assistant_docker_zwave_device
+
+- name: Home Assistant Docker Container
   community.docker.docker_container:
     name: homeassistant
     image: homeassistant/home-assistant:stable
     pull: true
-    volumes:
-      - "{{ home_assistant_docker_data_dir }}:/config"
-      - "/etc/localtime:/etc/localtime:ro"
+    volumes: "{{ home_assistant_docker_volume_list | default(omit) }}"
+    mounts: "{{ home_assistant_docker_mount_list | default(omit) }}"
     network_mode: "{{ home_assistant_docker_network }}"
     networks:
       - name: "{{ home_assistant_docker_network }}"
       - name: "{{ postgresql_docker_network_name }}"
-      - name: "{{ iot_vlan_docker_network_name }}"
     restart_policy: unless-stopped
     memory: "{{ home_assistant_docker_memory }}"
     cpus: "{{ home_assistant_docker_cpus }}"
-    devices:
-      - "{{ home_assistant_docker_zwave_device }}:/dev/ttyACM0"
+    devices: "{{ home_assistant_docker_device_list | default(omit) }}"
     container_default_behavior: no_defaults
     auto_remove: no
     detach: yes
