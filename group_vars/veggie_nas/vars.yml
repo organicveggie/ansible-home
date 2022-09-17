@@ -139,6 +139,7 @@ grafana_docker_extra_networks:
 ###
 ### Home Assistant
 ###
+home_assistant_docker_use_volumes: "true"
 home_assistant_docker_network_subnet: "172.100.6.0/24"
 home_assistant_docker_network_gateway: "172.100.6.1/24"
 home_assistant_docker_hostname: "hass"
