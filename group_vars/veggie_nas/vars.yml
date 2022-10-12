@@ -106,12 +106,12 @@ organicveggie_docker_networks:
     scope: "local"
     subnet: "{{ postgresql_docker_network_subnet }}"
     gateway: "{{ postgresql_docker_network_gateway }}"
-  # - name: "{{ home_assistant_docker_network }}"
-  #   enable_ipv6: "no"
-  #   internal: "yes"
-  #   scope: "local"
-  #   subnet: "{{ home_assistant_docker_network_subnet }}"
-  #   gateway: "{{ home_assistant_docker_network_gateway }}"
+  - name: "{{ home_assistant_docker_network }}"
+    enable_ipv6: "no"
+    internal: "yes"
+    scope: "local"
+    subnet: "{{ home_assistant_docker_network_subnet }}"
+    gateway: "{{ home_assistant_docker_network_gateway }}"
 
 ###
 ### Glances
