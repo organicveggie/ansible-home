@@ -1,6 +1,7 @@
 ---
-- import_playbook: speedtest.yml
-- import_playbook: nas.yml
-- import_playbook: virt.yml
-- import_playbook: nfs.yml
-- import_playbook: desktop.yml
+- import_playbook: "speedtest.yml"
+- import_playbook: "nas.yml"
+- import_playbook: "virt.yml"
+- import_playbook: "nfs.yml"
+- import_playbook: "desktop.yml"
+- import_playbook: "dev-env.yml"

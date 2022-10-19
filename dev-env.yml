@@ -1,0 +1,81 @@
+---
+- name: "Development Environment"
+  hosts: "z690"
+  become: yes
+
+  tasks:
+    - name: "Download Sublime Text GPG key"
+      ansible.builtin.get_url:
+        url: "https://download.sublimetext.com/sublimehq-pub.gpg"
+        dest: "/etc/apt/trusted.gpg.d/sublimehq-archive.asc"
+        mode: "0644"
+        force: true
+
+    - name: "Add Sublime Text Repository"
+      ansible.builtin.apt_repository:
+        repo: "deb https://download.sublimetext.com/ apt/stable/"
+        state: present
+        update_cache: true
+
+    - name: "Install packages"
+      ansible.builtin.apt:
+        pkg:
+          - "snap"
+          - "docker"
+          - "virtualenv"
+          - "yakuake"
+          - "autofs"
+          - "cifs-utils"
+          - "net-tools"
+          - "tmux"
+          - "sublime-text"
+          - "mediainfo"
+          - "git"
+
+    - name: "Install media management packages"
+      ansible.builtin.apt:
+        pkg:
+          - "ffmpeg"
+          - "libavcodec"
+          - "libavcodec_-extra"
+          - "libswresample3"
+          - "libswscale5"
+          - "mediainfo"
+    
+    # TODO: Install /etc/auto.nas and /etc/auto.nas/smbcredentials
+
+    - name: "Install lxd"
+      community.general.snap:
+        name:
+          - "lxd"
+
+    - name: "Install Visual Studio Code"
+      ansible.builtin.import_role:
+        name: "gantsign.visual-studio-code"
+      vars:
+        users:
+          - username: "sean"
+            visual_studio_code_extensions:
+              - "bazelbuild.vscode-bazel"
+              - "coolbear.systemd-unit-file"
+              - "darkriszty.markdown-table-prettify"
+              - "dart-code.dart-code"
+              - "dart-code.flutter"
+              - "davidanson.vscode-markdownlint"
+              - "foxundermoon.shell-format"
+              - "golang.go"
+              - "influxdata.flux"
+              - "ms-azuretools.vscode-docker"
+              - "ms-python.python"
+              - "ms-python.vscode-pylance"
+              - "ms-toolsai.jupyter"
+              - "ms-vscode.cpptools"
+              - "platformio.platformio-ide"
+              - "redhat.vscode-yaml"
+              - "wholroyd.jinja"
+              - "yzhang.markdown-all-in-one"
+              - "zxh404.vscode-proto3"
+
+# Install pipx 
+# python3 -m pip install --user pipx
+# python3 -m pipx ensurepath
