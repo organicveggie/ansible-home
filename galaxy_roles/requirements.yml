@@ -1,39 +1,42 @@
 ---
-- src: https://github.com/organicveggie/ansible.traefik
-  name: organicveggie.ansible-traefik
-  version: 2.0.0
+- src: "https://github.com/organicveggie/ansible.traefik"
+  name: "organicveggie.ansible-traefik"
+  version: "2.0.0"
 
-- src: https://github.com/organicveggie/ansible-role-certbot-route53
-  name: organicveggie.certbot-route53
-  version: 1.0.0
+- src: "https://github.com/organicveggie/ansible-role-certbot-route53"
+  name: "organicveggie.certbot-route53"
+  version: "1.0.0"
 
-- src: https://github.com/organicveggie/ansible-role-folders
-  name: organicveggie.folders
-  version: 2.0.0
+- src: "https://github.com/organicveggie/ansible-role-folders"
+  name: "organicveggie.folders"
+  version: "2.0.0"
 
-- src: https://github.com/organicveggie/ansible.unific
-  name: organicveggie.unific
+- src: "https://github.com/organicveggie/ansible.unific"
+  name: "organicveggie.unific"
   version: "2.1"
 
-- src: bertvv.samba
-  version: v2.7.1
+- src: "bertvv.samba"
+  version: "v2.7.1"
 
 - src: "gantsign.visual-studio-code"
   version: "6.10.0"
 
-- src: geerlingguy.docker
-  version: 3.0.0
+- src: "geerlingguy.docker"
+  version: "3.0.0"
 
-- src: geerlingguy.nfs
-  version: 2.0.0
+- src: "geerlingguy.nfs"
+  version: "2.0.0"
 
-- src: geerlingguy.pip
-  version: 2.1.0
+- src: "geerlingguy.pip"
+  version: "2.1.0"
 
-- src: stefangweichinger.ansible_rclone
+- src: "organicveggie.vagrant"
+  version: "1.0.0"
 
-- src: nickhammond.logrotate
+- src: "stefangweichinger.ansible_rclone"
 
-- src: https://github.com/organicveggie/ansible.users
-  name: organicveggie.ansible-users
+- src: "nickhammond.logrotate"
+
+- src: "https://github.com/organicveggie/ansible.users"
+  name: "organicveggie.ansible-users"
   version: "master"
