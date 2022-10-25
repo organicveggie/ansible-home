@@ -30,6 +30,9 @@
 - src: "geerlingguy.pip"
   version: "2.1.0"
 
+- src: "organicveggie.postgres_docker"
+  version: "1.0.0"
+
 - src: "organicveggie.vagrant"
   version: "1.0.0"
 
