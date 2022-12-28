@@ -2,8 +2,8 @@
 dependency:
   name: galaxy
   options:
-    requirements-file: molecule/homeassistant_docker/requirements.yml
-    role-file: molecule/homeassistant_docker/requirements.yml
+    requirements-file: molecule/homeassistant_docker_no_zwave/requirements.yml
+    role-file: molecule/homeassistant_docker_no_zwave/requirements.yml
 
 platforms:
   - name: instance

@@ -13,18 +13,18 @@ homeassistant:
   allowlist_external_dirs:
     - "/config"
   internal_url: "{{ hass_url }}"
-  packages: !include_dir_named includes
+  # packages: !include_dir_named includes
 
 # Automation
-automation: !include automations.yaml
+# automation: !include automations.yaml
 
 # Frontend modules
-frontend:
-  extra_module_url:
-    - /hacsfiles/lovelace-card-mod/card-mod.js
+# frontend:
+#   extra_module_url:
+#     - /hacsfiles/lovelace-card-mod/card-mod.js
 
 # Groups
-group: !include groups.yaml
+# group: !include groups.yaml
 
 http:
   use_x_forwarded_for: true
@@ -34,43 +34,43 @@ http:
     - ::1
     
 # Scenes
-scene: !include scenes.yaml
+# scene: !include scenes.yaml
 
 # Scripts
-script: !include scripts.yaml
+# script: !include scripts.yaml
 
 # Sonos with explicit host IPs
-sonos:
-  media_player:
-    advertise_addr: 192.168.25.20
-    hosts:
-      - 192.168.25.80   # Patio: SonosAmp
-      - 192.168.25.81   # Garage: Play3
-      - 192.168.25.82   # MBR: Play5
-      - 192.168.25.83   # Bonus: Beam
-      - 192.168.25.84   # Dining: Five
+# sonos:
+#   media_player:
+#     advertise_addr: 192.168.25.20
+#     hosts:
+#       - 192.168.25.80   # Patio: SonosAmp
+#       - 192.168.25.81   # Garage: Play3
+#       - 192.168.25.82   # MBR: Play5
+#       - 192.168.25.83   # Bonus: Beam
+#       - 192.168.25.84   # Dining: Five
 
 # Text to speech
-tts:
-  - platform: google_translate
+# tts:
+#   - platform: google_translate
 
 # Lovelace dashboards
-lovelace:
-  mode: yaml
-  resources:
-    - url: /hacsfiles/button-card/button-card.js
-      type: module
-    - url: /hacsfiles/lovelace-layout-card/layout-card.js
-      type: module
-    - url:  /hacsfiles/mini-graph-card/mini-graph-card-bundle.js
-      type: module
-    - url:  /hacsfiles/stack-in-card/stack-in-card.js
-      type: module
-  # Add yaml dashboards
-  dashboards:
-    weather-yaml:
-      mode: yaml
-      title: Weather
-      icon: mdi:weather-sunny
-      show_in_sidebar: true
-      filename: lovelace/weather.yaml
+# lovelace:
+#   mode: yaml
+#   resources:
+#     - url: /hacsfiles/button-card/button-card.js
+#       type: module
+#     - url: /hacsfiles/lovelace-layout-card/layout-card.js
+#       type: module
+#     - url:  /hacsfiles/mini-graph-card/mini-graph-card-bundle.js
+#       type: module
+#     - url:  /hacsfiles/stack-in-card/stack-in-card.js
+#       type: module
+#   # Add yaml dashboards
+#   dashboards:
+#     weather-yaml:
+#       mode: yaml
+#       title: Weather
+#       icon: mdi:weather-sunny
+#       show_in_sidebar: true
+#       filename: lovelace/weather.yaml

@@ -4,6 +4,17 @@
     name: "{{ home_assistant_docker_volume_name }}"
   when: home_assistant_docker_use_volumes
 
+- name: Retrieve info about Home Assistant Docker volume
+  community.docker.docker_volume_info:
+    name: "{{ home_assistant_docker_volume_name }}"
+  register: home_assistant_docker_volume_info_result
+  when: home_assistant_docker_use_volumes
+
+- name: Print Docker volume_info result
+  ansible.builtin.debug:
+    var: home_assistant_docker_volume_info_result
+  when: home_assistant_docker_use_volumes
+
 - name: Set Docker volume list for bind mounts
   ansible.builtin.set_fact:
     home_assistant_docker_volume_list:
