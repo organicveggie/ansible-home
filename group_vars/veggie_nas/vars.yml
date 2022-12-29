@@ -100,18 +100,24 @@ organicveggie_docker_networks:
     scope: "local"
     subnet: "{{ unific_network_subnet }}"
     gateway: "{{ unific_network_gateway }}"
-  - name: "{{ postgresql_docker_network_name }}"
+  # - name: "{{ postgresql_docker_network_name }}"
+  #   enable_ipv6: "no"
+  #   internal: "yes"
+  #   scope: "local"
+  #   subnet: "{{ postgresql_docker_network_subnet }}"
+  #   gateway: "{{ postgresql_docker_network_gateway }}"
+  # - name: "{{ home_assistant_docker_network }}"
+  #   enable_ipv6: "no"
+  #   internal: "yes"
+  #   scope: "local"
+  #   subnet: "{{ home_assistant_docker_network_subnet }}"
+  #   gateway: "{{ home_assistant_docker_network_gateway }}"
+  - name: "{{ tautulli_docker_network }}"
     enable_ipv6: "no"
-    internal: "yes"
+    internal: "no"
     scope: "local"
-    subnet: "{{ postgresql_docker_network_subnet }}"
-    gateway: "{{ postgresql_docker_network_gateway }}"
-  - name: "{{ home_assistant_docker_network }}"
-    enable_ipv6: "no"
-    internal: "yes"
-    scope: "local"
-    subnet: "{{ home_assistant_docker_network_subnet }}"
-    gateway: "{{ home_assistant_docker_network_gateway }}"
+    subnet: "{{ tautulli_docker_network_subnet }}"
+    gateway: "{{ tautulli_docker_network_gateway }}"
 
 ###
 ### Glances
@@ -385,6 +391,14 @@ veggie_nas_samba_groups:
   - source_writer
 
 ###
+### Tautulli
+###
+tautulli_docker_timezone: "{{ home_timezone }}"
+tautulli_docker_network_subnet: "172.100.7.0/24"
+tautulli_docker_network_gateway: "172.100.7.1"
+tautulli_docker_host_domain: "{{ veggie_base_domain_name }}"
+
+###
 ### Telegraf
 ###
 telegraf_influxdb_url: "{{ influxdb_url }}"
@@ -501,6 +515,7 @@ traefik_extra_networks:
   - name: "{{ portainer_network_name }}"
   # - name: "{{ postgres_docker_network_name }}"
   - name: "{{ restic_rest_server_network_name }}"
+  - name: "{{ tautulli_docker_network }}"
   - name: "{{ unific_network_name }}"
 
 ###

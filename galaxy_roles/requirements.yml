@@ -36,6 +36,9 @@
 - src: "organicveggie.postgres_docker"
   version: "1.0.0"
 
+- src: "organicveggie.tautulli_docker"
+  version: "1.0.1"
+
 - src: "organicveggie.vagrant"
   version: "1.0.0"
 

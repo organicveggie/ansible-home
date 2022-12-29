@@ -61,6 +61,7 @@
     # - role: postgresl_docker
     # - role: pgadmin_docker
     # - role: zwavejs2mqtt
+    - role: organicveggie.tautulli_docker
     - role: organicveggie.ansible-traefik
       tags:
         - traefik
