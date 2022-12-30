@@ -97,14 +97,14 @@
           - "liblzma-dev"
           - "jq"
 
-    roles:
-      - role: "geerlingguy.pip"
-        vars:
-          pip_install_packages:
-            - name: "virtualenv"
-            - name: "tox"
-      - role: "geerlingguy.docker"
-      - role: "organicveggie.vagrant"
+  roles:
+    - role: "geerlingguy.pip"
+      vars:
+        pip_install_packages:
+          - name: "virtualenv"
+          - name: "tox"
+    - role: "geerlingguy.docker"
+    - role: "organicveggie.vagrant"
 
 # Install pipx 
 # python3 -m pip install --user pipx
