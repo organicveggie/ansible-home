@@ -31,6 +31,7 @@
           - "sublime-text"
           - "mediainfo"
           - "git"
+          - "gnome-keyring"
 
     - name: "Install media management packages"
       ansible.builtin.apt:
@@ -41,6 +42,9 @@
           - "libswresample3"
           - "libswscale5"
           - "mediainfo"
+          - "mediainfo-gui"
+          - "mkvtoolnix"
+          - "mkvtoolnix-gui"
     
     # TODO: Install /etc/auto.nas and /etc/auto.nas/smbcredentials
 
@@ -76,14 +80,31 @@
               - "yzhang.markdown-all-in-one"
               - "zxh404.vscode-proto3"
 
-  roles:
-    - role: "geerlingguy.pip"
-      vars:
-        pip_install_packages:
-          - name: "virtualenv"
-          - name: "tox"
-    - role: "geerlingguy.docker"
-    - role: "organicveggie.vagrant"
+    - name: "Install flutter"
+      community.general.snap:
+        classic: "true"
+        name:
+          - "flutter"
+
+    - name: "Install additional flutter tools on Linux"
+      ansible.builtin.apt:
+        pkg:
+          - "clang"
+          - "cmake"
+          - "ninja-build"
+          - "pkg-config"
+          - "libgtk-3-dev"
+          - "liblzma-dev"
+          - "jq"
+
+    roles:
+      - role: "geerlingguy.pip"
+        vars:
+          pip_install_packages:
+            - name: "virtualenv"
+            - name: "tox"
+      - role: "geerlingguy.docker"
+      - role: "organicveggie.vagrant"
 
 # Install pipx 
 # python3 -m pip install --user pipx
