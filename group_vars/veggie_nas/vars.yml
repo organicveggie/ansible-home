@@ -274,6 +274,16 @@ plex_docker_cpus: "8"
 plex_docker_memory: "4GB"
 
 ###
+### Plex Meta Manager
+###
+pmm_docker_timezone: "{{ home_timezone }}"
+pmm_docker_plex_url: "{{ vault_pmm_docker_plex_url }}"
+pmm_docker_plex_token: "{{ vault_pmm_docker_plex_token }}"
+pmm_docker_tmdb_apikey: "{{ vault_pmm_docker_tmdb_apikey }}"
+pmm_docker_tautulli_url: "{{ vault_pmm_docker_tautulli_url }}"
+pmm_docker_tautulli_apikey: "{{ vault_pmm_docker_tautulli_apikey }}"
+
+###
 ### Pip
 ###
 pip_install_packages:
