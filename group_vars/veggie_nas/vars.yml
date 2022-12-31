@@ -336,6 +336,7 @@ pmm_docker_libraries: |2
         - pmm: sundance
         - pmm: tautulli
         - pmm: tmdb
+        - pmm: trakt
         - pmm: universe
         - pmm: year
       overlay_path:
@@ -352,6 +353,7 @@ pmm_docker_libraries: |2
         - pmm: network
         - pmm: resolution
         - pmm: tautulli
+        - pmm: trakt
         - pmm: year
       overlay_path:
         - remove_overlays: false
@@ -365,6 +367,7 @@ pmm_docker_libraries: |2
         - pmm: basic
         - pmm: myanimelist
         - pmm: other
+        - pmm: studio_anime
     Anime Series:
       report_path: /config/reports/Anime_Series.yml
       template_variables:
@@ -374,6 +377,7 @@ pmm_docker_libraries: |2
         - pmm: basic
         - pmm: myanimelist
         - pmm: other
+        - pmm: studio_anime
 
 # See https://replit.com/@chazlarson/TraktAuth to generate the auth data.
 pmm_docker_trakt: |2
