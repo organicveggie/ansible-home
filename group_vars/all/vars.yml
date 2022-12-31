@@ -56,6 +56,7 @@ msmtp_from: "{{ vault_msmtp_from }}"
 ###
 ### Networking
 ###
+default_dns_address: "{{ vault_default_dns_address }}"
 iot_vlan_docker_network_name: "iot-macvlan40"
 
 ###

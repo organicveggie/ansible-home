@@ -118,6 +118,12 @@ organicveggie_docker_networks:
     scope: "local"
     subnet: "{{ tautulli_docker_network_subnet }}"
     gateway: "{{ tautulli_docker_network_gateway }}"
+  - name: "{{ pmm_docker_network }}"
+    enable_ipv6: "no"
+    internal: "no"
+    scope: "local"
+    subnet: "{{ pmm_docker_network_subnet }}"
+    gateway: "{{ pmm_docker_network_gateway }}"
 
 ###
 ### Glances
@@ -276,12 +282,90 @@ plex_docker_memory: "4GB"
 ###
 ### Plex Meta Manager
 ###
+pmm_docker_cpus: "2"
+pmm_docker_dns_servers:
+  - "{{ default_dns_address }}"
+  - "8.8.8.8"
+  - "8.8.4.4"
+pmm_docker_memory: "1G"
+pmm_docker_network_subnet: "172.100.8.0/24"
+pmm_docker_network_gateway: "172.100.8.1"
 pmm_docker_timezone: "{{ home_timezone }}"
+
+pmm_docker_config_read_only: "true"
 pmm_docker_plex_url: "{{ vault_pmm_docker_plex_url }}"
 pmm_docker_plex_token: "{{ vault_pmm_docker_plex_token }}"
 pmm_docker_tmdb_apikey: "{{ vault_pmm_docker_tmdb_apikey }}"
+pmm_docker_tmdb_language: "en"
+pmm_docker_tmdb_region: "us"
 pmm_docker_tautulli_url: "{{ vault_pmm_docker_tautulli_url }}"
 pmm_docker_tautulli_apikey: "{{ vault_pmm_docker_tautulli_apikey }}"
+pmm_docker_libraries: |2
+    Movies:
+      template_variables:
+        language: "en"
+      metadata_path:
+        - pmm: actor
+        - pmm: basic
+        - pmm: bafta
+        - pmm: cannes
+        - pmm: decade
+        - pmm: director
+        - pmm: flixpatrol
+        - pmm: franchise
+          template_variables:
+            data:
+              visible_home: true
+        - pmm: genre
+          template_variables:
+            data:
+              visible_home: true
+        - pmm: imdb
+        - pmm: oscars
+          template_variables:
+            data:
+              starting: current_year-10
+              ending: current_year
+        - pmm: resolution
+        - pmm: seasonal
+          template_variables:
+            data:
+              visible_home: true
+        - pmm: streaming
+        - pmm: sundance
+        - pmm: tautulli
+        - pmm: tmdb
+        - pmm: universe
+        - pmm: year
+      overlay_path:
+        - remove_overlays: false
+        - pmm: ribbon
+    TV Shows:
+      template_variables:
+        language: en
+      metadata_path:
+        - pmm: basic
+        - pmm: franchise
+        - pmm: genre
+        - pmm: network
+        - pmm: resolution
+        - pmm: tautulli
+        - pmm: year
+      overlay_path:
+        - remove_overlays: false
+        - pmm: ribbon
+# See https://replit.com/@chazlarson/TraktAuth to generate the auth data.
+pmm_docker_trakt: |2
+    client_id: {{ vault_pmm_docker_trakt_client_id }}
+    client_secret: {{ vault_pmm_docker_trakt_client_secret }}
+    pin:
+    authorization:
+      access_token: {{ vault_pmm_docker_trakt_access_token }}
+      token_type: {{ vault_pmm_docker_trakt_token_type }}
+      expires_in: {{ vault_pmm_docker_trakt_expires_in }}
+      refresh_token: {{ vault_pmm_docker_trakt_refresh_token }}
+      scope: {{ vault_pmm_docker_trakt_scope }}
+      created_at: {{ vault_pmm_docker_trakt_created_at }}
 
 ###
 ### Pip
