@@ -26,7 +26,7 @@
     - role: veggie_common
     - role: docker_networks
     - role: veggie_nas
-    - role: bertvv.samba
+    - role: vladgh.samba.server
       tags:
         - samba
         - skip_ansible_lint

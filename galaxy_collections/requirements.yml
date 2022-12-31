@@ -2,3 +2,4 @@ collections:
   - name: community.general
   - name: community.aws
   - name: community.docker
+  - name: vladgh.samba
