@@ -302,6 +302,7 @@ pmm_docker_tautulli_url: "{{ vault_pmm_docker_tautulli_url }}"
 pmm_docker_tautulli_apikey: "{{ vault_pmm_docker_tautulli_apikey }}"
 pmm_docker_libraries: |2
     Movies:
+      report_path: /config/reports/Movies.yml
       template_variables:
         language: "en"
       metadata_path:
@@ -341,6 +342,7 @@ pmm_docker_libraries: |2
         - remove_overlays: false
         - pmm: ribbon
     TV Shows:
+      report_path: /config/reports/TV_Shows.yml
       template_variables:
         language: en
       metadata_path:
