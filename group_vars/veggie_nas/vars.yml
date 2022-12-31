@@ -356,6 +356,25 @@ pmm_docker_libraries: |2
       overlay_path:
         - remove_overlays: false
         - pmm: ribbon
+    Anime Movies:
+      report_path: /config/reports/Anime_Movies.yml
+      template_variables:
+        language: en
+      metadata_path:
+        - pmm: anilist
+        - pmm: basic
+        - pmm: myanimelist
+        - pmm: other
+    Anime Series:
+      report_path: /config/reports/Anime_Series.yml
+      template_variables:
+        language: en
+      metadata_path:
+        - pmm: anilist
+        - pmm: basic
+        - pmm: myanimelist
+        - pmm: other
+
 # See https://replit.com/@chazlarson/TraktAuth to generate the auth data.
 pmm_docker_trakt: |2
     client_id: {{ vault_pmm_docker_trakt_client_id }}
