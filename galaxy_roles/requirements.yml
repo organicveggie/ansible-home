@@ -40,7 +40,7 @@
 
 - src: "https://github.com/organicveggie/ansible.resilio_sync_docker"
   name: "organicveggie.resilio_sync_docker"
-  version: "1.0.0"
+  version: "1.0.2"
 
 - src: "organicveggie.tautulli_docker"
   version: "1.0.0"

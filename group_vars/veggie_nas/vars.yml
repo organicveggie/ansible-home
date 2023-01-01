@@ -621,8 +621,10 @@ traefik_confkey_certificatesResolvers:
 traefik_confkey_entryPoints:
   java_http:
     address: ":8080"
-  resilio:
+  resilio_sync_tcp:
     address: ":55555"
+  resilio_sync_udp:
+    address: ":55555/udp"
   unific_speed_test:
     address: ":6789"
   unific_stun:
