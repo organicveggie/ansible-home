@@ -596,6 +596,7 @@ traefik_labels:
 traefik_confkey_providers:
   docker:
     defaultRule: "Host(`{{ traefik_hostname }}`)"
+    exposedByDefault: false
 traefik_le_ca_server: "https://acme-v02.api.letsencrypt.org/directory"
 # traefik_le_ca_server: "https://acme-staging-v02.api.letsencrypt.org/directory"
 traefik_confkey_certificatesResolvers:
