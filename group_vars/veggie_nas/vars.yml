@@ -435,6 +435,18 @@ veggie_rclone_s3_bucket: "{{ veggie_nas_rclone_s3_bucket }}"
 veggie_rclone_config_path: /root/.config/rclone/rclone.conf
 
 ###
+### Resilio Sync
+###
+resilio_docker_group_name: "resilio"
+resilio_docker_user_name: "resilio"
+resilio_docker_uid: "32420"
+resilio_docker_gid: "32420"
+resilio_docker_torrentz_dir: "/mnt/nas/data/videos/torrentz"
+resilio_docker_extra_dirs:
+  "{{ resilio_docker_torrentz_dir }}": "torrentz"
+resilio_docker_host_domain: "{{ veggie_nas_domain_name }}"
+
+###
 ### Restic
 ###
 restic_rest_server_backup_dir: "{{ veggie_nas_restic_rest_server_backup_dir }}"
@@ -587,6 +599,7 @@ traefik_ports:
   - '8080:8080'
   - '10001:10001'
   - '19000:19000'
+  - "55555:55555"
 traefik_labels:
   traefik.enable: "true"
   traefik.http.routers.traefik.service: "api@internal"
@@ -608,6 +621,8 @@ traefik_confkey_certificatesResolvers:
 traefik_confkey_entryPoints:
   java_http:
     address: ":8080"
+  resilio:
+    address: ":55555"
   unific_speed_test:
     address: ":6789"
   unific_stun:
@@ -634,6 +649,7 @@ traefik_extra_networks:
   - name: "{{ photoprism_network_name }}"
   - name: "{{ portainer_network_name }}"
   # - name: "{{ postgres_docker_network_name }}"
+  - name: "{{ resilio_docker_network }}"
   - name: "{{ restic_rest_server_network_name }}"
   - name: "{{ tautulli_docker_network }}"
   - name: "{{ unific_network_name }}"
