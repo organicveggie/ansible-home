@@ -1,12 +1,14 @@
 ###
 ### Calibre
 ###
-calibre_books_root: "{{ vault_calibre_books_root }}"
-calibre_host_domain: "{{ veggie_base_domain_name }}"
-calibre_extra_groups:
-  - "book_writer"
-calibre_user_id: "{{ vault_calibre_user_id }}"
-calibre_group_id: "{{ vault_calibre_group_id }}"
+calibre_web_user_name: "calibre"
+calibre_web_group_name: "calibre"
+calibre_web_docker_book_dir: "{{ vault_calibre_web_docker_book_dir }}"
+calibre_web_docker_host_domain: "{{ veggie_base_domain_name }}"
+calibre_web_docker_uid: "{{ vault_calibre_web_docker_uid }}"
+calibre_web_docker_gid: "{{ vault_calibre_web_docker_gid }}"
+calibre_web_docker_network_subnet: "{{ vault_calibre_web_docker_network_subnet }}"
+calibre_web_docker_network_gateway: "{{ vault_calibre_web_docker_network_gateway }}"
 
 ###
 ### Common
@@ -445,6 +447,8 @@ resilio_docker_torrentz_dir: "/mnt/nas/data/videos/torrentz"
 resilio_docker_extra_dirs:
   "{{ resilio_docker_torrentz_dir }}": "torrentz"
 resilio_docker_host_domain: "{{ veggie_nas_domain_name }}"
+resilio_docker_network_subnet: "172.100.9.0/24"
+resilio_docker_network_gateway: "172.100.9.1"
 
 ###
 ### Restic
@@ -641,7 +645,7 @@ traefik_container_environment:
   AWS_SECRET_ACCESS_KEY: "{{ letsencrypt_aws_secret_key }}"
 
 traefik_extra_networks:
-  - name: "{{ calibre_docker_network_name }}"
+  - name: "{{ calibre_web_docker_network }}"
   - name: "{{ diun_docker_network_name }}"
   - name: "{{ glances_network_name }}"
   - name: "{{ grafana_network_name }}"
