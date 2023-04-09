@@ -664,10 +664,10 @@ traefik_extra_networks:
 ### UniFi Controiller
 ###
 unific_available_externally: "true"
-unific_host_domain: "{{ veggie_nas_domain_name }}"
+unific_host_domain: "{{ veggie_base_domain_name }}"
 unific_cpus: "2"
 unific_memory: "2GB"
-# unific_traefik_router_rule: "Host(`{{ unific_hostname }}.{{ unific_host_domain }}`) || Host(`{{ unific_hostname }}.{{ veggie_base_domain_name }}`)"
+# unific_traefik_router_rule: "Host(`{{ unific_hostname }}.{{ unific_host_domain }}`)||Host(`{{ unific_hostname }}.{{ veggie_base_domain_name }}`)"
 unific_traefik_router_rule: "Host(`{{ unific_hostname }}.{{ unific_host_domain }}`)"
 unific_docker_network_created: true
 unific_network_subnet: "172.100.4.0/24"
