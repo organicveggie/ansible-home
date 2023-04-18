@@ -237,17 +237,16 @@ organicveggie_folders_create:
 ###
 ### PgAdmin
 ###
-pgadmin_docker_dir: "/mnt/nas/pgadmin/lib"
-pgadmin_docker_conf_dir: "/mnt/nas/pgadmin/conf"
 pgadmin_default_email: "{{ primary_email_address }}"
+pgadmin_default_password: "{{ postgres_docker_admin_password }}"
+
+pgadmin_docker_available_externally: true
+pgadmin_docker_extra_networks: "{{ postgres_docker_network_name }}"
 pgadmin_docker_host_domain: "{{ veggie_nas_domain_name }}"
-pgadmin_default_password: "{{ veggie_postgres_admin_password }}"
-pgadmin_docker_email_server: "email-smtp.us-west-2.amazonaws.com"
-pgadmin_docker_email_port: "587"
-pgadmin_docker_email_use_ssl: "False"
-pgadmin_docker_email_user_tls: "True"
-pgadmin_docker_email_username: "{{ aws_ses_usw2_access_key }}"
-pgadmin_docker_email_password: "{{ aws_ses_usw2_secret_key }}"
+pgadmin_docker_network_create: false
+pgadmin_docker_network_gateway: "{{ vault_pgadmin_docker_network_gateway }}"
+pgadmin_docker_network_subnet: "{{ vault_pgadmin_docker_network_subnet }}"
+pgadmin_docker_use_volumes: true
 pgadmin_docker_servers:
   "pg_hass":
     Name: "Hass Postgres"
@@ -257,6 +256,13 @@ pgadmin_docker_servers:
     Host: "postgres"
     SSLMode: "prefer"
     MaintenanceDB: "postgres"
+
+pgadmin_docker_email_server: "email-smtp.us-west-2.amazonaws.com"
+pgadmin_docker_email_port: "587"
+pgadmin_docker_email_use_ssl: "False"
+pgadmin_docker_email_user_tls: "True"
+pgadmin_docker_email_username: "{{ aws_ses_usw2_access_key }}"
+pgadmin_docker_email_password: "{{ aws_ses_usw2_secret_key }}"
 
 ###
 ### Photoprism
@@ -410,11 +416,13 @@ portainer_host_domain: "{{ veggie_nas_domain_name }}"
 ###
 ### PostgreSQL
 ###
-postgresql_docker_use_volumes: true
-postgresql_docker_home_dir: "/mnt/nas/{{ postgresql_docker_name }}"
-postgresql_docker_conf_dir: "{{ postgresql_docker_home_dir }}/conf"
-postgresql_docker_data_dir: "{{ postgresql_docker_home_dir }}/data"
-postgresql_docker_admin_password: "{{ veggie_postgres_admin_password }}"
+postgres_docker_admin_password: "{{ vault_postgres_docker_admin_password }}"
+postgres_docker_image: "postgres:14-bullseye"
+postgres_docker_network_create: false
+postgres_docker_network_gateway: "{{ vault_postgres_docker_network_gateway }}"
+postgres_docker_network_name: "postgres"
+postgres_docker_network_subnet: "{{ vault_postgres_docker_network_subnet }}"
+postgres_docker_use_volumes: true
 
 ###
 ### RClone
