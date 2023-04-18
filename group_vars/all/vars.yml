@@ -11,10 +11,10 @@ letsencrypt_email: "{{ primary_email_address }}"
 ###
 ### AWS
 ###
-vault_aws_s3_rclone_access_key: "{{ aws_s3_rclone_access_key }}}"
-vault_aws_s3_rclone_secret_key: "{{ aws_s3_rclone_secret_key }}}"
-vault_aws_ses_usw2_access_key: "{{ aws_ses_usw2_access_key }}}"
-vault_aws_ses_usw2_secret_key: "{{ aws_ses_usw2_secret_key }}}"
+aws_s3_rclone_access_key: "{{ vault_aws_s3_rclone_access_key }}}"
+aws_s3_rclone_secret_key: "{{ vault_aws_s3_rclone_secret_key }}}"
+aws_ses_usw2_access_key: "{{ vault_aws_ses_usw2_access_key }}}"
+aws_ses_usw2_secret_key: "{{ vault_aws_ses_usw2_secret_key }}}"
 
 ###
 ### Common
