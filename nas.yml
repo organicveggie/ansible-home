@@ -75,7 +75,9 @@
             subnet: "{{ pgadmin_docker_network_subnet }}"
             gateway: "{{ pgadmin_docker_network_gateway }}"
     - role: organicveggie.postgres_docker
+      tags: ["docker", "postgres", "postgresql"]
     - role: organicveggie.pgadmin_docker
+      tags: ["docker", "pgadmin"]
 
     # - role: zwavejs2mqtt
     - role: organicveggie.tautulli_docker
