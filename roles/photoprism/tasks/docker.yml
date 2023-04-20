@@ -132,7 +132,7 @@
     labels:
       traefik.enable: "{{ photoprism_available_externally }}"
       traefik.http.routers.photoprism.entrypoints: "http,https"
-      traefik.http.routers.photoprism.rule:	"Host(`{{ photoprism_docker_hostname }}.{{ photoprism_docker_host_domain }}`)"
+      traefik.http.routers.photoprism.rule: "Host(`{{ photoprism_docker_hostname }}.{{ photoprism_docker_host_domain }}`)"
       traefik.http.routers.photoprism.tls.certresolver: "letsencrypt"
       traefik.http.routers.photoprism.tls.domains[0].main: "*.{{ photoprism_docker_host_domain }}"
       traefik.http.services.photoprism.loadbalancer.server.port: "{{ photoprism_docker_port }}"
