@@ -62,7 +62,7 @@
       tags: ["docker", "postgres", "postgresql"]
       vars:
         organicveggie_docker_networks:
-          - name: "{{ postgres_docker_network }}"
+          - name: "{{ postgres_docker_network_name }}"
             enable_ipv6: "no"
             internal: "no"
             scope: "local"

@@ -240,8 +240,9 @@ organicveggie_folders_create:
 pgadmin_default_email: "{{ primary_email_address }}"
 pgadmin_default_password: "{{ postgres_docker_admin_password }}"
 
-pgadmin_docker_available_externally: true
+pgadmin_docker_available_externally: "true"
 pgadmin_docker_extra_networks:
+  - name: "{{ pgadmin_docker_network_name }}"
   - name: "{{ postgres_docker_network_name }}"
 pgadmin_docker_host_domain: "{{ veggie_nas_domain_name }}"
 pgadmin_docker_network_create: false
