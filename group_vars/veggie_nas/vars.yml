@@ -664,7 +664,7 @@ traefik_extra_networks:
   - name: "{{ nodered_docker_network_name }}"
   - name: "{{ photoprism_network_name }}"
   - name: "{{ portainer_network_name }}"
-  # - name: "{{ postgres_docker_network_name }}"
+  - name: "{{ pgadmin_docker_network_name }}"
   - name: "{{ resilio_docker_network }}"
   - name: "{{ restic_rest_server_network_name }}"
   - name: "{{ tautulli_docker_network }}"

@@ -59,12 +59,12 @@
     
     # PostgreSQL and pgAdmin
     - role: docker_networks
-      tags: ["docker", "postgres", "postgresql"]
+      tags: ["docker", "postgres", "postgresql", "pgadmin"]
       vars:
         organicveggie_docker_networks:
           - name: "{{ postgres_docker_network_name }}"
             enable_ipv6: "no"
-            internal: "no"
+            internal: "yes"
             scope: "local"
             subnet: "{{ postgres_docker_network_subnet }}"
             gateway: "{{ postgres_docker_network_gateway }}"
