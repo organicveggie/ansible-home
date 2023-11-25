@@ -1,0 +1,33 @@
+---
+- name: "Create PostgreSQL for Home Assistant init script folder"
+  ansible.builtin.file:
+    group: "root"
+    mode: "0600"
+    owner: "root"
+    path: "{{ hass_docker_pgsql_init_tempates_dir }}"
+    state: "directory"
+
+- name: "Copy PostgreSQL for Home Assistant init scripts"
+  ansible.builtin.template:
+    src: "templates/{{ item }}.j2"
+    dest: "{{ hass_docker_pgsql_init_tempates_dir }}/{{ item }}"
+    mode: "0600"
+  loop:
+    - "01_create_role_db.sql"
+
+- include_role:
+    name: "organicveggie.postgres_docker"
+    allow_duplicates: "yes"
+  vars:
+    postgres_docker_admin_password: "{{ hass_docker_pgsql_admin_password }}"
+    postgres_docker_image: "{{ hass_docker_pgsql_image }}"
+    postgres_docker_name: "{{ hass_docker_pgsql_name }}"
+    postgres_docker_network_create: false
+    postgres_docker_network_name: "{{ hass_docker_pgsql_network_name }}"
+    postgres_docker_use_volumes: true
+    postgres_docker_volume_init_name: "{{ hass_docker_pgsql_volume_init_name }}"
+    postgres_docker_volume_conf_name: "{{ hass_docker_pgsql_volume_conf_name }}"
+    postgres_docker_volume_data_name: "{{ hass_docker_pgsql_volume_data_name }}"
+    postgres_docker_available_externally: "false"
+    postgres_docker_initscripts:
+      - "{{ hass_docker_pgsql_init_tempates_dir }}/01_create_role_db.sql"

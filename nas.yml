@@ -56,28 +56,6 @@
     - role: organicveggie.unific
       tags:
         - unific
-    
-    # PostgreSQL and pgAdmin
-    - role: docker_networks
-      tags: ["docker", "postgres", "postgresql", "pgadmin"]
-      vars:
-        organicveggie_docker_networks:
-          - name: "{{ postgres_docker_network_name }}"
-            enable_ipv6: "no"
-            internal: "yes"
-            scope: "local"
-            subnet: "{{ postgres_docker_network_subnet }}"
-            gateway: "{{ postgres_docker_network_gateway }}"
-          - name: "{{ pgadmin_docker_network_name }}"
-            enable_ipv6: "no"
-            internal: "no"
-            scope: "local"
-            subnet: "{{ pgadmin_docker_network_subnet }}"
-            gateway: "{{ pgadmin_docker_network_gateway }}"
-    - role: organicveggie.postgres_docker
-      tags: ["docker", "postgres", "postgresql"]
-    - role: organicveggie.pgadmin_docker
-      tags: ["docker", "pgadmin"]
 
     # - role: zwavejs2mqtt
     - role: organicveggie.tautulli_docker
@@ -166,10 +144,13 @@
     - role: "organicveggie.resilio_sync_docker"
       tags: ["resilio"]
 
+    - role: "home-assistant"
+      tags: ["hass", "homeassistant"]
+
+    ##########
     # Traefik
     - role: organicveggie.ansible-traefik
-      tags:
-        - traefik
+      tags: ["traefik"]
 
     # Telegraf
     - role: telegraf

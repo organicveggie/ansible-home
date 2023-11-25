@@ -153,18 +153,39 @@ grafana_docker_extra_networks:
 ###
 ### Home Assistant
 ###
-home_assistant_docker_use_volumes: "true"
-home_assistant_docker_network_subnet: "172.100.6.0/24"
-home_assistant_docker_network_gateway: "172.100.6.1/24"
-home_assistant_docker_hostname: "hass"
-home_assistant_docker_host_domain: "{{ veggie_nas_domain_name }}"
-home_assistant_docker_memory: "3G"
-hass_home_latitude: "{{ home_latitude }}"
-hass_home_longitude: "{{ home_longitude }}"
-hass_home_timezone: "{{ home_timezone }}"
-hass_url: "http://{{ vault_hass_hostname }}"
-hass_db_user: "{{ vault_hass_db_user }}"
-hass_db_password: "{{ vault_hass_db_password }}"
+hass_host_domain: "{{ veggie_base_domain_name }}"
+hass_host_name: "ha"
+
+###
+### Home Assistant - pgAdmin4
+###
+hass_docker_pgadmin_available_externally: "true"
+hass_docker_pgadmin_host_domain: "{{ hass_docker_host_name }}.{{ hass_docker_host_domain }}"
+hass_docker_pgadmin_name: "hass-pgadmin"
+hass_docker_pgadmin_network_name: "{{ hass_docker_network_name }}"
+hass_docker_pgadmin_servers:
+  "pg_hass":
+    Name: "Hass Postgres"
+    Group: "Servers"
+    Port: "5432"
+    Username: "postgres"
+    Host: "{{ hass_docker_pgsql_name }}"
+    SSLMode: "prefer"
+    MaintenanceDB: "postgres"
+hass_docker_pgadmin_use_volumes: true
+hass_docker_pgadmin_volume_data_name: "hass-pgadmin-data"
+
+###
+### Home Assistant - PostgreSQL
+###
+hass_docker_pgsql_admin_password: "{{ vault_postgres_docker_admin_password }}"
+hass_docker_pgsql_image: "postgres:15-bullseye"
+hass_docker_pgsql_name: "hass-pgsql"
+hass_docker_pgsql_network_name: "{{ hass_docker_network_name }}"
+hass_docker_pgsql_volume_init_name: "hass-pgsql-initscripts"
+hass_docker_pgsql_volume_conf_name: "hass-pgsql-conf"
+hass_docker_pgsql_volume_data_name: "hass-pgsql-data"
+hass_docker_pgsql_init_tempates_dir: "/mnt/nas/hass/pgsql"
 
 ###
 ### InfluxDB
@@ -179,6 +200,8 @@ influxdb_docker_superuser_password: "{{ influxdb_admin_password }}"
 influxdb_docker_superuser_org: "{{ influxdb_admin_org }}"
 influxdb_docker_superuser_token: "{{ influxdb_admin_token }}"
 influxdb_docker_init_bucket: "admin"
+
+influxdb_docker_image_version: "2.7"
 
 ###
 ### Let's Encrypt / Certbot
@@ -235,30 +258,10 @@ organicveggie_folders_create:
     mode: "755"
 
 ###
-### PgAdmin
+### PgAdmin defaults
 ###
-pgadmin_default_email: "{{ primary_email_address }}"
-pgadmin_default_password: "{{ postgres_docker_admin_password }}"
-
-pgadmin_docker_available_externally: "true"
-pgadmin_docker_extra_networks:
-  - name: "{{ pgadmin_docker_network_name }}"
-  - name: "{{ postgres_docker_network_name }}"
-pgadmin_docker_host_domain: "{{ veggie_nas_domain_name }}"
-pgadmin_docker_network_create: false
-pgadmin_docker_network_gateway: "{{ vault_pgadmin_docker_network_gateway }}"
-pgadmin_docker_network_subnet: "{{ vault_pgadmin_docker_network_subnet }}"
-pgadmin_docker_use_volumes: true
-pgadmin_docker_servers:
-  "pg_hass":
-    Name: "Hass Postgres"
-    Group: "Servers"
-    Port: "5432"
-    Username: "postgres"
-    Host: "postgres"
-    SSLMode: "prefer"
-    MaintenanceDB: "postgres"
-
+pgadmin_docker_admin_email: "{{ primary_email_address }}"
+pgadmin_docker_admin_password: "{{ postgres_docker_admin_password }}"
 pgadmin_docker_email_server: "email-smtp.us-west-2.amazonaws.com"
 pgadmin_docker_email_port: "587"
 pgadmin_docker_email_use_ssl: "False"
@@ -614,6 +617,7 @@ traefik_ports:
   - '10001:10001'
   - '19000:19000'
   - "55555:55555"
+  - "{{ hass_docker_ecowitt_port }}:{{ hass_docker_ecowitt_port }}"
 traefik_labels:
   traefik.enable: "true"
   traefik.http.routers.traefik.service: "api@internal"
@@ -633,6 +637,8 @@ traefik_confkey_certificatesResolvers:
       dnsChallenge:
         provider: route53
 traefik_confkey_entryPoints:
+  hass_ecowitt:
+    address: ":{{ hass_docker_ecowitt_port }}"
   java_http:
     address: ":8080"
   resilio_sync_tcp:
@@ -659,12 +665,11 @@ traefik_extra_networks:
   - name: "{{ diun_docker_network_name }}"
   - name: "{{ glances_network_name }}"
   - name: "{{ grafana_network_name }}"
-  # - name: "{{ home_assistant_docker_network }}"
+  - name: "{{ hass_docker_network_name }}"
   - name: "{{ influxdb_network_name }}"
   - name: "{{ nodered_docker_network_name }}"
   - name: "{{ photoprism_network_name }}"
   - name: "{{ portainer_network_name }}"
-  - name: "{{ pgadmin_docker_network_name }}"
   - name: "{{ resilio_docker_network }}"
   - name: "{{ restic_rest_server_network_name }}"
   - name: "{{ tautulli_docker_network }}"

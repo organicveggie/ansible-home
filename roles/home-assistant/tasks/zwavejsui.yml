@@ -1,0 +1,11 @@
+---
+# ZWave JS UI for Home Assistant
+- include_role:
+    name: "organicveggie.zwavejsui"
+    allow_duplicates: "yes"
+  vars:
+    zwavejsui_docker_device: "{{ hass_zwave_device }}"
+    zwavejsui_docker_host_domain: "{{ hass_host_domain }}"
+    zwavejsui_docker_network: "{{ hass_network_name }}"
+    zwavejsui_docker_timezone: "{{ hass_home_timezone }}"
+      

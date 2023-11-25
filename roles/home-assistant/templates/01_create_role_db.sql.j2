@@ -1,0 +1,8 @@
+CREATE ROLE {{ hass_docker_recorder_db_user }} 
+    WITH PASSWORD '{{ hass_docker_recorder_db_password }}'
+    LOGIN;
+CREATE DATABASE {{ hass_docker_recorder_db_db_name }}
+    WITH OWNER {{ hass_docker_recorder_db_user }};
+GRANT ALL PRIVILEGES ON 
+    DATABASE {{ hass_docker_recorder_db_db_name }}
+    TO {{ hass_docker_recorder_db_user }};

@@ -1,0 +1,22 @@
+default_config:
+
+homeassistant:
+  name: "{{ hass_home_name }}"
+  latitude: !secret home_latitude
+  longitude: !secret home_longitude
+  unit_system: "{{ hass_home_units }}"
+  time_zone: !secret home_time_zone
+  allowlist_external_dirs:
+    - "/config"
+  internal_url: "{{ hass_url }}"
+  packages: !include_dir_named packages
+
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+      - "127.0.0.1"
+      - "{{ hass_network_subnet }}"
+      - "::1"
+
+recorder:
+  db_url: !secret recorder_db_url

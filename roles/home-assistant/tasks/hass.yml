@@ -1,0 +1,43 @@
+---
+- include_role:
+    name: "organicveggie.home_assistant_docker"
+  tags: ["docker", "hass", "homeassistant", "service"]
+  vars:
+    hass_docker_extra_labels:
+      "traefik.tcp.routers.hass_ecowitt.entrypoints": "hass_ecowitt"
+      "traefik.tcp.routers.hass_ecowitt.rule": "HostSNI(`*`)"
+      "traefik.tcp.services.hass_ecowitt.loadBalancer.server.port": "{{ hass_ecowitt_port }}"
+    hass_docker_host_domain: "{{ hass_host_domain }}"
+    hass_docker_host_name: "{{ hass_host_name }}"
+    hass_docker_network_internal: "{{ hass_network_internal }}"
+    hass_docker_network_name: "{{ hass_network_name }}"
+    hass_docker_network_subnet: "{{ hass_network_subnet }}"
+    hass_docker_network_gateway: "{{ hass_network_gateway }}"
+    hass_docker_url: "{{ hass_url }}"
+    hass_docker_use_volumes: "{{ hass_use_volumes }}"
+    hass_docker_volume_config_name: "{{ hass_volume_config_name }}"
+
+- name: "Get info on the Home Assistant Docker config volume"
+  community.docker.docker_volume_info:
+    name: "{{ hass_volume_config_name }}"
+  register: "_conf_volume_info"
+
+- name: "Create Home As{sistant config folders"
+  ansible.builtin.file:
+    path: "{{ _conf_volume_info.volume.Mountpoint }}/{{ item.path }}"
+    state: "directory"
+    mode: "{{ item.mode }}"
+  with_community.general.filetree: "../templates/hass/"
+  when: "item.state == 'directory'"
+
+- name: "Copy Home Assistant config files"
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ _conf_volume_info.volume.Mountpoint }}/{{ item.path | splitext | first }}"
+    mode: "0600"
+    owner: "root"
+    group: "root"
+  with_community.general.filetree: "../templates/hass/"
+  when: "item.state == 'file'"
+  notify: "Restart Home Assistant Docker"
+    
