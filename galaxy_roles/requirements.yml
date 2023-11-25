@@ -56,6 +56,10 @@
 - src: "organicveggie.vagrant"
   version: "1.0.0"
 
+- src: "https://github.com/organicveggie/ansible.zwavejsui"
+  name: "organicveggie.zwavejsui"
+  version: "1.0.1"
+
 - src: "stefangweichinger.ansible_rclone"
 
 - src: "nickhammond.logrotate"
