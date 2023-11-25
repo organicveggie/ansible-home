@@ -1,3 +1,0 @@
----
-- name: Restart PostgreSQL Docker Container
-  ansible.builtin.shell: "docker container restart {{ postgresql_docker_name }}"

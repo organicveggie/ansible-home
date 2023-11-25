@@ -1,9 +1,0 @@
-- import_tasks: general.yml
-  tags:
-    - plex_docker
-    - plex_docker:general
-
-- import_tasks: docker.yml
-  tags:
-    - plex_docker
-    - plex_docker:docker
