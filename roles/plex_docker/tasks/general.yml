@@ -1,0 +1,20 @@
+---
+- name: Create Plex group
+  ansible.builtin.group:
+    name: "plex"
+    gid: "{{ plex_docker_gid }}"
+    state: present
+
+- name: Create Plex user
+  ansible.builtin.user:
+    name: "plex"
+    uid: "{{ plex_docker_uid }}"
+    shell: /usr/bin/false
+    state: present
+    password: "*"
+    update_password: always
+    create_home: no
+    group: "plex"
+    groups:
+        - media_writer
+        - music_writer
