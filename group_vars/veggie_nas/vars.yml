@@ -636,13 +636,16 @@ traefik_confkey_entryPoints:
     address: ":10001/udp"
   unific_controller_discovery:
     address: ":19000/udp"
+  zwavejsui:
+    address: ":3200"
 traefik_confkey_serversTransport:
   insecureSkipVerify: "true"
 traefik_container_environment:
   AWS_HOSTED_ZONE_ID: "{{ acme_route53_hosted_zone_id }}"
   AWS_ACCESS_KEY_ID: "{{ letsencrypt_aws_access_key }}"
   AWS_SECRET_ACCESS_KEY: "{{ letsencrypt_aws_secret_key }}"
-
+  AWS_REGION: "us-east-1"
+traefik_image: "traefik:2.10"
 traefik_extra_networks:
   - name: "{{ calibre_web_docker_network }}"
   - name: "{{ diun_docker_network_name }}"
