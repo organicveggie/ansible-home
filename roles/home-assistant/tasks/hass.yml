@@ -3,26 +3,13 @@
     name: "organicveggie.home_assistant_docker"
   tags: ["docker", "hass", "homeassistant", "service"]
   vars:
-    hass_docker_extra_labels:
-      "traefik.http.routers.hass.service": "hass"
-      "traefik.http.routers.hass.priority": "400"
-      # Allow traffic to /api/webhook over HTTP without TLS. Needed to support Ecowitt GW1000.
-      "traefik.http.routers.hass_webhook.rule": "Host(`ha.home.bealetech.com`) && PathPrefix(`/api/webhook/`)"
-      "traefik.http.routers.hass_webhook.entrypoints": "http"
-      "traefik.http.routers.hass_webhook.service": "hass_webhook"
-      "traefik.http.routers.hass_webhook.priority": "500"
-      "traefik.http.services.hass_webhook.loadbalancer.server.port": "{{ hass_web_port }}"
-      # "traefik.http.routers.hass_ecowitt_http.rule": "Host(`ecowitt.home.bealetech.com`)"
-      # "traefik.http.routers.hass_ecowitt_http.entrypoints": "http"
-      # "traefik.http.routers.hass_ecowitt_http.service": "hass_ecowitt_http"
-      # "traefik.http.routers.hass_ecowitt_http.priority": "500"
-      # "traefik.http.services.hass_ecowitt_http.loadbalancer.server.port": "{{ hass_web_port }}"
     hass_docker_host_domain: "{{ hass_host_domain }}"
     hass_docker_host_name: "{{ hass_host_name }}"
     hass_docker_network_internal: "{{ hass_network_internal }}"
     hass_docker_network_name: "{{ hass_network_name }}"
     hass_docker_network_subnet: "{{ hass_network_subnet }}"
     hass_docker_network_gateway: "{{ hass_network_gateway }}"
+    hass_docker_home_timezone: "{{ hass_home_timezone }}"
     hass_docker_url: "{{ hass_url }}"
     hass_docker_use_volumes: "{{ hass_use_volumes }}"
     hass_docker_volume_config_name: "{{ hass_volume_config_name }}"
