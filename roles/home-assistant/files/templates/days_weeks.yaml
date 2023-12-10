@@ -1,0 +1,10 @@
+---
+- sensor:
+  - name: "Day of the week"
+    state: "{{ now().weekday() }}"
+  - name: "Is Commute Day"
+    state: "{{ now().weekday() in [3,4]}}"
+  - name: "Is Weekend"
+    state: "{{ now().weekday() in [0,6]}}"
+  - name: "Is Weekday"
+    state: "{{ now().weekday() in [1,2,3,4,5]}}"

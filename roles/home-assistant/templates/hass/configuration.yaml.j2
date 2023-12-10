@@ -20,3 +20,8 @@ http:
 
 recorder:
   db_url: !secret recorder_db_url
+
+automation: !include automations.yaml
+automation custom: !include_dir_merge_list automations
+
+template: !include_dir_merge_list templates

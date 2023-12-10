@@ -155,25 +155,8 @@ grafana_docker_extra_networks:
 ###
 hass_host_domain: "{{ veggie_base_domain_name }}"
 hass_host_name: "ha"
-
-###
-### Home Assistant - pgAdmin4
-###
-hass_docker_pgadmin_available_externally: "true"
-hass_docker_pgadmin_host_domain: "{{ hass_docker_host_name }}.{{ hass_docker_host_domain }}"
-hass_docker_pgadmin_name: "hass-pgadmin"
-hass_docker_pgadmin_network_name: "{{ hass_docker_network_name }}"
-hass_docker_pgadmin_servers:
-  "pg_hass":
-    Name: "Hass Postgres"
-    Group: "Servers"
-    Port: "5432"
-    Username: "postgres"
-    Host: "{{ hass_docker_pgsql_name }}"
-    SSLMode: "prefer"
-    MaintenanceDB: "postgres"
-hass_docker_pgadmin_use_volumes: true
-hass_docker_pgadmin_volume_data_name: "hass-pgadmin-data"
+hass_network_name: "hass"
+hass_docker_network_name: "{{ hass_network_name }}"
 
 ###
 ### Home Assistant - PostgreSQL

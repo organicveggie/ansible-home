@@ -4,9 +4,9 @@
     allow_duplicates: "yes"
   vars:
     organicveggie_docker_networks:
-      - name: "{{ hass_docker_network_name }}"
+      - name: "{{ hass_network_name }}"
         enable_ipv6: "no"
         internal: "no"
         scope: "local"
-        subnet: "{{ hass_docker_network_subnet }}"
-        gateway: "{{ hass_docker_network_gateway }}"
+        subnet: "{{ hass_network_subnet }}"
+        gateway: "{{ hass_network_gateway }}"

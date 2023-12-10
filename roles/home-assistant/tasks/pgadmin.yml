@@ -5,11 +5,11 @@
     allow_duplicates: "yes"
   vars:
     pgadmin_docker_available_externally: "true"
-    pgadmin_docker_host_domain: "{{ hass_docker_pgadmin_host_domain }}"
-    pgadmin_docker_name: "{{ hass_docker_pgadmin_name }}"
+    pgadmin_docker_host_domain: "{{ hass_pgadmin_host_domain }}"
+    pgadmin_docker_name: "{{ hass_pgadmin_name }}"
     pgadmin_docker_network_create: false
-    pgadmin_docker_network_name: "{{ hass_docker_pgadmin_network_name }}"
-    pgadmin_docker_servers: "{{ hass_docker_pgadmin_servers }}"
-    pgadmin_docker_use_volumes: "{{ hass_docker_pgadmin_use_volumes }}"
-    pgadmin_docker_volume_data_name: "{{ hass_docker_pgadmin_volume_data_name }}"
+    pgadmin_docker_network_name: "{{ hass_network_name }}"
+    pgadmin_docker_servers: "{{ hass_pgadmin_servers }}"
+    pgadmin_docker_use_volumes: "{{ hass_pgadmin_use_volumes }}"
+    pgadmin_docker_volume_data_name: "{{ hass_pgadmin_volume_data_name }}"
 

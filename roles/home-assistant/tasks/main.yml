@@ -1,18 +1,19 @@
 ---
-# - name: "Setup Docker networks for Home Assistant"
-#   ansible.builtin.import_tasks: "networks.yml"
-#   tags: ["docker", "network", "networks"]
+- name: "Setup Docker networks for Home Assistant"
+  ansible.builtin.import_tasks: "networks.yml"
+  tags: ["docker", "network", "networks"]
 
-# - name: "Setup PostgreSQL for Home Assistant on Docker"
-#   ansible.builtin.import_tasks: "postgres.yml"
-#   tags: ["docker", "postgres", "postgresql", "pgsql"]
+- name: "Setup PostgreSQL for Home Assistant on Docker"
+  ansible.builtin.import_tasks: "postgres.yml"
+  tags: ["docker", "postgres", "postgresql", "pgsql"]
 
-# - name: "Setup pgAdmin for Home Assistant on Docker"
-#   ansible.builtin.import_tasks: "pgadmin.yml"
-#   tags: ["docker", "pgadmin"]
+- name: "Setup pgAdmin for Home Assistant on Docker"
+  ansible.builtin.import_tasks: "pgadmin.yml"
+  tags: ["docker", "pgadmin"]
 
 - name: "Setup ZWave JS UI"
   ansible.builtin.import_tasks: "zwavejsui.yml"
+  tags: ["docker", "zwave", "zwavejsui"]
 
 - name: "Setup Home Assistant on Docker"
   ansible.builtin.import_tasks: "hass.yml"
