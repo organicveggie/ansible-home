@@ -587,8 +587,29 @@ traefik_confkey_api:
 # traefik_confkey_log:
 #   level: DEBUG
 #   filePath: /var/log/traefik.log
+# traefik_confkey_accessLog:
+#   filePath: "/etc/traefik/log/traefik-access.log"
+#   bufferingSize: 500
+#   format: "json"
+#   fields:
+#     # defaultMode: "drop"
+#     names:
+#       ClientAddr: "drop"
+#       ClientHost: "keep"
+#       ClientPort: "drop"
+#       ClientUsername: "drop"
+#       DownstreamContentSize: "drop"
+#       RequestHost: "keep"
+#       RequestLine: "keep"
+#       RequestMethod: "keep"
+#       RequestPath: "keep"
+#       RequestProtocol: "keep"
+#       RequestScheme: "keep"
+#       RouterName": "keep"
+#       ServiceName: "keep"
+#       StartLocal: "keep"
 traefik_qs_https: "true"
-traefik_qs_https_redirect: "true"
+# traefik_qs_https_redirect: "true"
 traefik_qs_https_le: "true"
 traefik_qs_https_le_mail: "{{ letsencrypt_email }}"
 traefik_qs_log_level: INFO
@@ -600,13 +621,22 @@ traefik_ports:
   - '10001:10001'
   - '19000:19000'
   - "55555:55555"
-  - "{{ hass_docker_ecowitt_port }}:{{ hass_docker_ecowitt_port }}"
+  - "3200:3000"
 traefik_labels:
   traefik.enable: "true"
+  # Dashboard
   traefik.http.routers.traefik.service: "api@internal"
   traefik.http.routers.traefik.entrypoints: "https"
   traefik.http.routers.traefik.tls.certresolver: "letsencrypt"
-  traefik.http.routers.traefik.tls.domains[0].main: "*.{{ veggie_nas_domain_name }}"
+  traefik.http.routers.traefik.tls.domains[0].main: "traefik.{{ veggie_nas_domain_name }}"
+  # Global redirect to https
+  traefik.http.routers.http-catchall.rule: "hostregexp(`{host:.+}`)"
+  traefik.http.routers.http-catchall.entrypoints: "http"
+  traefik.http.routers.http-catchall.middlewares: "redirect-to-https"
+  traefik.http.routers.http-catchall.priority: "10"
+  # Middleware redirect
+  traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: "https"
+
 traefik_confkey_providers:
   docker:
     defaultRule: "Host(`{{ traefik_hostname }}`)"
@@ -620,8 +650,6 @@ traefik_confkey_certificatesResolvers:
       dnsChallenge:
         provider: route53
 traefik_confkey_entryPoints:
-  hass_ecowitt:
-    address: ":{{ hass_docker_ecowitt_port }}"
   java_http:
     address: ":8080"
   resilio_sync_tcp:
