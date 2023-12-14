@@ -1,0 +1,32 @@
+---
+- name: "Create Ecowitt to Home Assistant proxy Docker container" # noqa: args[module]
+  community.docker.docker_container:
+    name: "{{ hass_ecowitt_name }}"
+    image: "{{ hass_ecowitt_docker_image_name }}:{{ hass_ecowitt_docker_image_version }}"
+    pull: true
+    env:
+      "HASS_URL": "{{ hass_ecowitt_hass_url }}"
+      "HASS_AUTH_TOKEN": "{{ hass_ecowitt_hass_auth_token }}"
+      "HASS_WEBHOOK_ID": "{{ hass_ecowitt_hass_webhook_id }}"
+      "SERVER_PORT": "{{ hass_ecowitt_docker_port }}"
+      "TZ": "{{ hass_home_timezone }}"
+    network_mode: "{{ hass_network_name }}"
+    #networks: "{{ hass_network_name }}"
+    restart_policy: unless-stopped
+    memory: "{{ hass_ecowitt_docker_memory }}"
+    cpus: "{{ hass_ecowitt_docker_cpus }}"
+    container_default_behavior: "no_defaults"
+    auto_remove: false
+    detach: true
+    init: false
+    interactive: false
+    paused: false
+    privileged: false
+    read_only: false
+    tty: false
+    labels:
+      "traefik.enable": "true"
+      "traefik.http.routers.hass_ecowitt.rule": "Host(`{{ hass_ecowitt_fqdn }}`)"
+      "traefik.http.routers.hass_ecowitt.entrypoints": "http"
+      "traefik.http.routers.hass_ecowitt.priority": "1000"
+      "traefik.http.services.hass_ecowitt.loadbalancer.server.port": "{{ hass_ecowitt_docker_port }}"

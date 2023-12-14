@@ -80,3 +80,19 @@ hass_pgadmin_servers:
     MaintenanceDB: "postgres"
 hass_pgadmin_use_volumes: true
 hass_pgadmin_volume_data_name: "hass-pgadmin-data"
+
+###
+### Ecowit
+###
+hass_ecowitt_name: "ecowitt-proxy"
+hass_ecowitt_docker_port: "8181"
+hass_ecowitt_docker_image_name: "ghcr.io/organicveggie/home-assistant-ecowitt-proxy"
+hass_ecowitt_docker_image_version: "latest"
+hass_ecowitt_docker_memory: "512M"
+hass_ecowitt_docker_cpus: "1"
+
+hass_ecowitt_hass_url: "{{ hass_url }}"
+hass_ecowitt_hass_auth_token: "ABCD"
+hass_ecowitt_hass_webhook_id: "1234"
+
+hass_ecowitt_fqdn: "ecowitt.{{ hass_host_domain }}"

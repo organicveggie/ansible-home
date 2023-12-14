@@ -159,6 +159,12 @@ hass_network_name: "hass"
 hass_docker_network_name: "{{ hass_network_name }}"
 
 ###
+### Home Assistant - Ecowitt Proxy
+###
+hass_ecowitt_hass_auth_token: "{{ vault_hass_ecowitt_hass_auth_token }}"
+hass_ecowitt_hass_webhook_id: "{{ vault_hass_ecowitt_hass_webhook_id }}"
+
+###
 ### Home Assistant - PostgreSQL
 ###
 hass_docker_pgsql_admin_password: "{{ vault_postgres_docker_admin_password }}"
@@ -584,30 +590,30 @@ timemachine_smb_user: "{{ vault_timemachine_smb_user }}"
 traefik_hostname: "traefik.{{ veggie_nas_domain_name }}"
 traefik_confkey_api:
   dashboard: true # use this for enabling the dashboard
-# traefik_confkey_log:
-#   level: DEBUG
-#   filePath: /var/log/traefik.log
-# traefik_confkey_accessLog:
-#   filePath: "/etc/traefik/log/traefik-access.log"
-#   bufferingSize: 500
-#   format: "json"
-#   fields:
-#     # defaultMode: "drop"
-#     names:
-#       ClientAddr: "drop"
-#       ClientHost: "keep"
-#       ClientPort: "drop"
-#       ClientUsername: "drop"
-#       DownstreamContentSize: "drop"
-#       RequestHost: "keep"
-#       RequestLine: "keep"
-#       RequestMethod: "keep"
-#       RequestPath: "keep"
-#       RequestProtocol: "keep"
-#       RequestScheme: "keep"
-#       RouterName": "keep"
-#       ServiceName: "keep"
-#       StartLocal: "keep"
+#traefik_confkey_log:
+#  level: DEBUG
+#  filePath: /var/log/traefik.log
+#traefik_confkey_accessLog:
+#  filePath: "/etc/traefik/log/traefik-access.log"
+#  bufferingSize: 500
+#  format: "json"
+#  fields:
+#    # defaultMode: "drop"
+#    names:
+#      ClientAddr: "drop"
+#      ClientHost: "keep"
+#      ClientPort: "drop"
+#      ClientUsername: "drop"
+#      DownstreamContentSize: "drop"
+#      RequestHost: "keep"
+#      RequestLine: "keep"
+#      RequestMethod: "keep"
+#      RequestPath: "keep"
+#      RequestProtocol: "keep"
+#      RequestScheme: "keep"
+#      RouterName": "keep"
+#      ServiceName: "keep"
+#      StartLocal: "keep"
 traefik_qs_https: "true"
 # traefik_qs_https_redirect: "true"
 traefik_qs_https_le: "true"

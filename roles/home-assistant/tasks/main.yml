@@ -18,3 +18,7 @@
 - name: "Setup Home Assistant on Docker"
   ansible.builtin.import_tasks: "hass.yml"
   tags: ["docker", "homeassistant", "home-assistant"]
+
+- name: "Setup Ecowitt to Home Assistant Poxy on Docker"
+  ansible.builtin.import_tasks: "ecowitt.yml"
+  tags: ["docker", "ecowitt"]
