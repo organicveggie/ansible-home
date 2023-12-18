@@ -11,7 +11,6 @@
       "SERVER_PORT": "{{ hass_ecowitt_docker_port }}"
       "TZ": "{{ hass_home_timezone }}"
     network_mode: "{{ hass_network_name }}"
-    #networks: "{{ hass_network_name }}"
     restart_policy: unless-stopped
     memory: "{{ hass_ecowitt_docker_memory }}"
     cpus: "{{ hass_ecowitt_docker_cpus }}"

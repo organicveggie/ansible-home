@@ -163,6 +163,7 @@ hass_docker_network_name: "{{ hass_network_name }}"
 ###
 hass_ecowitt_hass_auth_token: "{{ vault_hass_ecowitt_hass_auth_token }}"
 hass_ecowitt_hass_webhook_id: "{{ vault_hass_ecowitt_hass_webhook_id }}"
+hass_ecowitt_hass_url: "http://{{ hass_host_name }}.{{ hass_host_domain }}:8123"
 
 ###
 ### Home Assistant - PostgreSQL
