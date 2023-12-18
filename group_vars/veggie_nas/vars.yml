@@ -155,6 +155,8 @@ grafana_docker_extra_networks:
 ###
 hass_host_domain: "{{ veggie_base_domain_name }}"
 hass_host_name: "ha"
+hass_network_aliases:
+  - "{{ hass_docker_host_name }}.{{ hass_docker_host_domain }}"
 hass_network_name: "hass"
 hass_docker_network_name: "{{ hass_network_name }}"
 

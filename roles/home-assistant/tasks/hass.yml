@@ -5,6 +5,7 @@
   vars:
     hass_docker_host_domain: "{{ hass_host_domain }}"
     hass_docker_host_name: "{{ hass_host_name }}"
+    hass_docker_network_aliases: "{{ hass_network_aliases }}"
     hass_docker_network_internal: "{{ hass_network_internal }}"
     hass_docker_network_name: "{{ hass_network_name }}"
     hass_docker_network_subnet: "{{ hass_network_subnet }}"
