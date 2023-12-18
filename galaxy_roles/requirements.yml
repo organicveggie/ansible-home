@@ -34,7 +34,7 @@
 
 - src: "https://github.com/organicveggie/ansible.home_assistant_docker"
   name: "organicveggie.home_assistant_docker"
-  version: "1.0.6"
+  version: "1.0.7"
 
 - src: "organicveggie.pgadmin_docker"
   version: "1.0.3"
