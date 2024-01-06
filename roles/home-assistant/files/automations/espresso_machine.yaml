@@ -5,9 +5,9 @@
     at: "07:00"
   condition:
   - condition: template
-    value_template: "{{ not(bool(states('sensor.is_commute_day'))) }}"
+    value_template: "{{ not(bool(states('binary_sensor.is_commute_day'))) }}"
   - condition: template
-    value_template: "{{ is_state('input_boolean.vacation_mode', 'off') }}"
+    value_template: "{{ not(bool(states('binary_sensor.is_vacation_mode'))) }}"
   action:
   - type: turn_on
     device_id: "088ea18fbcde9a76b68d841f475dde7e"
@@ -21,9 +21,9 @@
     at: "14:00"
   condition:
   - condition: template
-    value_template: "{{ bool(states('sensor.is_weekend')) }}"
+    value_template: "{{ bool(states('binary_sensor.is_weekend')) }}"
   - condition: template
-    value_template: "{{ is_state('input_boolean.vacation_mode', 'off') }}"
+    value_template: "{{ not(bool(states('binary_sensor.is_vacation_mode'))) }}"
   action:
   - type: turn_off
     device_id: "088ea18fbcde9a76b68d841f475dde7e"
@@ -37,9 +37,9 @@
     at: "06:00"
   condition:
   - condition: template
-    value_template: "{{ bool(states('sensor.is_commute_day')) }}"
+    value_template: "{{ bool(states('binary_sensor.is_commute_day')) }}"
   - condition: template
-    value_template: "{{ is_state('input_boolean.vacation_mode', 'off') }}"
+    value_template: "{{ not(bool(states('binary_sensor.is_vacation_mode'))) }}"
   action:
   - type: turn_on
     device_id: "088ea18fbcde9a76b68d841f475dde7e"
@@ -53,9 +53,9 @@
     at: "07:30"
   condition:
   - condition: template
-    value_template: "{{ bool(states('sensor.is_commute_day')) }}"
+    value_template: "{{ bool(states('binary_sensor.is_commute_day')) }}"
   - condition: template
-    value_template: "{{ is_state('input_boolean.vacation_mode', 'off') }}"
+    value_template: "{{ not(bool(states('binary_sensor.is_vacation_mode'))) }}"
   action:
   - type: turn_off
     device_id: "088ea18fbcde9a76b68d841f475dde7e"
@@ -69,9 +69,11 @@
     at: "12:00"
   condition:
   - condition: template
-    value_template: "{{ bool(states('sensor.is_weekday')) and not(bool(states('sensor.is_commute_day'))) }}"
+    value_template: "{{ bool(states('binary_sensor.is_weekday')) }}"
   - condition: template
-    value_template: "{{ is_state('input_boolean.vacation_mode', 'off') }}"
+    value_template: "{{ not(bool(states('binary_sensor.is_commute_day'))) }}"
+  - condition: template
+    value_template: "{{ not(bool(states('binary_sensor.is_vacation_mode'))) }}"
   action:
   - type: turn_off
     device_id: "088ea18fbcde9a76b68d841f475dde7e"

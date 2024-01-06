@@ -1,0 +1,8 @@
+---
+- binary_sensor:
+  - name: "Is Away Mode"
+    state: "{{ bool(is_state('input_select.home_mode', 'Away')) }}"
+  - name: "Is Home Mode Home"
+    state: "{{ bool(is_state('input_select.home_mode', 'Home')) }}"
+  - name: "Is Vacation Mode"
+    state: "{{ bool(is_state('input_select.home_mode', 'Vacation')) }}"

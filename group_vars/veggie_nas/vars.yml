@@ -159,6 +159,9 @@ hass_network_aliases:
   - "{{ hass_docker_host_name }}.{{ hass_docker_host_domain }}"
 hass_network_name: "hass"
 hass_docker_network_name: "{{ hass_network_name }}"
+hass_home_latitude: "{{ vault_hass_home_latitude }}"
+hass_home_longitude: "{{ vault_hass_home_longitude }}"
+hass_home_timezone: "{{ vault_hass_home_timezone }}"
 
 ###
 ### Home Assistant - Ecowitt Proxy
