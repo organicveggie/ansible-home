@@ -57,7 +57,6 @@
       tags:
         - unific
 
-    # - role: zwavejs2mqtt
     - role: organicveggie.tautulli_docker
     - role: organicveggie.pmm_docker
 
@@ -144,9 +143,6 @@
     - role: "organicveggie.resilio_sync_docker"
       tags: ["resilio"]
 
-    - role: "home-assistant"
-      tags: ["hass", "homeassistant"]
-
     ##########
     # Traefik
     - role: organicveggie.ansible-traefik
@@ -154,3 +150,6 @@
 
     # Telegraf
     - role: telegraf
+
+- ansible.builtin.import_playbook: "playbooks/hass.yml"
+  tags: ["hass", "homeassistant", "home-assistant"]

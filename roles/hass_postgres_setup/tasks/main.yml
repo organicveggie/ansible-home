@@ -1,0 +1,16 @@
+---
+- name: "Create PostgreSQL for Home Assistant init script folder"
+  ansible.builtin.file:
+    group: "root"
+    mode: "0600"
+    owner: "root"
+    path: "{{ pgsql_init_tempates_dir }}"
+    state: "directory"
+
+- name: "Copy PostgreSQL init script templates for Home Assistant"
+  ansible.builtin.template:
+    src: "templates/{{ item }}.j2"
+    dest: "{{ pgsql_init_tempates_dir }}/{{ item }}"
+    mode: "0600"
+  loop:
+    - "01_create_role_db.sql"

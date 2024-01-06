@@ -1,0 +1,8 @@
+CREATE ROLE {{ hass_recorder_db_user }} 
+    WITH PASSWORD '{{ hass_recorder_db_url }}'
+    LOGIN;
+CREATE DATABASE {{ hass_recorder_db_db_name }}
+    WITH OWNER {{ hass_recorder_db_user }};
+GRANT ALL PRIVILEGES ON 
+    DATABASE {{ hass_recorder_db_db_name }}
+    TO {{ hass_recorder_db_user }};

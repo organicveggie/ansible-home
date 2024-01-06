@@ -1,0 +1,2 @@
+---
+pgsql_init_tempates_dir: "/mnt/nas/hass/pgsql"
