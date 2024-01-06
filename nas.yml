@@ -60,43 +60,6 @@
     - role: organicveggie.tautulli_docker
     - role: organicveggie.pmm_docker
 
-    # Calibre Web
-    - role: "groupadd"
-      tags: ["calibre", "groups"]
-      vars:
-        user_groups:
-          - name: "{{ calibre_web_group_name }}"
-            gid: "{{ calibre_web_docker_gid }}"
-            system: "false"
-            state: "present"
-    - role: "organicveggie.ansible-users"
-      tags: ["resilio", "users"]
-      vars:
-        users:
-          - username: "{{ calibre_web_user_name }}"
-            uid: "{{ calibre_web_docker_uid }}"
-            group: "{{ calibre_web_docker_gid }}"
-            password: "*"
-            groups: ["media_writer"]
-            append: yes
-            home_create: no
-            system: no
-            authorized_keys: []
-            authorized_keys_exclusive: yes
-            shell: "/bin/false"
-    - role: docker_networks
-      tags: ["calibre", "docker"]
-      vars:
-        organicveggie_docker_networks:
-          - name: "{{ calibre_web_docker_network }}"
-            enable_ipv6: "no"
-            internal: "no"
-            scope: "local"
-            subnet: "{{ calibre_web_docker_network_subnet }}"
-            gateway: "{{ calibre_web_docker_network_gateway }}"
-    - role: "organicveggie.calibre_web_docker"
-      tags: ["calibre"]
-
     ##########
     # Traefik
     - role: organicveggie.ansible-traefik
@@ -104,6 +67,9 @@
 
     # Telegraf
     - role: telegraf
+
+- ansible.builtin.import_playbook: "playbooks/calibre-web.yml"
+  tags: ["calibre", "calibre-web", "calibre-web"]
 
 - ansible.builtin.import_playbook: "playbooks/hass.yml"
   tags: ["hass", "homeassistant", "home-assistant"]

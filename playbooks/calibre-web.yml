@@ -1,0 +1,43 @@
+- name: "Setup Calibre Web"
+  hosts: nas
+  remote_user: sean
+  become: yes
+
+  pre_tasks:
+    - name: "Create groups"
+      ansible.builtin.group:
+        name: "{{ calibre_web_group_name }}"
+        gid: "{{ calibre_web_docker_gid }}"
+        system: "false"
+        state: "present"
+      tags: ["setup", "groups"]
+
+    - name: "Create users"
+      ansible.builtin.user:
+        append: true
+        create_home: false
+        group: "{{ calibre_web_group_name }}"
+        groups: ["media_writer"]
+        name: "{{ calibre_web_user_name }}"
+        password: "*"
+        password_lock: true
+        shell: "/bin/false"
+        state: "present"
+        system: false
+        uid: "{{ calibre_web_docker_uid }}"
+      tags: ["setup", "users"]
+
+  roles:
+    - role: "docker_networks"
+      vars:
+        organicveggie_docker_networks:
+          - name: "{{ calibre_web_docker_network }}"
+            enable_ipv6: "no"
+            internal: "no"
+            scope: "local"
+            subnet: "{{ calibre_web_docker_network_subnet }}"
+            gateway: "{{ calibre_web_docker_network_gateway }}"
+      tags: ["docker", "network", "networks"]
+
+    - role: "organicveggie.calibre_web_docker"
+      tags: ["calibre"]
