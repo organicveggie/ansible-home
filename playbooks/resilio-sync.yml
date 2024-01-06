@@ -1,0 +1,61 @@
+---
+- name: "Setup Resilio Sync"
+  hosts: nas
+  remote_user: sean
+  become: yes
+
+  pre_tasks:
+    - name: "Create groups"
+      ansible.builtin.group:
+        name: "{{ resilio_docker_group_name }}"
+        gid: "{{ resilio_docker_gid }}"
+        system: "false"
+        state: "present"
+      tags: ["setup", "groups"]
+
+    - name: "Create users"
+      ansible.builtin.user:
+        append: true
+        create_home: false
+        group: "{{ resilio_docker_group_name }}"
+        groups: ["media_writer"]
+        name: "{{ resilio_docker_user_name }}"
+        password: "*"
+        password_lock: true
+        shell: "/bin/false"
+        state: "present"
+        system: false
+        uid: "{{ resilio_docker_uid }}"
+      tags: ["setup", "users"]
+
+    - name: "Create folders"
+      ansible.builtin.file:
+        attributes: "{{ item.attributes | default(omit) }}"
+        group: "{{ item.group | default(omit) }}"
+        mode: "{{ item.mode | default(omit) }}"
+        owner: "{{ item.owner | default(omit) }}"
+        path: "{{ item.path | default(omit) }}"
+        recurse: "{{ item.recurse | default(omit) }}"
+        state: "directory"
+      loop:
+        - path: "{{ resilio_docker_torrentz_dir }}"
+          state: "directory"
+          mode: "0775"
+          owner: "resilio"
+          group: "media_writer"
+      tags: ["setup", "directories", "folders"]
+
+  roles:
+    - role: "docker_networks"
+      vars:
+        organicveggie_docker_networks:
+          - name: "{{ resilio_docker_network }}"
+            enable_ipv6: "no"
+            internal: "no"
+            scope: "local"
+            subnet: "{{ resilio_docker_network_subnet }}"
+            gateway: "{{ resilio_docker_network_gateway }}"
+      tags: ["docker", "network", "networks"]
+
+    - role: "organicveggie.resilio_sync_docker"
+      tags: ["resilio"]

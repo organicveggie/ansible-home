@@ -97,52 +97,6 @@
     - role: "organicveggie.calibre_web_docker"
       tags: ["calibre"]
 
-    # Resilio Sync
-    - role: "groupadd"
-      tags: ["resilio", "groups"]
-      vars:
-        user_groups:
-          - name: "{{ resilio_docker_group_name }}"
-            gid: "{{ resilio_docker_gid }}"
-            system: "false"
-            state: "present"
-    - role: "organicveggie.ansible-users"
-      tags: ["resilio", "users"]
-      vars:
-        users:
-          - username: "{{ resilio_docker_user_name }}"
-            uid: "{{ resilio_docker_uid }}"
-            group: "{{ resilio_docker_group_name }}"
-            password: "*"
-            groups: ["media_writer"]
-            append: yes
-            home_create: no
-            system: no
-            authorized_keys: []
-            authorized_keys_exclusive: yes
-            shell: "/bin/false"
-    - role: "organicveggie.folders"
-      tags: ["resilio", "folders"]
-      vars:
-        organicveggie_folders_create:
-          - path: "{{ resilio_docker_torrentz_dir }}"
-            state: "directory"
-            mode: "0775"
-            owner: "resilio"
-            group: "media_writer"
-    - role: docker_networks
-      tags: ["resilio", "docker"]
-      vars:
-        organicveggie_docker_networks:
-          - name: "{{ resilio_docker_network }}"
-            enable_ipv6: "no"
-            internal: "no"
-            scope: "local"
-            subnet: "{{ resilio_docker_network_subnet }}"
-            gateway: "{{ resilio_docker_network_gateway }}"
-    - role: "organicveggie.resilio_sync_docker"
-      tags: ["resilio"]
-
     ##########
     # Traefik
     - role: organicveggie.ansible-traefik
@@ -153,3 +107,6 @@
 
 - ansible.builtin.import_playbook: "playbooks/hass.yml"
   tags: ["hass", "homeassistant", "home-assistant"]
+
+- ansible.builtin.import_playbook: "playbooks/resilio-sync.yml"
+  tags: ["resilio"]
