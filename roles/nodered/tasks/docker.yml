@@ -1,11 +1,25 @@
 ---
-- name: Node-RED Docker Volume
+- name: "Node-RED Docker Volume"
   community.docker.docker_volume:
     name: "{{ nodered_docker_volume_name }}"
 
+- name: "Get info on the Node-RED Docker volume"
+  community.docker.docker_volume_info:
+    name: "{{ nodered_docker_volume_name }}"
+  register: "_volume_info"
+
+- name: "Copy settings.js"
+  ansible.builtin.template:
+    src: "settings.js.j2"
+    dest: "{{ _volume_info.volume.Mountpoint }}/settings.js"
+    mode: "0660"
+    group: "{{ nodered_docker_gid }}"
+    owner: "{{ nodered_docker_uid }}"
+  notify: "Restart Node-RED Docker"
+
 - name: Node-RED Docker Container
   community.docker.docker_container:
-    name: nodered
+    name: "{{ nodered_docker_name }}"
     image: "{{ nodered_docker_image }}"
     pull: true
     mounts:
@@ -14,9 +28,6 @@
     network_mode: "{{ nodered_docker_network_name }}"
     networks:
       - name: "{{ nodered_docker_network_name }}"
-    env:
-      "NODERED_UID": "{{ nodered_uid }}"
-      "NODERED_GID": "{{ nodered_gid }}"
     restart_policy: unless-stopped
     memory: "{{ nodered_docker_memory }}"
     cpus: "{{ nodered_docker_cpus }}"

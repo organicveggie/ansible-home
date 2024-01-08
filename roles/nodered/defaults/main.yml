@@ -1,17 +1,17 @@
-nodered_user: "node-red"
-nodered_uid: "2400"
-nodered_gid: "2400"
-nodered_group: "node-red"
-nodered_extra_groups: []
-
 nodered_port: "1880"
 nodered_available_externally: "true"
 nodered_hostname: "nodered"
 nodered_host_domain: "example.com"
 
+nodered_docker_gid: "1000"
+nodered_docker_uid: "1000"
+
+nodered_docker_name: "nodered"
 nodered_docker_image: "nodered/node-red:latest"
 nodered_docker_volume_name: "nodered-data"
 nodered_docker_network_name: "nodered"
 
 nodered_docker_memory: "2G"
 nodered_docker_cpus: "2"
+
+nodered_credential_secret: "a-secret-key"

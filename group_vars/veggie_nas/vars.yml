@@ -225,7 +225,8 @@ nfs_exports:
 ###
 ### Node-RED
 ###
-nodered_docker_image: "{{ vault_nodered_docker_image }}"
+nodered_credential_secret: "{{ vault_nodered_credential_secret }}"
+nodered_docker_image: "nodered/node-red:latest"
 nodered_host_domain: "{{ veggie_nas_domain_name }}"
 
 ###

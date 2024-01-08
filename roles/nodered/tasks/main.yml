@@ -1,13 +1,7 @@
-- import_tasks: setup.yml
+---
+- import_tasks: "docker.yml"
   tags:
-    - nodered
-    - nodered:setup
-    - nodered_docker
-    - nodered_docker:setup
-
-- import_tasks: docker.yml
-  tags:
-    - nodered
-    - nodered:docker
-    - nodered_docker
-    - nodered_docker:docker
+    - "nodered"
+    - "nodered:docker"
+    - "nodered_docker"
+    - "nodered_docker:docker"

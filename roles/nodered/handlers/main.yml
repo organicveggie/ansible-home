@@ -1,0 +1,6 @@
+---
+- name: "Restart Node-RED Docker"
+  community.docker.docker_container:
+    name: "{{ nodered_docker_name }}"
+    restart: true
+    state: "started"
