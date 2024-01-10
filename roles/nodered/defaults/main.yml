@@ -9,7 +9,24 @@ nodered_docker_uid: "1000"
 nodered_docker_name: "nodered"
 nodered_docker_image: "nodered/node-red:latest"
 nodered_docker_volume_name: "nodered-data"
+
+nodered_docker_timezone: "America/New_York"
+
+#####
+# Docker Network
+#####
+nodered_docker_network_internal: "false"
 nodered_docker_network_name: "nodered"
+nodered_docker_network_subnet: "172.1.2.0/24"
+nodered_docker_network_gateway: "172.1.2.1"
+nodered_docker_extra_networks: []
+
+# List of aliases for this container in the default network. These names can be used in the default
+# network to reach this container.
+nodered_docker_network_aliases: []
+
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+nodered_docker_extra_labels: {}
 
 nodered_docker_memory: "2G"
 nodered_docker_cpus: "2"

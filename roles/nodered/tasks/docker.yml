@@ -8,6 +8,13 @@
     name: "{{ nodered_docker_volume_name }}"
   register: "_volume_info"
 
+- name: "Update ownership of Node-RED Docker volume folder"
+  ansible.builtin.file:
+    mode: "775"
+    owner: "{{ nodered_docker_uid }}"
+    path: "{{ _volume_info.volume.Mountpoint }}"
+    state: "directory"
+
 - name: "Copy settings.js"
   ansible.builtin.template:
     src: "settings.js.j2"
@@ -17,7 +24,58 @@
     owner: "{{ nodered_docker_uid }}"
   notify: "Restart Node-RED Docker"
 
-- name: Node-RED Docker Container
+- name: "Create placeholder array for default network"
+  ansible.builtin.set_fact:
+    _nodered_docker_created_networks:
+      - name: "{{ nodered_docker_network_name }}"
+        aliases: "{{ nodered_docker_network_aliases | default(omit) }}"
+
+- name: "Define all Docker networks for this container"
+  ansible.builtin.set_fact:
+    _nodered_docker_all_networks: >
+      {{ _nodered_docker_created_networks + nodered_docker_extra_networks }}
+
+- name: "Build container FQDN"
+  ansible.builtin.set_fact:
+    _nodered_docker_fqdn: "{{ nodered_hostname }}.{{ nodered_host_domain }}"
+
+- name: "Define Docker labels with Traefik disabled"
+  ansible.builtin.set_fact:
+    _nodered_docker_labels: "{{ _nodered_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  with_items:
+    - key: "traefik.enable"
+      value: "{{ nodered_available_externally }}"
+  when: "not nodered_available_externally"
+
+- name: "Define Docker labels with Traefik enabled"
+  ansible.builtin.set_fact:
+    _nodered_docker_labels: "{{ _nodered_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  with_items:
+    - key: "traefik.enable"
+      value: "{{ nodered_available_externally }}"
+    - key: "traefik.docker.network"
+      value: "{{ nodered_docker_network_name }}"
+    - key: "traefik.http.routers.nodered.rule"
+      value: "Host(`{{ _nodered_docker_fqdn }}`)"
+    - key: "traefik.http.routers.nodered.entrypoints"
+      value: "http,https"
+    - key: "traefik.http.routers.nodered.tls.certresolver"
+      value: "letsencrypt"
+    - key: "traefik.http.routers.nodered.tls.domains[0].main"
+      value: "*.{{ nodered_host_domain }}"
+    - key: "traefik.http.services.nodered.loadbalancer.server.port"
+      value: "{{ nodered_port }}"
+  when: "nodered_available_externally"
+
+- name: "Define user-supplied extra Docker labels"
+  ansible.builtin.set_fact:
+    _nodered_docker_labels: "{{ _nodered_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  loop: "{{ nodered_docker_extra_labels | dict2items }}"
+
+- name: "Node-RED Docker Container"
   community.docker.docker_container:
     name: "{{ nodered_docker_name }}"
     image: "{{ nodered_docker_image }}"
@@ -25,9 +83,11 @@
     mounts:
       - source: "{{ nodered_docker_volume_name }}"
         target: "/data"
+        type: "volume"
+    env:
+      "TZ": "{{ nodered_docker_timezone }}"
     network_mode: "{{ nodered_docker_network_name }}"
-    networks:
-      - name: "{{ nodered_docker_network_name }}"
+    networks: "{{ _nodered_docker_all_networks }}"
     restart_policy: unless-stopped
     memory: "{{ nodered_docker_memory }}"
     cpus: "{{ nodered_docker_cpus }}"
@@ -40,11 +100,4 @@
     privileged: no
     read_only: no
     tty: no
-    labels:
-      traefik.enable: "{{ nodered_available_externally }}"
-      traefik.docker.network: "{{ nodered_docker_network_name }}"
-      traefik.http.routers.nodered.rule: "Host(`{{ nodered_hostname }}.{{ nodered_host_domain }}`)"
-      traefik.http.routers.nodered.entrypoints: "http,https"
-      traefik.http.routers.nodered.tls.certresolver: "letsencrypt"
-      traefik.http.routers.nodered.tls.domains[0].main: "*.{{ nodered_host_domain }}"
-      traefik.http.services.nodered.loadbalancer.server.port: "{{ nodered_port }}"
+    labels: "{{ _nodered_docker_labels }}"

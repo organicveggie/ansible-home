@@ -224,6 +224,13 @@ nodered_credential_secret: "{{ vault_nodered_credential_secret }}"
 nodered_docker_image: "nodered/node-red:latest"
 nodered_host_domain: "{{ veggie_nas_domain_name }}"
 
+nodered_docker_extra_networks:
+  - name: "{{ hass_network_name }}"
+nodered_docker_network_name: "node-red"
+nodered_docker_network_subnet: "172.100.12.0/24"
+nodered_docker_network_gateway: "172.100.12.1"
+nodered_docker_timezone: "{{ vault_nodered_timezone }}"
+
 ###
 ### organicveggie.folders
 ###

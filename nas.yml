@@ -49,7 +49,6 @@
     - role: veggie_nas_rclone
     - role: organicveggie.certbot-route53
     - role: restic_rest_server
-    - role: nodered
     - role: diun
     - role: grafana_docker
     - role: photoprism
@@ -73,6 +72,9 @@
 
 - ansible.builtin.import_playbook: "playbooks/hass.yml"
   tags: ["hass", "homeassistant", "home-assistant"]
+
+- ansible.builtin.import_playbook: "playbooks/node-red.yml"
+  tags: ["nodered", "node-red"]
 
 - ansible.builtin.import_playbook: "playbooks/resilio-sync.yml"
   tags: ["resilio"]
