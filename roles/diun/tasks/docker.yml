@@ -26,6 +26,8 @@
     network_mode: "{{ diun_docker_network_name }}"
     networks:
       - name: "{{ diun_docker_network_name }}"
+    env:
+      "TZ": "{{ diun_docker_timezone }}"
     restart_policy: unless-stopped
     memory: "{{ diun_docker_memory }}"
     cpus: "{{ diun_docker_cpus }}"

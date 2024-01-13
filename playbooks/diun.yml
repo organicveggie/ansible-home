@@ -1,0 +1,20 @@
+---
+- name: "Setup Diun"
+  hosts: nas
+  remote_user: "sean"
+  become: yes
+
+  roles:
+    - role: "docker_networks"
+      vars:
+        organicveggie_docker_networks:
+          - name: "{{ diun_docker_network_name }}"
+            enable_ipv6: "no"
+            internal: "no"
+            scope: "local"
+            subnet: "{{ diun_docker_network_subnet }}"
+            gateway: "{{ diun_docker_network_gateway }}"
+      tags: ["docker", "network", "networks"]
+
+    - role: "diun"
+      tags: ["diun"]

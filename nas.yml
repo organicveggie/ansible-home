@@ -49,7 +49,6 @@
     - role: veggie_nas_rclone
     - role: organicveggie.certbot-route53
     - role: restic_rest_server
-    - role: diun
     - role: grafana_docker
     - role: photoprism
     - role: organicveggie.unific
@@ -69,6 +68,9 @@
 
 - ansible.builtin.import_playbook: "playbooks/calibre-web.yml"
   tags: ["calibre", "calibre-web", "calibre-web"]
+
+- ansible.builtin.import_playbook: "playbooks/diun.yml"
+  tags: ["diun"]
 
 - ansible.builtin.import_playbook: "playbooks/hass.yml"
   tags: ["hass", "homeassistant", "home-assistant"]

@@ -23,6 +23,11 @@ veggie_users_passwords:
 ###
 ### Diun
 ###
+diun_docker_network_name: "diun"
+diun_docker_network_subnet: "{{ vault_diun_docker_network_subnet }}"
+diun_docker_network_gateway: "{{ vault_diun_docker_network_gateway }}"
+diun_docker_timezone: "{{ vault_diun_docker_timezone }}"
+
 diun_notify_mail_host: "{{ vault_diun_notify_mail_host }}"
 diun_notify_mail_port: "{{ vault_diun_notify_mail_port }}"
 diun_notify_mail_ssl: true
@@ -67,12 +72,6 @@ organicveggie_docker_networks:
     scope: "local"
     subnet: "172.22.0.0/16"
     gateway: "172.22.0.1"
-  - name: "{{ diun_docker_network_name }}"
-    enable_ipv6: "no"
-    internal: "no"
-    scope: "local"
-    subnet: "172.24.0.0/16"
-    gateway: "172.24.0.1"
   - name: "{{ grafana_network_name }}"
     enable_ipv6: "no"
     internal: "no"

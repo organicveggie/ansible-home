@@ -21,6 +21,8 @@ diun_notify_mail_to: "webmaster@example.com"
 diun_docker_volume_name: "diun-data"
 diun_docker_network_name: "diun"
 
+diun_docker_timezone: "America/New_York"
+
 diun_docker_memory: "512M"
 diun_docker_cpus: "1"
 
