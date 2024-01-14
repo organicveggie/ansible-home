@@ -122,6 +122,7 @@ grafana_docker_smtp_password: "{{ vault_grafana_docker_smtp_password }}"
 grafana_docker_smtp_from_address: "{{ primary_email_address }}"
 grafana_docker_extra_networks:
   - "influxdb"
+grafana_network_name: "grafana"
 
 ###
 ### Home Assistant
@@ -171,8 +172,8 @@ influxdb_docker_superuser_password: "{{ influxdb_admin_password }}"
 influxdb_docker_superuser_org: "{{ influxdb_admin_org }}"
 influxdb_docker_superuser_token: "{{ influxdb_admin_token }}"
 influxdb_docker_init_bucket: "admin"
-
 influxdb_docker_image_version: "2.7"
+influxdb_network_name: "influxdb"
 
 ###
 ### Let's Encrypt / Certbot
@@ -258,6 +259,7 @@ photoprism_extra_groups: "photo_writer"
 photoprism_mariadb_dir: "/mnt/nas/photoprism-mariadb"
 photoprism_mariadb_root_password: "{{ vault_photoprism_mariadb_root_password }}"
 photoprism_mariadb_password: "{{ vault_photoprism_mariadb_password }}"
+photoprism_network_name: "photoprism"
 photoprism_zfs_filesystems:
   - dataset: "nas/photoprism"
     path: "/mnt/nas/photoprism"
@@ -396,6 +398,7 @@ pip_install_packages:
 portainer_available_externally: "true"
 portainer_admin_password: "{{ default_portainer_admin_password }}"
 portainer_host_domain: "{{ veggie_nas_domain_name }}"
+portainer_network_name: "portainer"
 
 ###
 ### PostgreSQL
@@ -523,6 +526,7 @@ veggie_nas_samba_groups:
 ### Tautulli
 ###
 tautulli_docker_timezone: "{{ home_timezone }}"
+tautulli_docker_network: "tautulli"
 tautulli_docker_network_subnet: "172.100.7.0/24"
 tautulli_docker_network_gateway: "172.100.7.1"
 tautulli_docker_host_domain: "{{ veggie_base_domain_name }}"
@@ -697,6 +701,7 @@ unific_memory: "2GB"
 # unific_traefik_router_rule: "Host(`{{ unific_hostname }}.{{ unific_host_domain }}`)||Host(`{{ unific_hostname }}.{{ veggie_base_domain_name }}`)"
 unific_traefik_router_rule: "Host(`{{ unific_hostname }}.{{ unific_host_domain }}`)"
 unific_docker_network_created: true
+unific_network_name: "unific"
 unific_network_subnet: "172.100.4.0/24"
 unific_network_gateway: "172.100.4.1"
 

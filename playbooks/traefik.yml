@@ -1,0 +1,9 @@
+---
+- name: "Setup Traefik"
+  hosts: nas
+  remote_user: "sean"
+  become: yes
+
+  roles:
+    - role: "organicveggie.ansible-traefik"
+      tags: ["traefik"]
