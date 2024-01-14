@@ -1,0 +1,20 @@
+---
+- name: "Setup Glances"
+  hosts: nas
+  remote_user: "sean"
+  become: yes
+
+  roles:
+    - role: "docker_networks"
+      vars:
+        organicveggie_docker_networks:
+          - name: "{{ glances_network_name }}"
+            enable_ipv6: "no"
+            internal: "no"
+            scope: "local"
+            subnet: "{{ glances_network_subnet }}"
+            gateway: "{{ glances_network_gateway }}"
+      tags: ["docker", "network", "networks"]
+
+    - role: "glances"
+      tags: ["glances"]

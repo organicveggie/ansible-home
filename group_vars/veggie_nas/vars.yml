@@ -48,12 +48,6 @@ docker_daemon_options:
   data-root: "{{ docker_home }}/data"
 
 organicveggie_docker_networks:
-  - name: "{{ glances_network_name }}"
-    enable_ipv6: "no"
-    internal: "yes"
-    scope: "local"
-    subnet: "172.18.0.0/16"
-    gateway: "172.18.0.1"
   - name: "{{ portainer_network_name }}"
     enable_ipv6: "no"
     internal: "yes"
@@ -107,6 +101,9 @@ organicveggie_docker_networks:
 ### Glances
 ###
 glances_host_domain: "{{ veggie_nas_domain_name }}"
+glances_network_name: "glances"
+glances_network_gateway: "{{ vault_glances_network_gateway }}"
+glances_network_subnet: "{{ vault_glances_network_subnet }}"
 
 ###
 ### Grafana

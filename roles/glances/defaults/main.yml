@@ -3,6 +3,8 @@ glances_available_externally: "true"
 
 # network
 glances_network_name: "glances"
+glances_network_gateway: "172.1.0.1"
+glances_network_subnet: "172.1.0.0/24"
 glances_hostname: "glances"
 glances_host_domain: example.com
 glances_port: "61208"

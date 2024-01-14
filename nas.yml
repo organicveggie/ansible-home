@@ -34,7 +34,6 @@
         - nfs_server
         - skip_ansible_lint
     - role: portainer
-    - role: glances
     - role: time_machine
     - role: influxdb_docker
     - role: plex_docker
@@ -71,6 +70,9 @@
 
 - ansible.builtin.import_playbook: "playbooks/diun.yml"
   tags: ["diun"]
+
+- ansible.builtin.import_playbook: "playbooks/glances.yml"
+  tags: ["glances"]
 
 - ansible.builtin.import_playbook: "playbooks/hass.yml"
   tags: ["hass", "homeassistant", "home-assistant"]
