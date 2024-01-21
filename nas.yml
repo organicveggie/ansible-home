@@ -78,6 +78,9 @@
 - ansible.builtin.import_playbook: "playbooks/resilio-sync.yml"
   tags: ["resilio"]
 
+- ansible.builtin.import_playbook: "playbooks/servarr.yml"
+  tags: ["servarr"]
+
 ##########
 # Traefik - Needs to be last so all of the networks exist
 ##########

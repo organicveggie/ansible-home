@@ -1,0 +1,110 @@
+---
+- name: "Setup *arr containers"
+  hosts: nas
+  remote_user: "sean"
+  become: yes
+
+  pre_tasks:
+    - name: "Create servarr group"
+      ansible.builtin.group:
+        name: "{{ servarr_groupname }}"
+        gid: "{{ servarr_gid }}"
+
+    - name: "Create servarr user"
+      ansible.builtin.user:
+        name: "{{ servarr_username }}"
+        uid: "{{ servarr_uid }}"
+        create_home: "false"
+        groups: "{{ servarr_groupname }}"
+        password: "!"
+
+    - name: "Create top-level ZFS datasets"
+      community.general.zfs:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - "nas/data/servarr"
+        - "nas/data/servarr/books"
+        - "nas/data/servarr/downloads"
+        - "nas/data/servarr/downloads/torrents"
+        - "nas/data/servarr/downloads/usenet"
+
+    - name: "Create ZFS datasets for torrents"
+      community.general.zfs:
+        name: "nas/data/servarr/downloads/torrents/{{ item }}"
+        state: present
+      loop:
+        - "tv"
+        - "movies"
+        - "books"
+        - "music"
+
+    - name: "Create ZFS datasets for usenet"
+      community.general.zfs:
+        name: "nas/data/servarr/downloads/usenet/{{ item }}"
+        state: present
+      loop:
+        - "tv"
+        - "movies"
+        - "books"
+        - "music"
+
+    - name: "Set owner/group for datasets"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: "directory"
+        owner: "{{ servarr_username }}"
+        group: "{{ servarr_groupname }}"
+        mode: "775"
+      loop:
+        - "/mnt/nas/data/servarr"
+        - "/mnt/nas/data/servarr/books"
+        - "/mnt/nas/data/servarr/downloads/torrents"
+        - "/mnt/nas/data/servarr/downloads/torrents/tv"
+        - "/mnt/nas/data/servarr/downloads/torrents/movies"
+        - "/mnt/nas/data/servarr/downloads/torrents/books"
+        - "/mnt/nas/data/servarr/downloads/torrents/music"
+        - "/mnt/nas/data/servarr/downloads/usenet"
+        - "/mnt/nas/data/servarr/downloads/usenet/tv"
+        - "/mnt/nas/data/servarr/downloads/usenet/movies"
+        - "/mnt/nas/data/servarr/downloads/usenet/books"
+        - "/mnt/nas/data/servarr/downloads/usenet/music"
+
+  roles:
+    - role: "docker_networks"
+      vars:
+        organicveggie_docker_networks:
+          - name: "{{ servarr_docker_network }}"
+            enable_ipv6: "no"
+            internal: "no"
+            scope: "local"
+            subnet: "{{ servarr_docker_network_subnet }}"
+            gateway: "{{ servarr_docker_network_gateway }}"
+      tags: ["docker", "network", "networks"]
+
+    - role: "prowlarr"
+      vars:
+        prowlarr_docker_gid: "{{ servarr_gid }}"
+        prowlarr_docker_uid: "{{ servarr_uid }}"
+        prowlarr_docker_timezone: "{{ servarr_timezone }}"
+        prowlarr_docker_network: "{{ servarr_docker_network }}"
+      tags: ["prowlarr"]
+
+    - role: "readarr"
+      vars:
+        readarr_docker_gid: "{{ servarr_gid }}"
+        readarr_docker_uid: "{{ servarr_uid }}"
+        readarr_docker_timezone: "{{ servarr_timezone }}"
+        readarr_docker_network: "{{ servarr_docker_network }}"
+        readarr_docker_data_source_path: "{{ servarr_data_source_path }}"
+      tags: ["readarr"]
+
+    - role: "SABnzbd"
+      vars:
+        sabnzbd_docker_gid: "{{ servarr_gid }}"
+        sabnzbd_docker_uid: "{{ servarr_uid }}"
+        sabnzbd_docker_timezone: "{{ servarr_timezone }}"
+        sabnzbd_docker_network: "{{ servarr_docker_network }}"
+        sabnzbd_docker_data_source_path: "{{ servarr_data_source_path }}"
+      tags: ["sabnzbd"]
+

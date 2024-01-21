@@ -412,6 +412,12 @@ postgres_docker_network_subnet: "{{ vault_postgres_docker_network_subnet }}"
 postgres_docker_use_volumes: true
 
 ###
+### Prowlarr
+###
+prowlarr_available_externally: "true"
+prowlarr_docker_host_domain: "{{ veggie_nas_domain_name }}"
+
+###
 ### RClone
 ###
 rclone_configs:
@@ -430,6 +436,12 @@ rclone_configs:
 rclone_config_path: "{{ veggie_rclone_config_path }}"
 veggie_rclone_s3_bucket: "{{ veggie_nas_rclone_s3_bucket }}"
 veggie_rclone_config_path: /root/.config/rclone/rclone.conf
+
+###
+### Readarr
+###
+readarr_available_externally: "true"
+readarr_docker_host_domain: "{{ veggie_nas_domain_name }}"
 
 ###
 ### Resilio Sync
@@ -458,6 +470,12 @@ restic_server_users:
   - name: "{{ restic_user_unific | default('') }}"
     password: "{{ restic_htpasswd_unific | default('') }}"
 restic_rest_server_network_name: "restic_rest_server"
+
+###
+### SABnzbd
+###
+sabnzbd_available_externally: "true"
+sabnzbd_docker_host_domain: "{{ veggie_nas_domain_name }}"
 
 ###
 ### Samba
@@ -521,6 +539,18 @@ veggie_nas_samba_groups:
   - photo_writer
   - rom_writer
   - source_writer
+
+###
+### Servarr aka *arr
+servarr_docker_network: "servarr"
+servarr_docker_network_subnet: "172.100.15.0/24"
+servarr_docker_network_gateway: "172.100.15.1"
+servarr_groupname: "servarr"
+servarr_gid: "4200"
+servarr_username: "servarr"
+servarr_uid: "4200"
+servarr_timezone: "{{ vault_servarr_timezone }}"
+servarr_data_source_path: "{{ vault_servarr_data_source_path }}"
 
 ###
 ### Tautulli
@@ -688,6 +718,7 @@ traefik_extra_networks:
   - name: "{{ portainer_network_name }}"
   - name: "{{ resilio_docker_network }}"
   - name: "{{ restic_rest_server_network_name }}"
+  - name: "{{ servarr_docker_network }}"
   - name: "{{ tautulli_docker_network }}"
   - name: "{{ unific_network_name }}"
 
