@@ -1,0 +1,77 @@
+---
+- name: "Build container FQDN"
+  ansible.builtin.set_fact:
+    _flaresolverr_docker_fqdn: "{{ flaresolverr_docker_host_name }}.{{ flaresolverr_docker_host_domain }}"
+
+- name: "Create placeholder array for default network"
+  ansible.builtin.set_fact:
+    _flaresolverr_docker_default_networks:
+      - name: "{{ flaresolverr_docker_network }}"
+        aliases: "{{ flaresolverr_docker_network_aliases | default(omit) }}"
+
+- name: "Define all Docker networks for this container"
+  ansible.builtin.set_fact:
+    _flaresolverr_docker_all_networks: >
+      {{ _flaresolverr_docker_default_networks + flaresolverr_docker_extra_networks }}
+
+- name: "Define Docker labels with Traefik disabled"
+  ansible.builtin.set_fact:
+    _flaresolverr_docker_labels: "{{ _flaresolverr_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  with_items:
+    - key: "traefik.enable"
+      value: "{{ flaresolverr_available_externally }}"
+  when: "not flaresolverr_docker_available_externally"
+
+- name: "Define Docker labels with Traefik enabled"
+  ansible.builtin.set_fact:
+    _flaresolverr_docker_labels: "{{ _flaresolverr_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  with_items:
+    - key: "traefik.enable"
+      value: "{{ flaresolverr_docker_available_externally }}"
+    - key: "traefik.docker.network"
+      value: "{{ servarr_docker_network }}"
+    - key: "traefik.http.routers.flaresolverr.rule"
+      value: "Host(`{{ _flaresolverr_docker_fqdn }}`)"
+    - key: "traefik.http.routers.flaresolverr.entrypoints"
+      value: "http,https"
+    - key: "traefik.http.routers.flaresolverr.tls.certresolver"
+      value: "letsencrypt"
+    - key: "traefik.http.routers.flaresolverr.tls.domains[0].main"
+      value: "*.{{ flaresolverr_docker_host_domain }}"
+    - key: "traefik.http.services.flaresolverr.loadbalancer.server.port"
+      value: "{{ flaresolverr_docker_port }}"
+  when: "flaresolverr_docker_available_externally"
+
+- name: "Define user-supplied extra Docker labels"
+  ansible.builtin.set_fact:
+    _flaresolverr_docker_labels: "{{ _flaresolverr_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  loop: "{{ flaresolverr_docker_extra_labels | dict2items }}"
+
+- name: "flaresolverr Docker Container"
+  community.docker.docker_container:
+    name: "{{ flaresolverr_docker_name }}"
+    image: "{{ flaresolverr_docker_image }}:{{ flaresolverr_docker_image_version }}"
+    pull: true
+    env:
+      "CAPTCHA_SOLVER": "{{ flaresolverr_docker_captcha_solver | default(omit) }}"
+      "LOG_HTML": "{{ flaresolverr_docker_log_html | default(false) }}"
+      "LOG_LEVEL": "{{ flaresolverr_docker_log_level | default('INFO') }}"
+      "TZ": "{{ flaresolverr_docker_timezone }}"
+    network_mode: "{{ flaresolverr_docker_network }}"
+    networks: "{{ _flaresolverr_docker_all_networks }}"
+    restart_policy: unless-stopped
+    memory: "{{ flaresolverr_docker_memory }}"
+    cpus: "{{ flaresolverr_docker_cpus }}"
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: no
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
+    labels: "{{ _flaresolverr_docker_labels }}"

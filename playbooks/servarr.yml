@@ -92,6 +92,12 @@
         calibre_docker_trusted_ips: "{{ servarr_docker_network_subnet }}"
       tags: ["calibre", "calibre-docker"]
 
+    - role: "flaresolverr"
+      vars:
+        flaresolverr_docker_timezone: "{{ servarr_timezone }}"
+        flaresolverr_docker_network: "{{ servarr_docker_network }}"
+      tags: ["flaresolverr"]
+
     - role: "prowlarr"
       vars:
         prowlarr_docker_gid: "{{ servarr_gid }}"

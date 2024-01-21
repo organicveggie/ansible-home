@@ -1,0 +1,58 @@
+---
+#####
+# Container settings
+#####
+
+# Name of the Docker container.
+flaresolverr_docker_name: "flaresolverr"
+
+# Base name of the Docker image to use for the container.
+flaresolverr_docker_image: "ghcr.io/flaresolverr/flaresolverr"
+
+# Specific Docker image version to use for the container.
+flaresolverr_docker_image_version: "latest"
+
+# Timezone to use inside the container.
+flaresolverr_docker_timezone: "America/New_York"
+
+# Number of vCPUs to allocate to the container.
+flaresolverr_docker_cpus: "1"
+
+# Amount of memory to allocate to the container.
+flaresolverr_docker_memory: "1GB"
+
+# TCP port number to expose to handle HTTP traffic for flaresolverr.
+flaresolverr_docker_port: "8191"
+
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+flaresolverr_docker_extra_labels: {}
+
+# Default Docker network.
+flaresolverr_docker_network: "servarr"
+
+# List of additional networks the container should attach to. Elements should be dictionaries like
+# https://docs.ansible.com/ansible/latest/collections/community/docker/docker_container_module.html#parameter-networks.
+flaresolverr_docker_extra_networks: []
+
+# List of aliases for this container in the default network. These names can be used in the default
+# network to reach this container.
+flaresolverr_docker_network_aliases: []
+
+flaresolverr_docker_captcha_solver: null
+flaresolverr_docker_log_level: "INFO"
+flaresolverr_docker_log_html: "false"
+
+#####
+# Traefik
+#####
+
+# Enable use of Traefik as a proxy.
+flaresolverr_docker_available_externally: "true"
+
+# Host name to use for the Traefik endpoint. Combined with [flaresolverr_docker_host_domain] to form the
+# FQDN for the endpoint.
+flaresolverr_docker_host_name: "flaresolverr"
+
+# Domain name to use for the Traefik endpoint. Combined with [flaresolverr_docker_host_name] to form the
+# FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
+flaresolverr_docker_host_domain: "example.com"

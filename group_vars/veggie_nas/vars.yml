@@ -107,6 +107,14 @@ organicveggie_docker_networks:
     gateway: "{{ pmm_docker_network_gateway }}"
 
 ###
+### Flaresolverr
+###
+flaresolverr_docker_available_externally: "true"
+flaresolverr_docker_host_domain: "{{ veggie_nas_domain_name }}"
+flaresolverr_docker_network_aliases:
+  - "flaresolverr"
+
+###
 ### Glances
 ###
 glances_host_domain: "{{ veggie_nas_domain_name }}"
