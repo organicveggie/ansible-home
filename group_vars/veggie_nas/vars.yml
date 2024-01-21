@@ -1,10 +1,11 @@
 ###
-### Calibre
+### Calibre Web
 ###
 calibre_web_user_name: "calibre"
 calibre_web_group_name: "calibre"
 calibre_web_docker_book_dir: "{{ vault_calibre_web_docker_book_dir }}"
 calibre_web_docker_host_domain: "{{ veggie_base_domain_name }}"
+calibre_web_docker_hostname: "calibre-web"
 calibre_web_docker_uid: "{{ vault_calibre_web_docker_uid }}"
 calibre_web_docker_gid: "{{ vault_calibre_web_docker_gid }}"
 calibre_web_docker_network: "calibre-web"
