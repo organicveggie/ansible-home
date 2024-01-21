@@ -1,0 +1,95 @@
+---
+- name: "Create calibre Docker config volume"
+  community.docker.docker_volume:
+    name: "{{ calibre_docker_volume_config_name }}"
+
+- name: "Set Docker mount list for volume mounts"
+  ansible.builtin.set_fact:
+    _calibre_docker_mount_list:
+      - source: "{{ calibre_docker_volume_config_name }}"
+        target: "/config"
+        type: "volume"
+      - source: "{{ calibre_docker_data_source_path }}"
+        target: "/data"
+        type: "bind"
+
+- name: "Build container FQDN"
+  ansible.builtin.set_fact:
+    _calibre_docker_fqdn: "{{ calibre_docker_host_name }}.{{ calibre_docker_host_domain }}"
+
+- name: "Create placeholder array for default network"
+  ansible.builtin.set_fact:
+    _calibre_docker_default_networks:
+      - name: "{{ calibre_docker_network }}"
+        aliases: "{{ calibre_docker_network_aliases | default(omit) }}"
+
+- name: "Define all Docker networks for this container"
+  ansible.builtin.set_fact:
+    _calibre_docker_all_networks: >
+      {{ _calibre_docker_default_networks + calibre_docker_extra_networks }}
+
+- name: "Define Docker labels with Traefik disabled"
+  ansible.builtin.set_fact:
+    _calibre_docker_labels: "{{ _calibre_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  with_items:
+    - key: "traefik.enable"
+      value: "{{ calibre_available_externally }}"
+  when: "not calibre_docker_available_externally"
+
+- name: "Define Docker labels with Traefik enabled"
+  ansible.builtin.set_fact:
+    _calibre_docker_labels: "{{ _calibre_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  with_items:
+    - key: "traefik.enable"
+      value: "{{ calibre_docker_available_externally }}"
+    - key: "traefik.docker.network"
+      value: "{{ servarr_docker_network }}"
+    - key: "traefik.http.routers.calibre.rule"
+      value: "Host(`{{ _calibre_docker_fqdn }}`)"
+    - key: "traefik.http.routers.calibre.entrypoints"
+      value: "http,https"
+    - key: "traefik.http.routers.calibre.tls.certresolver"
+      value: "letsencrypt"
+    - key: "traefik.http.routers.calibre.tls.domains[0].main"
+      value: "*.{{ calibre_docker_host_domain }}"
+    - key: "traefik.http.services.calibre.loadbalancer.server.port"
+      value: "{{ calibre_docker_web_port }}"
+  when: "calibre_docker_available_externally"
+
+- name: "Define user-supplied extra Docker labels"
+  ansible.builtin.set_fact:
+    _calibre_docker_labels: "{{ _calibre_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  loop: "{{ calibre_docker_extra_labels | dict2items }}"
+
+- name: "calibre Docker Container"
+  community.docker.docker_container:
+    name: "{{ calibre_docker_name }}"
+    image: "{{ calibre_docker_image }}:{{ calibre_docker_image_version }}"
+    pull: true
+    env:
+      "CUSTOM_PORT": "{{ calibre_docker_web_port }}"
+      "CUSTOM_HTTPS_PORT": "{{ calibre_docker_web_ssl_port }}"
+      "PUID": "{{ calibre_docker_uid }}"
+      "PGID": "{{ calibre_docker_gid }}"
+      "TZ": "{{ calibre_docker_timezone }}"
+    mounts: "{{ _calibre_docker_mount_list }}"
+    network_mode: "{{ calibre_docker_network }}"
+    networks: "{{ _calibre_docker_all_networks }}"
+    restart_policy: unless-stopped
+    security_opts:
+      - "seccomp:unconfined"
+    memory: "{{ calibre_docker_memory }}"
+    cpus: "{{ calibre_docker_cpus }}"
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: no
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
+    labels: "{{ _calibre_docker_labels }}"

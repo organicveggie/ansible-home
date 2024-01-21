@@ -1,0 +1,70 @@
+---
+#####
+# Container settings
+#####
+
+# Name of the Docker container.
+calibre_docker_name: "calibre"
+
+# Base name of the Docker image to use for the container.
+calibre_docker_image: "lscr.io/linuxserver/calibre"
+
+# Specific Docker image version to use for the container.
+calibre_docker_image_version: "latest"
+
+# Group ID to use inside the container.
+calibre_docker_gid: "1000"
+
+# User ID to use inside the container.
+calibre_docker_uid: "1000"
+
+# Timezone to use inside the container.
+calibre_docker_timezone: "America/New_York"
+
+calibre_docker_data_source_path: "/data"
+calibre_docker_volume_config_name: "calibre-config"
+
+# Number of vCPUs to allocate to the container.
+calibre_docker_cpus: "2"
+
+# Amount of memory to allocate to the container.
+calibre_docker_memory: "2GB"
+
+# TCP port number to expose to handle HTTP traffic for Calibre desktop gui.
+calibre_docker_web_port: "8080"
+
+# TCP port number to expose to handle HTTPS traffic for Calibre desktop gui.
+calibre_docker_web_ssl_port: "8181"
+
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+calibre_docker_extra_labels: {}
+
+# Default Docker network.
+calibre_docker_network: "servarr"
+
+# List of additional networks the container should attach to. Elements should be dictionaries like
+# https://docs.ansible.com/ansible/latest/collections/community/docker/docker_container_module.html#parameter-networks.
+calibre_docker_extra_networks: []
+
+# List of aliases for this container in the default network. These names can be used in the default
+# network to reach this container.
+calibre_docker_network_aliases: []
+
+# Comma separated list of address or network specifications that are trusted by Calibre Content
+# Server without requiring authentication.
+calibre_docker_trusted_ips: "192.168.0.0/24,10.10.1.0/24"
+
+#####
+# Traefik
+#####
+
+# Enable use of Traefik as a proxy.
+calibre_docker_available_externally: "true"
+
+# Host name to use for the Traefik endpoint. Combined with [calibre_docker_host_domain] to form the
+# FQDN for the endpoint.
+calibre_docker_host_name: "calibre"
+
+# Domain name to use for the Traefik endpoint. Combined with [calibre_docker_host_name] to form the
+# FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
+calibre_docker_host_domain: "example.com"

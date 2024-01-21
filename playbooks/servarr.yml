@@ -82,6 +82,16 @@
             gateway: "{{ servarr_docker_network_gateway }}"
       tags: ["docker", "network", "networks"]
 
+    - role: "calibre_docker"
+      vars:
+        calibre_docker_gid: "{{ servarr_gid }}"
+        calibre_docker_uid: "{{ servarr_uid }}"
+        calibre_docker_timezone: "{{ servarr_timezone }}"
+        calibre_docker_network: "{{ servarr_docker_network }}"
+        calibre_docker_data_source_path: "{{ servarr_data_source_path }}"
+        calibre_docker_trusted_ips: "{{ servarr_docker_network_subnet }}"
+      tags: ["calibre", "calibre-docker"]
+
     - role: "prowlarr"
       vars:
         prowlarr_docker_gid: "{{ servarr_gid }}"
@@ -99,7 +109,7 @@
         readarr_docker_data_source_path: "{{ servarr_data_source_path }}"
       tags: ["readarr"]
 
-    - role: "SABnzbd"
+    - role: "sabnzbd"
       vars:
         sabnzbd_docker_gid: "{{ servarr_gid }}"
         sabnzbd_docker_uid: "{{ servarr_uid }}"

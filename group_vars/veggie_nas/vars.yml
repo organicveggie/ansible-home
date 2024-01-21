@@ -1,6 +1,14 @@
 ###
 ### Calibre Web
 ###
+calibre_docker_available_externally: "true"
+calibre_docker_host_domain: "{{ veggie_nas_domain_name }}"
+calibre_docker_network_aliases:
+  - "calibre"
+
+###
+### Calibre Web
+###
 calibre_web_user_name: "calibre"
 calibre_web_group_name: "calibre"
 calibre_web_docker_book_dir: "{{ vault_calibre_web_docker_book_dir }}"
