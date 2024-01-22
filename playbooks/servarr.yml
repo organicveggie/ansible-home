@@ -90,7 +90,7 @@
         calibre_docker_network: "{{ servarr_docker_network }}"
         calibre_docker_data_source_path: "{{ servarr_data_source_path }}"
         calibre_docker_trusted_ips: "{{ servarr_docker_network_subnet }}"
-      tags: ["calibre", "calibre-docker"]
+      tags: ["calibre", "calibre-docker", "calibre_docker"]
 
     - role: "flaresolverr"
       vars:

@@ -1,6 +1,7 @@
 ###
 ### Calibre Web
 ###
+calibre_docker_cpus: "4"
 calibre_docker_available_externally: "true"
 calibre_docker_host_domain: "{{ veggie_nas_domain_name }}"
 calibre_docker_network_aliases:
