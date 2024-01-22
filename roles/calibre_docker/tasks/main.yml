@@ -50,12 +50,22 @@
       value: "Host(`{{ _calibre_docker_fqdn }}`)"
     - key: "traefik.http.routers.calibre.entrypoints"
       value: "http,https"
+    - key: "traefik.http.routers.calibre.middlewares"
+      value: "redirect-to-https,kasmvnc"
     - key: "traefik.http.routers.calibre.tls.certresolver"
       value: "letsencrypt"
     - key: "traefik.http.routers.calibre.tls.domains[0].main"
       value: "*.{{ calibre_docker_host_domain }}"
     - key: "traefik.http.services.calibre.loadbalancer.server.port"
       value: "{{ calibre_docker_web_port }}"
+    # See https://github.com/linuxserver/docker-baseimage-kasmvnc?tab=readme-ov-file#lossless for
+    # details on the request headers below.
+    - key: "traefik.http.middlewares.kasmvnc.headers.customrequestheaders.Cross-Origin-Embedder-Policy"
+      value: "require-corp"
+    - key: "traefik.http.middlewares.kasmvnc.headers.customrequestheaders.Cross-Origin-Opener-Policy"
+      value: "same-origin"
+    - key: "traefik.http.middlewares.kasmvnc.headers.customrequestheaders.Cross-Origin-Resource-Policy"
+      value: "same-site"
   when: "calibre_docker_available_externally"
 
 - name: "Define user-supplied extra Docker labels"
