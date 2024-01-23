@@ -124,3 +124,12 @@
         sabnzbd_docker_data_source_path: "{{ servarr_data_source_path }}"
       tags: ["sabnzbd"]
 
+    - role: "syncthing"
+      vars:
+        syncthing_docker_gid: "{{ servarr_gid }}"
+        syncthing_docker_uid: "{{ servarr_uid }}"
+        syncthing_docker_timezone: "{{ servarr_timezone }}"
+        syncthing_docker_network: "{{ servarr_docker_network }}"
+        syncthing_docker_data_source_path: "{{ servarr_data_source_path }}"
+      tags: ["syncthing"]
+

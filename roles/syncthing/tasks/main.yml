@@ -1,0 +1,103 @@
+---
+- name: "Create Syncthing Docker config volume"
+  community.docker.docker_volume:
+    name: "{{ syncthing_docker_volume_config_name }}"
+
+- name: "Set Docker mount list for volume mounts"
+  ansible.builtin.set_fact:
+    _calibre_docker_mount_list:
+      - source: "{{ syncthing_docker_volume_config_name }}"
+        target: "/config"
+        type: "volume"
+      - source: "{{ syncthing_docker_data_source_path }}"
+        target: "/data"
+        type: "bind"
+
+- name: "Build container FQDN"
+  ansible.builtin.set_fact:
+    _syncthing_docker_fqdn: "{{ syncthing_docker_host_name }}.{{ syncthing_docker_host_domain }}"
+
+- name: "Create placeholder array for default network"
+  ansible.builtin.set_fact:
+    _syncthing_docker_default_networks:
+      - name: "{{ syncthing_docker_network }}"
+        aliases: "{{ syncthing_docker_network_aliases | default(omit) }}"
+
+- name: "Define all Docker networks for this container"
+  ansible.builtin.set_fact:
+    _syncthing_docker_all_networks: >
+      {{ _syncthing_docker_default_networks + syncthing_docker_extra_networks }}
+
+- name: "Define Docker labels with Traefik disabled"
+  ansible.builtin.set_fact:
+    _syncthing_docker_labels: "{{ _syncthing_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  with_items:
+    - key: "traefik.enable"
+      value: "{{ syncthing_available_externally }}"
+  when: "not syncthing_docker_available_externally"
+
+# yamllint disable rule:line-length
+- name: "Define Docker labels with Traefik enabled"
+  ansible.builtin.set_fact:
+    _syncthing_docker_labels: "{{ _syncthing_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  with_items:
+    - key: "traefik.enable"
+      value: "{{ syncthing_docker_available_externally }}"
+    # HTTP/HTTPS
+    - { key: "traefik.docker.network", value: "{{ servarr_docker_network }}" }
+    - { key: "traefik.http.routers.syncthing.rule", value: "Host(`{{ _syncthing_docker_fqdn }}`)" }
+    - { key: "traefik.http.routers.syncthing.entrypoints", value: "http,https" }
+    - { key: "traefik.http.routers.syncthing.tls.certresolver", value: "letsencrypt" }
+    - { key: "traefik.http.routers.syncthing.tls.domains[0].main", value: "*.{{ syncthing_docker_host_domain }}" }
+    - { key: "traefik.http.services.syncthing.loadbalancer.server.port", value: "{{ syncthing_docker_web_port }}" }
+    # TCP
+    - { key: "traefik.tcp.routers.syncthing-tcp.entrypoints", value: "syncthing_tcp" }
+    - { key: "traefik.tcp.routers.syncthing-tcp.rule", value: "HostSNI(`*`)" }
+    - { key: "traefik.tcp.routers.syncthing-tcp.service", value: "syncthing-tcp" }
+    - { key: "traefik.tcp.services.syncthing-tcp.loadbalancer.server.port", value:  "{{ syncthing_docker_tcp_port }}" }
+    # UDP
+    - { key: "traefik.udp.routers.syncthing-udp.entrypoints", value: "syncthing_udp" }
+    # - { key: "traefik.udp.routers.syncthing-udp.rule", value: "HostSNI(`*`)" }
+    - { key: "traefik.udp.routers.syncthing-udp.service", value: "syncthing-udp" }
+    - { key: "traefik.udp.services.syncthing-udp.loadbalancer.server.port", value:  "{{ syncthing_docker_udp_port }}" }
+  when: "syncthing_docker_available_externally"
+# yamllint enable rule:line-length
+
+- name: "Define user-supplied extra Docker labels"
+  ansible.builtin.set_fact:
+    _syncthing_docker_labels: "{{ _syncthing_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  loop: "{{ syncthing_docker_extra_labels | dict2items }}"
+
+- name: "syncthing Docker Container"
+  community.docker.docker_container:
+    name: "{{ syncthing_docker_name }}"
+    image: "{{ syncthing_docker_image }}:{{ syncthing_docker_image_version }}"
+    pull: true
+    env:
+      "PUID": "{{ syncthing_docker_uid }}"
+      "PGID": "{{ syncthing_docker_gid }}"
+      "TZ": "{{ syncthing_docker_timezone }}"
+    mounts: "{{ _calibre_docker_mount_list }}"
+    network_mode: "{{ syncthing_docker_network }}"
+    networks: "{{ _syncthing_docker_all_networks }}"
+    # ports:
+    #   - 8384:8384
+    #   - 22000:22000/tcp
+    #   - 22000:22000/udp
+    #   - 21027:21027/udp
+    restart_policy: unless-stopped
+    memory: "{{ syncthing_docker_memory }}"
+    cpus: "{{ syncthing_docker_cpus }}"
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: no
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
+    labels: "{{ _syncthing_docker_labels }}"

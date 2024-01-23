@@ -1,0 +1,73 @@
+---
+#####
+# Container settings
+#####
+
+# Name of the Docker container.
+syncthing_docker_name: "syncthing"
+
+# Base name of the Docker image to use for the container.
+syncthing_docker_image: "lscr.io/linuxserver/syncthing"
+
+# Specific Docker image version to use for the container.
+syncthing_docker_image_version: "latest"
+
+# Group ID to use inside the container.
+syncthing_docker_gid: "1000"
+
+# User ID to use inside the container.
+syncthing_docker_uid: "1000"
+
+# Timezone to use inside the container.
+syncthing_docker_timezone: "America/New_York"
+
+# Number of vCPUs to allocate to the container.
+syncthing_docker_cpus: "1"
+
+# Amount of memory to allocate to the container.
+syncthing_docker_memory: "1GB"
+
+# TCP port number to expose to handle HTTP traffic for syncthing.
+syncthing_docker_web_port: "8384"
+
+# TPC port to expose for raw TCP traffic.
+syncthing_docker_tcp_port: "22000"
+
+# TPC port to expose for raw UDP traffic.
+syncthing_docker_udp_port: "22000"
+
+syncthing_docker_data_source_path: "/data"
+syncthing_docker_volume_config_name: "syncthing-config"
+
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+syncthing_docker_extra_labels: {}
+
+# Default Docker network.
+syncthing_docker_network: "servarr"
+
+# List of additional networks the container should attach to. Elements should be dictionaries like
+# https://docs.ansible.com/ansible/latest/collections/community/docker/docker_container_module.html#parameter-networks.
+syncthing_docker_extra_networks: []
+
+# List of aliases for this container in the default network. These names can be used in the default
+# network to reach this container.
+syncthing_docker_network_aliases: []
+
+syncthing_docker_captcha_solver: null
+syncthing_docker_log_level: "INFO"
+syncthing_docker_log_html: "false"
+
+#####
+# Traefik
+#####
+
+# Enable use of Traefik as a proxy.
+syncthing_docker_available_externally: "true"
+
+# Host name to use for the Traefik endpoint. Combined with [syncthing_docker_host_domain] to form the
+# FQDN for the endpoint.
+syncthing_docker_host_name: "syncthing"
+
+# Domain name to use for the Traefik endpoint. Combined with [syncthing_docker_host_name] to form the
+# FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
+syncthing_docker_host_domain: "example.com"

@@ -571,6 +571,12 @@ servarr_timezone: "{{ vault_servarr_timezone }}"
 servarr_data_source_path: "{{ vault_servarr_data_source_path }}"
 
 ###
+### Syncthing
+###
+syncthing_available_externally: "true"
+syncthing_docker_host_domain: "{{ veggie_nas_domain_name }}"
+
+###
 ### Tautulli
 ###
 tautulli_docker_timezone: "{{ home_timezone }}"
@@ -634,7 +640,7 @@ timemachine_smb_user: "{{ vault_timemachine_smb_user }}"
 traefik_hostname: "traefik.{{ veggie_nas_domain_name }}"
 traefik_confkey_api:
   dashboard: true # use this for enabling the dashboard
-#traefik_confkey_log:
+# traefik_confkey_log:
 #  level: DEBUG
 #  filePath: /var/log/traefik.log
 #traefik_confkey_accessLog:
@@ -666,12 +672,13 @@ traefik_qs_log_level: INFO
 traefik_ports:
   - '80:80'
   - '443:443'
-  - '3478:3478'
-  - '8080:8080'
-  - '10001:10001'
-  - '19000:19000'
-  - "55555:55555"
   - "3200:3000"
+  - '3478:3478'     # unific stun
+  - '8080:8080'     # java http
+  - '10001:10001'   # unific dev discovery
+  - '19000:19000'   # unific controller discovery
+  - '22000:22000'   # syncthing
+  - "55555:55555"   # Resilio Sync
 traefik_labels:
   traefik.enable: "true"
   # Dashboard
@@ -706,6 +713,10 @@ traefik_confkey_entryPoints:
     address: ":55555"
   resilio_sync_udp:
     address: ":55555/udp"
+  syncthing_tcp:
+    address: ":22000"
+  syncthing_udp:
+    address: ":22000/udp"
   unific_speed_test:
     address: ":6789"
   unific_stun:
