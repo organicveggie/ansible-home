@@ -571,6 +571,27 @@ servarr_timezone: "{{ vault_servarr_timezone }}"
 servarr_data_source_path: "{{ vault_servarr_data_source_path }}"
 
 ###
+### Sonarr
+###
+sonarr_docker_cpus: "2"
+sonarr_docker_available_externally: "true"
+sonarr_docker_host_domain: "{{ veggie_nas_domain_name }}"
+sonarr_docker_tv_source_path: "/mnt/nas/data/videos/tv"
+
+sonarr1080_docker_host_name: "sonarr1080"
+sonarr1080_docker_name: "sonarr1080"
+sonarr1080_docker_volume_config_name: "sonarr1080-config"
+sonarr1080_docker_network_aliases:
+  - "sonarr1080"
+
+sonarr4k_docker_host_name: "sonarr4k"
+sonarr4k_docker_name: "sonarr4k"
+sonarr4k_docker_volume_config_name: "sonarr4k-config"
+sonarr4k_docker_network_aliases:
+  - "sonarr4k"
+
+
+###
 ### Syncthing
 ###
 syncthing_available_externally: "true"

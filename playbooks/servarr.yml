@@ -124,6 +124,34 @@
         sabnzbd_docker_data_source_path: "{{ servarr_data_source_path }}"
       tags: ["sabnzbd"]
 
+    # Sonarr 1080
+    - role: "sonarr"
+      vars:
+        sonarr_docker_host_name: "{{ sonarr1080_docker_host_name }}"
+        sonarr_docker_name: "{{ sonarr1080_docker_name }}"
+        sonarr_docker_volume_config_name: "{{ sonarr1080_docker_volume_config_name }}"
+        sonarr_docker_network_aliases: "{{ sonarr1080_docker_network_aliases }}"
+        sonarr_docker_gid: "{{ servarr_gid }}"
+        sonarr_docker_uid: "{{ servarr_uid }}"
+        sonarr_docker_timezone: "{{ servarr_timezone }}"
+        sonarr_docker_network: "{{ servarr_docker_network }}"
+        sonarr_docker_data_source_path: "{{ servarr_data_source_path }}"
+      tags: ["sonarr", "sonarr1080"]
+
+    # Sonarr 4K
+    - role: "sonarr"
+      vars:
+        sonarr_docker_host_name: "{{ sonarr4k_docker_host_name }}"
+        sonarr_docker_name: "{{ sonarr4k_docker_name }}"
+        sonarr_docker_volume_config_name: "{{ sonarr4k_docker_volume_config_name }}"
+        sonarr_docker_network_aliases: "{{ sonarr4k_docker_network_aliases }}"
+        sonarr_docker_gid: "{{ servarr_gid }}"
+        sonarr_docker_uid: "{{ servarr_uid }}"
+        sonarr_docker_timezone: "{{ servarr_timezone }}"
+        sonarr_docker_network: "{{ servarr_docker_network }}"
+        sonarr_docker_data_source_path: "{{ servarr_data_source_path }}"
+      tags: ["sonarr", "sonarr4k"]
+
     - role: "syncthing"
       vars:
         syncthing_docker_gid: "{{ servarr_gid }}"
