@@ -1,0 +1,94 @@
+---
+- name: "Create radarr Docker config volume"
+  community.docker.docker_volume:
+    name: "{{ radarr_docker_volume_config_name }}"
+
+- name: "Set Docker mount list for volume mounts"
+  ansible.builtin.set_fact:
+    _radarr_docker_mount_list:
+      - source: "{{ radarr_docker_volume_config_name }}"
+        target: "/config"
+        type: "volume"
+      - source: "{{ radarr_docker_data_source_path }}"
+        target: "/data"
+        type: "bind"
+      - source: "{{ radarr_docker_movie_source_path }}"
+        target: "/data/media/movies"
+        type: "bind"
+
+- name: "Build container FQDN"
+  ansible.builtin.set_fact:
+    _radarr_docker_fqdn: "{{ radarr_docker_host_name }}.{{ radarr_docker_host_domain }}"
+
+- name: "Create placeholder array for default network"
+  ansible.builtin.set_fact:
+    _radarr_docker_default_networks:
+      - name: "{{ radarr_docker_network }}"
+        aliases: "{{ radarr_docker_network_aliases | default(omit) }}"
+
+- name: "Define all Docker networks for this container"
+  ansible.builtin.set_fact:
+    _radarr_docker_all_networks: >
+      {{ _radarr_docker_default_networks + radarr_docker_extra_networks }}
+
+- name: "Define Docker labels with Traefik disabled"
+  ansible.builtin.set_fact:
+    _radarr_docker_labels: "{{ _radarr_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  with_items:
+    - key: "traefik.enable"
+      value: "{{ radarr_available_externally }}"
+  when: "not radarr_docker_available_externally"
+
+- name: "Define Docker labels with Traefik enabled"
+  ansible.builtin.set_fact:
+    _radarr_docker_labels: "{{ _radarr_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  with_items:
+    - key: "traefik.enable"
+      value: "{{ radarr_docker_available_externally }}"
+    - key: "traefik.docker.network"
+      value: "{{ servarr_docker_network }}"
+    - key: "traefik.http.routers.{{ radarr_docker_host_name }}.rule"
+      value: "Host(`{{ _radarr_docker_fqdn }}`)"
+    - key: "traefik.http.routers.{{ radarr_docker_host_name }}.entrypoints"
+      value: "http,https"
+    - key: "traefik.http.routers.{{ radarr_docker_host_name }}.tls.certresolver"
+      value: "letsencrypt"
+    - key: "traefik.http.routers.{{ radarr_docker_host_name }}.tls.domains[0].main"
+      value: "*.{{ radarr_docker_host_domain }}"
+    - key: "traefik.http.services.{{ radarr_docker_host_name }}.loadbalancer.server.port"
+      value: "{{ radarr_docker_web_port }}"
+  when: "radarr_docker_available_externally"
+
+- name: "Define user-supplied extra Docker labels"
+  ansible.builtin.set_fact:
+    _radarr_docker_labels: "{{ _radarr_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  loop: "{{ radarr_docker_extra_labels | dict2items }}"
+
+- name: "radarr Docker Container"
+  community.docker.docker_container:
+    name: "{{ radarr_docker_name }}"
+    image: "{{ radarr_docker_image }}:{{ radarr_docker_image_version }}"
+    pull: true
+    env:
+      "PUID": "{{ radarr_docker_uid }}"
+      "PGID": "{{ radarr_docker_gid }}"
+      "TZ": "{{ radarr_docker_timezone }}"
+    mounts: "{{ _radarr_docker_mount_list }}"
+    network_mode: "{{ radarr_docker_network }}"
+    networks: "{{ _radarr_docker_all_networks }}"
+    restart_policy: unless-stopped
+    memory: "{{ radarr_docker_memory }}"
+    cpus: "{{ radarr_docker_cpus }}"
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: no
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
+    labels: "{{ _radarr_docker_labels }}"

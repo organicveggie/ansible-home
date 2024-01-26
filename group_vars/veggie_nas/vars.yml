@@ -436,6 +436,26 @@ prowlarr_available_externally: "true"
 prowlarr_docker_host_domain: "{{ veggie_nas_domain_name }}"
 
 ###
+### Radarr
+###
+radarr_docker_cpus: "2"
+radarr_docker_available_externally: "true"
+radarr_docker_host_domain: "{{ veggie_nas_domain_name }}"
+radarr_docker_movie_source_path: "/mnt/nas/data/videos/movies"
+
+radarr1080_docker_host_name: "radarr1080"
+radarr1080_docker_name: "radarr1080"
+radarr1080_docker_volume_config_name: "radarr1080-config"
+radarr1080_docker_network_aliases:
+  - "radarr1080"
+
+radarr4k_docker_host_name: "radarr4k"
+radarr4k_docker_name: "radarr4k"
+radarr4k_docker_volume_config_name: "radarr4k-config"
+radarr4k_docker_network_aliases:
+  - "radarr4k"
+
+###
 ### RClone
 ###
 rclone_configs:

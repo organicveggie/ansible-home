@@ -106,6 +106,34 @@
         prowlarr_docker_network: "{{ servarr_docker_network }}"
       tags: ["prowlarr"]
 
+    # radarr 1080
+    - role: "radarr"
+      vars:
+        radarr_docker_host_name: "{{ radarr1080_docker_host_name }}"
+        radarr_docker_name: "{{ radarr1080_docker_name }}"
+        radarr_docker_volume_config_name: "{{ radarr1080_docker_volume_config_name }}"
+        radarr_docker_network_aliases: "{{ radarr1080_docker_network_aliases }}"
+        radarr_docker_gid: "{{ servarr_gid }}"
+        radarr_docker_uid: "{{ servarr_uid }}"
+        radarr_docker_timezone: "{{ servarr_timezone }}"
+        radarr_docker_network: "{{ servarr_docker_network }}"
+        radarr_docker_data_source_path: "{{ servarr_data_source_path }}"
+      tags: ["radarr", "radarr1080"]
+
+    # radarr 4K
+    - role: "radarr"
+      vars:
+        radarr_docker_host_name: "{{ radarr4k_docker_host_name }}"
+        radarr_docker_name: "{{ radarr4k_docker_name }}"
+        radarr_docker_volume_config_name: "{{ radarr4k_docker_volume_config_name }}"
+        radarr_docker_network_aliases: "{{ radarr4k_docker_network_aliases }}"
+        radarr_docker_gid: "{{ servarr_gid }}"
+        radarr_docker_uid: "{{ servarr_uid }}"
+        radarr_docker_timezone: "{{ servarr_timezone }}"
+        radarr_docker_network: "{{ servarr_docker_network }}"
+        radarr_docker_data_source_path: "{{ servarr_data_source_path }}"
+      tags: ["radarr", "radarr4k"]
+
     - role: "readarr"
       vars:
         readarr_docker_gid: "{{ servarr_gid }}"
