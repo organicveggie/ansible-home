@@ -28,6 +28,10 @@
     _readarr_docker_all_networks: >
       {{ _readarr_docker_default_networks + readarr_docker_extra_networks }}
 
+- name: "Define placeholder map for Docker labels"
+  ansible.builtin.set_fact:
+    _readarr_docker_labels: {}
+
 - name: "Define Docker labels with Traefik disabled"
   ansible.builtin.set_fact:
     _readarr_docker_labels: "{{ _readarr_docker_labels | default({}) |

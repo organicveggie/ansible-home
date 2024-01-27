@@ -31,6 +31,10 @@
     _sonarr_docker_all_networks: >
       {{ _sonarr_docker_default_networks + sonarr_docker_extra_networks }}
 
+- name: "Define placeholder map for Docker labels"
+  ansible.builtin.set_fact:
+    _sonarr_docker_labels: {}
+
 - name: "Define Docker labels with Traefik disabled"
   ansible.builtin.set_fact:
     _sonarr_docker_labels: "{{ _sonarr_docker_labels | default({}) |

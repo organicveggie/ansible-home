@@ -442,6 +442,7 @@ radarr_docker_cpus: "2"
 radarr_docker_available_externally: "true"
 radarr_docker_host_domain: "{{ veggie_nas_domain_name }}"
 radarr_docker_movie_source_path: "/mnt/nas/data/videos/movies"
+radarr_docker_web_port: "7878"
 
 radarr1080_docker_host_name: "radarr1080"
 radarr1080_docker_name: "radarr1080"
@@ -480,6 +481,7 @@ veggie_rclone_config_path: /root/.config/rclone/rclone.conf
 ###
 readarr_available_externally: "true"
 readarr_docker_host_domain: "{{ veggie_nas_domain_name }}"
+readarr_docker_web_port: "8787"
 
 ###
 ### Resilio Sync
@@ -597,6 +599,7 @@ sonarr_docker_cpus: "2"
 sonarr_docker_available_externally: "true"
 sonarr_docker_host_domain: "{{ veggie_nas_domain_name }}"
 sonarr_docker_tv_source_path: "/mnt/nas/data/videos/tv"
+sonarr_docker_web_port: "8989"
 
 sonarr1080_docker_host_name: "sonarr1080"
 sonarr1080_docker_name: "sonarr1080"

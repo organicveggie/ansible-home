@@ -31,6 +31,10 @@
     _radarr_docker_all_networks: >
       {{ _radarr_docker_default_networks + radarr_docker_extra_networks }}
 
+- name: "Define placeholder map for Docker labels"
+  ansible.builtin.set_fact:
+    _radarr_docker_labels: {}
+
 - name: "Define Docker labels with Traefik disabled"
   ansible.builtin.set_fact:
     _radarr_docker_labels: "{{ _radarr_docker_labels | default({}) |

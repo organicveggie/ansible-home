@@ -29,26 +29,6 @@
         - "nas/data/servarr/downloads/torrents"
         - "nas/data/servarr/downloads/usenet"
 
-    - name: "Create ZFS datasets for torrents"
-      community.general.zfs:
-        name: "nas/data/servarr/downloads/torrents/{{ item }}"
-        state: present
-      loop:
-        - "tv"
-        - "movies"
-        - "books"
-        - "music"
-
-    - name: "Create ZFS datasets for usenet"
-      community.general.zfs:
-        name: "nas/data/servarr/downloads/usenet/{{ item }}"
-        state: present
-      loop:
-        - "tv"
-        - "movies"
-        - "books"
-        - "music"
-
     - name: "Set owner/group for datasets"
       ansible.builtin.file:
         path: "{{ item }}"
@@ -60,15 +40,18 @@
         - "/mnt/nas/data/servarr"
         - "/mnt/nas/data/servarr/books"
         - "/mnt/nas/data/servarr/downloads/torrents"
-        - "/mnt/nas/data/servarr/downloads/torrents/tv"
-        - "/mnt/nas/data/servarr/downloads/torrents/movies"
-        - "/mnt/nas/data/servarr/downloads/torrents/books"
-        - "/mnt/nas/data/servarr/downloads/torrents/music"
         - "/mnt/nas/data/servarr/downloads/usenet"
-        - "/mnt/nas/data/servarr/downloads/usenet/tv"
-        - "/mnt/nas/data/servarr/downloads/usenet/movies"
-        - "/mnt/nas/data/servarr/downloads/usenet/books"
-        - "/mnt/nas/data/servarr/downloads/usenet/music"
+
+    - name: "Create folders for completed downloads"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: "directory"
+        owner: "{{ servarr_username }}"
+        group: "{{ servarr_groupname }}"
+        mode: "775"
+      loop:
+        - "/mnt/nas/data/servarr/downloads/torrents/completed"
+        - "/mnt/nas/data/servarr/downloads/usenet/completed"
 
   roles:
     - role: "docker_networks"
@@ -188,4 +171,63 @@
         syncthing_docker_network: "{{ servarr_docker_network }}"
         syncthing_docker_data_source_path: "{{ servarr_data_source_path }}"
       tags: ["syncthing"]
-
+    
+    - role: "unpackerr"
+      vars:
+        unpackerr_docker_gid: "{{ servarr_gid }}"
+        unpackerr_docker_uid: "{{ servarr_uid }}"
+        unpackerr_docker_timezone: "{{ servarr_timezone }}"
+        unpackerr_docker_network: "{{ servarr_docker_network }}"
+        unpackerr_docker_data_source_path: "{{ servarr_data_source_path }}"
+        unpackerr_docker_web_upstreams:
+          - "{{ servarr_docker_network_gateway }}"
+          - "{{ servarr_docker_network_subnet }}"
+        unpackerr_docker_radarr:
+          - url: "http://{{ radarr1080_docker_host_name }}:{{ radarr_docker_web_port }}"
+            api_key: "{{ vault_radarr1080_api_key }}"
+            paths:
+              - "/data/downloads"
+            protocols: "torrent,usenet"
+            timeout: "10s"
+            delete_delay: "5m"
+            delete_orig: false
+            syncthing: true
+          - url: "http://{{ radarr4k_docker_host_name }}:{{ radarr_docker_web_port }}"
+            api_key: "{{ vault_radarr4k_api_key }}"
+            paths:
+              - "/data/downloads"
+            protocols: "torrent,usenet"
+            timeout: "10s"
+            delete_delay: "5m"
+            delete_orig: false
+            syncthing: true
+        unpackerr_docker_readarr:
+          - url: "http://{{ readarr_docker_host_name }}:{{ readarr_docker_web_port }}"
+            api_key: "{{ vault_readarr_api_key }}"
+            paths:
+              - "/data/downloads"
+            protocols: "torrent,usenet"
+            timeout: "10s"
+            delete_delay: "5m"
+            delete_orig: false
+            syncthing: true
+        unpackerr_docker_sonarr:
+          - url: "http://{{ sonarr1080_docker_host_name }}:{{ sonarr_docker_web_port }}"
+            api_key: "{{ vault_sonarr1080_api_key }}"
+            paths:
+              - "/data/downloads"
+            protocols: "torrent,usenet"
+            timeout: "10s"
+            delete_delay: "5m"
+            delete_orig: false
+            syncthing: true
+          - url: "http://{{ sonarr4k_docker_host_name }}:{{ sonarr_docker_web_port }}"
+            api_key: "{{ vault_sonarr4k_api_key }}"
+            paths:
+              - "/data/downloads"
+            protocols: "torrent,usenet"
+            timeout: "10s"
+            delete_delay: "5m"
+            delete_orig: false
+            syncthing: true
+      tags: ["unpackerr", "unpackarr"]
