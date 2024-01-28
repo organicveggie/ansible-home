@@ -1,0 +1,117 @@
+---
+- name: "Create unpackerr Docker config volume"
+  community.docker.docker_volume:
+    name: "{{ unpackerr_docker_volume_config_name }}"
+
+- name: "Get info about Docker config volume"
+  community.docker.docker_volume_info:
+    name: "{{ unpackerr_docker_volume_config_name }}"
+  register: "_unpackerr_docker_volume_conf_info"
+
+- name: "Create unpackerr Docker logs volume"
+  community.docker.docker_volume:
+    name: "{{ unpackerr_docker_volume_logs_name }}"
+
+- name: "Build target path to conf folder on Docker volume"
+  ansible.builtin.set_fact:
+    fact_unpackerr_docker_conf_folder:
+      "{{ _unpackerr_docker_volume_conf_info['volume']['Mountpoint'] }}"
+
+- name: "Create unpackerr.conf"
+  ansible.builtin.template:
+    src: "templates/unpackerr.conf.j2"
+    dest: "{{ fact_unpackerr_docker_conf_folder }}/unpackerr.conf"
+    mode: "0644"
+  register: _unpackerr_docker_file_config
+  notify: "Restart Unpackerr Docker"
+
+- name: "Set Docker mount list for volume mounts"
+  ansible.builtin.set_fact:
+    _unpackerr_docker_mount_list:
+      - source: "{{ unpackerr_docker_volume_config_name }}"
+        target: "/config"
+        type: "volume"
+      - source: "{{ unpackerr_docker_data_source_path }}"
+        target: "/data"
+        type: "bind"
+      - source: "{{ unpackerr_docker_volume_logs_name }}"
+        target: "/logs"
+        type: "volume"
+
+- name: "Build container FQDN"
+  ansible.builtin.set_fact:
+    _unpackerr_docker_fqdn: "{{ unpackerr_docker_host_name }}.{{ unpackerr_docker_host_domain }}"
+
+- name: "Create placeholder array for default network"
+  ansible.builtin.set_fact:
+    _unpackerr_docker_default_networks:
+      - name: "{{ unpackerr_docker_network }}"
+        aliases: "{{ unpackerr_docker_network_aliases | default(omit) }}"
+
+- name: "Define all Docker networks for this container"
+  ansible.builtin.set_fact:
+    _unpackerr_docker_all_networks: >
+      {{ _unpackerr_docker_default_networks + unpackerr_docker_extra_networks }}
+
+- name: "Define Docker labels with Traefik disabled"
+  ansible.builtin.set_fact:
+    _unpackerr_docker_labels: "{{ _unpackerr_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  with_items:
+    - key: "traefik.enable"
+      value: "{{ unpackerr_available_externally }}"
+  when: "not unpackerr_docker_available_externally"
+
+- name: "Define Docker labels with Traefik enabled"
+  ansible.builtin.set_fact:
+    _unpackerr_docker_labels: "{{ _unpackerr_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  with_items:
+    - key: "traefik.enable"
+      value: "{{ unpackerr_docker_available_externally }}"
+    - key: "traefik.docker.network"
+      value: "{{ servarr_docker_network }}"
+    - key: "traefik.http.routers.unpackerr.rule"
+      value: "Host(`{{ _unpackerr_docker_fqdn }}`)"
+    - key: "traefik.http.routers.unpackerr.entrypoints"
+      value: "https"
+    - key: "traefik.http.routers.unpackerr.tls.certresolver"
+      value: "letsencrypt"
+    - key: "traefik.http.routers.unpackerr.tls.domains[0].main"
+      value: "*.{{ unpackerr_docker_host_domain }}"
+    - key: "traefik.http.services.unpackerr.loadbalancer.server.port"
+      value: "{{ unpackerr_docker_web_port }}"
+  when: "unpackerr_docker_available_externally"
+
+- name: "Define user-supplied extra Docker labels"
+  ansible.builtin.set_fact:
+    _unpackerr_docker_labels: "{{ _unpackerr_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  loop: "{{ unpackerr_docker_extra_labels | dict2items }}"
+
+- name: "unpackerr Docker Container"
+  community.docker.docker_container:
+    name: "{{ unpackerr_docker_name }}"
+    image: "{{ unpackerr_docker_image }}:{{ unpackerr_docker_image_version }}"
+    pull: true
+    env:
+      "PUID": "{{ unpackerr_docker_uid }}"
+      "PGID": "{{ unpackerr_docker_gid }}"
+      "TZ": "{{ unpackerr_docker_timezone }}"
+      "UMASK": "{{ unpackerr_docker_umask | default(omit) }}"
+    mounts: "{{ _unpackerr_docker_mount_list }}"
+    network_mode: "{{ unpackerr_docker_network }}"
+    networks: "{{ _unpackerr_docker_all_networks }}"
+    restart_policy: unless-stopped
+    memory: "{{ unpackerr_docker_memory }}"
+    cpus: "{{ unpackerr_docker_cpus }}"
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: no
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
+    labels: "{{ _unpackerr_docker_labels }}"

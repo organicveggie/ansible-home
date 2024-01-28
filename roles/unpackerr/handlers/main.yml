@@ -1,0 +1,6 @@
+---
+- name: "Restart Unpackerr Docker"
+  community.docker.docker_container:
+    name: "{{ unpackerr_docker_name }}"
+    restart: true
+    state: "started"

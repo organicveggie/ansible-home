@@ -810,6 +810,13 @@ unific_network_subnet: "172.100.4.0/24"
 unific_network_gateway: "172.100.4.1"
 
 ###
+### Unpackerr
+###
+unpackerr_available_externally: "true"
+unpackerr_docker_host_domain: "{{ veggie_nas_domain_name }}"
+
+
+###
 ### Users/Groups
 ###
 users_list_host: "{{ nas_users }}"

@@ -1,0 +1,172 @@
+---
+#####
+# Container settings
+#####
+
+# Name of the Docker container.
+unpackerr_docker_name: "unpackerr"
+
+# Base name of the Docker image to use for the container.
+unpackerr_docker_image: "ghcr.io/hotio/unpackerr"
+
+# Specific Docker image version to use for the container.
+unpackerr_docker_image_version: "latest"
+
+# Group ID to use inside the container.
+unpackerr_docker_gid: "1000"
+
+# User ID to use inside the container.
+unpackerr_docker_uid: "1000"
+
+# Umask to use inside the container
+unpackerr_docker_umask: "002"
+
+# Timezone to use inside the container.
+unpackerr_docker_timezone: "America/New_York"
+
+unpackerr_docker_data_source_path: "/data"
+
+unpackerr_docker_volume_config_name: "unpackerr-config"
+unpackerr_docker_volume_logs_name: "unpackerr-logs"
+
+# Number of vCPUs to allocate to the container.
+unpackerr_docker_cpus: "1"
+
+# Amount of memory to allocate to the container.
+unpackerr_docker_memory: "512GB"
+
+# HTTP port for Prometheus metrics.
+unpackerr_docker_web_port: "5656"
+
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+unpackerr_docker_extra_labels: {}
+
+# Default Docker network.
+unpackerr_docker_network: "servarr"
+
+# List of additional networks the container should attach to. Elements should be dictionaries like
+# https://docs.ansible.com/ansible/latest/collections/community/docker/docker_container_module.html#parameter-networks.
+unpackerr_docker_extra_networks: []
+
+# List of aliases for this container in the default network. These names can be used in the default
+# network to reach this container.
+unpackerr_docker_network_aliases: []
+
+#####
+# Global Settings
+#####
+
+# Turns on more logs
+unpackerr_docker_debug: "false"
+
+# Do not print logs to stdout or stderr
+unpackerr_docker_quiet: "false"
+
+# Print ERROR lines to stderr instead of stdout
+unpackerr_docker_error_stderr: "false"
+
+# Setting true will print only queue counts with activity
+unpackerr_docker_activity: "false"
+
+# Uses Go Duration. How often to print internal counters.
+unpackerr_docker_log_queues: "1m"
+
+# Optionally provide a file path to write logs
+unpackerr_docker_log_file: "/logs/unpackerr.log"
+
+# Log files to keep after rotating. 0 disables rotation
+unpackerr_docker_log_files: 10
+
+# Max size of log files in megabytes
+unpackerr_docker_log_file_mb: 10
+
+# How often apps are polled, recommend 1m to 5m
+unpackerr_docker_interval: "2m"
+
+# Files are queued at least this long before extraction
+unpackerr_docker_start_delay: "1m"
+
+# Failed extractions are retried after at least this long
+unpackerr_docker_retry_delay: "5m"
+
+# Times to retry failed extractions. 0 = unlimited.
+unpackerr_docker_max_retries: 3
+
+# Concurrent extractions, only recommend 1
+unpackerr_docker_parallel: 1
+
+# Extracted files are written with this mode
+unpackerr_docker_file_mode: "0644"
+
+# Extracted folders are written with this mode
+unpackerr_docker_dir_mode: "0755"
+
+# How often poller (if enabled) checks for new folders.
+unpackerr_docker_folder_interval: "1s"
+
+#####
+# Webserver Settings
+#####
+
+## The web server currently only supports metrics; set this to true if you wish to use it.
+unpackerr_docker_metrics: "false"
+
+## This may be set to a port or an ip:port to bind a specific IP. 0.0.0.0 binds ALL IPs.
+unpackerr_docker_web_listen_addr: "0.0.0.0:5656"
+
+## Recommend setting a log file for HTTP requests. Otherwise, they go with other logs.
+unpackerr_docker_web_log_file: "/logs/webserver.log"
+
+## This app automatically rotates logs. Set these to the size and number to keep.
+unpackerr_docker_web_log_files: 10
+unpackerr_docker_web_log_file_mb: 10
+
+## Base URL from which to serve content.
+unpackerr_docker_web_urlbase: "/"
+
+## Upstreams should be set to the IP or CIDR of your trusted upstream proxy.
+## Setting this correctly allows X-Forwarded-For to be used in logs.
+unpackerr_docker_web_upstreams: [ ] # example: upstreams = [ "127.0.0.1/32", "10.1.2.0/24" ]
+
+#####
+# App
+#####
+
+unpackerr_docker_lidarr: []
+unpackerr_docker_radarr: []
+unpackerr_docker_readarr: []
+unpackerr_docker_sonarr: []
+
+# Example:
+# unpackerr_docker_sonarr:
+#   - url: "http://127.0.0.1:8989"
+#     api_key: "0123456789abcdef0123456789abcdef"
+#     # File system path where downloaded Sonarr items are located.
+#     paths: ['/downloads']
+#     # Default protocols is torrent. Alternative: "torrent,usenet"
+#     protocols: "torrent"
+#     # How long to wait for a reply from the backend.
+#     timeout: "10s"
+#     # How long to wait after import before deleting the extracted items.
+#     delete_delay: "5m"
+#     # If you use this app with NZB you may wish to delete archives after extraction.
+#     # General recommendation is: do not enable this for torrent use.
+#     # Setting this to true deletes the entire original download folder after import.
+#     delete_orig: false
+#     # If you use Syncthing, setting this to true will make unpackerr wait for syncs to finish.
+#     syncthing: false
+
+#####
+# Traefik
+#####
+
+# Enable use of Traefik as a proxy.
+unpackerr_docker_available_externally: "true"
+
+# Host name to use for the Traefik endpoint. Combined with [unpackerr_docker_host_domain] to form the
+# FQDN for the endpoint.
+unpackerr_docker_host_name: "unpackerr"
+
+# Domain name to use for the Traefik endpoint. Combined with [unpackerr_docker_host_name] to form the
+# FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
+unpackerr_docker_host_domain: "example.com"
