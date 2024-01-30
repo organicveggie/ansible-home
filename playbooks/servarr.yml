@@ -231,3 +231,10 @@
             delete_orig: false
             syncthing: true
       tags: ["unpackerr", "unpackarr"]
+    
+    - role: "cloudflared_docker"
+      vars:
+        cloudflared_docker_name: "servarr-cloudflared"
+        cloudflared_docker_tunnel_token: "{{ servarr_cloudflared_token }}"
+        cloudflared_docker_network: "{{ servarr_docker_network  }}"
+      tags: ["cloudflared"]

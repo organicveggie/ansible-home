@@ -591,6 +591,7 @@ servarr_username: "servarr"
 servarr_uid: "4200"
 servarr_timezone: "{{ vault_servarr_timezone }}"
 servarr_data_source_path: "{{ vault_servarr_data_source_path }}"
+servarr_cloudflared_token: "{{ vault_servarr_cloudflared_token }}"
 
 ###
 ### Sonarr

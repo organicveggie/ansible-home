@@ -1,0 +1,47 @@
+---
+- name: "Create placeholder array for default network"
+  ansible.builtin.set_fact:
+    _cloudflared_docker_default_networks:
+      - name: "{{ cloudflared_docker_network }}"
+        aliases: "{{ cloudflared_docker_network_aliases | default(omit) }}"
+
+- name: "Define all Docker networks for this container"
+  ansible.builtin.set_fact:
+    _cloudflared_docker_all_networks: >
+      {{ _cloudflared_docker_default_networks + cloudflared_docker_extra_networks }}
+
+- name: "Define Docker labels with Traefik disabled"
+  ansible.builtin.set_fact:
+    _cloudflared_docker_labels: "{{ _cloudflared_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  with_items:
+    - key: "traefik.enable"
+      value: "{{ cloudflared_available_externally }}"
+
+- name: "Define user-supplied extra Docker labels"
+  ansible.builtin.set_fact:
+    _cloudflared_docker_labels: "{{ _cloudflared_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  loop: "{{ cloudflared_docker_extra_labels | dict2items }}"
+
+- name: "cloudflared Docker Container"
+  community.docker.docker_container:
+    name: "{{ cloudflared_docker_name }}"
+    image: "{{ cloudflared_docker_image }}:{{ cloudflared_docker_image_version }}"
+    pull: true
+    command: "tunnel --no-autoupdate run --token {{ cloudflared_docker_tunnel_token }}"
+    network_mode: "{{ cloudflared_docker_network }}"
+    networks: "{{ _cloudflared_docker_all_networks }}"
+    restart_policy: unless-stopped
+    memory: "{{ cloudflared_docker_memory }}"
+    cpus: "{{ cloudflared_docker_cpus }}"
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: no
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
+    labels: "{{ _cloudflared_docker_labels }}"
