@@ -237,4 +237,15 @@
         cloudflared_docker_name: "servarr-cloudflared"
         cloudflared_docker_tunnel_token: "{{ servarr_cloudflared_token }}"
         cloudflared_docker_network: "{{ servarr_docker_network  }}"
-      tags: ["cloudflared"]
+      tags: ["cloudflared", "cloudflare"]
+
+    - role: "overseerr"
+      vars:
+        overseerr_docker_timezone: "{{ servarr_timezone }}"
+        overseerr_docker_network: "{{ servarr_docker_network }}"
+        overseerr_docker_extra_hosts:
+          "host.docker.internal": "172.17.0.1"
+          "plex": "172.17.0.1"
+        overseerr_docker_extra_networks:
+          - name: "{{ tautulli_docker_network }}"
+      tags: ["overseerr"]
