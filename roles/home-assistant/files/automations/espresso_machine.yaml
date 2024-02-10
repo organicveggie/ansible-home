@@ -50,7 +50,7 @@
 - alias: "Espresso Machine - Off (Commute Days)"
   trigger:
   - platform: time
-    at: "07:30"
+    at: "07:45"
   condition:
   - condition: template
     value_template: "{{ bool(states('binary_sensor.is_commute_day')) }}"
