@@ -28,6 +28,7 @@
         - "nas/data/servarr/downloads"
         - "nas/data/servarr/downloads/torrents"
         - "nas/data/servarr/downloads/usenet"
+        - "nas/data/servarr/music"
 
     - name: "Set owner/group for datasets"
       ansible.builtin.file:
@@ -41,6 +42,7 @@
         - "/mnt/nas/data/servarr/books"
         - "/mnt/nas/data/servarr/downloads/torrents"
         - "/mnt/nas/data/servarr/downloads/usenet"
+        - "/mnt/nas/data/servarr/music"
 
     - name: "Create folders for completed downloads"
       ansible.builtin.file:
@@ -80,6 +82,15 @@
         flaresolverr_docker_timezone: "{{ servarr_timezone }}"
         flaresolverr_docker_network: "{{ servarr_docker_network }}"
       tags: ["flaresolverr"]
+
+    - role: "lidarr"
+      vars:
+        lidarr_docker_gid: "{{ servarr_gid }}"
+        lidarr_docker_uid: "{{ servarr_uid }}"
+        lidarr_docker_timezone: "{{ servarr_timezone }}"
+        lidarr_docker_network: "{{ servarr_docker_network }}"
+        lidarr_docker_data_source_path: "{{ servarr_data_source_path }}"
+      tags: ["lidarr"]
 
     - role: "prowlarr"
       vars:
