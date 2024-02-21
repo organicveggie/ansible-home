@@ -36,7 +36,6 @@
     - role: portainer
     - role: time_machine
     - role: influxdb_docker
-    - role: plex_docker
     - role: stefangweichinger.ansible_rclone
       tags:
         - rclone
@@ -74,6 +73,9 @@
 
 - ansible.builtin.import_playbook: "playbooks/node-red.yml"
   tags: ["nodered", "node-red"]
+
+- ansible.builtin.import_playbook: "playbooks/plex.yml"
+  tags: ["plex", "pms", "plex-docker", "plex_docker"]
 
 - ansible.builtin.import_playbook: "playbooks/resilio-sync.yml"
   tags: ["resilio"]

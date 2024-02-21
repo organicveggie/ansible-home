@@ -299,9 +299,13 @@ photoprism_zfs_filesystems:
 ###
 ### Plex
 ###
-plex_docker_claim: "{{ vault_plex_docker_claim }}"
-plex_docker_cpus: "8"
-plex_docker_memory: "4GB"
+plex_cpus: "8"
+plex_gid: "32400"
+plex_groupname: "plex"
+plex_media_path: "{{ vault_plex_media_path }}"
+plex_memory: "4GB"
+plex_uid: "32400"
+plex_username: "plex"
 
 ###
 ### Plex Meta Manager

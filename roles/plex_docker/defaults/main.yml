@@ -1,13 +1,59 @@
-plex_docker_media_path: /mnt/nas/data
+---
+#####
+# Container settings
+#####
 
+# Name of the Docker container.
+plex_docker_name: "plex"
+
+# Base name of the Docker image to use for the container.
+plex_docker_image: "plexinc/pms-docker"
+
+# Specific Docker image version to use for the container.
+plex_docker_image_version: "latest"
+
+# User name and id to use inside the container.
+plex_docker_username: "plex"
+plex_docker_uid: "32400"
+
+# Group name and id to use inside the container.
+plex_docker_groupname: "plex"
+plex_docker_gid: "32400"
+
+# Timezone to use inside the container.
+plex_docker_timezone: "America/New York"
+
+# Number of vCPUs to allocate to the container.
+plex_docker_cpus: "1"
+
+# Amount of memory to allocate to the container.
+plex_docker_memory: "1GB"
+
+#####
+# Volumes
+#####
+
+# Name of the volume which will hold the main Plex data.
 plex_docker_volume_name_home: "plex-home"
+
+# Name of the volume which will be used by Plex for transcoding operations.
 plex_docker_volume_name_transcode: "plex-transcode"
 
-plex_docker_timezone: America/Los_Angeles
+# List of dictionaries of additional folders to bind mount into the container.
+#
+# Example:
+#
+# plex_docker_additional_bind_mounts:
+#   - source: "/mnt/music"
+#     target: "/media/music"
+#   - source: "/mnt/videos/movies"
+#     target: "/media/movies"
+#
+plex_docker_additional_bind_mounts: []
 
-plex_docker_claim: ""
+#####
+# Plex settings
+#####
 
-plex_docker_cpus: "1"
-plex_docker_memory: "1GB"
-plex_docker_uid: "32400"
-plex_docker_gid: "32400"
+plex_docker_claim: "ABCD1234"
+
