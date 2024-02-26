@@ -206,6 +206,7 @@ certbot_aws_secret_access_key: "{{ letsencrypt_aws_secret_key }}"
 ###
 lidarr_available_externally: "true"
 lidarr_docker_host_domain: "{{ veggie_nas_domain_name }}"
+lidarr_cpus: "2"
 
 ###
 ### Logrotate

@@ -90,6 +90,7 @@
         lidarr_docker_timezone: "{{ servarr_timezone }}"
         lidarr_docker_network: "{{ servarr_docker_network }}"
         lidarr_docker_data_source_path: "{{ servarr_data_source_path }}"
+        lidarr_docker_cpus: "{{ lidarr_cpus }}"
       tags: ["lidarr"]
 
     - role: "prowlarr"
