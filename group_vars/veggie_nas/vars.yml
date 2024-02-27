@@ -334,7 +334,7 @@ pmm_docker_libraries: |2
       report_path: /config/reports/Movies.yml
       template_variables:
         language: "en"
-      metadata_path:
+      collection_files:
         - pmm: actor
         - pmm: basic
         - pmm: bafta
@@ -368,14 +368,14 @@ pmm_docker_libraries: |2
         - pmm: trakt
         - pmm: universe
         - pmm: year
-      overlay_path:
+      overlay_files:
         - remove_overlays: false
         - pmm: ribbon
     TV Shows:
       report_path: /config/reports/TV_Shows.yml
       template_variables:
         language: en
-      metadata_path:
+      collection_files:
         - pmm: basic
         - pmm: franchise
         - pmm: genre
@@ -384,14 +384,14 @@ pmm_docker_libraries: |2
         - pmm: tautulli
         - pmm: trakt
         - pmm: year
-      overlay_path:
+      overlay_files:
         - remove_overlays: false
         - pmm: ribbon
     Anime Movies:
       report_path: /config/reports/Anime_Movies.yml
       template_variables:
         language: en
-      metadata_path:
+      collection_files:
         - pmm: anilist
         - pmm: basic
         - pmm: myanimelist
@@ -401,7 +401,7 @@ pmm_docker_libraries: |2
       report_path: /config/reports/Anime_Series.yml
       template_variables:
         language: en
-      metadata_path:
+      collection_files:
         - pmm: anilist
         - pmm: basic
         - pmm: myanimelist
