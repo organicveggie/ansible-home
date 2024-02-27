@@ -59,6 +59,9 @@
     # Telegraf
     - role: telegraf
 
+- ansible.builtin.import_playbook: "playbooks/media-storage/media-storage.yml"
+  tags: ["media", "media-storage"]
+
 - ansible.builtin.import_playbook: "playbooks/calibre-web.yml"
   tags: ["calibre", "calibre-web", "calibre-web"]
 
