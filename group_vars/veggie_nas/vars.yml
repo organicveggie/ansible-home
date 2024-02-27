@@ -372,6 +372,10 @@ pmm_docker_libraries: |2
         - pmm: year
       overlay_files:
         - remove_overlays: false
+        - pmm: resolution
+        - pmm: audio_codec
+        - pmm: streaming
+        - pmm: video_format
         - pmm: ribbon
     TV Shows:
       report_path: /config/reports/TV_Shows.yml
@@ -388,6 +392,34 @@ pmm_docker_libraries: |2
         - pmm: year
       overlay_files:
         - remove_overlays: false
+        - pmm: resolution
+        - pmm: resolution
+          template_variables:
+            builder_level: season
+        - pmm: resolution
+          template_variables:
+            builder_level: episode
+        - pmm: audio_codec
+        - pmm: audio_codec
+          template_variables:
+            builder_level: season
+        - pmm: audio_codec
+          template_variables:
+            builder_level: episode
+        - pmm: streaming
+        - pmm: video_format
+        - pmm: video_format
+          template_variables:
+            builder_level: season
+        - pmm: video_format
+          template_variables:
+            builder_level: episode
+        - pmm: episode_info
+          template_variables:
+            builder_level: episode
+        - pmm: runtimes
+          template_variables:
+            builder_level: episode
         - pmm: ribbon
     Anime Movies:
       report_path: /config/reports/Anime_Movies.yml
