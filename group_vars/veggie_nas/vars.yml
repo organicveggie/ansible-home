@@ -311,14 +311,16 @@ plex_username: "plex"
 ###
 ### Plex Meta Manager
 ###
+pmm_network_name: "plex-meta-manager"
+pmm_network_subnet: "172.100.8.0/24"
+pmm_network_gateway: "172.100.8.1"
+
 pmm_docker_cpus: "2"
 pmm_docker_dns_servers:
   - "{{ default_dns_address }}"
   - "8.8.8.8"
   - "8.8.4.4"
 pmm_docker_memory: "1G"
-pmm_docker_network_subnet: "172.100.8.0/24"
-pmm_docker_network_gateway: "172.100.8.1"
 pmm_docker_timezone: "{{ home_timezone }}"
 
 pmm_docker_config_read_only: "true"

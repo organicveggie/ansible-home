@@ -54,7 +54,6 @@
         - unific
 
     - role: organicveggie.tautulli_docker
-    - role: organicveggie.pmm_docker
 
     # Telegraf
     - role: telegraf
@@ -79,6 +78,9 @@
 
 - ansible.builtin.import_playbook: "playbooks/plex.yml"
   tags: ["plex", "pms", "plex-docker", "plex_docker"]
+
+- ansible.builtin.import_playbook: "playbooks/plex-media-manager.yml"
+  tags: ["pmm", "plex-media-ma ager"]
 
 - ansible.builtin.import_playbook: "playbooks/resilio-sync.yml"
   tags: ["resilio"]
