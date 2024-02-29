@@ -41,7 +41,7 @@
 
 - src: "https://github.com/organicveggie/ansible.pmm_docker"
   name: "organicveggie.pmm_docker"
-  version: "1.1.0"
+  version: "1.1.1"
 
 - src: "organicveggie.postgres_docker"
   version: "1.0.2"

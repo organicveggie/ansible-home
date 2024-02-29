@@ -324,12 +324,13 @@ pmm_docker_memory: "1G"
 pmm_docker_timezone: "{{ home_timezone }}"
 
 pmm_docker_config_read_only: "true"
+pmm_docker_plex_db_cache: "2048" # MB
 pmm_docker_plex_url: "{{ vault_pmm_docker_plex_url }}"
 pmm_docker_plex_token: "{{ vault_pmm_docker_plex_token }}"
 pmm_docker_tmdb_apikey: "{{ vault_pmm_docker_tmdb_apikey }}"
 pmm_docker_tmdb_language: "en"
 pmm_docker_tmdb_region: "us"
-pmm_docker_tautulli_url: "{{ vault_pmm_docker_tautulli_url }}"
+pmm_docker_tautulli_url: "http://{{ tautulli_docker_name }}:{{ tautulli_docker_web_port }}"
 pmm_docker_tautulli_apikey: "{{ vault_pmm_docker_tautulli_apikey }}"
 pmm_docker_libraries: |2
     Movies:
@@ -376,7 +377,27 @@ pmm_docker_libraries: |2
         - pmm: audio_codec
         - pmm: streaming
         - pmm: video_format
+        - pmm: ratings
+          template_variables:
+            rating1: critic
+            rating1_image: imdb
+            # rating1_font: config/metadata/fonts/Impact.ttf
+            # rating1_font_size: 70
+
+            rating2: audience
+            rating2_image: rt_popcorn
+            # rating2_font: config/metadata/fonts/Adlib.ttf
+            # rating2_font_size: 63
+
+            rating3: user
+            rating3_image: tmdb
+            # rating3_font: config/metadata/fonts/Avenir_95_Black.ttf
+            # rating3_font_size: 70
         - pmm: ribbon
+      operations:
+        mass_user_rating_update: mdb_tomatoes   # Update user ratings with mdb_tomatoes
+        mass_critic_rating_update: imdb         # Update critic ratings with imdb
+        mass_audience_rating_update: tmdb       # Update audience ratings with tmdb
     TV Shows:
       report_path: /config/reports/TV_Shows.yml
       template_variables:
@@ -421,6 +442,40 @@ pmm_docker_libraries: |2
           template_variables:
             builder_level: episode
         - pmm: ribbon
+        - pmm: ratings
+          template_variables:
+            rating1: critic
+            rating1_image: imdb
+            # rating1_font: config/metadata/fonts/Impact.ttf
+            # rating1_font_size: 70
+
+            rating2: audience
+            rating2_image: rt_popcorn
+            # rating2_font: config/metadata/fonts/Adlib.ttf
+            # rating2_font_size: 63
+
+            rating3: user
+            rating3_image: tmdb
+            # rating3_font: config/metadata/fonts/Avenir_95_Black.ttf
+            # rating3_font_size: 70
+        - pmm: ratings
+          template_variables:
+            builder_level: episode
+            rating1: critic
+            rating1_image: imdb
+            # rating1_font: config/metadata/fonts/Impact.ttf
+            # rating1_font_size: 70
+
+            rating2: audience
+            rating2_image: tmdb
+            # rating2_font: config/metadata/fonts/Avenir_95_Black.ttf
+            # rating2_font_size: 70
+      operations:
+        mass_user_rating_update: mdb_tomatoes   # Update user ratings with mdb_tomatoes
+        mass_critic_rating_update: imdb         # Update critic ratings with imdb
+        mass_audience_rating_update: tmdb       # Update audience ratings with tmdb
+        mass_episode_critic_rating_update: imdb
+        mass_episode_audience_rating_update: tmdb
     Anime Movies:
       report_path: /config/reports/Anime_Movies.yml
       template_variables:
@@ -429,8 +484,6 @@ pmm_docker_libraries: |2
         - pmm: anilist
         - pmm: basic
         - pmm: myanimelist
-        - pmm: other
-        - pmm: studio_anime
     Anime Series:
       report_path: /config/reports/Anime_Series.yml
       template_variables:
@@ -439,8 +492,6 @@ pmm_docker_libraries: |2
         - pmm: anilist
         - pmm: basic
         - pmm: myanimelist
-        - pmm: other
-        - pmm: studio_anime
 
 # See https://replit.com/@chazlarson/TraktAuth to generate the auth data.
 pmm_docker_trakt: |2
@@ -675,11 +726,14 @@ syncthing_docker_host_domain: "{{ veggie_nas_domain_name }}"
 ###
 ### Tautulli
 ###
+tautulli_network: "tautulli"
+tautulli_docker_name: "tautulli"
 tautulli_docker_timezone: "{{ home_timezone }}"
-tautulli_docker_network: "tautulli"
+tautulli_docker_network: "{{ tautulli_network }}"
 tautulli_docker_network_subnet: "172.100.7.0/24"
 tautulli_docker_network_gateway: "172.100.7.1"
 tautulli_docker_host_domain: "{{ veggie_base_domain_name }}"
+tautulli_docker_web_port: "8181"
 
 ###
 ### Telegraf

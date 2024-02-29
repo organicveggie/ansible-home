@@ -20,4 +20,7 @@
         pmm_docker_network: "{{ pmm_network_name }}"
         pmm_docker_network_subnet: "{{ pmm_network_subnet }}"
         pmm_docker_network_gateway: "{{ pmm_network_gateway }}"
+        pmm_docker_extra_networks:
+          - name: "{{ pmm_network_name }}"
+          - name: "{{ tautulli_network }}"
       tags: ["pmm", "pmm-docker", "plex-meta-manager", "plexmetamanager"]
