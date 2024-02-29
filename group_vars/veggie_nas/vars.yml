@@ -398,7 +398,150 @@ pmm_docker_libraries: |2
         mass_user_rating_update: mdb_tomatoes   # Update user ratings with mdb_tomatoes
         mass_critic_rating_update: imdb         # Update critic ratings with imdb
         mass_audience_rating_update: tmdb       # Update audience ratings with tmdb
+    Movies (4K):
+      report_path: /config/reports/Movies.yml
+      template_variables:
+        language: "en"
+      collection_files:
+        - pmm: actor
+        - pmm: basic
+        - pmm: bafta
+        - pmm: cannes
+        - pmm: decade
+        - pmm: director
+        - pmm: flixpatrol
+        - pmm: franchise
+          template_variables:
+            data:
+              visible_home: true
+        - pmm: genre
+          template_variables:
+            data:
+              visible_home: true
+        - pmm: imdb
+        - pmm: oscars
+          template_variables:
+            data:
+              starting: current_year-10
+              ending: current_year
+        - pmm: resolution
+        - pmm: seasonal
+          template_variables:
+            data:
+              visible_home: true
+        - pmm: streaming
+        - pmm: sundance
+        - pmm: tautulli
+        - pmm: tmdb
+        - pmm: trakt
+        - pmm: universe
+        - pmm: year
+      overlay_files:
+        - remove_overlays: false
+        - pmm: resolution
+        - pmm: audio_codec
+        - pmm: streaming
+        - pmm: video_format
+        - pmm: ratings
+          template_variables:
+            rating1: critic
+            rating1_image: imdb
+            # rating1_font: config/metadata/fonts/Impact.ttf
+            # rating1_font_size: 70
+
+            rating2: audience
+            rating2_image: rt_popcorn
+            # rating2_font: config/metadata/fonts/Adlib.ttf
+            # rating2_font_size: 63
+
+            rating3: user
+            rating3_image: tmdb
+            # rating3_font: config/metadata/fonts/Avenir_95_Black.ttf
+            # rating3_font_size: 70
+        - pmm: ribbon
+      operations:
+        mass_user_rating_update: mdb_tomatoes   # Update user ratings with mdb_tomatoes
+        mass_critic_rating_update: imdb         # Update critic ratings with imdb
+        mass_audience_rating_update: tmdb       # Update audience ratings with tmdb
     TV Shows:
+      report_path: /config/reports/TV_Shows.yml
+      template_variables:
+        language: en
+      collection_files:
+        - pmm: basic
+        - pmm: franchise
+        - pmm: genre
+        - pmm: network
+        - pmm: resolution
+        - pmm: tautulli
+        - pmm: trakt
+        - pmm: year
+      overlay_files:
+        - remove_overlays: false
+        - pmm: resolution
+        - pmm: resolution
+          template_variables:
+            builder_level: season
+        - pmm: resolution
+          template_variables:
+            builder_level: episode
+        - pmm: audio_codec
+        - pmm: audio_codec
+          template_variables:
+            builder_level: season
+        - pmm: audio_codec
+          template_variables:
+            builder_level: episode
+        - pmm: streaming
+        - pmm: video_format
+        - pmm: video_format
+          template_variables:
+            builder_level: season
+        - pmm: video_format
+          template_variables:
+            builder_level: episode
+        - pmm: episode_info
+          template_variables:
+            builder_level: episode
+        - pmm: runtimes
+          template_variables:
+            builder_level: episode
+        - pmm: ribbon
+        - pmm: ratings
+          template_variables:
+            rating1: critic
+            rating1_image: imdb
+            # rating1_font: config/metadata/fonts/Impact.ttf
+            # rating1_font_size: 70
+
+            rating2: audience
+            rating2_image: rt_popcorn
+            # rating2_font: config/metadata/fonts/Adlib.ttf
+            # rating2_font_size: 63
+
+            rating3: user
+            rating3_image: tmdb
+            # rating3_font: config/metadata/fonts/Avenir_95_Black.ttf
+            # rating3_font_size: 70
+        - pmm: ratings
+          template_variables:
+            builder_level: episode
+            rating1: critic
+            rating1_image: imdb
+            # rating1_font: config/metadata/fonts/Impact.ttf
+            # rating1_font_size: 70
+
+            rating2: audience
+            rating2_image: tmdb
+            # rating2_font: config/metadata/fonts/Avenir_95_Black.ttf
+            # rating2_font_size: 70
+      operations:
+        mass_user_rating_update: mdb_tomatoes   # Update user ratings with mdb_tomatoes
+        mass_critic_rating_update: imdb         # Update critic ratings with imdb
+        mass_audience_rating_update: tmdb       # Update audience ratings with tmdb
+        mass_episode_critic_rating_update: imdb
+        mass_episode_audience_rating_update: tmdb
+    TV Shows (4K):
       report_path: /config/reports/TV_Shows.yml
       template_variables:
         language: en
