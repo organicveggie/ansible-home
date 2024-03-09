@@ -33,6 +33,10 @@
         plex_docker_additional_bind_mounts:
           - source: "{{ plex_media_path }}/music"
             target: "/media/music"
+          - source: "{{ servarr_data_source_path }}/music/albums"
+            target: "/media/music-albums"
+          - source: "{{ servarr_data_source_path }}/music/live"
+            target: "/media/music-live"
           - source: "{{ plex_media_path }}/videos/anime"
             target: "/media/anime"
           - source: "{{ plex_media_path }}/videos/exercise"
