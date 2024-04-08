@@ -232,6 +232,20 @@ veggie_nas_plex_password: "{{ vault_nas_plex_password }}"
 veggie_nas_retropie_password: "{{ vault_nas_retropie_password }}"
 
 ###
+### Navidrome
+###
+navidrome_network_name: "{{ navidrome_network_name }}"
+navidrome_network_subnet: "{{ navidrome_network_subnet }}"
+navidrome_network_gateway: "{{ navidrome_network_gateway }}"
+
+navidrome_host_domain: "{{ veggie_base_domain_name }}"
+navidrome_lastfm_apikey: "{{ vault_navidrome_lastfm_apikey }}"
+navidrome_lastfm_secret: "{{ vault_navidrome_lastfm_secret }}"
+navidrome_spotify_client_id: "{{ vault_navidrome_docker_spotify_client_id }}"
+navidrome_spotify_client_secret: "{{ vault_navidrome_docker_spotify_client_secret }}"
+navidrome_music_folder: "{{ vault_navidrome_music_folder }}"
+
+###
 ### NFS
 ###
 nfs_exports:
@@ -1042,6 +1056,7 @@ traefik_extra_networks:
   - name: "{{ grafana_network_name }}"
   - name: "{{ hass_network_name }}"
   - name: "{{ influxdb_network_name }}"
+  - name: "{{ navidrome_network_name }}"
   - name: "{{ nodered_docker_network_name }}"
   - name: "{{ photoprism_network_name }}"
   - name: "{{ portainer_network_name }}"

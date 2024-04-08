@@ -1,0 +1,124 @@
+---
+#####
+# Navidrome settings
+#####
+
+# Base URL to configure Navidrome behind a proxy (examples: /music, https://music.example.com)
+navidrome_docker_base_url: null
+
+# Log level. Useful for troubleshooting. Possible values: error, warn, info, debug, trace.
+# Defaults to "info".
+navidrome_docker_loglevel: null
+
+# Folder to store cache data (transcoding, images…). Defaults to	"./data/cache".
+navidrome_docker_cache_folder: null
+
+# Use Gravatar images as the user profile image. Needs the user’s email to be filled.
+# Defaults to false.
+navidrome_docker_enable_gravatar: null
+
+# Enable the Sharing feature. Defaults to false.
+navidrome_docker_enable_sharing: null
+
+# Size of image (art work) cache. Set to "0" to disable cache. Defaults to "100MB".
+navidrome_docker_image_cache_size: null
+
+# Configure periodic scans using “cron” syntax. To disable it altogether, set it to "0".
+# Default is "1m".
+navidrome_docker_scan_schedule: null
+
+# Size of transcoding cache. Set to "0" to disable cache. Default is "100MB".
+navidrome_docker_transcoding_cache_size: null
+
+#####
+# Last.fm integration
+#####
+
+# Set this to false to completely disable Last.fm integration.
+navidrome_docker_lastfm_enabled: null
+
+# Last.fm API key.
+navidrome_docker_lastfm_apikey: null
+
+# Last.fm API secret.
+navidrome_docker_lastfm_secret: null
+
+#####
+# Spotify integration
+#####
+
+# Spotify Client ID. Required if you want Artist images.
+navidrome_docker_spotify_client_id: null
+
+# Spotify Client Secret. Required if you want Artist images.
+navidrome_docker_spotify_client_secret: null
+
+#####
+# Container settings
+#####
+
+# Name of the Docker container.
+navidrome_docker_name: "navidrome"
+
+# Base name of the Docker image to use for the container.
+navidrome_docker_image_name: "deluan/navidrome"
+
+# Specific Docker image version to use for the container.
+navidrome_docker_image_version: "latest"
+
+# Number of vCPUs to allocate to the container.
+navidrome_docker_cpus: "1"
+
+# Amount of memory to allocate to the container.
+navidrome_docker_memory: "512M"
+
+# TCP port number to expose to handle HTTP traffic.
+navidrome_docker_web_port: "4533"
+
+#####
+# Docker networks
+#####
+
+# Name of the default Docker network for the container. The container will *always* attach to this
+# network.
+navidrome_docker_network: "navidrome"
+
+# List of additional networks the container should attach to. Elements should be dictionaries like
+# https://docs.ansible.com/ansible/latest/collections/community/docker/docker_container_module.html#parameter-networks.
+navidrome_docker_extra_networks: []
+
+# List of aliases for this container in the default network. These names can be used in the default
+# network to reach this container.
+navidrome_docker_network_aliases: []
+
+# The container’s IPv4 address in the default network. Defaults to using DHCP.
+navidrome_docker_network_ipv4: null
+
+# The container’s IPv6 address in the default network. Defaults to using DHCP. Only applies if
+# IPv6 is enabled in the default network.
+navidrome_docker_network_ipv6: null
+
+#####
+# Docker volumes and folders
+#####
+
+# Name of the Docker volume to create to store data files.
+navidrome_docker_volume_name: "navidrome"
+
+# Full path to the music folder.
+navidrome_docker_music_folder: "/path/to/music/folder"
+
+#####
+# Traefik
+#####
+
+# Enable use of Traefik as a proxy.
+navidrome_docker_available_externally: "true"
+
+# Host name to use for the Traefik endpoint. Combined with [navidrome_docker_host_domain] to form
+# the FQDN for the endpoint.
+navidrome_docker_hostname: "navidrome"
+
+# Domain name to use for the Traefik endpoint. Combined with [navidrome_docker_hostname] to form
+# the FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
+navidrome_docker_host_domain: "example.com"

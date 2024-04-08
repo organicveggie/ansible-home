@@ -1,0 +1,4 @@
+---
+- name: "Create navidrome Docker volume"
+  community.docker.docker_volume:
+    name: "{{ navidrome_docker_volume_name }}"

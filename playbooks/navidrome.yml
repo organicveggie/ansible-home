@@ -1,0 +1,32 @@
+- name: "Setup Navidrome"
+  hosts: nas
+  remote_user: "sean"
+  become: yes
+
+  roles:
+    - role: "docker_networks"
+      vars:
+        organicveggie_docker_networks:
+          - name: "{{ navidrome_network_name }}"
+            enable_ipv6: "no"
+            internal: "no"
+            scope: "local"
+            subnet: "{{ navidrome_network_subnet }}"
+            gateway: "{{ navidrome_network_gateway }}"
+      tags: ["docker", "network", "networks"]
+
+    - role: "navidrome_docker"
+      vars:
+        navidrome_docker_base_url: "https://navidrome.home.bealetech.com"
+        navidrome_docker_extra_networks:
+          - name: "{{ navidrome_network_name }}"
+        navidrome_docker_host_domain: "{{ navidrome_host_domain }}"
+        navidrome_docker_image_cache_size: "500MB"
+        navidrome_docker_lastfm_enabled: "true"
+        navidrome_docker_lastfm_apikey: "{{ navidrome_lastfm_apikey }}"
+        navidrome_docker_lastfm_secret: "{{ navidrome_lastfm_secret }}"
+        navidrome_docker_music_folder: "{{ navidrome_music_folder }}"
+        navidrome_docker_network: "{{ navidrome_network_name }}"
+        navidrome_docker_spotify_client_id: "{{ navidrome_spotify_client_id }}"
+        navidrome_docker_spotify_client_secret: "{{ navidrome_spotify_client_secret }}"
+      tags: ["navidrome"]

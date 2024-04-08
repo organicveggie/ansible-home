@@ -73,6 +73,9 @@
 - ansible.builtin.import_playbook: "playbooks/hass.yml"
   tags: ["hass", "homeassistant", "home-assistant"]
 
+- ansible.builtin.import_playbook: "playbooks/navidrome.yml"
+  tags: ["navidrome"]
+
 - ansible.builtin.import_playbook: "playbooks/node-red.yml"
   tags: ["nodered", "node-red"]
 

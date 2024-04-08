@@ -1,0 +1,12 @@
+---
+- name: "Run general setup"
+  ansible.builtin.import_tasks: "setup.yml"
+  tags:
+    - "navidrome"
+    - "navidrome:setup"
+
+- name: "Create container"
+  ansible.builtin.import_tasks: "container.yml"
+  tags:
+    - "navidrome"
+    - "navidrome:docker"

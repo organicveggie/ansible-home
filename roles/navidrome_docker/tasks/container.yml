@@ -1,0 +1,83 @@
+---
+- name: "Set Docker mount list for volume mounts"
+  ansible.builtin.set_fact:
+    _fact_navidrome_docker_mount_list:
+      - source: "{{ navidrome_docker_volume_name }}"
+        target: "/data"
+        type: "volume"
+      - source: "{{ navidrome_docker_music_folder }}"
+        read_only: true
+        target: "/music"
+        type: "bind"
+
+- name: "Define all Docker networks for this container"
+  ansible.builtin.set_fact:
+    _fact_navidrome_docker_all_networks: "{{ navidrome_docker_extra_networks }}"
+
+- name: "Build container FQDN"
+  ansible.builtin.set_fact:
+    _fact_navidrome_docker_fqdn: "{{ navidrome_docker_hostname }}.{{ navidrome_docker_host_domain }}"
+
+- name: "Define Docker labels with Traefik disabled"
+  ansible.builtin.set_fact:
+    _fact_navidrome_docker_labels:
+      "{{ _fact_navidrome_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  with_items:
+    - key: "traefik.enable"
+      value: "{{ navidrome_docker_available_externally }}"
+  when: "not navidrome_docker_available_externally"
+
+- name: "Define Docker labels with Traefik enabled"
+  ansible.builtin.set_fact:
+    _fact_navidrome_docker_labels:
+      "{{ _fact_navidrome_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  with_items:
+    - key: "traefik.enable"
+      value: "{{ navidrome_docker_available_externally }}"
+    - key: "traefik.http.routers.navidrome.rule"
+      value: "Host(`{{ _fact_navidrome_docker_fqdn }}`)"
+    - key: "traefik.http.routers.navidrome.entrypoints"
+      value: "http,https"
+    - key: "traefik.http.routers.navidrome.tls.certresolver"
+      value: "letsencrypt"
+    - key: "traefik.http.routers.navidrome.tls.domains[0].main"
+      value: "*.{{ navidrome_docker_host_domain }}"
+    - key: "traefik.http.services.navidrome.loadbalancer.server.port"
+      value: "{{ navidrome_docker_web_port }}"
+  when: "navidrome_docker_available_externally"
+
+- name: "Create Navidrome Docker container" # noqa: args[module]
+  community.docker.docker_container:
+    name: "{{ navidrome_docker_name }}"
+    image: "{{ navidrome_docker_image_name }}:{{ navidrome_docker_image_version }}"
+    pull: true
+    mounts: "{{ _fact_navidrome_docker_mount_list }}"
+    env:
+      "ND_BASEURL": "{{ navidrome_docker_base_url | default(omit) }}"
+      "ND_CACHEFOLDER": "{{ navidrome_docker_cache_folder | default(omit) }}"
+      "ND_ENABLEGRAVATAR": "{{ navidrome_docker_enable_gravatar | default(omit) }}"
+      "ND_ENABLESHARING": "{{ navidrome_docker_enable_sharing | default(omit) }}"
+      "ND_IMAGECACHESIZE": "{{ navidrome_docker_image_cache_size | default(omit) }}"
+      "ND_LOGLEVEL": "{{ navidrome_docker_loglevel | default(omit) }}"
+      "ND_PORT": "{{ navidrome_docker_web_port | default(omit) }}"
+      "ND_SCANSCHEDULE": "{{ navidrome_docker_scan_schedule | default(omit) }}"
+      "ND_SPOTIFY_ID": "{{ navidrome_docker_spotify_client_id | default(omit) }}"
+      "ND_SPOTIFY_SECRET": "{{ navidrome_docker_spotify_client_secret | default(omit) }}"
+      "ND_TRANSCODINGCACHESIZE": "{{ navidrome_docker_transcoding_cache_size | default(omit) }}"
+    network_mode: "{{ navidrome_docker_network }}"
+    networks: "{{ _fact_navidrome_docker_all_networks }}"
+    restart_policy: unless-stopped
+    memory: "{{ navidrome_docker_memory }}"
+    cpus: "{{ navidrome_docker_cpus }}"
+    container_default_behavior: "no_defaults"
+    auto_remove: false
+    detach: true
+    init: true
+    interactive: false
+    paused: false
+    privileged: false
+    read_only: false
+    tty: false
+    labels: "{{ _fact_navidrome_docker_labels }}"
