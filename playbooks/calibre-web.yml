@@ -41,5 +41,7 @@
 
     - role: "organicveggie.calibre_web_docker"
       vars:
+        calibre_web_docker_extra_networks:
+          - name: "{{ calibre_web_docker_network }}"
         calibre_web_docker_volume_name: "calibre-web-config"
       tags: ["calibre"]
