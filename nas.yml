@@ -82,11 +82,8 @@
 - ansible.builtin.import_playbook: "playbooks/plex.yml"
   tags: ["plex", "pms", "plex-docker", "plex_docker"]
 
-- ansible.builtin.import_playbook: "playbooks/plex-media-manager.yml"
-  tags: ["pmm", "plex-media-ma ager"]
-
-- ansible.builtin.import_playbook: "playbooks/resilio-sync.yml"
-  tags: ["resilio"]
+- ansible.builtin.import_playbook: "playbooks/kometa.yml"
+  tags: ["kometa", "pmm", "plex-media-manager"]
 
 - ansible.builtin.import_playbook: "playbooks/servarr.yml"
   tags: ["servarr"]

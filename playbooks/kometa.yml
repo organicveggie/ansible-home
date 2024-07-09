@@ -1,0 +1,29 @@
+- name: "Setup Kometa container"
+  hosts: nas
+  remote_user: "sean"
+  become: yes
+
+  roles:
+    - role: "docker_networks"
+      vars:
+        organicveggie_docker_networks:
+          - name: "{{ kometa_network_name }}"
+            enable_ipv6: "no"
+            internal: "no"
+            scope: "local"
+            subnet: "{{ kometa_network_subnet }}"
+            gateway: "{{ kometa_network_gateway }}"
+      tags: ["docker", "network", "networks"]
+
+    - role: "organicveggie.kometa"
+      vars:
+        kometa_docker_run_once_only: "true"
+        kometa_docker_network: "{{ kometa_network_name }}"
+        kometa_docker_extra_networks:
+          - name: "{{ kometa_network_name }}"
+          - name: "{{ tautulli_network }}"
+        kometa_docker_config_read_only: "true"
+        kometa_docker_cpus: "{{ kometa_cpus }}"
+        kometa_docker_memory: "{{ kometa_memory }}"
+        kometa_docker_timezone: "{{ kometa_timezone }}"
+      tags: ["kometa", "kometa", "pmm", "plex-meta-manager", "plexmetamanager"]

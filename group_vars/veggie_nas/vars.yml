@@ -100,12 +100,6 @@ organicveggie_docker_networks:
     scope: "local"
     subnet: "{{ tautulli_docker_network_subnet }}"
     gateway: "{{ tautulli_docker_network_gateway }}"
-  - name: "{{ pmm_docker_network }}"
-    enable_ipv6: "no"
-    internal: "no"
-    scope: "local"
-    subnet: "{{ pmm_docker_network_subnet }}"
-    gateway: "{{ pmm_docker_network_gateway }}"
 
 ###
 ### Flaresolverr
@@ -324,32 +318,27 @@ plex_uid: "32400"
 plex_username: "plex"
 
 ###
-### Plex Meta Manager
+### Kameta (formerly Plex Meta Manager)
 ###
-pmm_network_name: "plex-meta-manager"
-pmm_network_subnet: "172.100.8.0/24"
-pmm_network_gateway: "172.100.8.1"
+kometa_network_name: "kometa"
+kometa_network_subnet: "172.100.17.0/24"
+kometa_network_gateway: "172.100.17.1"
 
-pmm_docker_cpus: "2"
-pmm_docker_dns_servers:
-  - "{{ default_dns_address }}"
-  - "8.8.8.8"
-  - "8.8.4.4"
-pmm_docker_memory: "1G"
-pmm_docker_timezone: "{{ home_timezone }}"
+kometa_cpus: "2"
+kometa_memory: "1G"
+kometa_timezone: "{{ home_timezone }}"
 
-pmm_docker_config_read_only: "true"
-pmm_docker_mdblist_apikey: "{{ vault_pmm_docker_mdblist_apikey }}"
-pmm_docker_mdblist_cache_expiration: "60"
-pmm_docker_plex_db_cache: "2048" # MB
-pmm_docker_plex_url: "{{ vault_pmm_docker_plex_url }}"
-pmm_docker_plex_token: "{{ vault_pmm_docker_plex_token }}"
-pmm_docker_tmdb_apikey: "{{ vault_pmm_docker_tmdb_apikey }}"
-pmm_docker_tmdb_language: "en"
-pmm_docker_tmdb_region: "US"
-pmm_docker_tautulli_url: "http://{{ tautulli_docker_name }}:{{ tautulli_docker_web_port }}"
-pmm_docker_tautulli_apikey: "{{ vault_pmm_docker_tautulli_apikey }}"
-pmm_docker_libraries: |2
+kometa_docker_mdblist_apikey: "{{ vault_kometa_docker_mdblist_apikey }}"
+kometa_docker_mdblist_cache_expiration: "60"
+kometa_docker_plex_db_cache: "2048" # MB
+kometa_docker_plex_url: "{{ vault_kometa_docker_plex_url }}"
+kometa_docker_plex_token: "{{ vault_kometa_docker_plex_token }}"
+kometa_docker_tmdb_apikey: "{{ vault_kometa_docker_tmdb_apikey }}"
+kometa_docker_tmdb_language: "en"
+kometa_docker_tmdb_region: "US"
+kometa_docker_tautulli_url: "http://{{ tautulli_docker_name }}:{{ tautulli_docker_web_port }}"
+kometa_docker_tautulli_apikey: "{{ vault_kometa_docker_tautulli_apikey }}"
+kometa_docker_libraries: |2
     Movies:
       report_path: /config/reports/Movies.yml
       template_variables:
@@ -654,17 +643,17 @@ pmm_docker_libraries: |2
         - pmm: myanimelist
 
 # See https://replit.com/@chazlarson/TraktAuth to generate the auth data.
-pmm_docker_trakt: |2
-    client_id: {{ vault_pmm_docker_trakt_client_id }}
-    client_secret: {{ vault_pmm_docker_trakt_client_secret }}
+kometa_docker_trakt: |2
+    client_id: {{ vault_kometa_docker_trakt_client_id }}
+    client_secret: {{ vault_kometa_docker_trakt_client_secret }}
     pin:
     authorization:
-      access_token: {{ vault_pmm_docker_trakt_access_token }}
-      token_type: {{ vault_pmm_docker_trakt_token_type }}
-      expires_in: {{ vault_pmm_docker_trakt_expires_in }}
-      refresh_token: {{ vault_pmm_docker_trakt_refresh_token }}
-      scope: {{ vault_pmm_docker_trakt_scope }}
-      created_at: {{ vault_pmm_docker_trakt_created_at }}
+      access_token: {{ vault_kometa_docker_trakt_access_token }}
+      token_type: {{ vault_kometa_docker_trakt_token_type }}
+      expires_in: {{ vault_kometa_docker_trakt_expires_in }}
+      refresh_token: {{ vault_kometa_docker_trakt_refresh_token }}
+      scope: {{ vault_kometa_docker_trakt_scope }}
+      created_at: {{ vault_kometa_docker_trakt_created_at }}
 
 ###
 ### Pip

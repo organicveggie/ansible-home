@@ -36,6 +36,10 @@
   name: "organicveggie.home_assistant_docker"
   version: "1.0.7"
 
+- src: "https://github.com/organicveggie/ansible.kometa"
+  name: "organicveggie.kometa"
+  version: "2.1.2"
+
 - src: "organicveggie.pgadmin_docker"
   version: "1.0.3"
 
