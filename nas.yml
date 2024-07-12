@@ -53,8 +53,6 @@
       tags:
         - unific
 
-    - role: organicveggie.tautulli_docker
-
     # Telegraf
     - role: telegraf
 
@@ -84,6 +82,9 @@
 
 - ansible.builtin.import_playbook: "playbooks/kometa.yml"
   tags: ["kometa", "pmm", "plex-media-manager"]
+
+- ansible.builtin.import_playbook: "playbooks/tautulli.yml"
+  tags: ["tautulli"]
 
 - ansible.builtin.import_playbook: "playbooks/servarr.yml"
   tags: ["servarr"]

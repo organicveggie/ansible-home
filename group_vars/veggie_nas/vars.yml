@@ -94,12 +94,6 @@ organicveggie_docker_networks:
     scope: "local"
     subnet: "{{ unific_network_subnet }}"
     gateway: "{{ unific_network_gateway }}"
-  - name: "{{ tautulli_docker_network }}"
-    enable_ipv6: "no"
-    internal: "no"
-    scope: "local"
-    subnet: "{{ tautulli_docker_network_subnet }}"
-    gateway: "{{ tautulli_docker_network_gateway }}"
 
 ###
 ### Flaresolverr
@@ -879,14 +873,13 @@ syncthing_docker_host_domain: "{{ veggie_nas_domain_name }}"
 ###
 ### Tautulli
 ###
-tautulli_network: "tautulli"
-tautulli_docker_name: "tautulli"
-tautulli_docker_timezone: "{{ home_timezone }}"
-tautulli_docker_network: "{{ tautulli_network }}"
-tautulli_docker_network_subnet: "172.100.7.0/24"
-tautulli_docker_network_gateway: "172.100.7.1"
-tautulli_docker_host_domain: "{{ veggie_base_domain_name }}"
-tautulli_docker_web_port: "8181"
+tautulli_network_name: "tautulli"
+tautulli_network_internal: "no"
+tautulli_network_scope: "local"
+tautulli_network_subnet: "172.100.7.0/24"
+tautulli_network_gateway: "172.100.7.1"
+tautulli_web_port: "8181"
+
 
 ###
 ### Telegraf
@@ -1052,7 +1045,7 @@ traefik_extra_networks:
   - name: "{{ resilio_docker_network }}"
   - name: "{{ restic_rest_server_network_name }}"
   - name: "{{ servarr_docker_network }}"
-  - name: "{{ tautulli_docker_network }}"
+  - name: "{{ tautulli_network_name }}"
   - name: "{{ unific_network_name }}"
 
 ###

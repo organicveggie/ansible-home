@@ -1,0 +1,31 @@
+- name: "Setup Tautulli container"
+  hosts: nas
+  remote_user: "sean"
+  become: yes
+
+  roles:
+    - role: "docker_networks"
+      vars:
+        organicveggie_docker_networks:
+          - name: "{{ tautulli_network_name }}"
+            enable_ipv6: "no"
+            internal: "{{ tautulli_network_internal }}"
+            scope: "{{ tautulli_network_scope }}"
+            subnet: "{{ tautulli_network_subnet }}"
+            gateway: "{{ tautulli_network_gateway }}"
+      tags: ["docker", "network", "networks"]
+
+    - role: "organicveggie.tautulli_docker"
+      vars:
+        tautulli_docker_host_domain: "{{ veggie_base_domain_name }}"
+        tautulli_docker_name: "tautulli"
+        tautulli_docker_network_create: false
+        tautulli_docker_network: "{{ tautulli_network_name }}"
+        tautulli_docker_network_internal: "{{ tautulli_network_internal }}"
+        tautulli_docker_network_scope: "{{ tautulli_network_scope }}"
+        tautulli_docker_network_subnet: "{{ tautulli_network_subnet }}"
+        tautulli_docker_network_gateway: "{{ tautulli_network_gateway }}"
+        tautulli_docker_timezone: "{{ home_timezone }}"
+        tautulli_docker_web_port: "{{ tautulli_web_port }}"
+        tautulli_docker_available_externally: "true"
+      tags: ["tautulli", "docker"]
