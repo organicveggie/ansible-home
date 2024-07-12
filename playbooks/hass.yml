@@ -3,18 +3,21 @@
   hosts: nas
   remote_user: sean
   become: yes
+  
+  pre_tasks:
+  - name: "Setup Home Assistant Docker network"
+    community.docker.docker_network:
+      name: "{{ hass_network_name }}"
+      driver: "bridge"
+      enable_ipv6: "no"
+      internal: "no"
+      scope: "local"
+      ipam_config:
+        - subnet: "{{ hass_network_subnet }}"
+          gateway: "{{ hass_network_gateway }}"
+    tags: ["docker", "network", "networks"]
+  
   roles:
-    - role: "docker_networks"
-      vars:
-        organicveggie_docker_networks:
-          - name: "{{ hass_network_name }}"
-            enable_ipv6: "no"
-            internal: "no"
-            scope: "local"
-            subnet: "{{ hass_network_subnet }}"
-            gateway: "{{ hass_network_gateway }}"
-      tags: ["docker", "network", "networks"]
-
     - role: "hass_postgres_setup"
       vars:
         pgsql_init_tempates_dir: "{{ hass_docker_pgsql_init_tempates_dir }}"

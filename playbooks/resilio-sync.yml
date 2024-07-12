@@ -45,17 +45,18 @@
           group: "media_writer"
       tags: ["setup", "directories", "folders"]
 
-  roles:
-    - role: "docker_networks"
-      vars:
-        organicveggie_docker_networks:
-          - name: "{{ resilio_docker_network }}"
-            enable_ipv6: "no"
-            internal: "no"
-            scope: "local"
-            subnet: "{{ resilio_docker_network_subnet }}"
+    - name: "Setup Resilio Docker network"
+      community.docker.docker_network:
+        name: "{{ resilio_docker_network_name }}"
+        driver: "bridge"
+        enable_ipv6: "no"
+        internal: "no"
+        scope: "local"
+        ipam_config:
+          - subnet: "{{ resilio_docker_network_subnet }}"
             gateway: "{{ resilio_docker_network_gateway }}"
       tags: ["docker", "network", "networks"]
 
+  roles:
     - role: "organicveggie.resilio_sync_docker"
       tags: ["resilio"]

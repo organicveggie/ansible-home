@@ -4,17 +4,19 @@
   remote_user: sean
   become: yes
 
-  roles:
-    - role: "docker_networks"
-      vars:
-        organicveggie_docker_networks:
-          - name: "{{ nodered_docker_network_name }}"
-            enable_ipv6: "no"
-            internal: "no"
-            scope: "local"
-            subnet: "{{ nodered_docker_network_subnet }}"
+  pre_tasks:
+    - name: "Setup Node-RED Docker network"
+      community.docker.docker_network:
+        name: "{{ nodered_docker_network_name }}"
+        driver: "bridge"
+        enable_ipv6: "no"
+        internal: "no"
+        scope: "local"
+        ipam_config:
+          - subnet: "{{ nodered_docker_network_subnet }}"
             gateway: "{{ nodered_docker_network_gateway }}"
       tags: ["docker", "network", "networks"]
 
+  roles:
     - role: "nodered"
       tags: ["nodered"]

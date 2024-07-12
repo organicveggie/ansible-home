@@ -27,18 +27,20 @@
         uid: "{{ calibre_web_docker_uid }}"
       tags: ["setup", "users"]
 
-  roles:
-    - role: "docker_networks"
-      vars:
-        organicveggie_docker_networks:
-          - name: "{{ calibre_web_docker_network }}"
-            enable_ipv6: "no"
-            internal: "no"
-            scope: "local"
-            subnet: "{{ calibre_web_docker_network_subnet }}"
+  pre_tasks:
+    - name: "Setup Calibre Web Docker network"
+      community.docker.docker_network:
+        name: "{{ calibre_web_docker_network }}"
+        driver: "bridge"
+        enable_ipv6: "no"
+        internal: "no"
+        scope: "local"
+        ipam_config:
+          - subnet: "{{ calibre_web_docker_network_subnet }}"
             gateway: "{{ calibre_web_docker_network_gateway }}"
       tags: ["docker", "network", "networks"]
 
+  roles:
     - role: "organicveggie.calibre_web_docker"
       vars:
         calibre_web_docker_extra_networks:

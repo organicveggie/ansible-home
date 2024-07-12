@@ -3,18 +3,20 @@
   remote_user: "sean"
   become: yes
 
-  roles:
-    - role: "docker_networks"
-      vars:
-        organicveggie_docker_networks:
-          - name: "{{ kometa_network_name }}"
-            enable_ipv6: "no"
-            internal: "no"
-            scope: "local"
-            subnet: "{{ kometa_network_subnet }}"
+  pre_tasks:
+    - name: "Setup Kometa Docker network"
+      community.docker.docker_network:
+        name: "{{ kometa_network_name }}"
+        driver: "bridge"
+        enable_ipv6: "no"
+        internal: "no"
+        scope: "local"
+        ipam_config:
+          - subnet: "{{ kometa_network_subnet }}"
             gateway: "{{ kometa_network_gateway }}"
       tags: ["docker", "network", "networks"]
 
+  roles:
     - role: "organicveggie.kometa"
       vars:
         # kometa_docker_run_once_only: "true"

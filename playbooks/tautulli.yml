@@ -3,18 +3,20 @@
   remote_user: "sean"
   become: yes
 
-  roles:
-    - role: "docker_networks"
-      vars:
-        organicveggie_docker_networks:
-          - name: "{{ tautulli_network_name }}"
-            enable_ipv6: "no"
-            internal: "{{ tautulli_network_internal }}"
-            scope: "{{ tautulli_network_scope }}"
-            subnet: "{{ tautulli_network_subnet }}"
+  pre_tasks:
+    - name: "Setup Tautulli Docker network"
+      community.docker.docker_network:
+        name: "{{ tautulli_network_name }}"
+        driver: "bridge"
+        enable_ipv6: "no"
+        internal: "{{ tautulli_network_internal }}"
+        scope: "{{ tautulli_network_scope }}"
+        ipam_config:
+          - subnet: "{{ tautulli_network_subnet }}"
             gateway: "{{ tautulli_network_gateway }}"
       tags: ["docker", "network", "networks"]
 
+  roles:
     - role: "organicveggie.tautulli_docker"
       vars:
         tautulli_docker_host_domain: "{{ veggie_base_domain_name }}"

@@ -3,6 +3,19 @@
   remote_user: "sean"
   become: yes
 
+  pre_tasks:
+    - name: "Setup Navidrome Docker network"
+      community.docker.docker_network:
+        name: "{{ navidrome_network_name }}"
+        driver: "bridge"
+        enable_ipv6: "no"
+        internal: "no"
+        scope: "local"
+        ipam_config:
+          - subnet: "{{ navidrome_network_subnet }}"
+            gateway: "{{ navidrome_network_gateway }}"
+      tags: ["docker", "network", "networks"]
+
   roles:
     - role: "docker_networks"
       vars:
