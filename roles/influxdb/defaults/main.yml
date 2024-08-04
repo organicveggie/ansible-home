@@ -1,4 +1,0 @@
----
-# defaults for InfluxDB
-influxdb_admin_username: admin
-influxdb_admin_password: secret

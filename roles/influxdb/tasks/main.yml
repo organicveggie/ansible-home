@@ -1,9 +1,0 @@
-- import_tasks: influxdb-install.yml
-  tags:
-    - influxdb
-    - influxdb:install
-
-- import_tasks: influxdb-config.yml
-  tags:
-    - influxdb
-    - influxdb:config
