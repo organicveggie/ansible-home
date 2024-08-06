@@ -689,12 +689,14 @@ radarr_docker_host_domain: "{{ veggie_nas_domain_name }}"
 radarr_docker_movie_source_path: "/mnt/nas/data/videos/movies"
 radarr_docker_web_port: "7878"
 
+radarr1080_docker_api_key: "{{ vault_radarr1080_api_key }}"
 radarr1080_docker_host_name: "radarr1080"
 radarr1080_docker_name: "radarr1080"
 radarr1080_docker_volume_config_name: "radarr1080-config"
 radarr1080_docker_network_aliases:
   - "radarr1080"
 
+radarr4k_docker_api_key: "{{ vault_radarr4k_api_key }}"
 radarr4k_docker_host_name: "radarr4k"
 radarr4k_docker_name: "radarr4k"
 radarr4k_docker_volume_config_name: "radarr4k-config"
@@ -851,12 +853,14 @@ sonarr_docker_host_domain: "{{ veggie_nas_domain_name }}"
 sonarr_docker_tv_source_path: "/mnt/nas/data/videos/tv"
 sonarr_docker_web_port: "8989"
 
+sonarr1080_docker_api_key: "{{ vault_sonarr1080_api_key }}"
 sonarr1080_docker_host_name: "sonarr1080"
 sonarr1080_docker_name: "sonarr1080"
 sonarr1080_docker_volume_config_name: "sonarr1080-config"
 sonarr1080_docker_network_aliases:
   - "sonarr1080"
 
+sonarr4k_docker_api_key: "{{ vault_sonarr4k_api_key }}"
 sonarr4k_docker_host_name: "sonarr4k"
 sonarr4k_docker_name: "sonarr4k"
 sonarr4k_docker_volume_config_name: "sonarr4k-config"
