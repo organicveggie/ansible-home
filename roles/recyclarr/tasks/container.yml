@@ -1,0 +1,35 @@
+---
+- name: "Set Docker mount list for volume mounts"
+  ansible.builtin.set_fact:
+    _fact_recylarr_docker_mount_list:
+      - source: "{{ recylarr_docker_volume_name }}"
+        target: "/config"
+        type: "volume"
+
+- name: "Define all Docker networks for this container"
+  ansible.builtin.set_fact:
+    _fact_recylarr_docker_all_networks: "{{ recylarr_docker_extra_networks }}"
+
+- name: "Create Recyclarr Docker container" # noqa: args[module]
+  community.docker.docker_container:
+    name: "{{ recylarr_docker_name }}"
+    image: "{{ recylarr_docker_image_name }}:{{ recylarr_docker_image_version }}"
+    pull: true
+    env: 
+      "CRON_SCHEDULE": "{{ recyclarr_docker_cron }}"
+      "TZ": "{{ recyclarr_docker_timezone }}"
+    mounts: "{{ _fact_recylarr_docker_mount_list }}"
+    network_mode: "{{ recylarr_docker_network }}"
+    networks: "{{ _fact_recylarr_docker_all_networks }}"
+    restart_policy: unless-stopped
+    memory: "{{ recylarr_docker_memory }}"
+    cpus: "{{ recylarr_docker_cpus }}"
+    container_default_behavior: "no_defaults"
+    auto_remove: false
+    detach: true
+    init: true
+    interactive: false
+    paused: false
+    privileged: false
+    read_only: false
+    tty: false

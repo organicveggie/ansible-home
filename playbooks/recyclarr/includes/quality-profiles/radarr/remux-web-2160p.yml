@@ -1,0 +1,64 @@
+quality_profiles:
+  - name: "Remux + WEB 2160p"
+    qualities:
+      - name: "Remux2160p"
+      - name: "WEBDL-2160p"
+      - name: "WEBRip-2160p"
+
+      - name: "Bluray-2160p"
+        enabled: false
+      - name: "Raw-HD"
+        enabled: false
+      - name: "BR-DISK"
+        enabled: false
+      - name: "HDTV-2160p"
+        enabled: false
+      - name: "Remux-1080p"
+        enabled: false
+      - name: "Bluray-1080p"
+        enabled: false
+      - name: "WEB 1080p"
+        qualities:
+          - name: "WEBRip-1080p"
+          - name: "WEBDL-1080p"
+        enabled: false
+      - name: "HDTV-1080p"
+        enabled: false
+      - name: "Bluray 720p"
+        enabled: false
+      - name: "WEB 720p"
+        qualities:
+          - name: "WEBRip-720p"
+          - name: "WEBDL-720p"
+        enabled: false
+      - name: "HDTV-720p"
+        enabled: false
+      - name: "Bluray 576p"
+        enabled: false
+      - name: "Bluray 480p"
+        enabled: false
+      - name: "WEB 480p"
+        qualities:
+          - name: "WEBRip-480p"
+          - name: "WEBDL-480p"
+        enabled: false
+      - name: "DVD-R"
+        enabled: false
+      - name: "DVD"
+        enabled: false
+      - name: "SDTV"
+        enabled: false
+      - name: "DVDSCR"
+        enabled: false
+      - name: "REGIONAL"
+        enabled: false
+      - name: "TELECINE"
+        enabled: false
+      - name: "TELESYNC"
+        enabled: false
+      - name: "CAM"
+        enabled: false
+      - name: "WORKPRINT"
+        enabled: false
+      - name: "Unknown"
+        enabled: false

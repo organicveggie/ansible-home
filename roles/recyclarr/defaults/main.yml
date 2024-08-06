@@ -1,0 +1,70 @@
+---
+#####
+# Recyclarr settings
+#####
+
+# Standard cron syntax for how often you want Recyclarr to run.
+recyclarr_docker_cron: "@daily"
+
+# The time zone you want to use for Recyclarr's local time in the container.
+recyclarr_docker_timezone: "America/Santiago"
+
+recyclarr_docker_config_template: "templates/recyclarr.yml.j2"
+
+recyclarr_docker_config_includes: []
+
+#####
+# Container settings
+#####
+
+# Name of the Docker container.
+recyclarr_docker_name: "recyclarr"
+
+# Base name of the Docker image to use for the container.
+recyclarr_docker_image_name: "ghcr.io/recyclarr/recyclarr"
+
+# Specific Docker image version to use for the container.
+recyclarr_docker_image_version: "latest"
+
+# Number of vCPUs to allocate to the container.
+recyclarr_docker_cpus: "1"
+
+# Amount of memory to allocate to the container.
+recyclarr_docker_memory: "512M"
+
+# User and Group ID you want to run the container as. Recyclarr will run
+# using this UID:GID and any files it creates in your /config volume will
+# also be owned by this user and group. The default for this, if not
+# specified, is 1000:1000.
+recyclarr_docker_uid: null
+recyclarr_docker_gid: null
+
+#####
+# Docker networks
+#####
+
+# Name of the default Docker network for the container. The container will *always* attach to this
+# network.
+recyclarr_docker_network: "recyclarr"
+
+# List of additional networks the container should attach to. Elements should be dictionaries like
+# https://docs.ansible.com/ansible/latest/collections/community/docker/docker_container_module.html#parameter-networks.
+recyclarr_docker_extra_networks: []
+
+# List of aliases for this container in the default network. These names can be used in the default
+# network to reach this container.
+recyclarr_docker_network_aliases: []
+
+# The container’s IPv4 address in the default network. Defaults to using DHCP.
+recyclarr_docker_network_ipv4: null
+
+# The container’s IPv6 address in the default network. Defaults to using DHCP. Only applies if
+# IPv6 is enabled in the default network.
+recyclarr_docker_network_ipv6: null
+
+#####
+# Docker volumes and folders
+#####
+
+# Name of the Docker volume to create to store data files.
+recyclarr_docker_volume_name: "recyclarr-config"

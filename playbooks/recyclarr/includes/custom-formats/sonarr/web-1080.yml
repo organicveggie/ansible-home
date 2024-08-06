@@ -1,0 +1,60 @@
+custom_formats:
+  - trash_ids:
+      - "e6258996055b9fbab7e9cb2f75819294" # WEB Tier 01
+    quality_profiles:
+      - name: "WEB-1080p"
+        score: 1700
+
+  - trash_ids:
+      - "58790d4e2fdcd9733aa7ae68ba2bb503" # WEB Tier 02
+    quality_profiles:
+      - name: "WEB-1080p"
+        score: 1650
+
+  - trash_ids:
+      - "d84935abd3f8556dcd51d4f27e22d0a6" # WEB Tier 03
+      - "d0c516558625b04b363fa6c5c2c7cfd4" # WEB Scene
+    quality_profiles:
+      - name: "WEB-1080p"
+        score: 1600
+
+  - trash_ids:
+      - "0d7824bb924701997f874e7ff7d4844a" # TrueHD ATMOS
+    quality_profiles:
+      - name: "WEB-1080p"
+        score: 11
+
+  - trash_ids:
+      - "1808e4b9cee74e064dfae3f1db99dbfe" # TrueHD
+      - "c429417a57ea8c41d57e6990a8b0033f" # DTS-HD MA
+    quality_profiles:
+      - name: "WEB-1080p"
+        score: 10
+
+  - trash_ids:
+      - "4232a509ce60c4e208d13825b7c06264" # DD+ ATMOS
+    quality_profiles:
+      - name: "WEB-1080p"
+        score: 8
+
+  - trash_ids:
+      - "63487786a8b01b7f20dd2bc90dd4a477" # DD+
+      - "44e7c4de10ae50265753082e5dc76047" # Repack v3
+    quality_profiles:
+      - name: "WEB-1080p"
+        score: 7
+
+  - trash_ids:
+      - "9d00418ba386a083fbf4d58235fc37ef" # DTS:X
+      - "eb3d5cc0a2be0db205fb823640db6a3c" # Repack v2
+    quality_profiles:
+      - name: "WEB-1080p"
+        score: 6
+
+  - trash_ids:
+      - "dbe00161b08a25ac6154c55f95e6318d" # DD
+      - "5964f2a8b3be407d083498e4459d05d0" # DTS
+      - "ec8fa7296b64e8cd390a1600981f3923" # Repack/Proper
+    quality_profiles:
+      - name: "WEB-1080p"
+        score: 5

@@ -1,0 +1,34 @@
+---
+- name: "Create recylarr config Docker volume"
+  community.docker.docker_volume:
+    name: "{{ recyclarr_docker_volume_name }}"
+
+- name: "Get info on Docker volume"
+  community.docker.docker_volume_info:
+    name: "{{ recyclarr_docker_volume_name }}"
+  register: "_fact_recyclarr_docker_volume_info"
+
+- name: "Build target path to Docker volume"
+  ansible.builtin.set_fact:
+    _fact_recyclarr_docker_conf_folder:
+      "{{ _fact_recyclarr_docker_volume_info['volume']['Mountpoint'] }}"
+
+- name: "Assemble list of config file subdirectory names"
+  ansible.builtin.set_fact:
+    _fact_recyclarr_config_dirs:
+      "{{ _fact_recyclarr_config_dirs | default([]) | union([item | dirname])}}"
+  loop: "{{ recyclarr_docker_config_includes }}"
+
+- name: "Create config file subdirectories"
+  ansible.builtin.file:
+    mode: "0640"
+    path: "{{ _fact_recyclarr_docker_conf_folder }}/{{ item }}"
+    recurse: true
+    state: "directory"
+  loop: "{{ _fact_recyclarr_config_dirs }}"
+
+- name: "Create config file"
+  ansible.builtin.template:
+    dest: "{{ _fact_recyclarr_docker_conf_folder }}/recyclarr.yml"
+    mode: "0640"
+    src: "{{ recyclarr_docker_config_template }}"

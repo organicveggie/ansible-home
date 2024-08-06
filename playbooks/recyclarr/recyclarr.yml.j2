@@ -1,0 +1,118 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/recyclarr/recyclarr/master/schemas/config-schema.json
+
+radarr:
+  radarr1080:
+    base_url: "http://{{ radarr1080_docker_host_name }}:{{ radarr_docker_web_port }}"
+    api_key: "{{ radarr1080_docker_api_key }}"
+    delete_old_custom_formats: false
+    replace_existing_custom_formats: true
+    include:
+      - config: "custom-formats/radarr-1080p.yml"
+      - config: "quality-definitions/radarr-movie.yml"
+      - config: "quality-profiles/radarr/any-prefer-remux-1080p.yml"
+      - config: "quality-profiles/radarr/remux-web-1080p.yml"
+
+    quality_profiles:
+      - name: "Any (Prefer Remux + WEB 1080p)"
+        upgrade:
+          allowed: true
+          until_quality: "Remux-1080p"
+          until_score: 10000
+        min_format_score: 0
+      - name: "Remux + WEB 1080p"
+        upgrade:
+          allowed: true
+          until_quality: "Remux-1080p"
+          until_score: 10000
+        min_format_score: 0
+
+  radarr4k:
+    base_url: http://{{ radarr4k_docker_host_name }}:{{ radarr_docker_web_port }}
+    api_key: { { radarr4k_docker_api_key } }
+    delete_old_custom_formats: false
+    replace_existing_custom_formats: true
+    include:
+      - config: "custom-formats/radarr-2160p.yml"
+      - config: "quality-definitions/radarr-movie.yml"
+      - config: "quality-profiles/radarr-2160p-remux-hdr-sdr.yml"
+      - config: "quality-profiles/radarr-remux-web-2160p.yml"
+
+    quality_profiles:
+      - name: "2160p Remux HDR, WEB HDR, or WEB SDR"
+        upgrade:
+          allowed: true
+          until_quality: "WEBDL-2160p"
+          until_score: 10000
+        min_format_score: 0
+      - name: "Remux + WEB 2160p"
+        upgrade:
+          allowed: true
+          until_quality: "WEBDL-2160p"
+          until_score: 10000
+        min_format_score: 0
+
+sonarr:
+  sonarr1080:
+    base_url: http://{{ sonarr1080_docker_host_name }}:{{ sonarr_docker_web_port }}
+    api_key: { { sonarr1080_docker_api_key } }
+    delete_old_custom_formats: false
+    replace_existing_custom_formats: true
+    include:
+      - config: "custom-formats/sonarr/any-1080.yml"
+      - config: "custom-formats/sonarr/common-1080.yml"
+      - config: "custom-formats/sonarr/web-1080.yml"
+      - config: "custom-formats/sonarr/web-1080-480.yml"
+      - config: "custom-formats/sonarr/web-1080-bluray.yml"
+      - config: "quality-definitions/sonarr-tv.yml"
+      - config: "quality-profiles/sonarr/any-1080.yml"
+      - config: "quality-profiles/sonarr/web-1080-480.yml"
+      - config: "quality-profiles/sonarr/web-1080-bluray.yml"
+      - config: "quality-profiles/sonarr/web-1080.yml"
+
+    quality_profiles:
+      - name: "WEB-1080p"
+        upgrade:
+          allowed: true
+          until_quality: "WEB-1080p"
+          until_score: 10000
+        min_format_score: 0
+      - name: "WEB-1080p (480p)"
+        upgrade:
+          allowed: true
+          until_quality: "WEB-1080p"
+          until_score: 10000
+        min_format_score: 0
+      - name: "WEB-1080p + Bluray"
+        upgrade:
+          allowed: true
+          until_quality: "WEB-1080p"
+          until_score: 10000
+        min_format_score: 0
+      - name: "Any"
+        upgrade:
+          allowed: true
+          until_quality: "WEB-1080p"
+          until_score: 10000
+        min_format_score: 0
+
+  sonarr4k:
+    base_url: http://{{ sonarr4k_docker_host_name }}:{{ sonarr_docker_web_port }}
+    api_key: { { sonarr4k_docker_api_key } }
+    delete_old_custom_formats: false
+    replace_existing_custom_formats: true
+    include:
+      - config: "quality-definitions/sonarr-tv.yml"
+
+    quality_profiles:
+      - name: "WEB-2160p"
+        upgrade:
+          allowed: true
+          until_quality: "WEB-2160p"
+          until_score: 10000
+        min_format_score: 0
+      - name: "WEB-2160p + Bluray"
+        upgrade:
+          allowed: true
+          until_quality: "WEB-2160p"
+          until_score: 10000
+        min_format_score: 0
