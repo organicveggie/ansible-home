@@ -222,9 +222,9 @@ veggie_nas_retropie_password: "{{ vault_nas_retropie_password }}"
 ###
 ### Navidrome
 ###
-navidrome_network_name: "{{ navidrome_network_name }}"
-navidrome_network_subnet: "{{ navidrome_network_subnet }}"
-navidrome_network_gateway: "{{ navidrome_network_gateway }}"
+navidrome_network_name: "{{ vault_navidrome_network_name }}"
+navidrome_network_subnet: "{{ vault_navidrome_network_subnet }}"
+navidrome_network_gateway: "{{ vault_navidrome_network_gateway }}"
 
 navidrome_host_domain: "{{ veggie_base_domain_name }}"
 navidrome_lastfm_apikey: "{{ vault_navidrome_lastfm_apikey }}"
