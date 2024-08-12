@@ -35,7 +35,6 @@
         - skip_ansible_lint
     - role: portainer
     - role: time_machine
-    # - role: influxdb_docker
     - role: stefangweichinger.ansible_rclone
       tags:
         - rclone
