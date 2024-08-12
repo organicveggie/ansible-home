@@ -27,7 +27,6 @@
         uid: "{{ calibre_web_docker_uid }}"
       tags: ["setup", "users"]
 
-  pre_tasks:
     - name: "Setup Calibre Web Docker network"
       community.docker.docker_network:
         name: "{{ calibre_web_docker_network }}"
