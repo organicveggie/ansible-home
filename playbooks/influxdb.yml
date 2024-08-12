@@ -1,0 +1,27 @@
+---
+- name: "Setup InfluxDB"
+  hosts: nas
+  remote_user: "sean"
+  become: yes
+
+  roles:
+    - role: "docker_networks"
+      vars:
+        organicveggie_docker_networks:
+          - name: "influxdb27"
+            enable_ipv6: "no"
+            internal: "no"
+            scope: "local"
+            subnet: "172.100.18.0/24"
+            gateway: "172.100.18.1"
+      tags: ["docker", "network", "networks"]
+
+    - role: "influxdb2_docker"
+      vars:
+        influxdb_docker_name: "influxdb27"
+        influxdb_docker_network: "influxdb27"
+        influxdb_docker_config_volume_name: "influxdb27-config"
+        influxdb_docker_data_volume_name: "influxdb27-data"
+        influxdb_docker_hostname: "influxdb"
+        influxdb_docker_host_domain: "{{ influxdb_host_domain }}"
+      tags: ["docker", "influxdb", "influxdb27"]

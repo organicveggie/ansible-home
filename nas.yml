@@ -35,7 +35,7 @@
         - skip_ansible_lint
     - role: portainer
     - role: time_machine
-    - role: influxdb_docker
+    # - role: influxdb_docker
     - role: stefangweichinger.ansible_rclone
       tags:
         - rclone
@@ -88,6 +88,9 @@
 
 - ansible.builtin.import_playbook: "playbooks/servarr.yml"
   tags: ["servarr"]
+
+- ansible.builtin.import_playbook: "playbooks/influxdb.yml"
+  tags: ["influxdb"]
 
 ##########
 # Traefik - Needs to be last so all of the networks exist

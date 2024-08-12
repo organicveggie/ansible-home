@@ -168,18 +168,7 @@ hass_docker_pgsql_init_tempates_dir: "/mnt/nas/hass/pgsql"
 ###
 ### InfluxDB
 ###
-influxdb_docker_host_domain: "{{ veggie_nas_domain_name }}"
-influxdb_docker_conf_dir: "/mnt/nas/influxdb/etc"
-influxdb_docker_zfs_filesystems:
-  - "nas/influxdb"
-  - "nas/influxdb/etc"
-influxdb_docker_superuser_name: "{{ influxdb_admin_user }}"
-influxdb_docker_superuser_password: "{{ influxdb_admin_password }}"
-influxdb_docker_superuser_org: "{{ influxdb_admin_org }}"
-influxdb_docker_superuser_token: "{{ influxdb_admin_token }}"
-influxdb_docker_init_bucket: "admin"
-influxdb_docker_image_version: "2.7"
-influxdb_network_name: "influxdb"
+influxdb_host_domain: "{{ veggie_nas_domain_name }}"
 
 ###
 ### Let's Encrypt / Certbot
@@ -1051,6 +1040,7 @@ traefik_extra_networks:
   - name: "{{ servarr_docker_network }}"
   - name: "{{ tautulli_network_name }}"
   - name: "{{ unific_network_name }}"
+  - name: "influxdb27"
 
 ###
 ### TRaSH Guides

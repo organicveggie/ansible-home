@@ -1,0 +1,8 @@
+---
+- name: "Create InfluxDB config Docker volume"
+  community.docker.docker_volume:
+    name: "{{ influxdb_docker_config_volume_name }}"
+
+- name: "Create InfluxDB data Docker volume"
+  community.docker.docker_volume:
+    name: "{{ influxdb_docker_data_volume_name }}"
