@@ -169,6 +169,9 @@ hass_docker_pgsql_init_tempates_dir: "/mnt/nas/hass/pgsql"
 ### InfluxDB
 ###
 influxdb_host_domain: "{{ veggie_nas_domain_name }}"
+influxdb_url: "https://influxdb.{{ influxdb_host_domain }}"
+influxdb_telegraf_token: "{{ vault_influxdb_telegraf_token }}"
+influxdb_admin_org: "{{ vault_influxdb_admin_org }}"
 
 ###
 ### Let's Encrypt / Certbot
