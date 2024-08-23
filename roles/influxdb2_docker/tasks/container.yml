@@ -76,6 +76,7 @@
     container_default_behavior: "no_defaults"
     auto_remove: false
     detach: true
+    image_name_mismatch: "ignore"
     init: true
     interactive: false
     paused: false
