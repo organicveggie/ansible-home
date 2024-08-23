@@ -3,3 +3,4 @@ collections:
   - name: community.aws
   - name: community.docker
   - name: vladgh.samba
+    version: ">=3.1.1"

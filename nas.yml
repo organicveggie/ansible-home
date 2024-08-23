@@ -25,10 +25,6 @@
     - role: veggie_common
     - role: docker_networks
     - role: veggie_nas
-    - role: vladgh.samba.server
-      tags:
-        - samba
-        - skip_ansible_lint
     - role: geerlingguy.nfs
       tags:
         - nfs_server
@@ -54,6 +50,9 @@
 
     # Telegraf
     - role: telegraf
+
+- ansible.builtin.import_playbook: "playbooks/samba.yml"
+  tags: ["samba"]
 
 - ansible.builtin.import_playbook: "playbooks/media-storage/media-storage.yml"
   tags: ["media", "media-storage"]
