@@ -1,0 +1,14 @@
+---
+- name: "Setup users and groups"
+  hosts: nas
+  remote_user: "sean"
+  become: true
+
+  roles:
+    - role: "groupadd"
+      vars:
+        user_groups: "{{ nas_groups }}"
+
+    - role: "organicveggie.ansible-users"
+      vars:
+        users_list_host: "{{ nas_users }}"

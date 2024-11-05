@@ -2,60 +2,68 @@
 - name: "Setup Veggie NAS"
   hosts: "veggie_nas"
   become: yes
-  vars_files:
-    - "vars/user_groups"
-    - "vars/users"
-  roles:
-    - role: groupadd
-    - role: organicveggie.ansible-users
-      tags:
-        - users
-        - skip_ansible_lint
-    - role: organicveggie.folders
-      tags:
-        - folders
-        - skip_ansible_lint
-    - role: geerlingguy.pip
-      tags:
-        - pip
-    - role: geerlingguy.docker
-      tags:
-        - docker
-        - skip_ansible_lint
-    - role: veggie_common
-    - role: docker_networks
-    - role: veggie_nas
-    - role: geerlingguy.nfs
-      tags:
-        - nfs_server
-        - skip_ansible_lint
-    - role: portainer
-    - role: time_machine
-    - role: stefangweichinger.ansible_rclone
-      tags:
-        - rclone
-        - skip_ansible_lint
-    - role: nickhammond.logrotate
-      tags:
-        - logrotate
-        - skip_ansible_lint
-    - role: veggie_nas_rclone
-    - role: organicveggie.certbot-route53
-    - role: restic_rest_server
-    - role: grafana_docker
-    - role: photoprism
-    - role: organicveggie.unific
-      tags:
-        - unific
+  ## vars_files:
+  ##   - "vars/user_groups"
+  ##   - "vars/users"
+  # roles:
+  ###   - role: organicveggie.ansible-users
+  ###     tags:
+  ###       - users
+  ###       - skip_ansible_lint
+  ###   - role: organicveggie.folders
+  ###     tags:
+  ###       - folders
+  ###       - skip_ansible_lint
+  ###   - role: geerlingguy.pip
+  ###     tags:
+  ###       - pip
+  ###   - role: geerlingguy.docker
+  ###     tags:
+  ###       - docker
+  ###       - skip_ansible_lint
+  ###   - role: veggie_common
+  #   - role: docker_networks
+  ###   - role: veggie_nas
+  #   - role: geerlingguy.nfs
+  #     tags:
+  #       - nfs_server
+  #       - skip_ansible_lint
+  ###   - role: portainer
+  #   - role: time_machine
+    # - role: stefangweichinger.ansible_rclone
+    #   tags:
+    #     - rclone
+    #     - skip_ansible_lint
+  ### - role: nickhammond.logrotate
+  ###   tags:
+  ###     - logrotate
+  ###     - skip_ansible_lint
+    # - role: veggie_nas_rclone
+    # - role: organicveggie.certbot-route53
+    # - role: restic_rest_server
+    # - role: grafana_docker
+    # - role: photoprism
+    # - role: organicveggie.unific
+    #   tags:
+    #     - unific
 
     # Telegraf
-    - role: telegraf
+    # - role: telegraf
 
-- ansible.builtin.import_playbook: "playbooks/samba.yml"
+- ansible.builtin.import_playbook: "nas-users-groups.yml"
+  tags: ["users", "groups"]
+
+- ansible.builtin.import_playbook: "common.yml"
+  tags: ["common"]
+
+- ansible.builtin.import_playbook: "docker.yml"
+  tags: ["docker", "portainer"]
+
+- ansible.builtin.import_playbook: "samba.yml"
   tags: ["samba"]
 
-- ansible.builtin.import_playbook: "playbooks/media-storage/media-storage.yml"
-  tags: ["media", "media-storage"]
+# - ansible.builtin.import_playbook: "playbooks/media-storage/media-storage.yml"
+#   tags: ["media", "media-storage"]
 
 - ansible.builtin.import_playbook: "playbooks/calibre-web.yml"
   tags: ["calibre", "calibre-web", "calibre-web"]
@@ -93,5 +101,5 @@
 ##########
 # Traefik - Needs to be last so all of the networks exist
 ##########
-- ansible.builtin.import_playbook: "playbooks/traefik.yml"
+- ansible.builtin.import_playbook: "traefik.yml"
   tags: ["traefik"]

@@ -1,0 +1,49 @@
+---
+- name: "Setup Python"
+  hosts: nas
+  remote_user: "sean"
+  become: true
+
+  roles:
+    - role: "veggie_common"
+      vars:
+        veggie_common_hostname: "{{ veggie_nas_domain_name }}"
+        veggie_common_timezone: "{{ home_timezone }}"
+        veggie_common_admin_username: "{{ veggie_nas_admin_username }}"
+        veggie_common_admin_passwd: "{{ veggie_nas_admin_passwd }}"
+        veggie_common_extra_packages:
+          - "smartmontools"
+          - "htop"
+          - "zfsutils-linux"
+          - "bonnie++"
+          - "unzip"
+          - "lm-sensors"
+          # TODO: https://github.com/bcicen/ctop?tab=readme-ov-file#install
+          # - "ctop"
+          - "mbuffer"
+          - "net-tools"
+          - "screen"
+          - "tmux"
+      tags:
+        - "common"
+
+    - role: "veggie_nas"
+      vars:
+        veggie_nas_samba_groups: "{{ samba_groups }}"
+      tags:
+        - "samba"
+
+    - role: "nickhammond.logrotate"
+      vars:
+        logrotate_scripts:
+          - name: "rclone"
+            path: "/var/log/rclone.log"
+            options:
+              - "daily"
+              - "rotate 7"
+              - "missingok"
+              - "compress"
+              - "delaycompress"
+              - "copytruncate"
+      tags:
+        - logrotate

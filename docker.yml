@@ -1,0 +1,19 @@
+---
+- name: "Setup Python"
+  hosts: nas
+  remote_user: "sean"
+  become: true
+
+  roles:
+    - role: "geerlingguy.pip"
+      tags:
+        - "pip"
+
+    - role: "geerlingguy.docker"
+      tags:
+        - "docker"
+
+    - role: "portainer"
+      tags:
+        - "portainer"
+  

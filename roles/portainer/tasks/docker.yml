@@ -1,12 +1,11 @@
 ---
-- name: Create Portainer Directories
+- name: "Create Portainer config directory"
   ansible.builtin.file:
-    path: "{{ item }}"
-    state: directory
-  with_items:
-    - "{{ portainer_data_directory }}"
-  
-- name: Portainer Docker Volume
+    path: "{{ portainer_data_directory }}"
+    state: "directory"
+    mode: "0770"
+
+- name: "Portainer Docker Volume"
   community.docker.docker_volume:
     name: "{{ portainer_docker_volume_name }}"
     driver_options:
@@ -14,10 +13,10 @@
       device: "{{ portainer_data_directory }}"
       o: "bind"
 
-- name: Portainer Docker Container
+- name: "Portainer Docker Container"
   community.docker.docker_container:
-    name: portainer
-    image: portainer/portainer-ce:latest
+    name: "portainer"
+    image: "portainer/portainer-ce:latest"
     pull: true
     mounts:
       - source: "{{ portainer_docker_volume_name }}"
@@ -39,14 +38,14 @@
     restart_policy: unless-stopped
     memory: "{{ portainer_memory }}"
     container_default_behavior: no_defaults
-    auto_remove: no
-    detach: yes
-    init: no
-    interactive: no
-    paused: no
-    privileged: no
-    read_only: no
-    tty: no
+    auto_remove: false
+    detach: true
+    init: false
+    interactive: false
+    paused: false
+    privileged: false
+    read_only: false
+    tty: false
     labels:
       traefik.enable: "{{ portainer_available_externally }}"
       traefik.http.routers.portainer.rule: "Host(`{{ portainer_hostname }}.{{ portainer_host_domain }}`)"
@@ -56,22 +55,22 @@
       traefik.http.services.portainer.loadbalancer.server.port: "{{ portainer_port }}"
   register: portainer_docker
 
-# - name: "Debug return values from container"
-#   ansible.builtin.debug:
-#     msg: "{{ portainer_docker.container }}"
+- name: "Debug return values from container"
+  ansible.builtin.debug:
+    msg: "{{ portainer_docker.container }}"
+  when: portainer_setup_debug
 
-- set_fact:
-    portainer_is_running: "{{ portainer_docker.container.State.Running }}"
+- ansible.builtin.set_fact:
+    _portainer_is_running: "{{ portainer_docker.container.State.Running }}"
 
-- set_fact:
-    portainer_endpoint:
-      "http://{{ portainer_docker.container.NetworkSettings.Networks.get(portainer_network_name).IPAddress }}:{{ portainer_port }}/api"
+- ansible.builtin.set_fact:
+    _portainer_endpoint: "http://{{ portainer_docker.container.NetworkSettings.Networks.get(portainer_network_name).IPAddress }}:{{ portainer_port }}/api"
 
 - name: "Check!!!"
   ansible.builtin.debug:
-    msg: "{{ portainer_is_running }} // {{ portainer_endpoint }}"
+    msg: "{{ _portainer_is_running }} // {{ _portainer_endpoint }}"
 
-- name: Check container status
+- name: "Check container status"
   ansible.builtin.fail:
-    msg: "Portainer did not start: {{ portainer_is_running }}"
-  when: not portainer_is_running
+    msg: "Portainer did not start: {{ _portainer_is_running }}"
+  when: not _portainer_is_running

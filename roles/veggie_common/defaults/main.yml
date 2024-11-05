@@ -1,27 +1,27 @@
 ---
-veggie_hostname: veggie-host
+veggie_common_hostname: "veggie-host"
 
 # Update all apt packages when playbook is run
-keep_packages_updated: false
+veggie_common_keep_packages_updated: false
 
 # Extra packages to install
-veggie_extra_packages:
-  - smartmontools
-  - htop
-  - zfsutils-linux
-  - bonnie++
-  - unzip
-  - lm-sensors
-  - ctop
-  - mbuffer
-  - screen
+veggie_common_extra_packages:
+  - "smartmontools"
+  - "htop"
+  - "zfsutils-linux"
+  - "bonnie++"
+  - "unzip"
+  - "lm-sensors"
+  - "ctop"
+  - "mbuffer"
+  - "screen"
 
 # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-veggie_timezone: America/Los_Angeles
+veggie_common_timezone: "America/Los_Angeles"
 
 # Password must be specified as an encrypted password:
 #   python3 -c 'import crypt,getpass;pw=getpass.getpass();print(crypt.crypt(pw) if (pw==getpass.getpass("Confirm: ")) else exit())'
-veggie_admin_username: admin
-veggie_admin_passwd: 1mGEYMWdG0wQs
-veggie_users_passwords:
-  user1: "password1"
+veggie_common_admin_username: "admin"
+veggie_common_admin_passwd: "1mGEYMWdG0wQs"
+
+veggie_common_release_name: "noble"

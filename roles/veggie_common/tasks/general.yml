@@ -1,53 +1,42 @@
 ---
-- name: Enable Universe repository
+- name: "Enable Universe repository"
   ansible.builtin.apt_repository:
-    repo: deb http://archive.ubuntu.com/ubuntu focal universe
+    repo: "deb http://archive.ubuntu.com/ubuntu {{ veggie_common_release_name }} universe"
     state: present
-    update_cache: True
+    update_cache: true
 
-- name: Update apt-cache
+- name: "Update apt-cache"
   ansible.builtin.apt:
-    update_cache: yes
+    update_cache: true
     cache_valid_time: 3600
   register: result
   until: result is succeeded
 
-- name: Upgrade all packages
+- name: "Upgrade all packages"
   ansible.builtin.apt:
     upgrade: yes
     state: latest
-  when: keep_packages_updated
-  tags:
-    - skip_ansible_lint
+  when: veggie_common_keep_packages_updated
 
-- name: Install some packages
+- name: "Install some packages"
   ansible.builtin.apt:
-    name: "{{ veggie_extra_packages }}"
+    name: "{{ veggie_common_extra_packages }}"
     state: present
   register: result
   until: result is succeeded
 
-- name: "Set hostname to {{ veggie_hostname }}"
+- name: "Set hostname to {{ veggie_common_hostname }}"
   ansible.builtin.hostname:
-    name: "{{ veggie_hostname }}"
+    name: "{{ veggie_common_hostname }}"
 
-- name: "Set timezone to {{ veggie_timezone }}"
+- name: "Set timezone to {{ veggie_common_timezone }}"
   community.general.timezone:
-    name: "{{ veggie_timezone }}"
+    name: "{{ veggie_common_timezone }}"
 
-- name: Create admin user
+- name: "Create admin user"
   ansible.builtin.user:
-    name: "{{ veggie_admin_username }}"
-    shell: /bin/bash
+    name: "{{ veggie_common_admin_username }}"
+    shell: "/bin/bash"
     state: present
-    password: "{{ veggie_admin_passwd }}"
-    update_password: on_create
-
-- name: Create additional users
-  ansible.builtin.user:
-    name: "{{ item.key }}"
-    shell: /usr/bin/false
-    state: present
-    password: "{{ item.value }}"
-    update_password: always
-  loop: "{{ veggie_users_passwords | dict2items }}"
+    password: "{{ veggie_common_admin_passwd }}"
+    update_password: "on_create"

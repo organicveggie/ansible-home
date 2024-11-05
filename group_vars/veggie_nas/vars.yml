@@ -191,16 +191,16 @@ lidarr_cpus: "2"
 ###
 ### Logrotate
 ###
-logrotate_scripts:
-  - name: rclone
-    path: "/var/log/rclone.log"
-    options:
-      - daily
-      - rotate 7
-      - missingok
-      - compress
-      - delaycompress
-      - copytruncate
+# logrotate_scripts:
+#   - name: rclone
+#     path: "/var/log/rclone.log"
+#     options:
+#       - daily
+#       - rotate 7
+#       - missingok
+#       - compress
+#       - delaycompress
+#       - copytruncate
 
 ###
 ### NAS
@@ -814,14 +814,14 @@ sabnzbd_docker_host_domain: "{{ veggie_nas_domain_name }}"
 #     group: kstar
 #     create_mode: 0740
 #     directory_mode: 0770
-veggie_nas_samba_groups:
-  - book_writer
-  - doc_writer
-  - media_writer
-  - music_writer
-  - photo_writer
-  - rom_writer
-  - source_writer
+samba_groups:
+  - "book_writer"
+  - "doc_writer"
+  - "media_writer"
+  - "music_writer"
+  - "photo_writer"
+  - "rom_writer"
+  - "source_writer"
 
 ###
 ### Servarr aka *arr
@@ -1033,7 +1033,7 @@ traefik_extra_networks:
   - name: "{{ glances_network_name }}"
   - name: "{{ grafana_network_name }}"
   - name: "{{ hass_network_name }}"
-  - name: "{{ influxdb_network_name }}"
+  # - name: "{{ influxdb_network_name }}"
   - name: "{{ navidrome_network_name }}"
   - name: "{{ nodered_docker_network_name }}"
   - name: "{{ photoprism_network_name }}"
@@ -1335,7 +1335,9 @@ unpackerr_docker_host_domain: "{{ veggie_nas_domain_name }}"
 ###
 ### Users/Groups
 ###
-users_list_host: "{{ nas_users }}"
+nas_groups: "{{ vault_nas_groups }}"
+nas_users: "{{ vault_nas_users }}"
+# users_list_host: "{{ nas_users }}"
 
 ###
 ### zwavejs2mqtt

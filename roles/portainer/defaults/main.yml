@@ -17,3 +17,5 @@ portainer_memory: 1g
 # config
 portainer_admin_user: "admin"
 portainer_admin_password: "password"
+
+portainer_setup_debug: false
