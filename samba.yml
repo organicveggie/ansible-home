@@ -22,7 +22,7 @@
             password: "{{ veggie_kstar_password }}"
         samba_shares:
           - name: "books"
-            path: "/mnt/nas/data/books"
+            path: "/mnt/nas/data/servarr/books"
             group: "book_writer"
             write_list: +book_writer
           - name: "documents"
