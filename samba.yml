@@ -59,4 +59,4 @@
             group: "kstar"
             create_mode: 0740
             directory_mode: 0770
-        tags: ["samba", "smbd"]
+      tags: ["samba", "smbd"]

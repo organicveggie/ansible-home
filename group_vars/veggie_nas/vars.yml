@@ -322,7 +322,7 @@ kometa_docker_plex_token: "{{ vault_kometa_docker_plex_token }}"
 kometa_docker_tmdb_apikey: "{{ vault_kometa_docker_tmdb_apikey }}"
 kometa_docker_tmdb_language: "en"
 kometa_docker_tmdb_region: "US"
-kometa_docker_tautulli_url: "http://{{ tautulli_docker_name }}:{{ tautulli_docker_web_port }}"
+kometa_docker_tautulli_url: "http://{{ tautulli_service_name }}:{{ tautulli_web_port }}"
 kometa_docker_tautulli_apikey: "{{ vault_kometa_docker_tautulli_apikey }}"
 kometa_docker_libraries: |2
     Movies:
@@ -874,6 +874,7 @@ tautulli_network_internal: "no"
 tautulli_network_scope: "local"
 tautulli_network_subnet: "172.100.7.0/24"
 tautulli_network_gateway: "172.100.7.1"
+tautulli_service_name: "tautulli"
 tautulli_web_port: "8181"
 
 
@@ -920,6 +921,15 @@ telegraf_plugins_extra:
 ###
 ### TimeMachine
 ###
+time_machine_data_directory: "{{ vault_time_machine_data_directory }}"
+time_machine_hostname: "{{ vault_time_machine_hostname }}"
+time_machine_network: "{{ vault_time_machine_network }}"
+time_machine_network_gateway: "{{ vault_time_machine_network_gateway }}"
+time_machine_network_ipv4: "{{ vault_time_machine_network_ipv4 }}"
+time_machine_network_parent: "{{ vault_time_machine_network_parent }}"
+time_machine_network_subnet: "{{ vault_time_machine_network_subnet }}"
+time_machine_password: "{{ vault_time_machine_password }}"
+
 timemachine_data_directory: "/mnt/nas/time-machine"
 timemachine_volume_size_limit: "768000"
 timemachine_share_name: "{{ vault_timemachine_share_name }}"

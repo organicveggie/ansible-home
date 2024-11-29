@@ -1,0 +1,32 @@
+---
+- name: "Setup TimeMachine"
+  hosts: all
+  remote_user: "sean"
+  become: true
+
+  pre_tasks:
+    - name: "Create Docker network"
+      community.docker.docker_network:
+        name: "{{ time_machine_network }}"
+        driver: "macvlan"
+        driver_options:
+          parent: "{{ time_machine_network_parent }}"
+        enable_ipv6: false
+        internal: false
+        scope: "local"
+        ipam_config:
+          - subnet: "{{ time_machine_network_subnet }}"
+            gateway: "{{ time_machine_network_gateway }}"
+
+  roles:
+    - role: "time_machine_docker"
+      vars:
+        time_machine_docker_name: "the-time-machine"
+        time_machine_docker_uid: "1311"
+        time_machine_docker_gid: "1311"
+        time_machine_docker_data_directory: "{{ time_machine_data_directory }}"
+        time_machine_docker_password: "{{ time_machine_password }}"
+        time_machine_docker_network: "{{ time_machine_network }}"
+        time_machine_docker_advertised_hostname: "{{ time_machine_hostname }}"
+        time_machine_docker_network_ipv4_addr: "{{ time_machine_network_ipv4 }}"
+      tags: ["time-machine", "timemachine"]

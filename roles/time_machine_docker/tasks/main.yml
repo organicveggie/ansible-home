@@ -1,0 +1,71 @@
+---
+- name: "Set Docker mount list"
+  ansible.builtin.set_fact:
+    _time_machine_docker_mount_list:
+      - source: "{{ time_machine_docker_data_directory }}"
+        target: "/opt/{{ time_machine_docker_user }}"
+        type: "bind"
+
+- name: "Create placeholder array for default network"
+  ansible.builtin.set_fact:
+    _time_machine_docker_default_networks:
+      - name: "{{ time_machine_docker_network }}"
+        aliases: "{{ time_machine_docker_network_aliases | default(omit) }}"
+        ipv4_address: "{{ time_machine_docker_network_ipv4_addr | default(omit) }}"
+        mac_address: "{{ time_machine_docker_network_mac_addr | default(omit) }}"
+
+- name: "Define all Docker networks for this container"
+  ansible.builtin.set_fact:
+    _time_machine_docker_all_networks: >
+      {{ _time_machine_docker_default_networks + time_machine_docker_extra_networks }}
+
+- name: "Define environment variables"
+  ansible.builtin.set_fact:
+    _time_machine_docker_all_env_vars:  "{{ _time_machine_docker_all_env_vars | default({}) |
+      combine({item.key: item.value}) }}"
+  no_log: true
+  when: item.value is defined and item.value != ''
+  with_items:
+    - key: "ADVERTISED_HOSTNAME"
+      value: "{{ time_machine_docker_advertised_hostname | default(None) }}"
+    - key: "PASSWORD"
+      value: "{{ time_machine_docker_password }}"
+    - key: "SHARE_NAME"
+      value: "{{ time_machine_docker_sharename | default(None) }}"
+    - key: "SMB_PORT"
+      value: "{{ time_machine_docker_smb_port | default(None) }}"
+    - key: "TM_USERNAME"
+      value: "{{ time_machine_docker_user }}"
+    - key: "TM_GROUPNAME"
+      value: "{{ time_machine_docker_group }}"
+    - key: "TM_UID"
+      value: "{{ time_machine_docker_uid }}"
+    - key: "TM_GID"
+      value: "{{ time_machine_docker_gid }}"
+    - key: "VOLUME_SIZE_LIMIT"
+      value: "{{ time_machine_docker_size_limit }}"
+    - key: "WORKGROUP"
+      value: "{{ time_machine_docker_workgroup | default(None) }}"
+
+- name: "Time Machine Docker Container"
+  community.docker.docker_container:
+    name: "{{ time_machine_docker_name }}"
+    image: "{{ time_machine_docker_image }}:{{ time_machine_docker_image_version }}"
+    pull: true
+    hostname: "{{ time_machine_docker_advertised_hostname | default(time_machine_docker_name) }}"
+    env: "{{ _time_machine_docker_all_env_vars }}"
+    mounts: "{{ _time_machine_docker_mount_list }}"
+    network_mode: "{{ time_machine_docker_network }}"
+    networks: "{{ _time_machine_docker_all_networks }}"
+    restart_policy: unless-stopped
+    memory: "{{ time_machine_docker_memory }}"
+    cpus: "{{ time_machine_docker_cpus }}"
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: no
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no

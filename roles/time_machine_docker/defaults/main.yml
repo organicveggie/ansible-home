@@ -1,0 +1,84 @@
+---
+#####
+# Container settings
+#####
+
+# Name of the Docker container.
+time_machine_docker_name: "time-machine"
+
+# Base name of the Docker image to use for the container.
+time_machine_docker_image: "mbentley/timemachine"
+
+# Specific Docker image version to use for the container.
+time_machine_docker_image_version: "smb"
+
+# User ID to use inside the container.
+time_machine_docker_uid: "1000"
+
+# Group ID to use inside the container.
+time_machine_docker_gid: "1000"
+
+# Where to to store the timemachine data on the host.
+time_machine_docker_data_directory: "/var/docker/data/time-machine"
+
+# Number of vCPUs to allocate to the container.
+time_machine_docker_cpus: "2"
+
+# Amount of memory to allocate to the container.
+time_machine_docker_memory: "2GB"
+
+#####
+# TimeMachine settings
+#####
+
+# The username timemachine runs as.
+time_machine_docker_user: "timemachine"
+
+# The group timemachine runs as.
+time_machine_docker_group: "timemachine"
+
+# The password for the timemachine user.
+time_machine_docker_password: "password"
+
+# Limits the size of the timemachine backups. Format: "SIZE [K|M|G|T|P]".
+#
+# IMPORTANT: This is an approximated calculation that only takes into account the contents of
+# Time Machine sparsebundle images. Therefore you MUST NOT use this folder to store other
+# content when using this option, because it would NOT be accounted.
+time_machine_docker_size_limit: "1 T"
+
+# Avahi will advertise the smb services at this hostname instead of the local hostname
+# (useful in Docker without --net=host). Do not set this if you don't know what you're doing!
+time_machine_docker_advertised_hostname: null
+
+# Sets the name of the timemachine share. Defaults to "TimeMachine".
+time_machine_docker_sharename: null
+
+# The port that Samba will be available on. Defaults to 445.
+time_machine_docker_smb_port: null
+
+# Sets the Samba workgroup name. Defaults to "WORKGROUP".
+# time_machine_docker_workgroup: "WORKGROUP"
+time_machine_docker_workgroup: null
+
+#####
+# Network settings
+#####
+
+# The name of the default network for this container.
+time_machine_docker_network: "time-machine"
+
+# List of additional networks the container should attach to. Elements should be dictionaries like
+# https://docs.ansible.com/ansible/latest/collections/community/docker/docker_container_module.html#parameter-networks.
+time_machine_docker_extra_networks: []
+
+# List of aliases for this container in the default network. These names can be used in the default
+# network to reach this container.
+time_machine_docker_network_aliases: []
+
+# The MAC address to assign to the container. Defaults to a random MAC address.
+time_machine_docker_network_mac_addr: null
+
+# The IPv4 address to assign to the container. Defaults to a random IP address in the subnet.
+time_machine_docker_network_ipv4_addr: null
+

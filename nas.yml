@@ -62,6 +62,9 @@
 - ansible.builtin.import_playbook: "samba.yml"
   tags: ["samba"]
 
+- ansible.builtin.import_playbook: "time-machine.yml"
+  tags: ["time-machine", "timemachine", "tim"]
+
 # - ansible.builtin.import_playbook: "playbooks/media-storage/media-storage.yml"
 #   tags: ["media", "media-storage"]
 
