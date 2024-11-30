@@ -20,7 +20,7 @@
     - role: "organicveggie.tautulli_docker"
       vars:
         tautulli_docker_host_domain: "{{ veggie_base_domain_name }}"
-        tautulli_docker_name: "tautulli"
+        tautulli_docker_name: "{{ tautulli_service_name }}"
         tautulli_docker_network_create: false
         tautulli_docker_network: "{{ tautulli_network_name }}"
         tautulli_docker_network_internal: "{{ tautulli_network_internal }}"

@@ -23,7 +23,7 @@
         kometa_docker_network: "{{ kometa_network_name }}"
         kometa_docker_extra_networks:
           - name: "{{ kometa_network_name }}"
-          - name: "{{ tautulli_network }}"
+          - name: "{{ tautulli_network_name }}"
         kometa_docker_config_read_only: "true"
         kometa_docker_cpus: "{{ kometa_cpus }}"
         kometa_docker_memory: "{{ kometa_memory }}"
