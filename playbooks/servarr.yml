@@ -137,6 +137,22 @@
         readarr_docker_network: "{{ servarr_docker_network }}"
         readarr_docker_data_source_path: "{{ servarr_data_source_path }}"
       tags: ["readarr"]
+    
+    # - role: "recyclarr"
+    #   vars:
+    #     recyclarr_docker_config_template: "recyclarr/recyclarr.yml.j2"
+    #     recyclarr_docker_config_includes:
+    #       - "includes/custom-formats/radarr-1080p.yml"
+    #       - "includes/custom-formats/radarr-2160p.yml"
+    #       - "includes/custom-formats/sonarr-1080p.yml"
+    #       - "includes/quality-definitions/radarr-movie.yml"
+    #       - "includes/quality-definitions/sonarr-tv.yml"
+    #       - "includes/quality-profiles/radarr-any-prefer-remux-1080p.yml"
+    #       - "includes/quality-profiles/radarr-2160p-remux-hdr-sdr.yml"
+    #       - "includes/quality-profiles/radarr-remux-web-1080p.yml"
+    #       - "includes/quality-profiles/radarr-remux-web-2160p.yml"
+    #       - "includes/quality-profiles/sonarr-web-1080p.yml"
+    #   tags: ["recyclarr"]
 
     - role: "sabnzbd"
       vars:

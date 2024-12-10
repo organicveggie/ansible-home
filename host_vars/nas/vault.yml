@@ -1,0 +1,29 @@
+---
+vault_hass_ecowitt_hass_auth_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhODVhNGQ1ZGQ0NjU0NzU5YTgxYTdlY2YxMWE3M2IyNyIsImlhdCI6MTcwMjQ5OTU2NywiZXhwIjoyMDE3ODU5NTY3fQ.QY-BR9Ab-XeW8I1cxiAHAwQ-6gICcfn0cT_4NQvkOk8"
+vault_hass_ecowitt_hass_webhook_id: "5730bdfde76bc9c64e0b76781c390ebc"
+vault_hass_zwave_device: "/dev/serial/by-id/usb-0658_0200-if00"
+
+vault_kometa_docker_plex_url: "http://192.168.25.40:32400"
+vault_kometa_docker_plex_token: "T8Sqxz4R4H1L_JSZv9rG"
+vault_kometa_docker_tautulli_apikey: "fdac6cfe4ad64b10a1b77ca8ea7d886c"
+
+vault_nodered_credential_secret: "zqb6H7isYzV2d4NiCRr7xGVCraKnrYL9chvVXFPC225Xpn2vZ36TU2WzPPiksyJh"
+
+# See https://www.plex.tv/claim
+vault_plex_docker_claim: "claim-KxhszqJ41PbC4JDLY2hc"
+
+vault_radarr1080_docker_api_key: "ea2a8f994b19480caa316a54349244d7"
+vault_radarr4k_docker_api_key: "6b058806a9584a4184ee1403aa2f7582"
+
+vault_readarr_api_key: "0e165e9fe7bf4455a14ce3f51a537a83"
+
+vault_sonarr1080_docker_api_key: "94b405eaaecf49e2a2bcfbace0907338"
+vault_sonarr4k_docker_api_key: "894781b6a4a2403995f72a15c04e40b0"
+
+vault_time_machine_data_directory: "/mnt/nas/time-machine/data2"
+vault_time_machine_hostname: "timmy"
+vault_time_machine_network_parent: "eno1"
+vault_time_machine_network_ipv4: "192.168.25.230"
+
+vault_veggie_domain: "home.bealetech.com"
+vault_veggie_hostname: "nas"

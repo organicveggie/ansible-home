@@ -1,0 +1,59 @@
+---
+###
+### Home Assistant
+###
+hass_ecowitt_hass_auth_token: "{{ vault_hass_ecowitt_hass_auth_token }}"
+hass_ecowitt_hass_webhook_id: "{{ vault_hass_ecowitt_hass_webhook_id }}"
+hass_zwave_device: "{{ vault_hass_zwave_device }}"
+
+###
+### Kometa
+###
+kometa_docker_plex_url: "{{ vault_kometa_docker_plex_url }}"
+kometa_docker_plex_token: "{{ vault_kometa_docker_plex_token }}"
+kometa_docker_tautulli_apikey: "{{ vault_kometa_docker_tautulli_apikey }}"
+
+###
+### NodeRED
+###
+nodered_credential_secret: "{{ vault_nodered_credential_secret }}"
+
+###
+### Plex
+###
+# See https://www.plex.tv/claim
+plex_docker_claim: "{{ vault_plex_docker_claim }}"
+
+###
+### Radarr
+###
+radarr1080_docker_api_key: "{{ vault_radarr1080_docker_api_key }}"
+radarr4k_docker_api_key: "{{ vault_radarr4k_docker_api_key }}"
+
+###
+### Readarr
+###
+readarr_api_key: "{{ vault_readarr_api_key }}"
+
+###
+### Sonarr
+###
+sonarr1080_docker_api_key: "{{ vault_sonarr1080_docker_api_key }}"
+sonarr4k_docker_api_key: "{{ vault_sonarr4k_docker_api_key }}"
+
+###
+### Time Machine
+###
+time_machine_data_directory: "{{ vault_time_machine_data_directory }}"
+time_machine_hostname: "{{ vault_time_machine_hostname }}"
+time_machine_network_parent: "{{ vault_time_machine_network_parent }}"
+time_machine_network_ipv4: "{{ vault_time_machine_network_ipv4 }}"
+
+###
+### Veggie Common
+###
+veggie_base_domain_name: "{{ veggie_domain }}"
+veggie_domain: "{{ vault_veggie_domain }}"
+veggie_fqdn: "{{ veggie_hostname }}.{{ veggie_domain }}"
+veggie_hostname: "{{ vault_veggie_hostname }}"
+veggie_nas_domain_name: "{{ veggie_fqdn }}"

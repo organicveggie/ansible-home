@@ -133,6 +133,7 @@ grafana_network_name: "grafana"
 ###
 ### Home Assistant
 ###
+hass_docker_host_domain: "{{ hass_host_domain }}"
 hass_host_domain: "{{ veggie_base_domain_name }}"
 hass_host_name: "ha"
 hass_network_aliases:
@@ -140,17 +141,16 @@ hass_network_aliases:
 hass_network_name: "hass"
 hass_network_subnet: "{{ vault_hass_network_subnet }}"
 hass_network_gateway: "{{ vault_hass_network_gateway }}"
-# hass_docker_network_name: "{{ hass_network_name }}"
 hass_home_latitude: "{{ vault_hass_home_latitude }}"
 hass_home_longitude: "{{ vault_hass_home_longitude }}"
 hass_home_timezone: "{{ vault_hass_home_timezone }}"
-hass_zwave_device: "/dev/serial/by-id/usb-0658_0200-if00"
+hass_zwave_device: "/dev/serial/by-id/usb-1234"
 
 ###
 ### Home Assistant - Ecowitt Proxy
 ###
-hass_ecowitt_hass_auth_token: "{{ vault_hass_ecowitt_hass_auth_token }}"
-hass_ecowitt_hass_webhook_id: "{{ vault_hass_ecowitt_hass_webhook_id }}"
+hass_ecowitt_hass_auth_token: "TODO-REPLACE-ME"
+hass_ecowitt_hass_webhook_id: "TODO-REPLACE-ME"
 hass_ecowitt_hass_url: "http://{{ hass_host_name }}.{{ hass_host_domain }}:8123"
 
 ###
@@ -174,137 +174,7 @@ influxdb_telegraf_token: "{{ vault_influxdb_telegraf_token }}"
 influxdb_admin_org: "{{ vault_influxdb_admin_org }}"
 
 ###
-### Let's Encrypt / Certbot
-###
-certbot_domain_name: "{{ veggie_nas_domain_name }}"
-certbot_admin_email: "{{ letsencrypt_email }}"
-certbot_aws_access_key_id: "{{ letsencrypt_aws_access_key }}"
-certbot_aws_secret_access_key: "{{ letsencrypt_aws_secret_key }}"
-
-###
-### Lidarr
-###
-lidarr_available_externally: "true"
-lidarr_docker_host_domain: "{{ veggie_nas_domain_name }}"
-lidarr_cpus: "2"
-
-###
-### Logrotate
-###
-# logrotate_scripts:
-#   - name: rclone
-#     path: "/var/log/rclone.log"
-#     options:
-#       - daily
-#       - rotate 7
-#       - missingok
-#       - compress
-#       - delaycompress
-#       - copytruncate
-
-###
-### NAS
-###
-veggie_nas_admin_passwd: "{{ vault_nas_admin_passwd }}"
-veggie_nas_admin_samba_passwd: "{{ vault_nas_admin_samba_passwd }}"
-veggie_nas_admin_username: "{{ vault_nas_admin_username }}"
-veggie_nas_plex_password: "{{ vault_nas_plex_password }}"
-veggie_nas_retropie_password: "{{ vault_nas_retropie_password }}"
-
-###
-### Navidrome
-###
-navidrome_network_name: "{{ vault_navidrome_network_name }}"
-navidrome_network_subnet: "{{ vault_navidrome_network_subnet }}"
-navidrome_network_gateway: "{{ vault_navidrome_network_gateway }}"
-
-navidrome_host_domain: "{{ veggie_base_domain_name }}"
-navidrome_lastfm_apikey: "{{ vault_navidrome_lastfm_apikey }}"
-navidrome_lastfm_secret: "{{ vault_navidrome_lastfm_secret }}"
-navidrome_spotify_client_id: "{{ vault_navidrome_docker_spotify_client_id }}"
-navidrome_spotify_client_secret: "{{ vault_navidrome_docker_spotify_client_secret }}"
-navidrome_music_folder: "{{ vault_navidrome_music_folder }}"
-
-###
-### NFS
-###
-nfs_exports:
-  - "/mnt/nas/data/books {{ veggie_virt_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
-  - "/mnt/nas/servarr/music {{ veggie_virt_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
-  - "/mnt/nas/data/videos {{ veggie_virt_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
-  # - "/mnt/nas/data/music {{ veggie_virt_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
-
-###
-### Node-RED
-###
-nodered_credential_secret: "{{ vault_nodered_credential_secret }}"
-nodered_docker_image: "nodered/node-red:latest"
-nodered_host_domain: "{{ veggie_nas_domain_name }}"
-
-nodered_docker_extra_networks:
-  - name: "{{ hass_network_name }}"
-nodered_docker_network_name: "node-red"
-nodered_docker_network_subnet: "172.100.12.0/24"
-nodered_docker_network_gateway: "172.100.12.1"
-nodered_docker_timezone: "{{ vault_nodered_timezone }}"
-
-###
-### organicveggie.folders
-###
-organicveggie_folders_create:
-  - path: "{{ docker_home }}"
-    owner: root
-    group: root
-    mode: "755"
-
-###
-### Overseerr
-###
-overseerr_docker_available_externally: "true"
-overseerr_docker_host_domain: "{{ veggie_nas_domain_name }}"
-
-###
-### PgAdmin defaults
-###
-pgadmin_docker_admin_email: "{{ primary_email_address }}"
-pgadmin_docker_admin_password: "{{ postgres_docker_admin_password }}"
-pgadmin_docker_email_server: "email-smtp.us-west-2.amazonaws.com"
-pgadmin_docker_email_port: "587"
-pgadmin_docker_email_use_ssl: "False"
-pgadmin_docker_email_user_tls: "True"
-pgadmin_docker_email_username: "{{ aws_ses_usw2_access_key }}"
-pgadmin_docker_email_password: "{{ aws_ses_usw2_secret_key }}"
-
-###
-### Photoprism
-###
-photoprism_admin_password: "{{ vault_photoprism_admin_password }}"
-photoprism_docker_host_domain: "{{ veggie_base_domain_name }}"
-photoprism_dir: "/mnt/nas/photoprism"
-photoprism_extra_groups: "photo_writer"
-photoprism_mariadb_dir: "/mnt/nas/photoprism-mariadb"
-photoprism_mariadb_root_password: "{{ vault_photoprism_mariadb_root_password }}"
-photoprism_mariadb_password: "{{ vault_photoprism_mariadb_password }}"
-photoprism_network_name: "photoprism"
-photoprism_zfs_filesystems:
-  - dataset: "nas/photoprism"
-    path: "/mnt/nas/photoprism"
-  - dataset: "nas/photoprism-mariadb"
-    path: "/mnt/nas/photoprism-mariadb"
-
-###
-### Plex
-###
-plex_cpus: "8"
-plex_gid: "32400"
-plex_groupname: "plex"
-plex_media_path: "{{ vault_plex_media_path }}"
-plex_memory: "4GB"
-plex_uid: "32400"
-plex_username: "plex"
-
-###
-### Kameta (formerly Plex Meta Manager)
+### Kometa
 ###
 kometa_network_name: "kometa"
 kometa_network_subnet: "172.100.17.0/24"
@@ -317,13 +187,13 @@ kometa_timezone: "{{ home_timezone }}"
 kometa_docker_mdblist_apikey: "{{ vault_kometa_docker_mdblist_apikey }}"
 kometa_docker_mdblist_cache_expiration: "60"
 kometa_docker_plex_db_cache: "2048" # MB
-kometa_docker_plex_url: "{{ vault_kometa_docker_plex_url }}"
-kometa_docker_plex_token: "{{ vault_kometa_docker_plex_token }}"
+kometa_docker_plex_url: "http://plex:32400"
+kometa_docker_plex_token: "TODO-REPLACE-ME"
 kometa_docker_tmdb_apikey: "{{ vault_kometa_docker_tmdb_apikey }}"
 kometa_docker_tmdb_language: "en"
 kometa_docker_tmdb_region: "US"
 kometa_docker_tautulli_url: "http://{{ tautulli_service_name }}:{{ tautulli_web_port }}"
-kometa_docker_tautulli_apikey: "{{ vault_kometa_docker_tautulli_apikey }}"
+kometa_docker_tautulli_apikey: "TODO-REPLACE-ME"
 kometa_docker_libraries: |2
     Movies:
       report_path: /config/reports/Movies.yml
@@ -642,6 +512,139 @@ kometa_docker_trakt: |2
       created_at: {{ vault_kometa_docker_trakt_created_at }}
 
 ###
+### Let's Encrypt / Certbot
+###
+certbot_domain_name: "{{ veggie_nas_domain_name }}"
+certbot_admin_email: "{{ letsencrypt_email }}"
+certbot_aws_access_key_id: "{{ letsencrypt_aws_access_key }}"
+certbot_aws_secret_access_key: "{{ letsencrypt_aws_secret_key }}"
+
+###
+### Lidarr
+###
+lidarr_available_externally: "true"
+lidarr_docker_host_domain: "{{ veggie_nas_domain_name }}"
+lidarr_cpus: "2"
+
+###
+### Logrotate
+###
+# logrotate_scripts:
+#   - name: rclone
+#     path: "/var/log/rclone.log"
+#     options:
+#       - daily
+#       - rotate 7
+#       - missingok
+#       - compress
+#       - delaycompress
+#       - copytruncate
+
+###
+### NAS
+###
+veggie_nas_admin_passwd: "{{ vault_nas_admin_passwd }}"
+veggie_nas_admin_samba_passwd: "{{ vault_nas_admin_samba_passwd }}"
+veggie_nas_admin_username: "{{ vault_nas_admin_username }}"
+veggie_nas_plex_password: "{{ vault_nas_plex_password }}"
+veggie_nas_retropie_password: "{{ vault_nas_retropie_password }}"
+
+###
+### Navidrome
+###
+navidrome_network_name: "{{ vault_navidrome_network_name }}"
+navidrome_network_subnet: "{{ vault_navidrome_network_subnet }}"
+navidrome_network_gateway: "{{ vault_navidrome_network_gateway }}"
+
+navidrome_host_domain: "{{ veggie_base_domain_name }}"
+navidrome_lastfm_apikey: "{{ vault_navidrome_lastfm_apikey }}"
+navidrome_lastfm_secret: "{{ vault_navidrome_lastfm_secret }}"
+navidrome_spotify_client_id: "{{ vault_navidrome_docker_spotify_client_id }}"
+navidrome_spotify_client_secret: "{{ vault_navidrome_docker_spotify_client_secret }}"
+navidrome_music_folder: "{{ vault_navidrome_music_folder }}"
+
+###
+### NFS
+###
+nfs_exports:
+  - "/mnt/nas/data/books {{ veggie_virt_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
+  - "/mnt/nas/servarr/music {{ veggie_virt_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
+  - "/mnt/nas/data/videos {{ veggie_virt_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
+  # - "/mnt/nas/data/music {{ veggie_virt_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
+
+###
+### Node-RED
+###
+nodered_credential_secret: "nodred-secret"
+nodered_docker_image: "nodered/node-red:latest"
+nodered_host_domain: "{{ veggie_nas_domain_name }}"
+
+nodered_docker_extra_networks:
+  - name: "{{ hass_network_name }}"
+nodered_docker_network_name: "node-red"
+nodered_docker_network_subnet: "172.100.12.0/24"
+nodered_docker_network_gateway: "172.100.12.1"
+nodered_docker_timezone: "{{ vault_nodered_timezone }}"
+
+###
+### organicveggie.folders
+###
+organicveggie_folders_create:
+  - path: "{{ docker_home }}"
+    owner: root
+    group: root
+    mode: "755"
+
+###
+### Overseerr
+###
+overseerr_docker_available_externally: "true"
+overseerr_docker_host_domain: "{{ veggie_nas_domain_name }}"
+
+###
+### PgAdmin defaults
+###
+pgadmin_docker_admin_email: "{{ primary_email_address }}"
+pgadmin_docker_admin_password: "{{ postgres_docker_admin_password }}"
+pgadmin_docker_email_server: "email-smtp.us-west-2.amazonaws.com"
+pgadmin_docker_email_port: "587"
+pgadmin_docker_email_use_ssl: "False"
+pgadmin_docker_email_user_tls: "True"
+pgadmin_docker_email_username: "{{ aws_ses_usw2_access_key }}"
+pgadmin_docker_email_password: "{{ aws_ses_usw2_secret_key }}"
+
+###
+### Photoprism
+###
+photoprism_admin_password: "{{ vault_photoprism_admin_password }}"
+photoprism_docker_host_domain: "{{ veggie_base_domain_name }}"
+photoprism_dir: "/mnt/nas/photoprism"
+photoprism_extra_groups: "photo_writer"
+photoprism_mariadb_dir: "/mnt/nas/photoprism-mariadb"
+photoprism_mariadb_root_password: "{{ vault_photoprism_mariadb_root_password }}"
+photoprism_mariadb_password: "{{ vault_photoprism_mariadb_password }}"
+photoprism_network_name: "photoprism"
+photoprism_zfs_filesystems:
+  - dataset: "nas/photoprism"
+    path: "/mnt/nas/photoprism"
+  - dataset: "nas/photoprism-mariadb"
+    path: "/mnt/nas/photoprism-mariadb"
+
+###
+### Plex
+###
+plex_cpus: "8"
+plex_gid: "32400"
+plex_groupname: "plex"
+plex_media_path: "{{ vault_plex_media_path }}"
+plex_memory: "4GB"
+plex_uid: "32400"
+plex_username: "plex"
+
+# See https://www.plex.tv/claim
+plex_docker_claim: "claim-abcdefg"
+
+###
 ### Pip
 ###
 pip_install_packages:
@@ -718,6 +721,7 @@ veggie_rclone_config_path: /root/.config/rclone/rclone.conf
 ###
 ### Readarr
 ###
+readarr_api_key: "TODO-REPLACE-ME"
 readarr_available_externally: "true"
 readarr_docker_host_domain: "{{ veggie_nas_domain_name }}"
 readarr_docker_web_port: "8787"
@@ -759,61 +763,6 @@ sabnzbd_docker_host_domain: "{{ veggie_nas_domain_name }}"
 ###
 ### Samba
 ###
-# samba_domain_master: auto
-# samba_preferred_master: auto
-# samba_wins_support: false
-
-# # Defaults to true, which disables share browsing by Windows clients.
-# # See https://access.redhat.com/security/cve/cve-2017-7494
-# samba_mitigate_cve_2017_7494: false
-# samba_users:
-#   - name: "{{ veggie_nas_admin_username }}"
-#     password: "{{ veggie_nas_admin_samba_passwd }}"
-#   # - name: "plex"
-#   #   password: "{{ veggie_nas_plex_password }}"
-#   - name: "retropie"
-#     password: "{{ veggie_nas_retropie_password }}"
-#   - name: "kstar"
-#     password: "{{ veggie_kstar_password }}"
-# samba_shares:
-#   - name: books
-#     path: /mnt/nas/data/books
-#     group: book_writer
-#     write_list: +book_writer
-#   - name: documents
-#     path: /mnt/nas/data/documents
-#     group: doc_writer
-#     write_list: +doc_writer
-#   - name: music
-#     path: /mnt/nas/data/servarr/music
-#     group: music_writer
-#     write_list: +music_writer
-#   - name: music-old
-#     path: /mnt/nas/data/music
-#     group: music_writer
-#     write_list: +music_writer
-#   - name: photos
-#     path: /mnt/nas/data/photos
-#     group: photo_writer
-#     write_list: +photo_writer
-#   - name: roms
-#     path: /mnt/nas/data/roms
-#     group: rom_writer
-#     write_list: +rom_writer
-#   - name: source
-#     path: /mnt/nas/data/source
-#     group: source_writer
-#     write_list: +source_writer
-#   - name: videos
-#     path: /mnt/nas/data/videos
-#     group: media_writer
-#     write_list: +media_writer
-#   - name: kstar
-#     path: /mnt/nas/kstar
-#     owner: kstar
-#     group: kstar
-#     create_mode: 0740
-#     directory_mode: 0770
 samba_groups:
   - "book_writer"
   - "doc_writer"
@@ -845,14 +794,14 @@ sonarr_docker_host_domain: "{{ veggie_nas_domain_name }}"
 sonarr_docker_tv_source_path: "/mnt/nas/data/videos/tv"
 sonarr_docker_web_port: "8989"
 
-sonarr1080_docker_api_key: "{{ vault_sonarr1080_api_key }}"
+sonarr1080_docker_api_key: "TODO-REPLACE-ME"
 sonarr1080_docker_host_name: "sonarr1080"
 sonarr1080_docker_name: "sonarr1080"
 sonarr1080_docker_volume_config_name: "sonarr1080-config"
 sonarr1080_docker_network_aliases:
   - "sonarr1080"
 
-sonarr4k_docker_api_key: "{{ vault_sonarr4k_api_key }}"
+sonarr4k_docker_api_key: "TODO-REPLACE-ME"
 sonarr4k_docker_host_name: "sonarr4k"
 sonarr4k_docker_name: "sonarr4k"
 sonarr4k_docker_volume_config_name: "sonarr4k-config"
@@ -921,12 +870,12 @@ telegraf_plugins_extra:
 ###
 ### TimeMachine
 ###
-time_machine_data_directory: "{{ vault_time_machine_data_directory }}"
-time_machine_hostname: "{{ vault_time_machine_hostname }}"
+time_machine_data_directory: "/mnt/data/time-machine"
+time_machine_hostname: "time-machine"
 time_machine_network: "{{ vault_time_machine_network }}"
 time_machine_network_gateway: "{{ vault_time_machine_network_gateway }}"
-time_machine_network_ipv4: "{{ vault_time_machine_network_ipv4 }}"
-time_machine_network_parent: "{{ vault_time_machine_network_parent }}"
+time_machine_network_ipv4: "192.168.1.2"
+time_machine_network_parent: "eth0"
 time_machine_network_subnet: "{{ vault_time_machine_network_subnet }}"
 time_machine_password: "{{ vault_time_machine_password }}"
 
@@ -1043,7 +992,6 @@ traefik_extra_networks:
   - name: "{{ glances_network_name }}"
   - name: "{{ grafana_network_name }}"
   - name: "{{ hass_network_name }}"
-  # - name: "{{ influxdb_network_name }}"
   - name: "{{ navidrome_network_name }}"
   - name: "{{ nodered_docker_network_name }}"
   - name: "{{ photoprism_network_name }}"
@@ -1347,7 +1295,6 @@ unpackerr_docker_host_domain: "{{ veggie_nas_domain_name }}"
 ###
 nas_groups: "{{ vault_nas_groups }}"
 nas_users: "{{ vault_nas_users }}"
-# users_list_host: "{{ nas_users }}"
 
 ###
 ### zwavejs2mqtt

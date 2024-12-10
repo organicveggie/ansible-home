@@ -1,0 +1,29 @@
+---
+vault_hass_ecowitt_hass_auth_token: "TODO-REPLACE-ME"
+vault_hass_ecowitt_hass_webhook_id: "TODO-REPLACE-ME"
+vault_hass_zwave_device: "/dev/serial/by-id/usb-TODO-XYZ"
+
+vault_kometa_docker_plex_url: "http://192.168.25.40:32400"
+vault_kometa_docker_plex_token: "TODO-REPLACE-ME"
+vault_kometa_docker_tautulli_apikey: "TODO-REPLACE-ME"
+
+vault_nodered_credential_secret: "TODO-REPLACE-ME"
+
+# See https://www.plex.tv/claim
+vault_plex_docker_claim: "claim-TODO-REPLACE-ME"
+
+vault_radarr1080_docker_api_key: "ea2a8f994b19480caa316a54349244d7"
+vault_radarr4k_docker_api_key: "6b058806a9584a4184ee1403aa2f7582"
+
+vault_readarr_api_key: "0e165e9fe7bf4455a14ce3f51a537a83"
+
+vault_sonarr1080_docker_api_key: "94b405eaaecf49e2a2bcfbace0907338"
+vault_sonarr4k_docker_api_key: "894781b6a4a2403995f72a15c04e40b0"
+
+vault_time_machine_data_directory: "/mnt/nas/time-machine/data"
+vault_time_machine_hostname: "drwho"
+vault_time_machine_network_parent: "eno1"
+vault_time_machine_network_ipv4: "192.168.25.232"
+
+vault_veggie_domain: "350mva.xyz"
+vault_veggie_hostname: "r740xd"
