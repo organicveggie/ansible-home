@@ -22,39 +22,39 @@
             password: "{{ veggie_kstar_password }}"
         samba_shares:
           - name: "books"
-            path: "/mnt/nas/data/servarr/books"
+            path: "{{ nas_path_books }}"
             group: "book_writer"
             write_list: +book_writer
           - name: "documents"
-            path: "/mnt/nas/data/documents"
+            path: "{{ nas_path_documents }}"
             group: "doc_writer"
             write_list: +doc_writer
           - name: "music"
-            path: "/mnt/nas/data/servarr/music"
+            path: "{{ nas_path_music }}"
             group: "music_writer"
             write_list: +music_writer
           - name: "music-old"
-            path: "/mnt/nas/data/music"
+            path: "{{ nas_path_music_old }}"
             group: "music_writer"
             write_list: +music_writer
           - name: "photos"
-            path: "/mnt/nas/data/photos"
+            path: "{{ nas_path_photos }}"
             group: "photo_writer"
             write_list: +photo_writer
           - name: "roms"
-            path: "/mnt/nas/data/roms"
+            path: "{{ nas_path_roms }}"
             group: "rom_writer"
             write_list: +rom_writer
           - name: "source"
-            path: "/mnt/nas/data/source"
+            path: "{{ nas_path_source }}"
             group: "source_writer"
             write_list: +source_writer
           - name: "videos"
-            path: "/mnt/nas/data/videos"
+            path: "{{ nas_path_videos }}"
             group: "media_writer"
             write_list: +media_writer
           - name: "kstar"
-            path: "/mnt/nas/kstar"
+            path: "{{ nas_path_kstar }}"
             owner: "kstar"
             group: "kstar"
             create_mode: 0740
