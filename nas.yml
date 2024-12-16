@@ -2,42 +2,11 @@
 - name: "Setup Veggie NAS"
   hosts: "veggie_nas"
   become: yes
-  ## vars_files:
-  ##   - "vars/user_groups"
-  ##   - "vars/users"
   # roles:
-  ###   - role: organicveggie.ansible-users
-  ###     tags:
-  ###       - users
-  ###       - skip_ansible_lint
-  ###   - role: organicveggie.folders
-  ###     tags:
-  ###       - folders
-  ###       - skip_ansible_lint
-  ###   - role: geerlingguy.pip
-  ###     tags:
-  ###       - pip
-  ###   - role: geerlingguy.docker
-  ###     tags:
-  ###       - docker
-  ###       - skip_ansible_lint
-  ###   - role: veggie_common
-  #   - role: docker_networks
-  ###   - role: veggie_nas
-  #   - role: geerlingguy.nfs
-  #     tags:
-  #       - nfs_server
-  #       - skip_ansible_lint
-  ###   - role: portainer
-  #   - role: time_machine
     # - role: stefangweichinger.ansible_rclone
     #   tags:
     #     - rclone
     #     - skip_ansible_lint
-  ### - role: nickhammond.logrotate
-  ###   tags:
-  ###     - logrotate
-  ###     - skip_ansible_lint
     # - role: veggie_nas_rclone
     # - role: organicveggie.certbot-route53
     # - role: restic_rest_server
@@ -46,8 +15,6 @@
     # - role: organicveggie.unific
     #   tags:
     #     - unific
-
-    # Telegraf
     # - role: telegraf
 
 - ansible.builtin.import_playbook: "nas-users-groups.yml"
