@@ -888,6 +888,13 @@ time_machine_network_parent: "eth0"
 time_machine_network_subnet: "{{ vault_time_machine_network_subnet }}"
 time_machine_password: "{{ vault_time_machine_password }}"
 
+time_machine_groupname: "time-machine"
+time_machine_gid: 1311
+time_machine_username: "time-machine"
+time_machine_uid: 1311
+
+time_machine_zfs_dataset: null
+
 timemachine_data_directory: "/mnt/nas/time-machine"
 timemachine_volume_size_limit: "768000"
 timemachine_share_name: "{{ vault_timemachine_share_name }}"

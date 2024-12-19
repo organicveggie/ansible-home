@@ -5,6 +5,22 @@
   become: true
 
   pre_tasks:
+    - name: "Create Time Machine group"
+      ansible.builtin.group:
+        name: "{{ time_machine_groupname }}"
+        gid: "{{ time_machine_gid | default(omit) }}"
+        state: "present"
+
+    - name: "Create Time Machine user"
+      ansible.builtin.user:
+        username: "{{ time_machine_username }}"
+        password: "*"
+        shell: "/bin/false"
+        system: false
+        uid: "{{ time_machine_uid }}"
+        group: "{{ time_machine_groupname }}"
+        password_lock: true
+
     - name: "Create Docker network"
       community.docker.docker_network:
         name: "{{ time_machine_network }}"
@@ -17,6 +33,21 @@
         ipam_config:
           - subnet: "{{ time_machine_network_subnet }}"
             gateway: "{{ time_machine_network_gateway }}"
+
+    - name: "Create ZFS dataset"
+      community.general.zfs:
+        name: "{{ time_machine_zfs_dataset }}"
+        state: present
+      when: "{{ time_machine_zfs_dataset }}"
+
+    - name: "Create data folder"
+      ansible.builtin.file:
+        path: "{{ time_machine_data_directory }}"
+        mode: "770"
+        recurse: true
+        state: "directory"
+        owner: "root"
+        group: "root"
 
   roles:
     - role: "time_machine_docker"
