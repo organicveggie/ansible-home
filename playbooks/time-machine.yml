@@ -13,7 +13,7 @@
 
     - name: "Create Time Machine user"
       ansible.builtin.user:
-        username: "{{ time_machine_username }}"
+        name: "{{ time_machine_username }}"
         password: "*"
         shell: "/bin/false"
         system: false
@@ -46,8 +46,8 @@
         mode: "770"
         recurse: true
         state: "directory"
-        owner: "root"
-        group: "root"
+        owner: "{{ time_machine_username }}"
+        group: "{{ time_machine_groupname }}"
 
   roles:
     - role: "time_machine_docker"
