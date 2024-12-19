@@ -17,19 +17,19 @@
     #     - unific
     # - role: telegraf
 
-- ansible.builtin.import_playbook: "nas-users-groups.yml"
+- ansible.builtin.import_playbook: "playbooks/nas-users-groups.yml"
   tags: ["users", "groups"]
 
-- ansible.builtin.import_playbook: "common.yml"
+- ansible.builtin.import_playbook: "playbooks/common.yml"
   tags: ["common"]
 
-- ansible.builtin.import_playbook: "docker.yml"
+- ansible.builtin.import_playbook: "playbooks/docker.yml"
   tags: ["docker", "portainer"]
 
-- ansible.builtin.import_playbook: "samba.yml"
+- ansible.builtin.import_playbook: "playbooks/samba.yml"
   tags: ["samba"]
 
-- ansible.builtin.import_playbook: "time-machine.yml"
+- ansible.builtin.import_playbook: "playbooks/time-machine.yml"
   tags: ["time-machine", "timemachine", "tim"]
 
 # - ansible.builtin.import_playbook: "playbooks/media-storage/media-storage.yml"
@@ -71,5 +71,5 @@
 ##########
 # Traefik - Needs to be last so all of the networks exist
 ##########
-- ansible.builtin.import_playbook: "traefik.yml"
+- ansible.builtin.import_playbook: "playbooks/traefik.yml"
   tags: ["traefik"]

@@ -14,7 +14,7 @@
         scope: "local"
         ipam_config:
           - subnet: "{{ glances_network_subnet }}"
-            gateway: "{{ tautulli_neglances_network_gatewaytwork_gateway }}"
+            gateway: "{{ glances_network_gatewaytwork_gateway }}"
       tags: ["docker", "network", "networks"]
 
   roles:
