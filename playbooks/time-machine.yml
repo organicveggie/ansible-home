@@ -1,6 +1,6 @@
 ---
 - name: "Setup TimeMachine"
-  hosts: all
+  hosts: "veggie_nas"
   remote_user: "sean"
   become: true
 

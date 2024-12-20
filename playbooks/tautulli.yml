@@ -1,5 +1,5 @@
 - name: "Setup Tautulli container"
-  hosts: nas
+  hosts: "veggie_nas"
   remote_user: "sean"
   become: yes
 

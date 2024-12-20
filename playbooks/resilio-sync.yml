@@ -1,6 +1,6 @@
 ---
 - name: "Setup Resilio Sync"
-  hosts: nas
+  hosts: "veggie_nas"
   remote_user: sean
   become: yes
 

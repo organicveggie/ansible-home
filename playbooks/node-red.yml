@@ -1,6 +1,6 @@
 ---
 - name: "Setup Node-RED"
-  hosts: nas
+  hosts: "veggie_nas"
   remote_user: sean
   become: yes
 

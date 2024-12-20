@@ -1,6 +1,6 @@
 ---
 - name: "Setup Samba"
-  hosts: all
+  hosts: "veggie_nas"
   remote_user: "sean"
   become: true
 

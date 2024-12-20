@@ -1,7 +1,7 @@
 ---
-- name: Setup Home Assistant
-  hosts: nas
-  remote_user: sean
+- name: "Setup Home Assistant"
+  hosts: "veggie_nas"
+  remote_user: "sean"
   become: yes
   
   pre_tasks:
