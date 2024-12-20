@@ -26,7 +26,7 @@
   version: "2.0.0"
 
 - src: "geerlingguy.pip"
-  version: "3.0.3"
+  version: "3.1.0"
 
 - src: "https://github.com/organicveggie/ansible.calibre_web_docker"
   name: "organicveggie.calibre_web_docker"
