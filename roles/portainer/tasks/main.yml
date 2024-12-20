@@ -4,7 +4,8 @@
     - portainer
     - portainer:docker
 
-- import_tasks: admin.yml
-  tags:
-    - portainer
-    - portainer:admin
+# TODO: Switch to executing within the Portainer container
+# - import_tasks: admin.yml
+#   tags:
+#     - portainer
+#     - portainer:admin

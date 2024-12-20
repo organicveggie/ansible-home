@@ -1,7 +1,7 @@
 ---
 - name: Configure admin user password
   ansible.builtin.uri:
-    url: "{{ portainer_endpoint }}/users/admin/init"
+    url: "{{ _portainer_endpoint }}/users/admin/init"
     method: POST
     return_content: true
     body_format: json

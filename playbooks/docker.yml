@@ -30,13 +30,15 @@
         organicveggie_docker_networks:
           - name: "{{ portainer_network_name }}"
             enable_ipv6: false
-            enable_ipv6: "no"
             internal: "no"
             scope: "local"
             subnet: "{{ portainer_network_subnet }}"
             gateway: "{{ portainer_network_gateway }}"
 
     - role: "portainer"
+      vars:
+        portainer_docker_home: "{{ nas_docker_home }}"
+        portainer_host_domain: "{{ veggie_nas_domain_name }}"
       tags:
         - "portainer"
   
