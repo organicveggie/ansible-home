@@ -49,14 +49,6 @@ diun_notify_mail_to: "{{ vault_diun_notify_mail_to }}"
 diun_regopts_dockerio_user: "{{ vault_diun_regopts_dockerio_user }}"
 diun_regopts_dockerio_passwd: "{{ vault_diun_regopts_dockerio_passwd }}"
 
-###
-### Docker
-###
-docker_home: /mnt/nas/docker
-docker_daemon_options:
-  storage-driver: "zfs"
-  data-root: "{{ docker_home }}/data"
-
 organicveggie_docker_networks:
   - name: "{{ portainer_network_name }}"
     enable_ipv6: "no"
@@ -666,6 +658,8 @@ portainer_available_externally: "true"
 portainer_admin_password: "{{ default_portainer_admin_password }}"
 portainer_host_domain: "{{ veggie_nas_domain_name }}"
 portainer_network_name: "portainer"
+portainer_network_subnet: "{{ vault_portainer_network_subnet }}"
+portainer_network_gateway: "{{ vault_portainer_network_gateway }}"
 
 ###
 ### PostgreSQL

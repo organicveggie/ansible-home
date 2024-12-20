@@ -1,5 +1,5 @@
 ---
-- name: Create Docker networks
+- name: "Create Docker networks"
   community.docker.docker_network:
     name: "{{ item.name }}"
     driver: "{{ item.driver | default(omit) }}"

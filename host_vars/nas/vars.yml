@@ -1,5 +1,11 @@
 ---
 ###
+### Docker
+###
+nas_docker_zfs_dataset: "nas/data/docker"
+nas_docker_home: "/mnt/{{ nas_docker_zfs_dataset }}"
+
+###
 ### Home Assistant
 ###
 hass_ecowitt_hass_auth_token: "{{ vault_hass_ecowitt_hass_auth_token }}"

@@ -4,14 +4,37 @@
   remote_user: "sean"
   become: true
 
+  pre_tasks:
+      - name: "Create ZFS dataset"
+        community.general.zfs:
+          name: "{{ nas_docker_zfs_dataset }}"
+          state: present
+
   roles:
     - role: "geerlingguy.pip"
       tags:
         - "pip"
 
     - role: "geerlingguy.docker"
+      vars:
+        docker_home: "{{ nas_docker_home }}"
+        docker_daemon_options:
+          storage-driver: "zfs"
+          data-root: "{{ nas_docker_home }}/data"
       tags:
         - "docker"
+
+    - name: "Create Portainer Docker network"
+      role: "docker_networks"
+      vars:
+        organicveggie_docker_networks:
+          - name: "{{ portainer_network_name }}"
+            enable_ipv6: false
+            enable_ipv6: "no"
+            internal: "no"
+            scope: "local"
+            subnet: "{{ portainer_network_subnet }}"
+            gateway: "{{ portainer_network_gateway }}"
 
     - role: "portainer"
       tags:
