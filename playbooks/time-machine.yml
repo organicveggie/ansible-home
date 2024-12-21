@@ -8,7 +8,7 @@
     - name: "Create Time Machine group"
       ansible.builtin.group:
         name: "{{ time_machine_groupname }}"
-        gid: "{{ time_machine_gid | default(omit) }}"
+        gid: "{{ time_machine_gid | default(time_machine_uid) }}"
         state: "present"
 
     - name: "Create Time Machine user"
@@ -53,8 +53,8 @@
     - role: "time_machine_docker"
       vars:
         time_machine_docker_name: "the-time-machine"
-        time_machine_docker_uid: "1311"
-        time_machine_docker_gid: "1311"
+        time_machine_docker_uid: "{{ time_machine_uid }}"
+        time_machine_docker_gid: "{{ time_machine_gid }}"
         time_machine_docker_data_directory: "{{ time_machine_data_directory }}"
         time_machine_docker_password: "{{ time_machine_password }}"
         time_machine_docker_network: "{{ time_machine_network }}"
