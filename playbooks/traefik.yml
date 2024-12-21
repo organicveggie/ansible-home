@@ -4,6 +4,190 @@
   remote_user: "sean"
   become: yes
 
+  vars:
+    _entrypoints: {}
+    _extra_networks: []
+    _extra_ports: []
+
+    _traefik_http_ports:
+      - '80:80'
+      - '443:443'
+
+    _unific_entrypoints:
+      unific_speed_test:
+        address: ":6789"
+      unific_stun:
+        address: ":3478/udp"
+      unific_dev_discovery:
+        address: ":10001/udp"
+      unific_controller_discovery:
+        address: ":19000/udp"
+    _unific_ports:
+      - '3478:3478'     # unific stun
+      - '10001:10001'   # unific dev discovery
+      - '19000:19000'   # unific controller discovery
+
+  pre_tasks:
+    ###
+    ### Configure additional networks, ports, and entrypoints
+    ###
+    - name: "Check if Home Assistant network exists"
+      community.docker.docker_network_info:
+        name: "{{ hass_network_name }}"
+      register: "_hass_network_info"
+      when: "hass_network_name"
+
+    - name: "Enable Home Assistant extra network"
+      ansible.builtin.set_fact:
+        _extra_networks: "{{ _extra_networks | default([]) + [{'name': hass_network_name}] }}"
+      when: "hass_network_name and _hass_network_info.exists"
+
+    - name: "Check if Portainer network exists"
+      community.docker.docker_network_info:
+        name: "{{ portainer_network_name }}"
+      register: "_portainer_network_info"
+      when: "portainer_network_name"
+
+    - name: "Enable Portainer extra network"
+      ansible.builtin.set_fact:
+        _extra_networks: "{{ _extra_networks | default([]) + [{'name': portainer_network_name}] }}"
+      when: "portainer_network_name and _portainer_network_info.exists"
+
+    - name: "Check if Servarr network exists"
+      community.docker.docker_network_info:
+        name: "{{ servarr_docker_network }}"
+      register: "_servarr_network_info"
+      when: "servarr_docker_network"
+
+    - name: "Enable Servarr extra network"
+      ansible.builtin.set_fact:
+        _extra_networks: "{{ _extra_networks | default([]) + [{'name': servarr_docker_network}] }}"
+      when: "servarr_docker_network and _servarr_network_info.exists"
+
+    - name: "Enable Syncthings (Servarr) ports"
+      ansible.builtin.set_fact:
+        _extra_ports: "{{ _extra_ports | default([]) + ['22000:22000'] }}"
+      when: "servarr_docker_network and _servarr_network_info.exists"
+
+    - name: "Check if UniFi Controller network exists"
+      community.docker.docker_network_info:
+        name: "{{ unific_network_name }}"
+      register: "_unific_network_info"
+      when: "unific_network_name"
+
+    - name: "Enable UniFi Controller extra network"
+      ansible.builtin.set_fact:
+        _extra_networks: "{{ _extra_networks | default([]) + [{'name': unific_network_name}] }}"
+      when: "unific_network_name and _unific_network_info.exists"
+
+    - name: "Enable UniFi Controlller ports"
+      ansible.builtin.set_fact:
+        _extra_ports: "{{ _extra_ports | default([]) + _unific_ports }}"
+      when: "unific_network_name and _unific_network_info.exists"
+    
+    - name: "Enable UniFi Controller entrypoints"
+      ansible.builtin.set_fact:
+        _entrypoints: "{{ _entrypoints | default({}) | combine(_unific_entrypoints) }}"
+      when: "unific_network_name and _unific_network_info.exists"
+
+    - name: "Define all Traefik ports"
+      ansible.builtin.set_fact:
+        _traefik_all_ports: "{{ (_extra_ports | default([]) + _traefik_http_ports) | sort }}"
+
+    - ansible.builtin.debug:
+        msg:
+          - "Entrypoints: {{ _entrypoints | default({}) }}"
+          - "Extra networks: {{ _extra_networks | default([]) }}"
+          - "All ports: {{ _traefik_all_ports | default([]) }}"
+
   roles:
     - role: "organicveggie.ansible-traefik"
+      vars:
+        traefik_image: "traefik:2.11"
+        traefik_container_environment:
+          AWS_HOSTED_ZONE_ID: "{{ acme_route53_hosted_zone_id }}"
+          AWS_ACCESS_KEY_ID: "{{ letsencrypt_aws_access_key }}"
+          AWS_SECRET_ACCESS_KEY: "{{ letsencrypt_aws_secret_key }}"
+          AWS_REGION: "us-east-1"
+        traefik_qs_https: "true"
+        # traefik_qs_https_redirect: "true"
+        traefik_qs_https_le: "true"
+        traefik_qs_https_le_mail: "{{ letsencrypt_email }}"
+        traefik_qs_log_level: INFO
+        traefik_ports: "{{ _traefik_all_ports }}"
+    #       - "3200:3000"
+    #       - '8080:8080'     # java http
+    #       - '22000:22000'   # syncthing
+    #       # - "55555:55555"   # Resilio Sync
+        traefik_hostname: "traefik.{{ veggie_nas_domain_name }}"
+        traefik_confkey_api:
+          dashboard: true # use this for enabling the dashboard
+        traefik_labels:
+          traefik.enable: "true"
+          # Dashboard
+          traefik.http.routers.traefik.service: "api@internal"
+          traefik.http.routers.traefik.entrypoints: "https"
+          traefik.http.routers.traefik.tls.certresolver: "letsencrypt"
+          traefik.http.routers.traefik.tls.domains[0].main: "{{ traefik_hostname }}"
+          # Global redirect to https
+          traefik.http.routers.http-catchall.rule: "hostregexp(`{host:.+}`)"
+          traefik.http.routers.http-catchall.entrypoints: "http"
+          traefik.http.routers.http-catchall.middlewares: "redirect-to-https"
+          traefik.http.routers.http-catchall.priority: "10"
+          # Middleware redirect
+          traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: "https"
+        traefik_extra_networks: "{{ _extra_networks }}"
+    #       # - name: "{{ calibre_web_docker_network }}"
+    #       # - name: "{{ diun_docker_network_name }}"
+    #       # - name: "{{ glances_network_name }}"
+    #       # - name: "{{ grafana_network_name }}"
+    #       # - name: "{{ hass_network_name }}"
+    #       # - name: "{{ navidrome_network_name }}"
+    #       # - name: "{{ nodered_docker_network_name }}"
+    #       # - name: "{{ photoprism_network_name }}"
+    #       # - name: "{{ resilio_docker_network }}"
+    #       # - name: "{{ restic_rest_server_network_name }}"
+    #       # - name: "{{ servarr_docker_network }}"
+    #       # - name: "{{ tautulli_network_name }}"
+    #       # - name: "{{ unific_network_name }}"
+    #       # - name: "influxdb27"
+        traefik_confkey_entryPoints: "{{ _entrypoints }}"
+    #       java_http:
+    #         address: ":8080"
+    #       resilio_sync_tcp:
+    #         address: ":55555"
+    #       resilio_sync_udp:
+    #         address: ":55555/udp"
+    #       syncthing_tcp:
+    #         address: ":22000"
+    #       syncthing_udp:
+    #         address: ":22000/udp"
+    #       zwavejsui:
+    #         address: ":3200"
+        traefik_confkey_serversTransport:
+          insecureSkipVerify: "true"
+        traefik_confkey_log:
+          level: DEBUG
+          filePath: "/var/log/traefik.log"
+        traefik_confkey_accessLog:
+          filePath: "/etc/traefik/log/traefik-access.log"
+          bufferingSize: 500
+          format: "json"
+          fields:
+            # defaultMode: "drop"
+            names:
+              ClientAddr: "drop"
+              ClientHost: "keep"
+              ClientPort: "drop"
+              ClientUsername: "drop"
+              DownstreamContentSize: "drop"
+              RequestHost: "keep"
+              RequestLine: "keep"
+              RequestMethod: "keep"
+              RequestPath: "keep"
+              RequestProtocol: "keep"
+              RequestScheme: "keep"
+              RouterName": "keep"
+              ServiceName: "keep"
+              StartLocal: "keep"
       tags: ["traefik"]
