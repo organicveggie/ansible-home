@@ -52,7 +52,9 @@
   roles:
     - role: "time_machine_docker"
       vars:
-        time_machine_docker_name: "the-time-machine"
+        time_machine_docker_name: "time-machine"
+        time_machine_docker_user: "{{ time_machine_username }}"
+        time_machine_docker_group: "{{ time_machine_groupname }}"
         time_machine_docker_uid: "{{ time_machine_uid }}"
         time_machine_docker_gid: "{{ time_machine_gid }}"
         time_machine_docker_data_directory: "{{ time_machine_data_directory }}"
@@ -60,4 +62,5 @@
         time_machine_docker_network: "{{ time_machine_network }}"
         time_machine_docker_advertised_hostname: "{{ time_machine_hostname }}"
         time_machine_docker_network_ipv4_addr: "{{ time_machine_network_ipv4 }}"
+        time_machine_docker_workgroup: "TMWORKGROUP"
       tags: ["time-machine", "timemachine"]
