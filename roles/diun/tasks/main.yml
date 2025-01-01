@@ -1,10 +1,60 @@
 ---
-- import_tasks: "config.yml"
-  tags:
-    - "diun"
-    - "diun:config"
+- name: "Install configuration yaml"
+  ansible.builtin.template:
+    src: "../templates/diun.yml.j2"
+    dest: "{{ diun_config_file }}"
+    owner: "{{ diun_user }}"
+    group: "{{ diun_group }}"
+    mode: "0660"
 
-- import_tasks: docker.yml
-  tags:
-    - "diun"
-    - "diun:docker"
+- name: "Install file provider yaml"
+  ansible.builtin.template:
+    src: "../templates/provider.yml.j2"
+    dest: "{{ diun_provider_file_name }}"
+    owner: "{{ diun_user }}"
+    group: "{{ diun_group }}"
+    mode: "0660"
+
+- name: "Create Diun Docker Volume"
+  community.docker.docker_volume:
+    name: "{{ diun_docker_volume_name }}"
+
+- name: "Create Diun Docker Container"
+  community.docker.docker_container:
+    name: "{{ diun_docker_name }}"
+    image: "{{ diun_docker_image_name }}:{{ diun_docker_image_version }}"
+    pull: true
+    mounts:
+      - source: "{{ diun_docker_volume_name }}"
+        target: "/data"
+        type: "volume"
+      - source: "{{ diun_config_file }}"
+        target: "/diun.yml"
+        type: "bind"
+        read_only: "true"
+      - source: "{{ diun_provider_file_name }}"
+        target: "/provider.yml"
+        type: "bind"
+        read_only: "true"
+      - source: "/var/run/docker.sock"
+        target: "/var/run/docker.sock"
+        type: "bind"
+    network_mode: "{{ diun_docker_network_name }}"
+    networks:
+      - name: "{{ diun_docker_network_name }}"
+    env:
+      "TZ": "{{ diun_docker_timezone }}"
+    restart_policy: unless-stopped
+    memory: "{{ diun_docker_memory }}"
+    cpus: "{{ diun_docker_cpus }}"
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: yes
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
+    labels:
+      traefik.enable: "false"

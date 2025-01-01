@@ -18,6 +18,9 @@ diun_notify_mail_password: "secret"
 diun_notify_mail_from: "diun@example.com"
 diun_notify_mail_to: "webmaster@example.com"
 
+diun_docker_name: "diun"
+diun_docker_image_name: "crazymax/diun"
+diun_docker_image_version: "latest"
 diun_docker_volume_name: "diun-data"
 diun_docker_network_name: "diun"
 
