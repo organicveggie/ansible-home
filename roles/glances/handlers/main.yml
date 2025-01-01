@@ -1,3 +1,0 @@
----
-- name: restart glances
-  command: docker restart glances
