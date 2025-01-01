@@ -82,14 +82,6 @@ flaresolverr_docker_network_aliases:
   - "flaresolverr"
 
 ###
-### Glances
-###
-glances_host_domain: "{{ veggie_nas_domain_name }}"
-glances_network_name: "glances"
-glances_network_gateway: "{{ vault_glances_network_gateway }}"
-glances_network_subnet: "{{ vault_glances_network_subnet }}"
-
-###
 ### Grafana
 ###
 grafana_docker_memory: "1G"
