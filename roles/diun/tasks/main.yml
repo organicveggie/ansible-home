@@ -1,15 +1,10 @@
 ---
-- import_tasks: setup.yml
+- import_tasks: "config.yml"
   tags:
-    - diun
-    - diun:setup
-
-- import_tasks: config.yml
-  tags:
-    - diun
-    - diun:config
+    - "diun"
+    - "diun:config"
 
 - import_tasks: docker.yml
   tags:
-    - diun
-    - diun:docker
+    - "diun"
+    - "diun:docker"

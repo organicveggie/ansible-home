@@ -33,21 +33,7 @@ veggie_users_passwords:
 ###
 ### Diun
 ###
-diun_docker_network_name: "diun"
-diun_docker_network_subnet: "{{ vault_diun_docker_network_subnet }}"
-diun_docker_network_gateway: "{{ vault_diun_docker_network_gateway }}"
-diun_docker_timezone: "{{ vault_diun_docker_timezone }}"
-
-diun_notify_mail_host: "{{ vault_diun_notify_mail_host }}"
-diun_notify_mail_port: "{{ vault_diun_notify_mail_port }}"
-diun_notify_mail_ssl: true
-diun_notify_mail_insecure_skip_verify: false
-diun_notify_mail_username: "{{ vault_diun_notify_mail_username }}"
-diun_notify_mail_password: "{{ vault_diun_notify_mail_password }}"
-diun_notify_mail_from: "{{ vault_diun_notify_mail_from }}"
-diun_notify_mail_to: "{{ vault_diun_notify_mail_to }}"
-diun_regopts_dockerio_user: "{{ vault_diun_regopts_dockerio_user }}"
-diun_regopts_dockerio_passwd: "{{ vault_diun_regopts_dockerio_passwd }}"
+diun_network_name: "diun"
 
 organicveggie_docker_networks:
   - name: "{{ portainer_network_name }}"
@@ -966,29 +952,29 @@ traefik_confkey_certificatesResolvers:
       caServer: "{{ traefik_le_ca_server }}"
       dnsChallenge:
         provider: route53
-traefik_confkey_entryPoints:
-  java_http:
-    address: ":8080"
-  resilio_sync_tcp:
-    address: ":55555"
-  resilio_sync_udp:
-    address: ":55555/udp"
-  syncthing_tcp:
-    address: ":22000"
-  syncthing_udp:
-    address: ":22000/udp"
-  unific_speed_test:
-    address: ":6789"
-  unific_stun:
-    address: ":3478/udp"
-  unific_dev_discovery:
-    address: ":10001/udp"
-  unific_controller_discovery:
-    address: ":19000/udp"
-  zwavejsui:
-    address: ":3200"
-traefik_confkey_serversTransport:
-  insecureSkipVerify: "true"
+# traefik_confkey_entryPoints:
+#   java_http:
+#     address: ":8080"
+#   resilio_sync_tcp:
+#     address: ":55555"
+#   resilio_sync_udp:
+#     address: ":55555/udp"
+#   syncthing_tcp:
+#     address: ":22000"
+#   syncthing_udp:
+#     address: ":22000/udp"
+#   unific_speed_test:
+#     address: ":6789"
+#   unific_stun:
+#     address: ":3478/udp"
+#   unific_dev_discovery:
+#     address: ":10001/udp"
+#   unific_controller_discovery:
+#     address: ":19000/udp"
+#   zwavejsui:
+#     address: ":3200"
+# traefik_confkey_serversTransport:
+#   insecureSkipVerify: "true"
 # traefik_container_environment:
 #   AWS_HOSTED_ZONE_ID: "{{ acme_route53_hosted_zone_id }}"
 #   AWS_ACCESS_KEY_ID: "{{ letsencrypt_aws_access_key }}"

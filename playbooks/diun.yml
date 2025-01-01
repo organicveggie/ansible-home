@@ -4,19 +4,79 @@
   remote_user: "sean"
   become: yes
 
+  vars:
+    diun_username: "diun"
+    diun_uid: 2450
+
+    diun_network_subnet: "{{ vault_diun_network_subnet }}"
+    diun_network_gateway: "{{ vault_diun_network_gateway }}"
+
+    diun_config_dir: "/etc/diun"
+
   pre_tasks:
+    - name: "Set Diun group id"
+      ansible.builtin.set_fact:
+        _diun_gid: "{{ diun_gid | default(diun_uid) }}"
+
+    - name: "Set Diun group name"
+      ansible.builtin.set_fact:
+        _diun_groupname: "{{ diun_groupname | default(diun_username) }}"
+
+    - name: "Create Diun group"
+      ansible.builtin.group:
+        name: "{{ _diun_groupname }}"
+        gid: "{{ _diun_gid }}"
+        state: "present"
+
+    - name: "Create Diun user"
+      ansible.builtin.user:
+        name: "{{ diun_username }}"
+        password: "*"
+        shell: "/bin/false"
+        system: false
+        uid: "{{ diun_uid }}"
+        group: "{{ _diun_groupname }}"
+        password_lock: true
+    
+    - name: "Create Diun directories"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ diun_username }}"
+        group: "{{ _diun_groupname }}"
+        mode: "0770"
+      with_items:
+        - "{{ diun_config_dir }}"
+
     - name: "Setup Diun Docker network"
       community.docker.docker_network:
-        name: "{{ diun_docker_network_name }}"
+        name: "{{ diun_network_name }}"
         driver: "bridge"
         enable_ipv6: "no"
         internal: "no"
         scope: "local"
         ipam_config:
-          - subnet: "{{ diun_docker_network_subnet }}"
-            gateway: "{{ diun_docker_network_gateway }}"
-      tags: ["docker", "network", "networks"]
+          - subnet: "{{ diun_network_subnet }}"
+            gateway: "{{ diun_network_gateway }}"
 
   roles:
     - role: "diun"
+      vars:
+        diun_user: "{{ diun_username }}"
+        diun_uid: "{{ diun_uid }}"
+        diun_group: "{{ _diun_groupname }}"
+        diun_docker_network_name: "{{ diun_network_name }}"
+        diun_docker_network_subnet: "{{ diun_network_subnet }}"
+        diun_docker_network_gateway: "{{ diun_network_gateway }}"
+        diun_docker_timezone: "{{ home_timezone }}"
+        diun_notify_mail_host: "{{ vault_diun_notify_mail_host }}"
+        diun_notify_mail_port: "{{ vault_diun_notify_mail_port }}"
+        diun_notify_mail_ssl: true
+        diun_notify_mail_insecure_skip_verify: false
+        diun_notify_mail_username: "{{ vault_diun_notify_mail_username }}"
+        diun_notify_mail_password: "{{ vault_diun_notify_mail_password }}"
+        diun_notify_mail_from: "{{ vault_diun_notify_mail_from }}"
+        diun_notify_mail_to: "{{ vault_diun_notify_mail_to }}"
+        diun_regopts_dockerio_user: "{{ vault_diun_regopts_dockerio_user }}"
+        diun_regopts_dockerio_passwd: "{{ vault_diun_regopts_dockerio_passwd }}"
       tags: ["diun"]

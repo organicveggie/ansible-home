@@ -1,12 +1,12 @@
 ---
-- name: Diun Docker Volume
+- name: "Create Diun Docker Volume"
   community.docker.docker_volume:
     name: "{{ diun_docker_volume_name }}"
 
-- name: Diun Docker Container
+- name: "Create Diun Docker Container"
   community.docker.docker_container:
-    name: diun
-    image: crazymax/diun:latest
+    name: "diun"
+    image: "{{ diun_docker_image_name }}:{{ diun_docker_image_version }}"
     pull: true
     mounts:
       - source: "{{ diun_docker_volume_name }}"
