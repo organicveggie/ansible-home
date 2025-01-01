@@ -543,6 +543,7 @@ navidrome_network_name: "{{ vault_navidrome_network_name }}"
 navidrome_network_subnet: "{{ vault_navidrome_network_subnet }}"
 navidrome_network_gateway: "{{ vault_navidrome_network_gateway }}"
 
+navidrome_base_url: "https://navidrome.{{ navidrome_host_domain }}"
 navidrome_host_domain: "{{ veggie_base_domain_name }}"
 navidrome_lastfm_apikey: "{{ vault_navidrome_lastfm_apikey }}"
 navidrome_lastfm_secret: "{{ vault_navidrome_lastfm_secret }}"

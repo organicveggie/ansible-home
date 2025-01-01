@@ -30,7 +30,7 @@
 
     - role: "navidrome_docker"
       vars:
-        navidrome_docker_base_url: "https://navidrome.home.bealetech.com"
+        navidrome_docker_base_url: "{{ navidrome_base_url }}"
         navidrome_docker_extra_networks:
           - name: "{{ navidrome_network_name }}"
         navidrome_docker_host_domain: "{{ navidrome_host_domain }}"
