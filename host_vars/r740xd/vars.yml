@@ -6,6 +6,65 @@ nas_docker_zfs_dataset: "data/docker"
 nas_docker_home: "/{{ nas_docker_zfs_dataset }}"
 
 ###
+### Glances
+###
+glances_host_domain_name: "{{ veggie_fqdn }}"
+glances_config_data:
+  diskio:
+    "hide": "loop.*,md0,sd[b-z][0-9]"
+  folders:
+    "folder_1_path": "/nas-mirror/books"
+    "folder_2_path": "/nas-mirror/documents"
+    "folder_3_path": "/nas-mirror/music"
+    "folder_4_path": "/nas-mirror/photos"
+    "folder_5_path": "/nas-mirror/time=machine"
+    "folder_6_path": "/data/videos/movies/1080p"
+    "folder_7_path": "/data/videos/movies/2160p"
+    "folder_8_path": "/data/videos/tv/1080p"
+    "folder_9_path": "/data/videos/tv/2160p"
+  fs:
+    "hide": "/etc.*"
+  network:
+    "hide": "docker.*,lo,veth.*"
+glances_extra_bind_mounts:
+    - source: "/nas-mirror/books"
+      target: "/nas-mirror/books"
+      type: "bind"
+      read_only: true
+    - source: "/nas-mirror/documents"
+      target: "/nas-mirror/documents"
+      type: "bind"
+      read_only: true
+    - source: "/nas-mirror/music"
+      target: "/nas-mirror/music"
+      type: "bind"
+      read_only: true
+    - source: "/nas-mirror/photos"
+      target: "/nas-mirror/photos"
+      type: "bind"
+      read_only: true
+    - source: "/nas-mirror/time-machine"
+      target: "/nas-mirror/time-machine"
+      type: "bind"
+      read_only: true
+    - source: "/data/videos/movies/1080p"
+      target: "/data/videos/movies/1080p"
+      type: "bind"
+      read_only: true
+    - source: "/data/videos/movies/2160p"
+      target: "/data/videos/movies/2160p"
+      type: "bind"
+      read_only: true
+    - source: "/data/videos/tv/1080p"
+      target: "/data/videos/tv/1080p"
+      type: "bind"
+      read_only: true
+    - source: "/data/videos/tv/2160p"
+      target: "/data/videos/tv/2160p"
+      type: "bind"
+      read_only: true
+
+###
 ### Home Assistant
 ###
 hass_ecowitt_hass_auth_token: "{{ vault_hass_ecowitt_hass_auth_token }}"
@@ -18,6 +77,11 @@ hass_zwave_device: "{{ vault_hass_zwave_device }}"
 kometa_docker_plex_url: "{{ vault_kometa_docker_plex_url }}"
 kometa_docker_plex_token: "{{ vault_kometa_docker_plex_token }}"
 kometa_docker_tautulli_apikey: "{{ vault_kometa_docker_tautulli_apikey }}"
+
+###
+### Navidrome
+###
+navidrome_base_url: "https://navidrome"
 
 ###
 ### NodeRED

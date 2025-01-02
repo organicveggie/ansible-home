@@ -31,6 +31,17 @@
     ###
     ### Configure additional networks, ports, and entrypoints
     ###
+    - name: "Check if Glances network exists"
+      community.docker.docker_network_info:
+        name: "{{ glances_network_name }}"
+      register: "_glances_network_info"
+      when: "glances_network_name"
+
+    - name: "Enable Glances extra network"
+      ansible.builtin.set_fact:
+        _extra_networks: "{{ _extra_networks | default([]) + [{'name': glances_network_name}] }}"
+      when: "glances_network_name and _glances_network_info.exists"
+
     - name: "Check if Home Assistant network exists"
       community.docker.docker_network_info:
         name: "{{ hass_network_name }}"

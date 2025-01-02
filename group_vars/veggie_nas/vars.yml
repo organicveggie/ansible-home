@@ -82,6 +82,21 @@ flaresolverr_docker_network_aliases:
   - "flaresolverr"
 
 ###
+### Glances
+###
+glances_network_name: "glances"
+glances_network_subnet: "{{ vault_glances_network_subnet}}"
+glances_network_gateway: "{{ vault_glances_network_gateway }}"
+glances_config_data:
+  glances_docker_config:
+    diskio:
+      "hide": "loop.*,md0"
+    fs:
+      "hide": "/etc.*"
+    network:
+      "hide": "docker.*,lo"
+
+###
 ### Grafana
 ###
 grafana_docker_memory: "1G"

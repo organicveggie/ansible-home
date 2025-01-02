@@ -6,6 +6,30 @@ nas_docker_zfs_dataset: "nas/data/docker"
 nas_docker_home: "/mnt/{{ nas_docker_zfs_dataset }}"
 
 ###
+### Glances
+###
+glances_host_domain_name: "{{ veggie_base_domain_name }}"
+glances_config_data:
+  diskio:
+    hide: "loop.*,md0,sda1,sda9,sdb1,sdb9,sdc1,sdc9,sdd1,sdd9,sde1,sde9,sdf1,sdf2,sdf3,sdf4,sdf5,sdf9,sdg1,sdg2,sdg3,sdg4,sdg5,sdg9,sdh1,sdh9,sdi1,sdi9,sdj1,sdj9"
+  folders:
+    "folder_1_path": "/mnt/nas/time-machine"
+    "folder_2_path": "/mnt/nas/plex"
+  fs:
+    "hide": "/etc.*"
+  network:
+    "hide": "docker.*,lo,veth4fd8882.*"
+glances_extra_bind_mounts:
+  - source: "/mnt/nas/time-machine"
+    target: "/mnt/nas/time-machine"
+    type: "bind"
+    read_only: true
+  - source: "/mnt/nas/plex"
+    target: "/mnt/nas/plex"
+    type: "bind"
+    read_only: true
+
+###
 ### Home Assistant
 ###
 hass_ecowitt_hass_auth_token: "{{ vault_hass_ecowitt_hass_auth_token }}"

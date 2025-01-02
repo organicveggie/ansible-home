@@ -1,13 +1,45 @@
 ---
-glances_available_externally: "true"
+#####
+# Config file
+#####
+
+# Directory on the host where the glances.conf file should go.
+glances_docker_config_path: "/etc/glances"
+
+# Name of the glances config file on the host.
+glances_docker_config_name: "glances.conf"
+
+# Dictionary of configuration sections. See https://raw.githubusercontent.com/nicolargo/glances/master/conf/glances.conf
+# for more details.
+glances_docker_config: {}
+
+#####
+# Container
+#####
+glances_docker_name: "glances"
+glances_docker_image: "nicolargo/glances"
+glances_docker_image_version: "latest"
+glances_docker_memory: 1g
+
+# Additional dictionary of host OS paths to bind mount read-only in the container. Each key in the
+# dictionary is a path on the host which should be mounted in the container. The value is the
+# target mount point in the container.
+# 
+# Example:
+#   glances_docker_extra_bind_mounts:
+#     "/source1/path/to/mount1": "/path/to/mount"
+#     "/other/path/to/other/mount": "/opt/other"
+glances_docker_extra_bind_mounts: []
+
+#####
+# Traefik
+#####
+glances_docker_available_externally: "true"
+glances_docker_hostname: "glances"
+glances_docker_host_domain: "example.com"
 
 # network
-glances_network_name: "glances"
-glances_network_gateway: "172.1.0.1"
-glances_network_subnet: "172.1.0.0/24"
-glances_hostname: "glances"
-glances_host_domain: example.com
-glances_port: "61208"
-
-# specs
-glances_memory: 1g
+glances_docker_network_name: "glances"
+glances_docker_network_gateway: "172.1.0.1"
+glances_docker_network_subnet: "172.1.0.0/24"
+glances_docker_port: "61208"

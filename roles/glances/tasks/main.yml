@@ -1,39 +1,86 @@
 ---
-- name: "Create /etc/glances"
+- name: "Create {{ glances_docker_config_path }}"
   ansible.builtin.file:
+    # path: "{{ glances_docker_config_path }}"
     path: "/etc/glances"
     state: "directory"
-    owner: "root"
-    group: "root"
     mode: "0755"
 
-- name: "Install glances.conf"
+- name: "Define full pathname to the glances config file"
+  ansible.builtin.set_fact:
+    _glances_docker_config_pathname: "{{ glances_docker_config_path }}/{{ glances_docker_config_name }}"
+
+- name: "Install {{ _glances_docker_config_pathname }}"
   ansible.builtin.template:
-    src: "../templates/glances.conf"
+    src: "templates/glances.conf"
+    # dest: "{{ _glances_docker_config_pathname }}"
     dest: "/etc/glances/glances.conf"
-    owner: "root"
-    group: "root"
-  register: "_glances_config"
+    mode: "0640"
+  register: _glances_config
+
+# - name: "Define dictionary of required mount points"
+#   ansible.builtin.set_fact:
+#     _glances_docker_required_mounts:
+#       "/var/run/docker.sock": "/var/run/docker.sock"
+#       "/etc/timezone": "/etc/timezone"
+#       "{{ _glances_docker_config_pathname }}": "/glances/conf/glances.conf"
+#       "/etc/os-release": "/etc/os-release"
+
+- name: "Define dictionary of required mount points"
+  ansible.builtin.set_fact:
+    _glances_docker_required_mounts:
+      - source: "/var/run/docker.sock"
+        target: "/var/run/docker.sock"
+        type: "bind"
+        read_only: true
+      - source: "/etc/timezone"
+        target: "/etc/timezone"
+        type: "bind"
+        read_only: true
+      - source: "{{ _glances_docker_config_pathname }}"
+        target: "/glances/conf/glances.conf"
+        type: "bind"
+        read_only: true
+      - source: "/etc/os-release"
+        target: "/etc/os-release"
+        type: "bind"
+        read_only: true
+
+- name: "Define Docker mount list for required mounts"
+  ansible.builtin.set_fact:
+    _glances_docker_mount_list: "{{ _glances_docker_mount_list | default([]) + [item] }}"
+  loop: "{{ _glances_docker_required_mounts | default([]) }}"
+
+# - name: "Build list of extra mount points"
+#   ansible.builtin.set_fact:
+#     _glances_docker_mount_list: >
+#       {{ _glances_docker_mount_list | default([]) + [{'source': item.key, 'target': item.value, 'type': 'bind', 'read_only': true }] }}
+#   loop: "{{ glances_docker_extra_bind_mounts | default({}) | dict2items }}"
+
+- name: "Build list of extra mount points"
+  ansible.builtin.set_fact:
+    _glances_docker_mount_list: >
+      {{ _glances_docker_mount_list | default([]) + [item] }}
+  loop: "{{ glances_docker_extra_bind_mounts | default({}) }}"
+
+# - ansible.builtin.debug:
+#     msg: "{{ _glances_docker_mount_list }}"
 
 - name: "Create Glances Docker Container"
   community.docker.docker_container:
-    name: "glances"
-    image: "nicolargo/glances:latest"
+    name: "{{ glances_docker_name }}"
+    image: "{{ glances_docker_image }}:{{ glances_docker_image_version }}"
     pull: true
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "/etc/timezone:/etc/timezone:ro"
-      - "/etc/glances/glances.conf:/glances/conf/glances.conf"
-      - "/mnt/nas:/mnt/nas:ro"
-    pid_mode: host
     exposed_ports:
-      - "{{ glances_port }}"
-    network_mode: "{{ glances_network_name }}"
+      - "{{ glances_docker_port }}"
     env:
       GLANCES_OPT: "-w"
+    mounts: "{{ _glances_docker_mount_list }}"
+    network_mode: "{{ glances_docker_network_name }}"
     restart_policy: unless-stopped
     restart: "{{ _glances_config.changed | default(false) }}"
-    memory: "{{ glances_memory }}"
+    memory: "{{ glances_docker_memory }}"
+    pid_mode: host
     security_opts:
       - "apparmor:unconfined"
     container_default_behavior: no_defaults
@@ -46,10 +93,10 @@
     read_only: no
     tty: no
     labels:
-      traefik.enable: "{{ glances_available_externally }}"
-      traefik.docker.network: "{{ glances_network_name }}"
-      traefik.http.routers.glances.rule: "Host(`{{ glances_hostname }}.{{ glances_host_domain }}`)"
+      traefik.enable: "{{ glances_docker_available_externally }}"
+      traefik.docker.network: "{{ glances_docker_network_name }}"
+      traefik.http.routers.glances.rule: "Host(`{{ glances_docker_hostname }}.{{ glances_docker_host_domain }}`)"
       traefik.http.routers.glances.entrypoints: "http,https"
       traefik.http.routers.glances.tls.certresolver: "letsencrypt"
-      traefik.http.routers.glances.tls.domains[0].main: "*.{{ glances_host_domain }}"
-      traefik.http.services.glances.loadbalancer.server.port: "{{ glances_port }}"
+      traefik.http.routers.glances.tls.domains[0].main: "*.{{ glances_docker_host_domain }}"
+      traefik.http.services.glances.loadbalancer.server.port: "{{ glances_docker_port }}"
