@@ -18,6 +18,7 @@ glances_config_data:
   fs:
     "hide": "/etc.*"
   network:
+    "disabled": "true"
     "hide": "docker.*,lo,veth4fd8882.*"
 glances_extra_bind_mounts:
   - source: "/mnt/nas/time-machine"

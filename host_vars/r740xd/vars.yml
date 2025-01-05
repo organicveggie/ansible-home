@@ -25,6 +25,7 @@ glances_config_data:
   fs:
     "hide": "/etc.*"
   network:
+    "disabled": "true"
     "hide": "docker.*,lo,veth.*"
 glances_extra_bind_mounts:
     - source: "/nas-mirror/books"
