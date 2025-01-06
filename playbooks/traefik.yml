@@ -31,75 +31,99 @@
     ###
     ### Configure additional networks, ports, and entrypoints
     ###
-    - name: "Check if Glances network exists"
-      community.docker.docker_network_info:
-        name: "{{ glances_network_name }}"
-      register: "_glances_network_info"
+    - name: "Process Glances network"
       when: "glances_network_name"
+      block:
+        - name: "Check if Glances network exists"
+          community.docker.docker_network_info:
+            name: "{{ glances_network_name }}"
+          register: "_glances_network_info"
 
-    - name: "Enable Glances extra network"
-      ansible.builtin.set_fact:
-        _extra_networks: "{{ _extra_networks | default([]) + [{'name': glances_network_name}] }}"
-      when: "glances_network_name and _glances_network_info.exists"
+        - name: "Enable Glances extra network"
+          ansible.builtin.set_fact:
+            _extra_networks: "{{ _extra_networks | default([]) + [{'name': glances_network_name}] }}"
+          when: "_glances_network_info.exists"
 
-    - name: "Check if Home Assistant network exists"
-      community.docker.docker_network_info:
-        name: "{{ hass_network_name }}"
-      register: "_hass_network_info"
+    - name: "Process Home Assistant network"
       when: "hass_network_name"
+      block:
+        - name: "Check if Home Assistant network exists"
+          community.docker.docker_network_info:
+            name: "{{ hass_network_name }}"
+          register: "_hass_network_info"    
 
-    - name: "Enable Home Assistant extra network"
-      ansible.builtin.set_fact:
-        _extra_networks: "{{ _extra_networks | default([]) + [{'name': hass_network_name}] }}"
-      when: "hass_network_name and _hass_network_info.exists"
+        - name: "Enable Home Assistant extra network"
+          ansible.builtin.set_fact:
+            _extra_networks: "{{ _extra_networks | default([]) + [{'name': hass_network_name}] }}"
+          when: "_hass_network_info.exists"
 
-    - name: "Check if Portainer network exists"
-      community.docker.docker_network_info:
-        name: "{{ portainer_network_name }}"
-      register: "_portainer_network_info"
+    - name: "Process Navidrome network"
+      when: "navidrome_network_name"
+      block:
+        - name: "Check if Navidrome network exists"
+          community.docker.docker_network_info:
+            name: "{{ navidrome_network_name }}"
+          register: "_navidrome_network_info"
+
+        - name: "Enable Navidrome extra network"
+          ansible.builtin.set_fact:
+            _extra_networks: "{{ _extra_networks | default([]) + [{'name': navidrome_network_name}] }}"
+          when: "_navidrome_network_info.exists"
+
+    - name: "Process Portainer network"
       when: "portainer_network_name"
+      block:
+        - name: "Check if Portainer network exists"
+          community.docker.docker_network_info:
+            name: "{{ portainer_network_name }}"
+          register: "_portainer_network_info"
 
-    - name: "Enable Portainer extra network"
-      ansible.builtin.set_fact:
-        _extra_networks: "{{ _extra_networks | default([]) + [{'name': portainer_network_name}] }}"
-      when: "portainer_network_name and _portainer_network_info.exists"
+        - name: "Enable Portainer extra network"
+          ansible.builtin.set_fact:
+            _extra_networks: "{{ _extra_networks | default([]) + [{'name': portainer_network_name}] }}"
+          when: "_portainer_network_info.exists"
 
-    - name: "Check if Servarr network exists"
-      community.docker.docker_network_info:
-        name: "{{ servarr_docker_network }}"
-      register: "_servarr_network_info"
+    - name: "Process Servarr network"
       when: "servarr_docker_network"
+      block:
+        - name: "Check if Servarr network exists"
+          community.docker.docker_network_info:
+            name: "{{ servarr_docker_network }}"
+          register: "_servarr_network_info"
 
-    - name: "Enable Servarr extra network"
-      ansible.builtin.set_fact:
-        _extra_networks: "{{ _extra_networks | default([]) + [{'name': servarr_docker_network}] }}"
-      when: "servarr_docker_network and _servarr_network_info.exists"
+        - name: "Configure Traefik for Servarr tools"
+          when: "_servarr_network_info.exists"
+          block:
+            - name: "Enable Servarr extra network"
+              ansible.builtin.set_fact:
+                _extra_networks: "{{ _extra_networks | default([]) + [{'name': servarr_docker_network}] }}"
 
-    - name: "Enable Syncthings (Servarr) ports"
-      ansible.builtin.set_fact:
-        _extra_ports: "{{ _extra_ports | default([]) + ['22000:22000'] }}"
-      when: "servarr_docker_network and _servarr_network_info.exists"
+            - name: "Enable Syncthings (Servarr) ports"
+              ansible.builtin.set_fact:
+                _extra_ports: "{{ _extra_ports | default([]) + ['22000:22000'] }}"
 
-    - name: "Check if UniFi Controller network exists"
-      community.docker.docker_network_info:
-        name: "{{ unific_network_name }}"
-      register: "_unific_network_info"
+    - name: "Process UniFi Controller network"
       when: "unific_network_name"
+      block:
+        - name: "Check if UniFi Controller network exists"
+          community.docker.docker_network_info:
+            name: "{{ unific_network_name }}"
+          register: "_unific_network_info"
 
-    - name: "Enable UniFi Controller extra network"
-      ansible.builtin.set_fact:
-        _extra_networks: "{{ _extra_networks | default([]) + [{'name': unific_network_name}] }}"
-      when: "unific_network_name and _unific_network_info.exists"
+        - name: "Configure Traefik for UniFi Controller"
+          when: "_unific_network_info.exists"
+          block:
+            - name: "Enable UniFi Controller extra network"
+              ansible.builtin.set_fact:
+                _extra_networks: "{{ _extra_networks | default([]) + [{'name': unific_network_name}] }}"
 
-    - name: "Enable UniFi Controlller ports"
-      ansible.builtin.set_fact:
-        _extra_ports: "{{ _extra_ports | default([]) + _unific_ports }}"
-      when: "unific_network_name and _unific_network_info.exists"
-    
-    - name: "Enable UniFi Controller entrypoints"
-      ansible.builtin.set_fact:
-        _entrypoints: "{{ _entrypoints | default({}) | combine(_unific_entrypoints) }}"
-      when: "unific_network_name and _unific_network_info.exists"
+            - name: "Enable UniFi Controlller ports"
+              ansible.builtin.set_fact:
+                _extra_ports: "{{ _extra_ports | default([]) + _unific_ports }}"
+            
+            - name: "Enable UniFi Controller entrypoints"
+              ansible.builtin.set_fact:
+                _entrypoints: "{{ _entrypoints | default({}) | combine(_unific_entrypoints) }}"
 
     - name: "Define all Traefik ports"
       ansible.builtin.set_fact:
