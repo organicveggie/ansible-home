@@ -7,16 +7,23 @@
   pre_tasks:
     - name: "Setup Node-RED Docker network"
       community.docker.docker_network:
-        name: "{{ nodered_docker_network_name }}"
+        name: "{{ nodered_network_name }}"
         driver: "bridge"
         enable_ipv6: "no"
         internal: "no"
         scope: "local"
         ipam_config:
-          - subnet: "{{ nodered_docker_network_subnet }}"
-            gateway: "{{ nodered_docker_network_gateway }}"
+          - subnet: "{{ nodered_network_subnet }}"
+            gateway: "{{ nodered_network_gateway }}"
       tags: ["docker", "network", "networks"]
 
   roles:
     - role: "nodered"
+      vars:
+        nodered_docker_network_name: "{{ nodered_network_name }}"
+        nodered_docker_network_subnet: "{{ nodered_network_subnet }}"
+        nodered_docker_network_gateway: "{{ nodered_network_gateway }}"
+        nodered_docker_timezone: "{{ nodered_timezone }}"
+        # nodered_docker_extra_networks:
+        #   - name: "{{ hass_network_name }}"
       tags: ["nodered"]

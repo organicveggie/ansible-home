@@ -70,6 +70,19 @@
             _extra_networks: "{{ _extra_networks | default([]) + [{'name': navidrome_network_name}] }}"
           when: "_navidrome_network_info.exists"
 
+    - name: "Process Node-RED network"
+      when: "nodered_network_name"
+      block:
+        - name: "Check if Node-RED network exists"
+          community.docker.docker_network_info:
+            name: "{{ nodered_network_name }}"
+          register: "_nodered_network_info"
+
+        - name: "Enable Node-RED extra network"
+          ansible.builtin.set_fact:
+            _extra_networks: "{{ _extra_networks | default([]) + [{'name': nodered_network_name}] }}"
+          when: "_nodered_network_info.exists"
+
     - name: "Process Portainer network"
       when: "portainer_network_name"
       block:
@@ -174,11 +187,8 @@
         traefik_extra_networks: "{{ _extra_networks }}"
     #       # - name: "{{ calibre_web_docker_network }}"
     #       # - name: "{{ diun_docker_network_name }}"
-    #       # - name: "{{ glances_network_name }}"
     #       # - name: "{{ grafana_network_name }}"
     #       # - name: "{{ hass_network_name }}"
-    #       # - name: "{{ navidrome_network_name }}"
-    #       # - name: "{{ nodered_docker_network_name }}"
     #       # - name: "{{ photoprism_network_name }}"
     #       # - name: "{{ resilio_docker_network }}"
     #       # - name: "{{ restic_rest_server_network_name }}"
