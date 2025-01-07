@@ -3,49 +3,67 @@
   hosts: "veggie_nas"
   remote_user: "sean"
   become: yes
+
+  vars:
+    homeassistant_fqdn: "{{ homeassistant_host_name }}.{{ homeassistant_host_domain }}"
   
   pre_tasks:
   - name: "Setup Home Assistant Docker network"
     community.docker.docker_network:
-      name: "{{ hass_network_name }}"
+      name: "{{ homeassistant_network_name }}"
       driver: "bridge"
       enable_ipv6: "no"
       internal: "no"
       scope: "local"
       ipam_config:
-        - subnet: "{{ hass_network_subnet }}"
-          gateway: "{{ hass_network_gateway }}"
+        - subnet: "{{ homeassistant_network_subnet }}"
+          gateway: "{{ homeassistant_network_gateway }}"
     tags: ["docker", "network", "networks"]
   
   roles:
     - role: "hass_postgres_setup"
       vars:
-        pgsql_init_tempates_dir: "{{ hass_docker_pgsql_init_tempates_dir }}"
+        pgsql_init_tempates_dir: "{{ homeassistant_pgsql_init_tempates_dir }}"
       tags: ["{postgres}", "pgsql", "setup"]
 
     - role: "organicveggie.postgres_docker"
       vars:
-        postgres_docker_admin_password: "{{ hass_docker_pgsql_admin_password }}"
-        postgres_docker_image: "{{ hass_docker_pgsql_image }}"
-        postgres_docker_name: "{{ hass_docker_pgsql_name }}"
+        postgres_docker_admin_password: "{{ homeassistant_pgsql_admin_password }}"
+        postgres_docker_image: "{{ homeassistant_pgsql_image }}"
+        postgres_docker_name: "{{ homeassistant_pgsql_name }}"
         postgres_docker_network_create: false
-        postgres_docker_network_name: "{{ hass_docker_pgsql_network_name }}"
+        postgres_docker_network_name: "{{ homeassistant_pgsql_network_name }}"
         postgres_docker_use_volumes: true
-        postgres_docker_volume_init_name: "{{ hass_docker_pgsql_volume_init_name }}"
-        postgres_docker_volume_conf_name: "{{ hass_docker_pgsql_volume_conf_name }}"
-        postgres_docker_volume_data_name: "{{ hass_docker_pgsql_volume_data_name }}"
+        postgres_docker_volume_init_name: "{{ homeassistant_pgsql_volume_init_name }}"
+        postgres_docker_volume_conf_name: "{{ homeassistant_pgsql_volume_conf_name }}"
+        postgres_docker_volume_data_name: "{{ homeassistant_pgsql_volume_data_name }}"
         postgres_docker_available_externally: "false"
         postgres_docker_initscripts:
-          - "{{ hass_docker_pgsql_init_tempates_dir }}/01_create_role_db.sql"
+          - "{{ homeassistant_pgsql_init_tempates_dir }}/01_create_role_db.sql"
       tags: ["postgres", "pgsql"]
 
     - name: "organicveggie.zwavejsui"
       vars:
-        zwavejsui_docker_device: "{{ hass_zwave_device }}"
-        zwavejsui_docker_host_domain: "{{ hass_host_domain }}"
-        zwavejsui_docker_network: "{{ hass_network_name }}"
-        zwavejsui_docker_timezone: "{{ hass_home_timezone }}"
+        zwavejsui_docker_device: "{{ homeassistant_zwave_device }}"
+        zwavejsui_docker_host_domain: "{{ homeassistant_host_domain }}"
+        zwavejsui_docker_network: "{{ homeassistant_network_name }}"
+        zwavejsui_docker_timezone: "{{ homeassistant_home_timezone }}"
       tags: ["zwave", "zwavejs", "zwavejsui"]
 
     - name: "home-assistant"
+      vars:
+        hass_network_aliases:
+          - "{{ homeassistant_fqdn }}"
+        hass_home_latitude: "{{ homeassistant_home_latitude }}"
+        hass_home_longitude: "{{ homeassistant_home_longitude }}"
+        hass_host_domain: "{{ homeassistant_host_domain }}"
+        hass_host_name: "{{ homeassistant_host_name }}"
+        hass_home_timezone: "{{ homeassistant_home_timezone }}"
+        hass_zwave_device: "{{ homeassistant_zwave_device }}"
+        hass_network_name: "{{ homeassistant_network_name }}"
+        hass_network_subnet: "{{ homeassistant_network_subnet }}"
+        hass_network_gateway: "{{ homeassistant_network_gateway }}"
+        hass_ecowitt_hass_auth_token: "{{ vault_homeassistant_ecowitt_hass_auth_token }}"
+        hass_ecowitt_hass_webhook_id: "{{ vault_homeassistant_ecowitt_hass_webhook_id }}"
+        hass_ecowitt_hass_url: "http://{{ homeassistant_fqdn }}:8123"
       tags: ["hass", "home-assistant"]

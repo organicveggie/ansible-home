@@ -24,6 +24,6 @@
         nodered_docker_network_subnet: "{{ nodered_network_subnet }}"
         nodered_docker_network_gateway: "{{ nodered_network_gateway }}"
         nodered_docker_timezone: "{{ nodered_timezone }}"
-        # nodered_docker_extra_networks:
-        #   - name: "{{ hass_network_name }}"
+        nodered_docker_extra_networks:
+          - name: "{{ hass_network_name }}"
       tags: ["nodered"]

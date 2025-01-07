@@ -118,37 +118,27 @@ grafana_network_name: "grafana"
 ###
 ### Home Assistant
 ###
-hass_docker_host_domain: "{{ hass_host_domain }}"
-hass_host_domain: "{{ veggie_base_domain_name }}"
-hass_host_name: "ha"
-hass_network_aliases:
-  - "{{ hass_docker_host_name }}.{{ hass_docker_host_domain }}"
-hass_network_name: "hass"
-hass_network_subnet: "{{ vault_hass_network_subnet }}"
-hass_network_gateway: "{{ vault_hass_network_gateway }}"
-hass_home_latitude: "{{ vault_hass_home_latitude }}"
-hass_home_longitude: "{{ vault_hass_home_longitude }}"
-hass_home_timezone: "{{ vault_hass_home_timezone }}"
-hass_zwave_device: "/dev/serial/by-id/usb-1234"
-
-###
-### Home Assistant - Ecowitt Proxy
-###
-hass_ecowitt_hass_auth_token: "TODO-REPLACE-ME"
-hass_ecowitt_hass_webhook_id: "TODO-REPLACE-ME"
-hass_ecowitt_hass_url: "http://{{ hass_host_name }}.{{ hass_host_domain }}:8123"
+homeassistant_host_domain: "{{ veggie_base_domain_name }}"
+homeassistant_network_name: "hass"
+homeassistant_network_subnet: "{{ vault_homeassistant_network_subnet }}"
+homeassistant_network_gateway: "{{ vault_homeassistant_network_gateway }}"
+homeassistant_home_latitude: "{{ vault_homeassistant_home_latitude }}"
+homeassistant_home_longitude: "{{ vault_homeassistant_home_longitude }}"
+homeassistant_home_timezone: "{{ home_timezone }}"
+homeassistant_zwave_device: "/dev/serial/by-id/usb-1234"
+homeassistant_host_name: "hass"
 
 ###
 ### Home Assistant - PostgreSQL
 ###
-hass_docker_pgsql_admin_password: "{{ vault_postgres_docker_admin_password }}"
-hass_docker_pgsql_image: "postgres:15-bullseye"
-hass_docker_pgsql_name: "hass-pgsql"
-hass_docker_pgsql_network_name: "{{ hass_network_name }}"
-hass_docker_pgsql_volume_init_name: "hass-pgsql-initscripts"
-hass_docker_pgsql_volume_conf_name: "hass-pgsql-conf"
-hass_docker_pgsql_volume_data_name: "hass-pgsql-data"
-hass_docker_pgsql_init_tempates_dir: "/mnt/nas/hass/pgsql"
+homeassistant_pgsql_admin_password: "{{ vault_homeassistant_pgsql_admin_password }}"
+homeassistant_pgsql_image: "postgres:15-bullseye"
+homeassistant_pgsql_name: "hass-pgsql"
+homeassistant_pgsql_network_name: "{{ homeassistant_network_name }}"
+homeassistant_pgsql_volume_init_name: "hass-pgsql-initscripts"
+homeassistant_pgsql_volume_conf_name: "hass-pgsql-conf"
+homeassistant_pgsql_volume_data_name: "hass-pgsql-data"
+homeassistant_pgsql_init_tempates_dir: "{{ vault_homeassistant_pgsql_init_tempates_dir }}"
 
 ###
 ### InfluxDB
