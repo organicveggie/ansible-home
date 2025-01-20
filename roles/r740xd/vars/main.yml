@@ -91,11 +91,6 @@ nas_docker_networks:
     subnet: "172.30.14.0/24"    
 
 ###
-### Glances
-###
-nas_glances_network_name: "glances"
-
-###
 ### Home Assistant
 ###
 nas_hass_network_name: "hass"

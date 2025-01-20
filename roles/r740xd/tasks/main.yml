@@ -58,28 +58,28 @@
   ansible.builtin.import_tasks: "portainer.yml"
   tags: ["portainer"]
 
-# - name: "Create Docker macvlan network"
-#   community.docker.docker_network:
-#     name: "{{ nas_docker_macvlan_network_name }}"
-#     driver: "macvlan"
-#     driver_options:
-#       parent: "{{ nas_docker_macvlan_network_parent }}"
-#     enable_ipv6: "no"
-#     internal: "no"
-#     scope: "local"
-#     ipam_config:
-#       - subnet: "{{ nas_docker_macvlan_subnet }}"
-#         gateway: "{{ nas_docker_macvlan_gateway }}"
-#         iprange: "{{ nas_docker_macvlan_iprange }}"
-#   tags: ["docker", "network"]
+- name: "Create Docker macvlan network"
+  community.docker.docker_network:
+    name: "{{ nas_docker_macvlan_network_name }}"
+    driver: "macvlan"
+    driver_options:
+      parent: "{{ nas_docker_macvlan_network_parent }}"
+    enable_ipv6: false
+    internal: false
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ nas_docker_macvlan_subnet }}"
+        gateway: "{{ nas_docker_macvlan_gateway }}"
+        iprange: "{{ nas_docker_macvlan_iprange }}"
+  tags: ["docker", "network"]
 
 # # - ansible.builtin.import_tasks: "samba.yml"
 # #   tags: ["samba"]
 
-# - ansible.builtin.import_tasks: "time-machine.yml"
-#   vars:
-#     nas_time_machine_network_name: "{{ nas_docker_macvlan_network_name }}"
-#   tags: ["time-machine", "timemachine", "tim"]
+- ansible.builtin.import_tasks: "time-machine.yml"
+  vars:
+    nas_time_machine_network_name: "{{ nas_docker_macvlan_network_name }}"
+  tags: ["time-machine", "timemachine", "tim"]
 
 # - ansible.builtin.import_tasks: "calibre-web.yml"
 #   tags: ["calibre-web", "calibreweb"]
@@ -109,6 +109,8 @@
 
 # # - ansible.builtin.import_tasks: "influxdb.yml"
 # #   tags: ["influxdb"]
+
+# TODO: Watchtower
 
 # Traefik needs to be last so all of the networks exist.
 - ansible.builtin.import_tasks: "traefik.yml"

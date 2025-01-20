@@ -19,7 +19,7 @@
   community.general.zfs:
     name: "{{ nas_time_machine_zfs_dataset }}"
     state: present
-  when: "{{ nas_time_machine_zfs_dataset }}"
+  when: "nas_time_machine_zfs_dataset"
 
 - name: "time-machine | Create data folder"
   ansible.builtin.file:
@@ -31,7 +31,7 @@
     group: "{{ nas_time_machine_groupname }}"
 
 - name: "time-machine | Setup TimeMachine container"
-  ansible.builtin.role:
+  ansible.builtin.import_role:
     name: "time_machine_docker"
   vars:
     time_machine_docker_name: "{{ nas_time_machine_docker_name }}"
@@ -45,4 +45,3 @@
     time_machine_docker_advertised_hostname: "{{ nas_time_machine_hostname }}"
     time_machine_docker_network_ipv4_addr: "{{ nas_time_machine_network_ipv4 }}"
     time_machine_docker_workgroup: "{{ nas_time_machine_workgroup }}"
-  tags: ["time-machine", "timemachine"]

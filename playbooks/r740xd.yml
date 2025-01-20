@@ -7,7 +7,7 @@
   vars:
     _docker_macvlan_gateway: "192.168.25.1"
     _docker_macvlan_iprange: "192.168.25.224/28"
-    _docker_macvlan_network_parent: "eno1"
+    _docker_macvlan_network_parent: "bond0"
     _docker_macvlan_subnet: "192.168.25.0/24"
     _glances_config_data:
       glances_docker_config:

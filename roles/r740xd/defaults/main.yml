@@ -42,7 +42,7 @@ nas_docker_macvlan_gateway: null
 nas_docker_macvlan_iprange: null
 
 # Name of the macvlan network.
-nas_docker_macvlan_network_name: "nas-macvlan"
+nas_docker_macvlan_network_name: "nas_macvlan"
 
 # Name of the parent interface on the host for the macvlan network.
 # Examples: "eth0", "eno1"
