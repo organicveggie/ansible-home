@@ -1,7 +1,7 @@
 ---
 - name: "docker | Create Portainer Docker network"
   community.docker.docker_network:
-    name: "{{ portainer_network_name }}"
+    name: "{{ nas_portainer_network_name }}"
     driver: "bridge"
     enable_ipv6: "no"
     internal: "no"
@@ -11,7 +11,8 @@
         gateway: "{{ portainer_network_gateway }}"
 
 - name: "docker | Launch Portainer container"
-  ansible.builtin.import_role: "portainer"
+  ansible.builtin.import_role:
+    name: "portainer"
   vars:
     portainer_docker_home: "{{ nas_docker_home }}"
     portainer_host_domain: "{{ veggie_nas_domain_name }}"

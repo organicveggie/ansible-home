@@ -4,6 +4,7 @@
     src: "motd.txt"
     dest: "/etc/motd"
     mode: "0644"
+  tags: ["motd"]
 
 - name: "Create NAS groups"
   ansible.builtin.group:
@@ -12,14 +13,18 @@
     system: "{{ item.system | default(omit) }}"
     state: "{{ item.state | default('present') }}"
   loop: "{{ nas_groups }}"
+  tags: ["groups", "users", "usergroups"]
 
 - name: "Create NAS users"
-  ansible.builtin.import_role: "organicveggie.ansible-users"
+  ansible.builtin.import_role:
+    name: "organicveggie.ansible-users"
   vars:
     users_list_host: "{{ nas_users }}"
+  tags: ["groups", "users", "usergroups"]
 
 - name: "Run common operations for all veggie servers"
-  ansible.builtin.import_role: "veggie_common"
+  ansible.builtin.import_role:
+    name: "veggie_common"
   vars:
     veggie_common_hostname: "{{ nas_domain_name }}"
     veggie_common_timezone: "{{ nas_timezone }}"
@@ -29,7 +34,8 @@
   tags: ["common"]
 
 - name: "Setup Logrotate"
-  ansible.builtin.import_role: "nickhammond.logrotate"
+  ansible.builtin.import_role: 
+    name: "nickhammond.logrotate"
   vars:
     # TODO: Move this into rclone setup
     logrotate_scripts:
@@ -52,62 +58,62 @@
   ansible.builtin.import_tasks: "portainer.yml"
   tags: ["portainer"]
 
-- name: "Create Docker macvlan network"
-  community.docker.docker_network:
-    name: "{{ nas_docker_macvlan_network_name }}"
-    driver: "macvlan"
-    driver_options:
-      parent: "{{ nas_docker_macvlan_network_parent }}"
-    enable_ipv6: "no"
-    internal: "no"
-    scope: "local"
-    ipam_config:
-      - subnet: "{{ nas_docker_macvlan_subnet }}"
-        gateway: "{{ nas_docker_macvlan_gateway }}"
-        iprange: "{{ nas_docker_macvlan_iprange }}"
-  tags: ["docker", "network"]
+# - name: "Create Docker macvlan network"
+#   community.docker.docker_network:
+#     name: "{{ nas_docker_macvlan_network_name }}"
+#     driver: "macvlan"
+#     driver_options:
+#       parent: "{{ nas_docker_macvlan_network_parent }}"
+#     enable_ipv6: "no"
+#     internal: "no"
+#     scope: "local"
+#     ipam_config:
+#       - subnet: "{{ nas_docker_macvlan_subnet }}"
+#         gateway: "{{ nas_docker_macvlan_gateway }}"
+#         iprange: "{{ nas_docker_macvlan_iprange }}"
+#   tags: ["docker", "network"]
 
-# - ansible.builtin.import_tasks: "samba.yml"
-#   tags: ["samba"]
+# # - ansible.builtin.import_tasks: "samba.yml"
+# #   tags: ["samba"]
 
-- ansible.builtin.import_tasks: "time-machine.yml"
-  vars:
-    nas_time_machine_network_name: "{{ nas_docker_macvlan_network_name }}"
-  tags: ["time-machine", "timemachine", "tim"]
+# - ansible.builtin.import_tasks: "time-machine.yml"
+#   vars:
+#     nas_time_machine_network_name: "{{ nas_docker_macvlan_network_name }}"
+#   tags: ["time-machine", "timemachine", "tim"]
 
-- ansible.builtin.import_tasks: "calibre-web.yml"
-  tags: ["calibre-web", "calibreweb"]
+# - ansible.builtin.import_tasks: "calibre-web.yml"
+#   tags: ["calibre-web", "calibreweb"]
 
-- ansible.builtin.import_tasks: "diun.yml"
-  tags: ["diun"]
+# - ansible.builtin.import_tasks: "diun.yml"
+#   tags: ["diun"]
 
-- ansible.builtin.import_tasks: "glances.yml"
-  tags: ["glances"]
+# - ansible.builtin.import_tasks: "glances.yml"
+#   tags: ["glances"]
 
-- ansible.builtin.import_tasks: "hass.yml"
-  vars:
-    nas_hass_host_domain: "{{ nas_domain_name }}"
-  tags: ["hass", "home-assistant", "homeassistant"]
+# - ansible.builtin.import_tasks: "hass.yml"
+#   vars:
+#     nas_hass_host_domain: "{{ nas_domain_name }}"
+#   tags: ["hass", "home-assistant", "homeassistant"]
 
-- ansible.builtin.import_tasks: "navidrome.yml"
-  tags: ["navidrome"]
+# - ansible.builtin.import_tasks: "navidrome.yml"
+#   tags: ["navidrome"]
 
-- ansible.builtin.import_tasks: "node-red.yml"
-  tags: ["node-red", "nodered"]
+# - ansible.builtin.import_tasks: "node-red.yml"
+#   tags: ["node-red", "nodered"]
 
-# - ansible.builtin.import_tasks: "plex.yml"
-#   tags: ["plex", "pms"]
+# # - ansible.builtin.import_tasks: "plex.yml"
+# #   tags: ["plex", "pms"]
 
-# - ansible.builtin.import_tasks: "servarr.yml"
-#   tags: ["servarr"]
+# # - ansible.builtin.import_tasks: "servarr.yml"
+# #   tags: ["servarr"]
 
-# - ansible.builtin.import_tasks: "influxdb.yml"
-#   tags: ["influxdb"]
+# # - ansible.builtin.import_tasks: "influxdb.yml"
+# #   tags: ["influxdb"]
 
-# # Traefik needs to be last so all of the networks exist.
-# - ansible.builtin.import_tasks: "traefik.yml"
-#   tags: ["traefik"]
+# Traefik needs to be last so all of the networks exist.
+- ansible.builtin.import_tasks: "traefik.yml"
+  tags: ["traefik"]
 
 
-# # - ansible.builtin.import_playbook: "playbooks/media-storage/media-storage.yml"
-# #   tags: ["media", "media-storage"]
+# # # - ansible.builtin.import_playbook: "playbooks/media-storage/media-storage.yml"
+# # #   tags: ["media", "media-storage"]

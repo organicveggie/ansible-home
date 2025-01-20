@@ -5,10 +5,12 @@
     state: present
 
 - name: "docker | Install Pip"
-  ansible.builtin.import_role: "geerlingguy.pip"
+  ansible.builtin.import_role:
+    name: "geerlingguy.pip"
 
 - name: "docker | Install Docker"
-  ansible.builtin.role: "geerlingguy.docker"
+  ansible.builtin.import_role:
+    name: "geerlingguy.docker"
   vars:
     docker_home: "{{ nas_docker_home }}"
     docker_daemon_options:

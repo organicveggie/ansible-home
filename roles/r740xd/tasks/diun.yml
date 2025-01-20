@@ -41,18 +41,17 @@
     internal: "no"
     scope: "local"
     ipam_config:
-      - subnet: "{{ nas_diun_network_subnet }}"
-        gateway: "{{ nas_diun_network_gateway }}"
+      - subnet: "{{ nas_docker_networks.diun.subnet }}"
+        gateway: "{{ nas_docker_networks.diun.gateway }}"
 
 - name: "diun | Create Diun container"
-  role: "diun"
+  ansible.builtin.import_role:
+    name: "diun"
   vars:
     nas_diun_user: "{{ nas_diun_username }}"
     nas_diun_uid: "{{ nas_diun_uid }}"
     nas_diun_group: "{{ _nas_diun_groupname }}"
     nas_diun_docker_network_name: "{{ nas_diun_network_name }}"
-    nas_diun_docker_network_subnet: "{{ nas_diun_network_subnet }}"
-    nas_diun_docker_network_gateway: "{{ nas_diun_network_gateway }}"
     nas_diun_docker_timezone: "{{ nas_timezone }}"
     nas_diun_notify_mail_host: "{{ nas_diun_notify_mail_host }}"
     nas_diun_notify_mail_port: "{{ nas_diun_notify_mail_port }}"

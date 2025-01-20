@@ -11,16 +11,18 @@
     internal: "no"
     scope: "local"
     ipam_config:
-      - subnet: "{{ nas_hass_network_subnet }}"
-        gateway: "{{ nas_hass_network_gateway }}"
+      - subnet: "{{ nas_docker_networks.hass.subnet }}"
+        gateway: "{{ nas_docker_networks.hass.gateway }}"
 
 - name: "hass | Run PostgreSQL setup"
-  import_role: "hass_postgres_setup"
+  ansible.builtin.import_role:
+    name: "hass_postgres_setup"
   vars:
     pgsql_init_tempates_dir: "{{ nas_hass_pgsql_init_tempates_dir }}"
 
 - name: "hass | Setup PostgreSQL Docker container"
-  import_role: "organicveggie.postgres_docker"
+  ansible.builtin.import_role:
+    name: "organicveggie.postgres_docker"
   vars:
     postgres_docker_admin_password: "{{ nas_hass_pgsql_admin_password }}"
     postgres_docker_image: "{{ nas_hass_pgsql_image }}"
@@ -36,7 +38,8 @@
       - "{{ nas_hass_pgsql_init_tempates_dir }}/01_create_role_db.sql"
 
 - name: "hass | Setup Z-Wave JS UI container"
-  role: "organicveggie.zwavejsui"
+  ansible.builtin.role:
+    name: "organicveggie.zwavejsui"
   vars:
     zwavejsui_docker_device: "{{ nas_hass_zwave_device }}"
     zwavejsui_docker_host_domain: "{{ nas_hass_host_domain }}"
@@ -44,7 +47,8 @@
     zwavejsui_docker_timezone: "{{ nas_hass_timezone }}"
 
 - name: "hass | Setup Home Assistant container"
-  import-role: "home-assistant"
+  ansible.builtin.import_role:
+    name: "home-assistant"
   vars:
     hass_network_aliases:
       - "{{ _nas_hass_fqdn }}"

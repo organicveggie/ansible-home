@@ -29,11 +29,12 @@
     internal: "no"
     scope: "local"
     ipam_config:
-      - subnet: "{{ nas_calibre_web_network_subnet }}"
-        gateway: "{{ nas_calibre_web_network_gateway }}"
+      - subnet: "{{ nas_docker_networks.calibre_web.subnet }}"
+        gateway: "{{ nas_docker_networks.calibre_web.gateway }}"
 
 - name: "calibre-web | Create container"
-  import_role: "organicveggie.calibre_web_docker"
+  import_role: 
+    name: "organicveggie.calibre_web_docker"
   vars:
     calibre_web_docker_book_dir: "{{ nas_calibre_web_book_dir }}"
     calibre_web_docker_extra_networks:

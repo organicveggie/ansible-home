@@ -2,23 +2,24 @@
 # defaults file for r740xd
 
 ###
+### Admin
+###
+nas_admin_passwd: null
+nas_admin_user: null
+
+###
 ### Calibre Web
 ###
 nas_calibre_web_book_dir: null
 nas_calibre_web_gid: null
 nas_calibre_web_host_domain: null
 nas_calibre_web_hostname: "calibre-web"
-nas_calibre_web_network_gateway: null
-nas_calibre_web_network_subnet: null
 nas_calibre_web_uid: null
 
 ###
 ### Diun
 ###
-nas_diun_network_gateway: "172.1.1.1"
 nas_diun_network_name: "diun"
-nas_diun_network_subnet: "172.1.1.0/24"
-
 nas_diun_notify_mail_host: null
 nas_diun_notify_mail_port: null
 nas_diun_notify_mail_username: null
@@ -59,8 +60,6 @@ nas_domain_name: "example.com"
 ### Glances
 ###
 nas_glances_config_data: null
-nas_glances_network_gateway: null
-nas_glances_network_subnet: null
 
 # List of dictionaries of Linux groups to create. Each entry in the list should be a dictionary
 # in the form to match ansible.builtin.group.
@@ -82,8 +81,6 @@ nas_hass_host_domain: null
 nas_hass_host_name: "hass"
 nas_hass_latitude: null
 nas_hass_longitude: null
-nas_hass_network_gateway: null
-nas_hass_network_subnet: null
 nas_hass_pgsql_admin_password: null
 nas_hass_pgsql_init_tempates_dir: null
 nas_hass_timezone: null
@@ -97,16 +94,8 @@ nas_navidrome_host_domain: null
 nas_navidrome_lastfm_apikey: null
 nas_navidrome_lastfm_secret: null
 nas_navidrome_music_folder: null
-nas_navidrome_network_gateway: null
-nas_navidrome_network_subnet: null
 nas_navidrome_spotify_client_id: null
 nas_navidrome_spotify_client_secret: null
-
-###
-### Node-RED
-###
-nas_nodered_network_gateway: null
-nas_nodered_network_subnet: null
 
 ###
 ### Samba

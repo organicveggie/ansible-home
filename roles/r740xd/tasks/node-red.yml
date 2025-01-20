@@ -7,11 +7,12 @@
     internal: "no"
     scope: "local"
     ipam_config:
-      - subnet: "{{ nas_nodered_network_subnet }}"
-        gateway: "{{ nas_nodered_network_gateway }}"
+      - subnet: "{{ nas_docker_networks.node_red.subnet }}"
+        gateway: "{{ nas_docker_networks.node_red.gateway }}"
 
 - name: "node-red | Setup Node-RED"
-  import_role: "nodered"
+  ansible.builtin.import_role:
+    name: "nodered"
   vars:
     nodered_docker_network_name: "{{ nas_nodered_network_name }}"
     nodered_docker_timezone: "{{ nas_nodered_timezone }}"

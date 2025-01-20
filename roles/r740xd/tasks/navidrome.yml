@@ -11,11 +11,12 @@
     internal: "no"
     scope: "local"
     ipam_config:
-      - subnet: "{{ nas_navidrome_network_subnet }}"
-        gateway: "{{ nas_navidrome_network_gateway }}"
+      - subnet: "{{ nas_docker_networks.navidrome.subnet }}"
+        gateway: "{{ nas_docker_networks.navidrome.gateway }}"
 
 - name: "navidrome | Create Docker container"
-  import_role: "navidrome_docker"
+  ansible.builtin.import_role:
+    name: "navidrome_docker"
   vars:
     navidrome_docker_base_url: "{{ navidrome_base_url }}"
     navidrome_docker_extra_networks:

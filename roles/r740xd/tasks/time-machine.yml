@@ -31,7 +31,8 @@
     group: "{{ nas_time_machine_groupname }}"
 
 - name: "time-machine | Setup TimeMachine container"
-  role: "time_machine_docker"
+  ansible.builtin.role:
+    name: "time_machine_docker"
   vars:
     time_machine_docker_name: "{{ nas_time_machine_docker_name }}"
     time_machine_docker_user: "{{ nas_time_machine_username }}"

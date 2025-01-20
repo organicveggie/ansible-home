@@ -19,12 +19,13 @@ nas_extra_packages:
 ###
 nas_calibre_web_username: "calibre"
 nas_calibre_web_groupname: "calibre"
-nas_calibre_web_network: "calibre-web"
+nas_calibre_web_network_name: "calibre-web"
 
 ###
 ### Diun
 ###
 nas_diun_group: "diun"
+nas_diun_network_name: "diun"
 nas_diun_uid: 2450
 nas_diun_user: "diun"
 
@@ -40,7 +41,7 @@ nas_docker_networks:
     name: "portainer"
     gateway: "172.30.2.1"
     subnet: "172.30.2.0/24"
-  calibre-web:
+  calibre_web:
     name: "calibre-web"
     gateway: "172.30.3.1"
     subnet: "172.30.3.0/24"
@@ -60,7 +61,7 @@ nas_docker_networks:
     name: "navidrome"
     gateway: "172.30.7.1"
     subnet: "172.30.7.0/24"
-  node-red:
+  node_red:
     name: "node-red"
     gateway: "172.30.8.1"
     subnet: "172.30.8.0/24"
@@ -90,6 +91,11 @@ nas_docker_networks:
     subnet: "172.30.14.0/24"    
 
 ###
+### Glances
+###
+nas_glances_network_name: "glances"
+
+###
 ### Home Assistant
 ###
 nas_hass_network_name: "hass"
@@ -111,7 +117,39 @@ nas_navidrome_network_name: "navidrome"
 nas_nodered_network_name: "node-red"
 
 ###
+### Portainer
+###
+nas_portainer_network_name: "portainer"
+
+###
 ### TimeMachine
 ###
 nas_time_machine_docker_name: "time-machine"
 nas_time_machine_workgroup: "TMWORKGROUP"
+
+###
+### Traefik
+###
+nas_traefik_http_ports:
+  - '80:80'
+  - '443:443'
+nas_traefik_syncthings_entrypoints:
+  syncthing_tcp:
+    address: ":22000"
+  syncthing_udp:
+    address: ":22000/udp"
+nas_traefik_syncthings_ports:
+  - "22000:22000"
+nas_traefik_unific_entrypoints:
+  unific_speed_test:
+    address: ":6789"
+  unific_stun:
+    address: ":3478/udp"
+  unific_dev_discovery:
+    address: ":10001/udp"
+  unific_controller_discovery:
+    address: ":19000/udp"
+nas_traefik_unific_ports:
+  - "3478:3478"     # unific stun
+  - "10001:10001"   # unific dev discovery
+  - "19000:19000"   # unific controller discovery

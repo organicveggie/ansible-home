@@ -1,0 +1,166 @@
+---
+- name: "traefik | Define fqdn"
+  ansible.builtin.set_fact:
+    _nas_traefik_fqdn: "traefik.{{ veggie_nas_domain_name }}"
+
+# - name: "traefik`1` | Setup Docker network"
+#   community.docker.docker_network:
+#     name: "{{ nas_docker_networks.traefik.name }}"
+#     driver: "bridge"
+#     enable_ipv6: "no"
+#     internal: "no"
+#     scope: "local"
+#     ipam_config:
+#       - subnet: "{{ nas_docker_networks.traefik.subnet }}"
+#         gateway: "{{ nas_docker_networks.traefik.gateway }}"
+
+###
+### Configure additional networks, ports, and entrypoints
+###
+- name: "traefik | Process extra networks"
+  ansible.builtin.include_tasks:
+    file: "traefik_network.yml"
+  loop:
+    # - "{{ nas_docker_networks.traefik.name }}"
+    - "{{ nas_calibre_web_network_name | default(omit) }}"
+    - "{{ nas_glances_network_name | default(omit) }}"
+    - "{{ nas_hass_network_name | default(omit) }}"
+    - "{{ nas_navidrome_network_name | default(omit) }}"
+    - "{{ nas_nodered_network_name | default(omit) }}"
+    - "{{ nas_portainer_network_name | default(omit) }}"
+    - "{{ nas_servarr_network_name | default(omit) }}"
+    - "{{ nas_unific_network_name | default(omit) }}"
+
+- name: "traefik | Process Servarr network"
+  when:
+    - "nas_servarr_network_name is defined"
+    - "nas_servarr_network_name not in (None, omit)"
+  block:
+    - name: "traefik | Check if Servarr network exists"
+      community.docker.docker_network_info:
+        name: "{{ nas_servarr_network_name }}"
+      register: "_nas_traefik_servarr_network_info"
+
+    - name: "traefik | Configure for Servarr tools"
+      when: "_nas_traefik_servarr_network_info.exists"
+      block:
+        - name: "traefik | Enable Servarr extra network"
+          ansible.builtin.set_fact:
+            _nas_traefik_extra_networks: "{{ _nas_traefik_extra_networks | default([]) + [{'name': nas_servarr_network_name}] }}"
+
+        - name: "traefik | Enable SyncThings (Servarr) ports"
+          ansible.builtin.set_fact:
+            _nas_traefik_extra_ports: "{{ _nas_traefik_extra_ports | default([]) + nas_traefik_syncthings_ports }}"
+        
+        - name: "traefik | Enable SyncThings (Servarr) entrypoints"
+          ansible.builtin.set_fact:
+            _nas_traefik_entrypoints: "{{ _nas_traefik_entrypoints | default({}) | combine(nas_traefik_syncthings_entrypoints) }}"
+
+- name: "traefik | Process UniFi Controller network"
+  when:
+    - "nas_unific_network_name is defined"
+    - "nas_unific_network_name not in (None, omit)"
+  block:
+    - name: "traefik | Check if UniFi Controller network exists"
+      community.docker.docker_network_info:
+        name: "{{ nas_unific_network_name }}"
+      register: "_nas_traefik_unific_network_info"
+
+    - name: "traefik | Configure Traefik for UniFi Controller"
+      when: "_nas_traefik_unific_network_info.exists"
+      block:
+        - name: "traefik | Enable UniFi Controlller ports"
+          ansible.builtin.set_fact:
+            _nas_traefik_extra_ports: "{{ _nas_traefik_extra_ports | default([]) + nas_traefik_unific_ports }}"
+        
+        - name: "traefik | Enable UniFi Controller entrypoints"
+          ansible.builtin.set_fact:
+            _nas_traefik_entrypoints: "{{ _nas_traefik_entrypoints | default({}) | combine(nas_traefik_unific_entrypoints) }}"
+
+- name: "traefik | Define all ports"
+  ansible.builtin.set_fact:
+    _nas_traefik_all_ports: "{{ (_nas_traefik_extra_ports | default([]) + nas_traefik_http_ports) | sort }}"
+
+- ansible.builtin.debug:
+    msg:
+      - "Entrypoints: {{ _nas_traefik_entrypoints | default({}) }}"
+      - "Extra networks: {{ _nas_traefik_extra_networks | default([]) }}"
+      - "All ports: {{ _nas_traefik_all_ports | default([]) }}"
+
+- name: "traefik | Setup Traefik"
+  ansible.builtin.import_role:
+    name: "organicveggie.ansible-traefik"
+  vars:
+    traefik_image: "traefik:2.11"
+    traefik_container_environment:
+      AWS_HOSTED_ZONE_ID: "{{ acme_route53_hosted_zone_id }}"
+      AWS_ACCESS_KEY_ID: "{{ letsencrypt_aws_access_key }}"
+      AWS_SECRET_ACCESS_KEY: "{{ letsencrypt_aws_secret_key }}"
+      AWS_REGION: "us-east-1"
+    traefik_qs_https: "true"
+    # traefik_qs_https_redirect: "true"
+    traefik_qs_https_le: "true"
+    traefik_qs_https_le_mail: "{{ letsencrypt_email }}"
+    traefik_qs_log_level: INFO
+    traefik_ports: "{{ _nas_traefik_all_ports }}"
+#       - "3200:3000"
+#       - '8080:8080'     # java http
+#       - '22000:22000'   # syncthing
+#       # - "55555:55555"   # Resilio Sync
+    traefik_hostname: "{{ _nas_traefik_fqdn }}"
+    traefik_confkey_api:
+      dashboard: true # use this for enabling the dashboard
+    traefik_labels:
+      traefik.enable: "true"
+      # Dashboard
+      traefik.http.routers.traefik.service: "api@internal"
+      traefik.http.routers.traefik.entrypoints: "https"
+      traefik.http.routers.traefik.tls.certresolver: "letsencrypt"
+      traefik.http.routers.traefik.tls.domains[0].main: "{{ _nas_traefik_fqdn }}"
+      # Global redirect to https
+      traefik.http.routers.http-catchall.rule: "hostregexp(`{host:.+}`)"
+      traefik.http.routers.http-catchall.entrypoints: "http"
+      traefik.http.routers.http-catchall.middlewares: "redirect-to-https"
+      traefik.http.routers.http-catchall.priority: "10"
+      # Middleware redirect
+      traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: "https"
+    traefik_extra_networks: "{{ _nas_traefik_extra_networks }}"
+    traefik_confkey_entryPoints: "{{ _nas_traefik_entrypoints }}"
+#       java_http:
+#         address: ":8080"
+#       resilio_sync_tcp:
+#         address: ":55555"
+#       resilio_sync_udp:
+#         address: ":55555/udp"
+#       syncthing_tcp:
+#         address: ":22000"
+#       syncthing_udp:
+#         address: ":22000/udp"
+#       zwavejsui:
+#         address: ":3200"
+    traefik_confkey_serversTransport:
+      insecureSkipVerify: "true"
+    # traefik_confkey_log:
+    #   level: DEBUG
+    #   filePath: "/var/log/traefik.log"
+    # traefik_confkey_accessLog:
+    #   filePath: "/etc/traefik/log/traefik-access.log"
+    #   bufferingSize: 500
+    #   format: "json"
+    #   fields:
+    #     # defaultMode: "drop"
+    #     names:
+    #       ClientAddr: "drop"
+    #       ClientHost: "keep"
+    #       ClientPort: "drop"
+    #       ClientUsername: "drop"
+    #       DownstreamContentSize: "drop"
+    #       RequestHost: "keep"
+    #       RequestLine: "keep"
+    #       RequestMethod: "keep"
+    #       RequestPath: "keep"
+    #       RequestProtocol: "keep"
+    #       RequestScheme: "keep"
+    #       RouterName": "keep"
+    #       ServiceName: "keep"
+    #       StartLocal: "keep"
