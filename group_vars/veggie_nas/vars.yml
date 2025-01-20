@@ -527,6 +527,12 @@ nas_path_roms: "{{ vault_nas_path_roms }}"
 nas_path_source: "{{ vault_nas_path_source }}"
 nas_path_videos: "{{ vault_nas_path_videos }}"
 nas_path_kstar: "{{ vault_nas_path_kstar }}"
+
+veggie_nas_docker_macvlan_gateway: "{{ vault_veggie_nas_docker_macvlan_gateway }}"
+veggie_nas_docker_macvlan_iprange: "{{ vault_veggie_nas_docker_macvlan_iprange }}"
+veggie_nas_docker_macvlan_network_parent: "{{ vault_veggie_nas_docker_macvlan_network_parent }}"
+veggie_nas_docker_macvlan_subnet: "{{ vault_veggie_nas_docker_macvlan_subnet }}"
+
 veggie_nas_admin_passwd: "{{ vault_nas_admin_passwd }}"
 veggie_nas_admin_samba_passwd: "{{ vault_nas_admin_samba_passwd }}"
 veggie_nas_admin_username: "{{ vault_nas_admin_username }}"

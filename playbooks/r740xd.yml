@@ -5,10 +5,6 @@
   become: true
 
   vars:
-    _docker_macvlan_gateway: "192.168.25.1"
-    _docker_macvlan_iprange: "192.168.25.224/28"
-    _docker_macvlan_network_parent: "bond0"
-    _docker_macvlan_subnet: "192.168.25.0/24"
     _glances_config_data:
       glances_docker_config:
         diskio:
@@ -39,10 +35,10 @@
         nas_diun_regopts_dockerio_user: "{{ vault_diun_regopts_dockerio_user }}"
         nas_diun_regopts_dockerio_passwd: "{{ vault_diun_regopts_dockerio_passwd }}"
         # Docker
-        nas_docker_macvlan_gateway: "{{ _docker_macvlan_gateway  }}"
-        nas_docker_macvlan_iprange: "{{ _docker_macvlan_iprange }}"
-        nas_docker_macvlan_network_parent: "{{ _docker_macvlan_network_parent }}"
-        nas_docker_macvlan_subnet: "{{ _docker_macvlan_subnet }}"
+        nas_docker_macvlan_gateway: "{{ veggie_nas_docker_macvlan_gateway  }}"
+        nas_docker_macvlan_iprange: "{{ veggie_nas_docker_macvlan_iprange }}"
+        nas_docker_macvlan_network_parent: "{{ veggie_nas_docker_macvlan_network_parent }}"
+        nas_docker_macvlan_subnet: "{{ veggie_nas_docker_macvlan_subnet }}"
         # Domain name
         nas_domain_name: "{{ veggie_nas_domain_name }}"
         # Glances
