@@ -1,7 +1,7 @@
 ---
 - name: "glances | Setup Docker network"
   community.docker.docker_network:
-    name: "{{ nas_glances_network_name }}"
+    name: "{{ nas_docker_networks.glances.name }}"
     driver: "bridge"
     enable_ipv6: "no"
     internal: "no"
@@ -15,6 +15,6 @@
     name: "glances"
   vars:
     glances_docker_host_domain: "{{ nas_domain_name }}"
-    glances_docker_network_name: "{{ nas_glances_network_name }}"
+    glances_docker_network_name: "{{ nas_docker_networks.glances.name }}"
     glances_docker_config: "{{ nas_glances_config_data }}"
     glances_docker_extra_bind_mounts: "{{ nas_glances_extra_bind_mounts }}"
