@@ -119,6 +119,8 @@ time_machine_data_directory: "{{ vault_time_machine_data_directory }}"
 time_machine_hostname: "{{ vault_time_machine_hostname }}"
 time_machine_network_parent: "{{ vault_time_machine_network_parent }}"
 time_machine_network_ipv4: "{{ vault_time_machine_network_ipv4 }}"
+nas_time_machine_data_directory: "{{ vault_time_machine_data_directory }}"
+nas_time_machine_hostname: "{{ vault_time_machine_hostname }}"
 
 ###
 ### Veggie Common

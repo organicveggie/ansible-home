@@ -1,0 +1,20 @@
+---
+- name: "glances | Setup Docker network"
+  community.docker.docker_network:
+    name: "{{ nas_glances_network_name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "no"
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ nas_glances_network_subnet }}"
+        gateway: "{{ nas_glances_network_gateway }}"
+
+- name: "glances | Setup Docker container"
+  import_role: "glances"
+  vars:
+    glances_docker_host_domain: "{{ nas_domain_name }}"
+    glances_docker_network_gateway: "{{ nas_glances_network_gateway }}"
+    glances_docker_network_subnet: "{{ nas_glances_network_subnet }}"
+    glances_docker_config: "{{ nas_glances_config_data }}"
+    glances_docker_extra_bind_mounts: "{{ nas_glances_extra_bind_mounts }}"

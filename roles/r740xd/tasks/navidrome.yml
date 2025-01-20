@@ -1,0 +1,31 @@
+---
+- name: "navidrome | Set fqdn"
+  ansible.builtin.set_fact:
+    _nas_navidrome_fqdn: "{{ nas_navidrome_host_name }}.{{ nas_navidrome_host_domain }}"
+
+- name: "navidrome | Setup Docker network"
+  community.docker.docker_network:
+    name: "{{ nas_navidrome_network_name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "no"
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ nas_navidrome_network_subnet }}"
+        gateway: "{{ nas_navidrome_network_gateway }}"
+
+- name: "navidrome | Create Docker container"
+  import_role: "navidrome_docker"
+  vars:
+    navidrome_docker_base_url: "{{ navidrome_base_url }}"
+    navidrome_docker_extra_networks:
+      - name: "{{ nas_navidrome_network_name }}"
+    navidrome_docker_host_domain: "{{ nas_navidrome_host_domain }}"
+    navidrome_docker_image_cache_size: "{{ nas_navidrome_image_cache_size }}"
+    navidrome_docker_lastfm_enabled: "true"
+    navidrome_docker_lastfm_apikey: "{{ nas_navidrome_lastfm_apikey }}"
+    navidrome_docker_lastfm_secret: "{{ nas_navidrome_lastfm_secret }}"
+    navidrome_docker_music_folder: "{{ nas_navidrome_music_folder }}"
+    navidrome_docker_network: "{{ nas_navidrome_network_name }}"
+    navidrome_docker_spotify_client_id: "{{ nas_navidrome_spotify_client_id }}"
+    navidrome_docker_spotify_client_secret: "{{ nas_navidrome_spotify_client_secret }}"

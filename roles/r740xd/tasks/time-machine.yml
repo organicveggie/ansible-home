@@ -1,0 +1,47 @@
+---
+- name: "time-machine | Create TimeMachine group"
+  ansible.builtin.group:
+    name: "{{ nas_time_machine_groupname }}"
+    gid: "{{ nas_time_machine_gid | default(nas_time_machine_uid) }}"
+    state: "present"
+
+- name: "time-machine | Create TimeMachine user"
+  ansible.builtin.user:
+    name: "{{ nas_time_machine_username }}"
+    password: "*"
+    shell: "/bin/false"
+    system: false
+    uid: "{{ nas_time_machine_uid }}"
+    group: "{{ nas_time_machine_groupname }}"
+    password_lock: true
+
+- name: "time-machine | Create ZFS dataset"
+  community.general.zfs:
+    name: "{{ nas_time_machine_zfs_dataset }}"
+    state: present
+  when: "{{ nas_time_machine_zfs_dataset }}"
+
+- name: "time-machine | Create data folder"
+  ansible.builtin.file:
+    path: "{{ nas_time_machine_data_directory }}"
+    mode: "770"
+    recurse: true
+    state: "directory"
+    owner: "{{ nas_time_machine_username }}"
+    group: "{{ nas_time_machine_groupname }}"
+
+- name: "time-machine | Setup TimeMachine container"
+  role: "time_machine_docker"
+  vars:
+    time_machine_docker_name: "{{ nas_time_machine_docker_name }}"
+    time_machine_docker_user: "{{ nas_time_machine_username }}"
+    time_machine_docker_group: "{{ nas_time_machine_groupname }}"
+    time_machine_docker_uid: "{{ nas_time_machine_uid }}"
+    time_machine_docker_gid: "{{ nas_time_machine_gid }}"
+    time_machine_docker_data_directory: "{{ nas_time_machine_data_directory }}"
+    time_machine_docker_password: "{{ nas_time_machine_password }}"
+    time_machine_docker_network: "{{ nas_time_machine_network_name }}"
+    time_machine_docker_advertised_hostname: "{{ nas_time_machine_hostname }}"
+    time_machine_docker_network_ipv4_addr: "{{ nas_time_machine_network_ipv4 }}"
+    time_machine_docker_workgroup: "{{ nas_time_machine_workgroup }}"
+  tags: ["time-machine", "timemachine"]

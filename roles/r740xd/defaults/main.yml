@@ -1,0 +1,139 @@
+---
+# defaults file for r740xd
+
+###
+### Calibre Web
+###
+nas_calibre_web_book_dir: null
+nas_calibre_web_gid: null
+nas_calibre_web_host_domain: null
+nas_calibre_web_hostname: "calibre-web"
+nas_calibre_web_network_gateway: null
+nas_calibre_web_network_subnet: null
+nas_calibre_web_uid: null
+
+###
+### Diun
+###
+nas_diun_network_gateway: "172.1.1.1"
+nas_diun_network_name: "diun"
+nas_diun_network_subnet: "172.1.1.0/24"
+
+nas_diun_notify_mail_host: null
+nas_diun_notify_mail_port: null
+nas_diun_notify_mail_username: null
+nas_diun_notify_mail_password: null
+nas_diun_notify_mail_from: null
+nas_diun_notify_mail_to: null
+
+nas_diun_regopts_dockerio_user: null
+nas_diun_regopts_dockerio_passwd: null
+
+###
+### Docker macvlan network
+###
+
+# IPv4 gateway for the macvlan network.
+nas_docker_macvlan_gateway: null
+
+# IPv4 range set aside for the macvlan network in subnet format.
+# Example: "192.168.1.240/28"
+nas_docker_macvlan_iprange: null
+
+# Name of the macvlan network.
+nas_docker_macvlan_network_name: "nas-macvlan"
+
+# Name of the parent interface on the host for the macvlan network.
+# Examples: "eth0", "eno1"
+nas_docker_macvlan_network_parent: null
+
+# IPv4 subnet for the macvlan network.
+nas_docker_macvlan_subnet: null
+
+##########
+
+# Base domain name for machine and containers running on it.
+nas_domain_name: "example.com"
+
+###
+### Glances
+###
+nas_glances_config_data: null
+nas_glances_network_gateway: null
+nas_glances_network_subnet: null
+
+# List of dictionaries of Linux groups to create. Each entry in the list should be a dictionary
+# in the form to match ansible.builtin.group.
+# Example:
+#   nas_groups:
+#     - name: "group1"
+#     - name: "group2"
+#       gid: 4200
+#     - name: "group3"
+#       system: true
+nas_groups: []
+
+###
+### Home Assistant
+###
+nas_hass_ecowitt_hass_auth_token: null
+nas_hass_ecowitt_hass_webhook_id: null
+nas_hass_host_domain: null
+nas_hass_host_name: "hass"
+nas_hass_latitude: null
+nas_hass_longitude: null
+nas_hass_network_gateway: null
+nas_hass_network_subnet: null
+nas_hass_pgsql_admin_password: null
+nas_hass_pgsql_init_tempates_dir: null
+nas_hass_timezone: null
+nas_hass_zwave_device: null
+
+###
+### Navidrome
+###
+nas_navidrome_host_name: "navi"
+nas_navidrome_host_domain: null
+nas_navidrome_lastfm_apikey: null
+nas_navidrome_lastfm_secret: null
+nas_navidrome_music_folder: null
+nas_navidrome_network_gateway: null
+nas_navidrome_network_subnet: null
+nas_navidrome_spotify_client_id: null
+nas_navidrome_spotify_client_secret: null
+
+###
+### Node-RED
+###
+nas_nodered_network_gateway: null
+nas_nodered_network_subnet: null
+
+###
+### Samba
+###
+# List of group names for Samba groups. The admin user will automatically be added to these
+# groups.
+nas_samba_group_names: []
+
+nas_samba_admin_username: "admin"
+nas_samba_admin_password: "password"
+
+###
+### TimeMachine
+###
+nas_time_machine_data_directory: null
+nas_time_machine_hostname: "time-machine"
+nas_time_machine_groupname: "time-machine"
+nas_time_machine_gid: 1311
+nas_time_machine_password: null
+nas_time_machine_username: "time-machine"
+nas_time_machine_uid: 1311
+nas_time_machine_zfs_dataset: null
+
+##########
+
+nas_timezone: "America/New_York"
+
+# List of dictionaries of Linux users to create. Each entry in the list should be a dictionary
+# in the form to match ansible.builtin.user.
+nas_users: []

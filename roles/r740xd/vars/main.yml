@@ -1,0 +1,117 @@
+---
+# vars file for r740xd
+nas_extra_packages:
+  - "smartmontools"
+  - "htop"
+  - "zfsutils-linux"
+  - "bonnie++"
+  - "unzip"
+  - "lm-sensors"
+  # TODO: https://github.com/bcicen/ctop?tab=readme-ov-file#install
+  # - "ctop"
+  - "mbuffer"
+  - "net-tools"
+  - "screen"
+  - "tmux"
+
+###
+### Calibre Web
+###
+nas_calibre_web_username: "calibre"
+nas_calibre_web_groupname: "calibre"
+nas_calibre_web_network: "calibre-web"
+
+###
+### Diun
+###
+nas_diun_group: "diun"
+nas_diun_uid: 2450
+nas_diun_user: "diun"
+
+###
+### Docker
+###
+nas_docker_networks:
+  traefik:
+    name: "traefik"
+    gateway: "172.30.1.1"
+    subnet: "172.30.1.0/24"
+  portainer:
+    name: "portainer"
+    gateway: "172.30.2.1"
+    subnet: "172.30.2.0/24"
+  calibre-web:
+    name: "calibre-web"
+    gateway: "172.30.3.1"
+    subnet: "172.30.3.0/24"
+  diun:
+    name: "diun"
+    gateway: "172.30.4.1"
+    subnet: "172.30.4.0/24"
+  glances:
+    name: "glances"
+    gateway: "172.30.5.1"
+    subnet: "172.30.5.0/24"
+  hass:
+    name: "hass"
+    gateway: "172.30.6.1"
+    subnet: "172.30.6.0/24"
+  navidrome:
+    name: "navidrome"
+    gateway: "172.30.7.1"
+    subnet: "172.30.7.0/24"
+  node-red:
+    name: "node-red"
+    gateway: "172.30.8.1"
+    subnet: "172.30.8.0/24"
+  servarr:
+    name: "servarr"
+    gateway: "172.30.9.1"
+    subnet: "172.30.9.0/24"
+  influxdb:
+    name: "influxdb"
+    gateway: "172.30.10.1"
+    subnet: "172.30.10.0/24"
+  grafana:
+    name: "grafana"
+    gateway: "172.30.11.1"
+    subnet: "172.30.11.0/24"
+  kometa:
+    name: "kometa"
+    gateway: "172.30.12.1"
+    subnet: "172.30.12.0/24"
+  restic:
+    name: "restic"
+    gateway: "172.30.13.1"
+    subnet: "172.30.13.0/24"    
+  tautulli:
+    name: "tautulli"
+    gateway: "172.30.14.1"
+    subnet: "172.30.14.0/24"    
+
+###
+### Home Assistant
+###
+nas_hass_network_name: "hass"
+nas_hass_pgsql_image: "postgres:15-bullseye"
+nas_hass_pgsql_name: "hass-pgsql"
+nas_hass_pgsql_volume_conf_name: "hass-pgsql-conf"
+nas_hass_pgsql_volume_data_name: "hass-pgsql-data"
+nas_hass_pgsql_volume_init_name: "hass-pgsql-initscripts"
+
+###
+### Navidrome
+###
+nas_navidrome_image_cache_size: "500MB"
+nas_navidrome_network_name: "navidrome"
+
+###
+### Node-RED
+###
+nas_nodered_network_name: "node-red"
+
+###
+### TimeMachine
+###
+nas_time_machine_docker_name: "time-machine"
+nas_time_machine_workgroup: "TMWORKGROUP"

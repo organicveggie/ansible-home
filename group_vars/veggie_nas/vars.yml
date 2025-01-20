@@ -747,13 +747,13 @@ sabnzbd_docker_host_domain: "{{ veggie_nas_domain_name }}"
 ### Samba
 ###
 samba_groups:
-  - "book_writer"
-  - "doc_writer"
-  - "media_writer"
-  - "music_writer"
-  - "photo_writer"
-  - "rom_writer"
-  - "source_writer"
+  - name: "book_writer"
+  - name: "doc_writer"
+  - name: "media_writer"
+  - name: "music_writer"
+  - name: "photo_writer"
+  - name: "rom_writer"
+  - name: "source_writer"
 
 ###
 ### Servarr aka *arr
@@ -1285,6 +1285,8 @@ unpackerr_docker_host_domain: "{{ veggie_nas_domain_name }}"
 ###
 nas_groups: "{{ vault_nas_groups }}"
 nas_users: "{{ vault_nas_users }}"
+veggie_nas_groups: "{{ vault_nas_groups }}"
+veggie_nas_users: "{{ vault_nas_users }}"
 
 ###
 ### zwavejs2mqtt

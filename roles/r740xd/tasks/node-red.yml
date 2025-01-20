@@ -1,0 +1,19 @@
+---
+- name: "node-red| Setup Docker network"
+  community.docker.docker_network:
+    name: "{{ nas_nodered_network_name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "no"
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ nas_nodered_network_subnet }}"
+        gateway: "{{ nas_nodered_network_gateway }}"
+
+- name: "node-red | Setup Node-RED"
+  import_role: "nodered"
+  vars:
+    nodered_docker_network_name: "{{ nas_nodered_network_name }}"
+    nodered_docker_timezone: "{{ nas_nodered_timezone }}"
+    nodered_docker_extra_networks:
+      - name: "{{ nas_hass_network_name }}"

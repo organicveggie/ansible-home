@@ -1,0 +1,87 @@
+---
+- name: "Setup users and groups"
+  hosts: "veggie_nas"
+  remote_user: "sean"
+  become: true
+
+  vars:
+    _docker_macvlan_gateway: "192.168.25.1"
+    _docker_macvlan_iprange: "192.168.25.224/28"
+    _docker_macvlan_network_parent: "eno1"
+    _docker_macvlan_subnet: "192.168.25.0/24"
+    _glances_config_data:
+      glances_docker_config:
+        diskio:
+          "hide": "loop.*,md0"
+        fs:
+          "hide": "/etc.*"
+        network:
+          "hide": "docker.*,lo"
+
+  roles:
+    - role: "r740xd"
+      vars:
+        # Admin user
+        nas_admin_username: "{{ veggie_nas_admin_username }}"
+        nas_admin_password: "{{ veggie_nas_admin_passwd }}"
+        # Calibre Web
+        nas_calibre_web_book_dir: "{{ vault_calibre_web_docker_book_dir }}"
+        nas_calibre_web_gid: "{{ vault_calibre_web_docker_gid }}"
+        nas_calibre_web_host_domain: "{{ veggie_base_domain_name }}"
+        nas_calibre_web_network_gateway: "{{ vault_calibre_web_docker_network_gateway }}"
+        nas_calibre_web_network_subnet: "{{ vault_calibre_web_docker_network_subnet }}" 
+        nas_calibre_web_uid: "{{ vault_calibre_web_docker_uid }}"
+        # Diun
+        nas_diun_network_gateway: "{{ vault_diun_network_gateway }}"
+        nas_diun_network_subnet: "{{ vault_diun_network_subnet }}"
+        nas_diun_notify_mail_host: "{{ vault_diun_notify_mail_host }}"
+        nas_diun_notify_mail_port: "{{ vault_diun_notify_mail_port }}"
+        nas_diun_notify_mail_username: "{{ vault_diun_notify_mail_username }}"
+        nas_diun_notify_mail_password: "{{ vault_diun_notify_mail_password }}"
+        nas_diun_notify_mail_from: "{{ vault_diun_notify_mail_from }}"
+        nas_diun_notify_mail_to: "{{ vault_diun_notify_mail_to }}"
+        nas_diun_regopts_dockerio_user: "{{ vault_diun_regopts_dockerio_user }}"
+        nas_diun_regopts_dockerio_passwd: "{{ vault_diun_regopts_dockerio_passwd }}"
+        # Docker macvlan
+        nas_docker_macvlan_gateway: "{{ _docker_macvlan_gateway  }}"
+        nas_docker_macvlan_iprange: "{{ _docker_macvlan_iprange }}"
+        nas_docker_macvlan_network_parent: "{{ _docker_macvlan_network_parent }}"
+        nas_docker_macvlan_subnet: "{{ _docker_macvlan_subnet }}"
+        # Domain name
+        nas_domain_name: "{{ veggie_nas_domain_name }}"
+        # Glances
+        nas_glances_config_data: "{{ _glances_config_data }}"
+        nas_glances_network_gateway: "{{ vault_glances_network_gateway }}"
+        nas_glances_network_subnet: "{{ vault_glances_network_subnet }}"
+        # Groups
+        nas_groups: "{{ veggie_nas_groups }}"
+        # Home Assistant
+        nas_hass_ecowitt_hass_auth_token: "{{ vault_homeassistant_ecowitt_hass_auth_token }}"
+        nas_hass_ecowitt_hass_webhook_id: "{{ vault_homeassistant_ecowitt_hass_webhook_id }}"
+        nas_hass_latitude: "{{ homeassistant_home_latitude }}"
+        nas_hass_longitude: "{{ homeassistant_home_longitude }}"
+        nas_hass_network_gateway: "{{ homeassistant_network_gateway }}"
+        nas_hass_network_subnet: "{{ homeassistant_network_subnet }}"
+        nas_hass_pgsql_admin_password: "{{ homeassistant_pgsql_admin_password }}"
+        nas_hass_pgsql_init_tempates_dir: "{{ homeassistant_pgsql_init_tempates_dir }}"
+        nas_hass_timezone: "{{ home_timezone }}"
+        nas_hass_zwave_device: "{{ homeassistant_zwave_device }}"
+        # Navidrome
+        nas_navidrome_host_domain: "{{ veggie_nas_domain_name }}"
+        nas_navidrome_lastfm_apikey: "{{ navidrome_lastfm_apikey }}"
+        nas_navidrome_lastfm_secret: "{{ navidrome_lastfm_secret }}"
+        nas_navidrome_music_folder: "{{ navidrome_music_folder }}"
+        nas_navidrome_network_gateway: "{{ navidrome_network_gateway }}"
+        nas_navidrome_network_subnet: "{{ navidrome_network_subnet }}"
+        nas_navidrome_spotify_client_id: "{{ navidrome_spotify_client_id }}"
+        nas_navidrome_spotify_client_secret: "{{ navidrome_spotify_client_secret }}"
+        # Samba
+        nas_samba_group_names: "{{ samba_groups }}"
+        # TimeMachine
+        nas_time_machine_data_directory: "{{ vault_time_machine_data_directory }}"
+        nas_time_machine_hostname: "{{ vault_time_machine_hostname }}"
+        nas_time_machine_network_ipv4: "{{ vault_time_machine_network_ipv4 }}"
+        nas_time_machine_password: "{{ vault_time_machine_password }}"
+        nas_time_machine_zfs_dataset: "{{ vault_time_machine_zfs_dataset }}"
+        nas_timezone: "{{ home_timezone }}"
+        nas_users: "{{ veggie_nas_users }}"
