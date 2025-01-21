@@ -81,8 +81,8 @@
     nas_time_machine_network_name: "{{ nas_docker_macvlan_network_name }}"
   tags: ["time-machine", "timemachine", "tim"]
 
-# - ansible.builtin.import_tasks: "calibre-web.yml"
-#   tags: ["calibre-web", "calibreweb"]
+- ansible.builtin.import_tasks: "calibre-web.yml"
+  tags: ["calibre-web", "calibreweb", "calibre_web"]
 
 - ansible.builtin.import_tasks: "diun.yml"
   tags: ["diun"]

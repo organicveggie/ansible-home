@@ -23,7 +23,7 @@
 
 - name: "calibre-web | Setup Docker network"
   community.docker.docker_network:
-    name: "{{ nas_calibre_web_network }}"
+    name: "{{ nas_docker_networks.calibre_web.name }}"
     driver: "bridge"
     enable_ipv6: "no"
     internal: "no"
@@ -36,9 +36,10 @@
   import_role: 
     name: "organicveggie.calibre_web_docker"
   vars:
+    calibre_web_docker_network_create: false
     calibre_web_docker_book_dir: "{{ nas_calibre_web_book_dir }}"
     calibre_web_docker_extra_networks:
-      - name: "{{ nas_calibre_web_network }}"
+      - name: "{{ nas_docker_networks.calibre_web.name }}"
     calibre_web_docker_gid: "{{ nas_calibre_web_gid }}"
     calibre_web_docker_host_domain: "{{ nas_calibre_web_host_domain }}"
     calibre_web_docker_hostname: "{{ nas_calibre_web_hostname }}"
