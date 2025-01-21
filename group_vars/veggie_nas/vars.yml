@@ -125,7 +125,7 @@ homeassistant_network_gateway: "{{ vault_homeassistant_network_gateway }}"
 homeassistant_home_latitude: "{{ vault_homeassistant_home_latitude }}"
 homeassistant_home_longitude: "{{ vault_homeassistant_home_longitude }}"
 homeassistant_home_timezone: "{{ home_timezone }}"
-homeassistant_zwave_device: "/dev/serial/by-id/usb-1234"
+homeassistant_zwave_device: "{{ vault_homeassistant_zwave_device }}"
 homeassistant_host_name: "hass"
 
 ###
