@@ -5,7 +5,7 @@
 
 - name: "diun | Set group name"
   ansible.builtin.set_fact:
-    _nas_diun_groupname: "{{ nas_diun_groupname | default(nas_diun_username) }}"
+    _nas_diun_groupname: "{{ nas_diun_group | default(nas_diun_user) }}"
 
 - name: "diun | Create Diun group"
   ansible.builtin.group:
@@ -15,7 +15,7 @@
 
 - name: "diun | Create Diun user"
   ansible.builtin.user:
-    name: "{{ nas_diun_username }}"
+    name: "{{ nas_diun_user }}"
     password: "*"
     shell: "/bin/false"
     system: false
@@ -27,7 +27,7 @@
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    owner: "{{ nas_diun_username }}"
+    owner: "{{ nas_diun_user }}"
     group: "{{ _nas_diun_groupname }}"
     mode: "0770"
   with_items:
@@ -35,7 +35,7 @@
 
 - name: "diun | Setup Diun Docker network"
   community.docker.docker_network:
-    name: "{{ nas_diun_network_name }}"
+    name: "{{ nas_docker_networks.diun.name }}"
     driver: "bridge"
     enable_ipv6: "no"
     internal: "no"
@@ -48,10 +48,10 @@
   ansible.builtin.import_role:
     name: "diun"
   vars:
-    nas_diun_user: "{{ nas_diun_username }}"
+    nas_diun_user: "{{ nas_diun_user }}"
     nas_diun_uid: "{{ nas_diun_uid }}"
     nas_diun_group: "{{ _nas_diun_groupname }}"
-    nas_diun_docker_network_name: "{{ nas_diun_network_name }}"
+    nas_diun_docker_network_name: "{{ nas_docker_networks.diun.name }}"
     nas_diun_docker_timezone: "{{ nas_timezone }}"
     nas_diun_notify_mail_host: "{{ nas_diun_notify_mail_host }}"
     nas_diun_notify_mail_port: "{{ nas_diun_notify_mail_port }}"

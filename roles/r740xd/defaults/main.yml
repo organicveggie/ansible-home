@@ -19,6 +19,7 @@ nas_calibre_web_uid: null
 ###
 ### Diun
 ###
+nas_diun_config_dir: "/etc/diun"
 nas_diun_network_name: "diun"
 nas_diun_notify_mail_host: null
 nas_diun_notify_mail_port: null
