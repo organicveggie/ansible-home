@@ -61,7 +61,9 @@
         nas_navidrome_lastfm_secret: "{{ navidrome_lastfm_secret }}"
         nas_navidrome_music_folder: "{{ navidrome_music_folder }}"
         nas_navidrome_spotify_client_id: "{{ navidrome_spotify_client_id }}"
-        nas_navidrome_spotify_client_secret: "{{ navidrome_spotify_client_secret }}"
+        nas_navidrome_spotify_client_secret: "{{ navidrome_spotify_client_secret }}" 
+        # Node-RED
+        nas_nodered_timezone: "{{ home_timezone }}"
         # Samba
         nas_samba_group_names: "{{ samba_groups }}"
         # TimeMachine
