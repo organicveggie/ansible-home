@@ -5,7 +5,7 @@
 
 - name: "navidrome | Setup Docker network"
   community.docker.docker_network:
-    name: "{{ nas_navidrome_network_name }}"
+    name: "{{ nas_docker_networks.navidrome.name }}"
     driver: "bridge"
     enable_ipv6: "no"
     internal: "no"
@@ -20,13 +20,13 @@
   vars:
     navidrome_docker_base_url: "{{ navidrome_base_url }}"
     navidrome_docker_extra_networks:
-      - name: "{{ nas_navidrome_network_name }}"
+      - name: "{{ nas_docker_networks.navidrome.name }}"
     navidrome_docker_host_domain: "{{ nas_navidrome_host_domain }}"
     navidrome_docker_image_cache_size: "{{ nas_navidrome_image_cache_size }}"
     navidrome_docker_lastfm_enabled: "true"
     navidrome_docker_lastfm_apikey: "{{ nas_navidrome_lastfm_apikey }}"
     navidrome_docker_lastfm_secret: "{{ nas_navidrome_lastfm_secret }}"
     navidrome_docker_music_folder: "{{ nas_navidrome_music_folder }}"
-    navidrome_docker_network: "{{ nas_navidrome_network_name }}"
+    navidrome_docker_network: "{{ nas_docker_networks.navidrome.name }}"
     navidrome_docker_spotify_client_id: "{{ nas_navidrome_spotify_client_id }}"
     navidrome_docker_spotify_client_secret: "{{ nas_navidrome_spotify_client_secret }}"

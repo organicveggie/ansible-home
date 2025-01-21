@@ -95,8 +95,8 @@
 #     nas_hass_host_domain: "{{ nas_domain_name }}"
 #   tags: ["hass", "home-assistant", "homeassistant"]
 
-# - ansible.builtin.import_tasks: "navidrome.yml"
-#   tags: ["navidrome"]
+- ansible.builtin.import_tasks: "navidrome.yml"
+  tags: ["navidrome"]
 
 # - ansible.builtin.import_tasks: "node-red.yml"
 #   tags: ["node-red", "nodered"]
