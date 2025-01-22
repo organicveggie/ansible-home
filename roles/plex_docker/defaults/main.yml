@@ -30,6 +30,14 @@ plex_docker_cpus: "1"
 plex_docker_memory: "1GB"
 
 #####
+# Network
+#####
+
+plex_docker_network_aliases: null
+plex_docker_network_name: null
+plex_docker_network_ipv4: null
+
+#####
 # Volumes
 #####
 

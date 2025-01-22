@@ -27,12 +27,27 @@
     _plex_docker_all_mounts: >
       {{ _plex_docker_base_mounts + _plex_docker_extra_bind_mounts }}
 
+- name: "Set network mode"
+  ansible.builtin.set_fact:
+    _plex_docker_network_mode: "{{ plex_docker_network_name | default('host') }}"
+
+- name: "Create array for Docker network"
+  ansible.builtin.set_fact:
+    _plex_docker_networks:
+      - name: "{{ plex_docker_network_name }}"
+        aliases: "{{ plex_docker_network_aliases | default(omit) }}"
+        ipv4_address: "{{ plex_docker_network_ipv4 | default(omit) }}"
+  when:
+    - "plex_docker_network_name is defined"
+    - "plex_docker_network_name not in (None, omit)"
+
 - name: "Create Plex Docker Container"
   community.docker.docker_container:
     name: "{{ plex_docker_name }}"
     image: "{{ plex_docker_image }}:{{ plex_docker_image_version }}"
     pull: true
-    network_mode: "host"
+    network_mode: "{{ _plex_docker_network_mode }}"
+    networks: "{{ _plex_docker_networks | default(omit) }}"
     mounts: "{{ _plex_docker_all_mounts }}"
     env:
       TZ: "{{ plex_docker_timezone }}"
