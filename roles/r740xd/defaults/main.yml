@@ -99,6 +99,18 @@ nas_navidrome_spotify_client_id: null
 nas_navidrome_spotify_client_secret: null
 
 ###
+### Plex
+###
+nas_plex_docker_claim: null
+nas_plex_docker_cpus: 8
+nas_plex_docker_memory: "4GB"
+nas_plex_docker_network_name: null
+nas_plex_docker_network_ipv4: null
+nas_plex_music_path: null
+nas_plex_old_music_path: null
+nas_plex_videos_path: null
+
+###
 ### Samba
 ###
 # List of group names for Samba groups. The admin user will automatically be added to these

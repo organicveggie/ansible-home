@@ -5,6 +5,9 @@
   become: true
 
   vars:
+    _nas_plex_music_path: "/nas-mirror/music"
+    _nas_plex_old_music_path: "/nas-mirror/music-old"
+    _nas_plex_videos_path: "/data/videos"
     _glances_config_data:
       glances_docker_config:
         diskio:
@@ -64,6 +67,12 @@
         nas_navidrome_spotify_client_secret: "{{ navidrome_spotify_client_secret }}" 
         # Node-RED
         nas_nodered_timezone: "{{ home_timezone }}"
+        # Plex
+        nas_plex_docker_claim: "{{ vault_plex_docker_claim }}"
+        nas_plex_docker_network_ipv4: "{{ vault_plex_network_ipv4 }}"
+        nas_plex_music_path: "{{ _nas_plex_music_path }}"
+        nas_plex_old_music_path: "{{ _nas_plex_old_music_path }}"
+        nas_plex_videos_path: "{{ _nas_plex_videos_path }}"
         # Samba
         nas_samba_group_names: "{{ samba_groups }}"
         # TimeMachine

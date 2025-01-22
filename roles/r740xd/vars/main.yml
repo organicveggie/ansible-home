@@ -112,6 +112,14 @@ nas_navidrome_network_name: "navidrome"
 nas_nodered_network_name: "node-red"
 
 ###
+### Plex
+###
+nas_plex_gid: 32400
+nas_plex_groupname: "plex"
+nas_plex_uid: 32400
+nas_plex_username: "plex"
+
+###
 ### Portainer
 ###
 nas_portainer_network_name: "portainer"

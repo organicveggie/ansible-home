@@ -101,8 +101,10 @@
 - ansible.builtin.import_tasks: "node-red.yml"
   tags: ["node-red", "nodered"]
 
-# # - ansible.builtin.import_tasks: "plex.yml"
-# #   tags: ["plex", "pms"]
+- ansible.builtin.import_tasks: "plex.yml"
+  vars:
+    nas_plex_docker_network_name: "{{ nas_docker_macvlan_network_name }}"
+  tags: ["plex", "pms"]
 
 # # - ansible.builtin.import_tasks: "servarr.yml"
 # #   tags: ["servarr"]
