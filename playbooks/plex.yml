@@ -23,6 +23,7 @@
   roles:
     - role: "plex_docker"
       vars:
+        # TODO: plex_docker_port: "{{ nas_plex_port }}"
         plex_docker_claim: "{{ vault_plex_docker_claim }}"
         plex_docker_cpus: "{{ plex_cpus }}"
         plex_docker_gid: "{{ plex_gid }}"

@@ -27,13 +27,14 @@
   ansible.builtin.import_role:
     name: "plex_docker"
   vars:
-    plex_docker_claim: "{{ nas_plex_docker_claim }}"
-    plex_docker_cpus: "{{ nas_plex_docker_cpus }}"
+    plex_docker_claim: "{{ nas_plex_claim }}"
+    plex_docker_cpus: "{{ nas_plex_cpus }}"
     plex_docker_gid: "{{ _nas_plex_gid }}"
     plex_docker_groupname: "{{ _nas_plex_groupname }}"
-    plex_docker_memory: "{{ nas_plex_docker_memory  }}"
-    plex_docker_network_name: "{{ nas_plex_docker_network_name }}"
-    plex_docker_network_ipv4: "{{ nas_plex_docker_network_ipv4 }}"
+    plex_docker_memory: "{{ nas_plex_memory  }}"
+    plex_docker_name: "{{ nas_plex_container_name }}"
+    plex_docker_network_name: "{{ nas_plex_network_name }}"
+    plex_docker_network_ipv4: "{{ nas_plex_network_ipv4 }}"
     plex_docker_uid: "{{ nas_plex_uid }}"
     plex_docker_username: "{{ nas_plex_username }}"
     plex_docker_additional_bind_mounts:
@@ -51,10 +52,3 @@
         target: "/media/movies"
       - source: "{{ nas_plex_videos_path }}/tv"
         target: "/media/tv"
-
-  # - ansible.builtin.import_playbook: "playbooks/kometa.yml"
-  #   tags: ["kometa", "pmm", "plex-media-manager"]
-
-  # - ansible.builtin.import_playbook: "playbooks/tautulli.yml"
-  #   tags: ["tautulli"]
-

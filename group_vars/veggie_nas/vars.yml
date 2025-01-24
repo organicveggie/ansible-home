@@ -169,7 +169,8 @@ kometa_docker_tmdb_language: "en"
 kometa_docker_tmdb_region: "US"
 kometa_docker_tautulli_url: "http://{{ tautulli_service_name }}:{{ tautulli_web_port }}"
 kometa_docker_tautulli_apikey: "TODO-REPLACE-ME"
-kometa_docker_libraries: |2
+kometa_docker_libraries: "{{ kometa_libraries }}"
+kometa_libraries: |2
     Movies:
       report_path: /config/reports/Movies.yml
       template_variables:
@@ -474,7 +475,8 @@ kometa_docker_libraries: |2
         - pmm: myanimelist
 
 # See https://replit.com/@chazlarson/TraktAuth to generate the auth data.
-kometa_docker_trakt: |2
+kometa_docker_trakt: "{{ kometa_trakt }}"
+kometa_trakt: |2
     client_id: {{ vault_kometa_docker_trakt_client_id }}
     client_secret: {{ vault_kometa_docker_trakt_client_secret }}
     pin:

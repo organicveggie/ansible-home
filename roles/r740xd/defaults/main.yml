@@ -88,6 +88,18 @@ nas_hass_timezone: null
 nas_hass_zwave_device: null
 
 ###
+### Kometa
+###
+nas_kometa_cpus: "2"
+nas_kometa_memory: "2G"
+nas_kometa_mdblist_apikey: null
+nas_kometa_plex_token: null
+nas_kometa_tmdb_apikey: null
+nas_kometa_tautulli_apikey: null
+nas_kometa_libraries: null 
+nas_kometa_trakt: null
+
+###
 ### Navidrome
 ###
 nas_navidrome_host_name: "navi"
@@ -101,11 +113,12 @@ nas_navidrome_spotify_client_secret: null
 ###
 ### Plex
 ###
-nas_plex_docker_claim: null
-nas_plex_docker_cpus: 8
-nas_plex_docker_memory: "4GB"
-nas_plex_docker_network_name: null
-nas_plex_docker_network_ipv4: null
+nas_plex_container_name: "plex"
+nas_plex_claim: null
+nas_plex_cpus: 8
+nas_plex_memory: "4GB"
+nas_plex_network_name: null
+nas_plex_network_ipv4: null
 nas_plex_music_path: null
 nas_plex_old_music_path: null
 nas_plex_videos_path: null
@@ -119,6 +132,12 @@ nas_samba_group_names: []
 
 nas_samba_admin_username: "admin"
 nas_samba_admin_password: "password"
+
+###
+### Tautulli
+###
+mas_tautulli_container_name: "tautulli"
+nas_tautulli_hostname: "tautulli"
 
 ###
 ### TimeMachine

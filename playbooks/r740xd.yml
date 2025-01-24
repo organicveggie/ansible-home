@@ -58,6 +58,13 @@
         nas_hass_timezone: "{{ home_timezone }}"
         # nas_hass_zwave_device: "{{ homeassistant_zwave_device }}"
         nas_hass_zwave_device: null
+        # Kometa
+        nas_kometa_mdblist_apikey: "{{ vault_kometa_docker_mdblist_apikey }}"
+        nas_kometa_plex_token: "{{ vault_kometa_docker_plex_token }}"
+        nas_kometa_tmdb_apikey: "{{ vault_kometa_docker_tmdb_apikey }}"
+        nas_kometa_tautulli_apikey: "{{ vault_kometa_docker_tautulli_apikey }}"
+        nas_kometa_libraries: "{{ kometa_libraries }}"
+        nas_kometa_trakt: "{{ kometa_trakt }}"
         # Navidrome
         nas_navidrome_host_domain: "{{ veggie_nas_domain_name }}"
         nas_navidrome_lastfm_apikey: "{{ navidrome_lastfm_apikey }}"
@@ -68,8 +75,8 @@
         # Node-RED
         nas_nodered_timezone: "{{ home_timezone }}"
         # Plex
-        nas_plex_docker_claim: "{{ vault_plex_docker_claim }}"
-        nas_plex_docker_network_ipv4: "{{ vault_plex_network_ipv4 }}"
+        nas_plex_claim: "{{ vault_plex_docker_claim }}"
+        nas_plex_network_ipv4: "{{ vault_plex_network_ipv4 }}"
         nas_plex_music_path: "{{ _nas_plex_music_path }}"
         nas_plex_old_music_path: "{{ _nas_plex_old_music_path }}"
         nas_plex_videos_path: "{{ _nas_plex_videos_path }}"
@@ -81,5 +88,6 @@
         nas_time_machine_network_ipv4: "{{ vault_time_machine_network_ipv4 }}"
         nas_time_machine_password: "{{ vault_time_machine_password }}"
         nas_time_machine_zfs_dataset: "{{ vault_time_machine_zfs_dataset }}"
+        # NAS
         nas_timezone: "{{ home_timezone }}"
         nas_users: "{{ veggie_nas_users }}"

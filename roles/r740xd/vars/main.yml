@@ -101,6 +101,14 @@ nas_hass_pgsql_volume_data_name: "hass-pgsql-data"
 nas_hass_pgsql_volume_init_name: "hass-pgsql-initscripts"
 
 ###
+### Kometa
+###
+nas_kometa_mdblist_cache_expiration: "60"
+nas_kometa_plex_db_cache: "2048" # MB
+nas_kometa_tmdb_language: "en"
+nas_kometa_tmdb_region: "US"
+
+###
 ### Navidrome
 ###
 nas_navidrome_image_cache_size: "500MB"
@@ -116,6 +124,7 @@ nas_nodered_network_name: "node-red"
 ###
 nas_plex_gid: 32400
 nas_plex_groupname: "plex"
+nas_plex_port: 32400
 nas_plex_uid: 32400
 nas_plex_username: "plex"
 
@@ -123,6 +132,11 @@ nas_plex_username: "plex"
 ### Portainer
 ###
 nas_portainer_network_name: "portainer"
+
+###
+### Tautulli
+###
+nas_tautulli_web_port: "8181"
 
 ###
 ### TimeMachine
