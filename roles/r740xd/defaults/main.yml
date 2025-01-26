@@ -100,6 +100,12 @@ nas_kometa_libraries: null
 nas_kometa_trakt: null
 
 ###
+### Lidarr
+###
+nas_lidarr_cpus: null
+nas_lidarr_host_domain: null
+
+###
 ### Navidrome
 ###
 nas_navidrome_host_name: "navi"
@@ -124,14 +130,51 @@ nas_plex_old_music_path: null
 nas_plex_videos_path: null
 
 ###
+### Radarr
+###
+nas_radarr_cpus: "2"
+nas_radarr_movie_source_path: null
+nas_radarr1080_api_key: null
+nas_radarr1080_host_domain: null
+nas_radarr4k_api_key: null
+nas_radarr4k_host_domain: null
+
+###
+### Readarr
+###
+nas_readarr_api_key: null
+nas_readarr_host_domain: null
+
+###
 ### Samba
 ###
 # List of group names for Samba groups. The admin user will automatically be added to these
 # groups.
 nas_samba_group_names: []
-
 nas_samba_admin_username: "admin"
 nas_samba_admin_password: "password"
+
+###
+### Servarr
+###
+nas_servarr_cloudflared_token: null
+nas_servarr_path: null
+nas_servarr_tv_source_path: null
+nas_servarr_zfs_dataset: null
+
+###
+### Sonarr
+###
+nas_sonarr_cpus: "2"
+nas_sonarr1080_api_key: null
+nas_sonarr1080_host_domain: null
+nas_sonarr4k_api_key: null
+nas_sonarr4k_host_domain: null
+
+###
+### SyncThing
+###
+nas_syncthing_host_domain: null
 
 ###
 ### Tautulli

@@ -28,6 +28,8 @@
         nas_calibre_web_gid: "{{ vault_calibre_web_docker_gid }}"
         nas_calibre_web_host_domain: "{{ veggie_base_domain_name }}"
         nas_calibre_web_uid: "{{ vault_calibre_web_docker_uid }}"
+        # Cloudflare
+        nas_servarr_cloudflared_token: "{{ vault_servarr_cloudflared_token }}"
         # Diun
         nas_diun_notify_mail_host: "{{ vault_diun_notify_mail_host }}"
         nas_diun_notify_mail_port: "{{ vault_diun_notify_mail_port }}"
@@ -65,6 +67,9 @@
         nas_kometa_tautulli_apikey: "{{ vault_kometa_docker_tautulli_apikey }}"
         nas_kometa_libraries: "{{ kometa_libraries }}"
         nas_kometa_trakt: "{{ kometa_trakt }}"
+        # Lidarr
+        nas_lidarr_cpus: "2"
+        nas_lidarr_host_domain: "{{ veggie_nas_domain_name }}"
         # Navidrome
         nas_navidrome_host_domain: "{{ veggie_nas_domain_name }}"
         nas_navidrome_lastfm_apikey: "{{ navidrome_lastfm_apikey }}"
@@ -80,8 +85,30 @@
         nas_plex_music_path: "{{ _nas_plex_music_path }}"
         nas_plex_old_music_path: "{{ _nas_plex_old_music_path }}"
         nas_plex_videos_path: "{{ _nas_plex_videos_path }}"
+        # Radarr
+        nas_radarr_cpus: "2"
+        nas_radarr1080_api_key: "{{ vault_radarr1080_api_key }}"
+        nas_radarr1080_host_domain: "{{ veggie_nas_domain_name }}"
+        nas_radarr4k_api_key: "{{ vault_radarr4k_api_key }}"
+        nas_radarr4k_host_domain: "{{ veggie_nas_domain_name }}"
+        # Readarr
+        nas_readarr_api_key: "{{ vault_readarr_api_key }}"
+        nas_readarr_host_domain: "{{ veggie_nas_domain_name }}"
         # Samba
         nas_samba_group_names: "{{ samba_groups }}"
+        # Servarr
+        nas_servarr_movie_source_path: "{{ vault_servarr_movie_path }}"
+        nas_servarr_path: "{{ vault_servarr_path }}"
+        nas_servarr_tv_source_path: "{{ vault_servarr_tv_path }}"
+        nas_servarr_zfs_dataset: "{{ vault_servarr_zfs_dataset }}"
+        # Sonarr
+        nas_sonarr_cpus: "2"
+        nas_sonarr1080_api_key: "{{ vault_sonarr1080_api_key }}"
+        nas_sonarr1080_host_domain: "{{ veggie_nas_domain_name }}"
+        nas_sonarr4k_api_key: "{{ vault_sonarr4k_api_key }}"
+        nas_sonarr4k_host_domain: "{{ veggie_nas_domain_name }}"
+        # Syncthing
+        nas_syncthing_host_domain: "{{ veggie_nas_domain_name }}"
         # TimeMachine
         nas_time_machine_data_directory: "{{ vault_time_machine_data_directory }}"
         nas_time_machine_hostname: "{{ vault_time_machine_hostname }}"

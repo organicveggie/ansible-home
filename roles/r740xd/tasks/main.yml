@@ -112,8 +112,8 @@
 - ansible.builtin.import_tasks: "kometa.yml"
   tags: ["kometa", "pmm", "plex-media-manager"]
 
-# # - ansible.builtin.import_tasks: "servarr.yml"
-# #   tags: ["servarr"]
+- ansible.builtin.import_tasks: "servarr.yml"
+  tags: ["servarr"]
 
 # # - ansible.builtin.import_tasks: "influxdb.yml"
 # #   tags: ["influxdb"]
