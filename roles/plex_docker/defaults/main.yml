@@ -29,6 +29,9 @@ plex_docker_cpus: "1"
 # Amount of memory to allocate to the container.
 plex_docker_memory: "1GB"
 
+# Full FQDN for the Plex server.
+plex_docker_fqdn: "plex.example.com"
+
 #####
 # Network
 #####

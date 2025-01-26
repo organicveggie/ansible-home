@@ -103,7 +103,7 @@
 
 - ansible.builtin.import_tasks: "plex.yml"
   vars:
-    nas_plex_docker_network_name: "{{ nas_docker_macvlan_network_name }}"
+    nas_plex_network_name: "{{ nas_docker_macvlan_network_name }}"
   tags: ["plex", "pms"]
 
 - ansible.builtin.import_tasks: "tautulli.yml"

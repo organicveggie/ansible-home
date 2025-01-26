@@ -57,6 +57,8 @@ nas_docker_macvlan_subnet: null
 # Base domain name for machine and containers running on it.
 nas_domain_name: "example.com"
 
+nas_veggie_domain: "subdomain.example.com"
+
 ###
 ### Glances
 ###

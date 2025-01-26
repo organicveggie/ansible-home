@@ -1,9 +1,75 @@
-- import_tasks: general.yml
-  tags:
-    - plex_docker
-    - plex_docker:general
+---
+- name: "Create Plex Docker Volumes"
+  community.docker.docker_volume:
+    name: "{{ item }}"
+  with_items:
+    - "{{ plex_docker_volume_name_home }}"  
+    - "{{ plex_docker_volume_name_transcode }}"
 
-- import_tasks: docker.yml
-  tags:
-    - plex_docker
-    - plex_docker:docker
+- name: "Set Docker mount list for standard volume mounts"
+  ansible.builtin.set_fact:
+    _plex_docker_base_mounts:
+      - source: "{{ plex_docker_volume_name_home }}"
+        target: "/config"
+        type: "volume"
+      - source: "{{ plex_docker_volume_name_transcode }}"
+        target: "/transcode"
+        type: "volume"
+
+- name: "Define list of extra bind mounts"
+  ansible.builtin.set_fact:
+    _plex_docker_extra_bind_mounts: "{{ _plex_docker_extra_bind_mounts | default([]) + 
+      [{'source': item.source, 'target': item.target, 'type': 'bind'}] }}"
+  with_items: "{{ plex_docker_additional_bind_mounts }}"
+
+- name: "Define complete list of mounts"
+  ansible.builtin.set_fact:
+    _plex_docker_all_mounts: >
+      {{ _plex_docker_base_mounts + _plex_docker_extra_bind_mounts }}
+
+- name: "Set network mode"
+  ansible.builtin.set_fact:
+    _plex_docker_network_mode: "{{ plex_docker_network_name | default('host') }}"
+
+- name: "Create array for Docker network"
+  ansible.builtin.set_fact:
+    _plex_docker_networks:
+      - name: "{{ plex_docker_network_name }}"
+        aliases: "{{ plex_docker_network_aliases | default(omit) }}"
+        ipv4_address: "{{ plex_docker_network_ipv4 | default(omit) }}"
+  when: "plex_docker_network_name | default('') | trim | length > 0"
+
+- name: "Debug Docker network"
+  ansible.builtin.debug:
+    msg:
+      - "Default network: {{ _plex_docker_network_mode }}"
+      - "plex_docker_network_name: {{ plex_docker_network_name }}"
+
+- name: "Create Plex Docker Container"
+  community.docker.docker_container:
+    name: "{{ plex_docker_name }}"
+    image: "{{ plex_docker_image }}:{{ plex_docker_image_version }}"
+    pull: true
+    network_mode: "{{ _plex_docker_network_mode }}"
+    networks: "{{ _plex_docker_networks | default(omit) }}"
+    hostname: "{{ plex_docker_fqdn }}"
+    mounts: "{{ _plex_docker_all_mounts }}"
+    env:
+      TZ: "{{ plex_docker_timezone }}"
+      PLEX_CLAIM: "{{ plex_docker_claim }}"
+      PLEX_UID: "{{ plex_docker_uid }}"
+      PLEX_GID: "{{ plex_docker_gid }}"
+    restart_policy: unless-stopped
+    cpus: "{{ plex_docker_cpus }}"
+    memory: "{{ plex_docker_memory }}"
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: yes
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    labels:
+      traefik.enable: "false"
+      veggie_fqdn: "{{ plex_docker_fqdn }}"
