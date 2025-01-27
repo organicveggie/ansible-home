@@ -10,6 +10,4 @@
       ansible.builtin.set_fact:
         _nas_traefik_extra_networks: "{{ _nas_traefik_extra_networks | default([]) + [{'name': item}] }}"
       when: "_network_info.exists"
-  when:
-    - "item is defined"
-    - "item not in (None, omit)"
+  when: "item | default('') | trim | length > 0"

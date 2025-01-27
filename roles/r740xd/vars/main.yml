@@ -90,6 +90,10 @@ nas_docker_networks:
     name: "tautulli"
     gateway: "172.30.14.1"
     subnet: "172.30.14.0/24"    
+  unific:
+    name: "unific"
+    gateway: "172.30.15.1"
+    subnet: "172.30.15.0/24"    
 
 ###
 ### Home Assistant

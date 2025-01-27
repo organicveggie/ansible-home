@@ -22,23 +22,19 @@
     file: "traefik_network.yml"
   loop:
     # - "{{ nas_docker_networks.traefik.name }}"
-    - "{{ nas_calibre_web_network_name | default(omit) }}"
-    - "{{ nas_glances_network_name | default(omit) }}"
-    - "{{ nas_hass_network_name | default(omit) }}"
-    - "{{ nas_navidrome_network_name | default(omit) }}"
-    - "{{ nas_nodered_network_name | default(omit) }}"
-    - "{{ nas_portainer_network_name | default(omit) }}"
-    - "{{ nas_servarr_network_name | default(omit) }}"
-    - "{{ nas_unific_network_name | default(omit) }}"
+    - "{{ nas_docker_networks.calibre_web.name }}"
+    - "{{ nas_docker_networks.glances.name }}"
+    - "{{ nas_docker_networks.hass.name }}"
+    - "{{ nas_docker_networks.navidrome.name }}"
+    - "{{ nas_docker_networks.node_red.name }}"
+    - "{{ nas_docker_networks.portainer.name }}"
 
 - name: "traefik | Process Servarr network"
-  when:
-    - "nas_servarr_network_name is defined"
-    - "nas_servarr_network_name not in (None, omit)"
+  when: "nas_docker_networks.servarr.name | default('') | trim | length > 0"
   block:
     - name: "traefik | Check if Servarr network exists"
       community.docker.docker_network_info:
-        name: "{{ nas_servarr_network_name }}"
+        name: "{{ nas_docker_networks.servarr.name }}"
       register: "_nas_traefik_servarr_network_info"
 
     - name: "traefik | Configure for Servarr tools"
@@ -46,7 +42,7 @@
       block:
         - name: "traefik | Enable Servarr extra network"
           ansible.builtin.set_fact:
-            _nas_traefik_extra_networks: "{{ _nas_traefik_extra_networks | default([]) + [{'name': nas_servarr_network_name}] }}"
+            _nas_traefik_extra_networks: "{{ _nas_traefik_extra_networks | default([]) + [{'name': nas_docker_networks.servarr.name}] }}"
 
         - name: "traefik | Enable SyncThings (Servarr) ports"
           ansible.builtin.set_fact:
@@ -57,18 +53,20 @@
             _nas_traefik_entrypoints: "{{ _nas_traefik_entrypoints | default({}) | combine(nas_traefik_syncthings_entrypoints) }}"
 
 - name: "traefik | Process UniFi Controller network"
-  when:
-    - "nas_unific_network_name is defined"
-    - "nas_unific_network_name not in (None, omit)"
+  when: "nas_docker_networks.unific.name | default('') | trim | length > 0"
   block:
     - name: "traefik | Check if UniFi Controller network exists"
       community.docker.docker_network_info:
-        name: "{{ nas_unific_network_name }}"
+        name: "{{ nas_docker_networks.unific.name }}"
       register: "_nas_traefik_unific_network_info"
 
     - name: "traefik | Configure Traefik for UniFi Controller"
       when: "_nas_traefik_unific_network_info.exists"
       block:
+        - name: "traefik | Enable UniFi extra network"
+          ansible.builtin.set_fact:
+            _nas_traefik_extra_networks: "{{ _nas_traefik_extra_networks | default([]) + [{'name': nas_docker_networks.unific.name}] }}"
+
         - name: "traefik | Enable UniFi Controlller ports"
           ansible.builtin.set_fact:
             _nas_traefik_extra_ports: "{{ _nas_traefik_extra_ports | default([]) + nas_traefik_unific_ports }}"
@@ -103,10 +101,6 @@
     traefik_qs_https_le_mail: "{{ letsencrypt_email }}"
     traefik_qs_log_level: INFO
     traefik_ports: "{{ _nas_traefik_all_ports }}"
-#       - "3200:3000"
-#       - '8080:8080'     # java http
-#       - '22000:22000'   # syncthing
-#       # - "55555:55555"   # Resilio Sync
     traefik_hostname: "{{ _nas_traefik_fqdn }}"
     traefik_confkey_api:
       dashboard: true # use this for enabling the dashboard
