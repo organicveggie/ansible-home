@@ -45,7 +45,7 @@
         nas_docker_macvlan_network_parent: "{{ veggie_nas_docker_macvlan_network_parent }}"
         nas_docker_macvlan_subnet: "{{ veggie_nas_docker_macvlan_subnet }}"
         # Domain name
-        nas_site_domain: "{{ veggie_domain }}"
+        nas_site_domain: "{{ veggie_base_domain_name }}"
         nas_domain_name: "{{ veggie_nas_domain_name }}"
         # Glances
         nas_glances_config_data: "{{ _glances_config_data }}"
@@ -70,9 +70,9 @@
         nas_kometa_trakt: "{{ kometa_trakt }}"
         # Lidarr
         nas_lidarr_cpus: "2"
-        nas_lidarr_host_domain: "{{ veggie_nas_domain_name }}"
+        nas_lidarr_host_domain: "{{ veggie_base_domain_name }}"
         # Navidrome
-        nas_navidrome_host_domain: "{{ veggie_nas_domain_name }}"
+        nas_navidrome_host_domain: "{{ veggie_base_domain_name }}"
         nas_navidrome_lastfm_apikey: "{{ navidrome_lastfm_apikey }}"
         nas_navidrome_lastfm_secret: "{{ navidrome_lastfm_secret }}"
         nas_navidrome_music_folder: "{{ navidrome_music_folder }}"
@@ -89,12 +89,12 @@
         # Radarr
         nas_radarr_cpus: "2"
         nas_radarr1080_api_key: "{{ vault_radarr1080_api_key }}"
-        nas_radarr1080_host_domain: "{{ veggie_nas_domain_name }}"
+        nas_radarr1080_host_domain: "{{ veggie_base_domain_name }}"
         nas_radarr4k_api_key: "{{ vault_radarr4k_api_key }}"
-        nas_radarr4k_host_domain: "{{ veggie_nas_domain_name }}"
+        nas_radarr4k_host_domain: "{{ veggie_base_domain_name }}"
         # Readarr
         nas_readarr_api_key: "{{ vault_readarr_api_key }}"
-        nas_readarr_host_domain: "{{ veggie_nas_domain_name }}"
+        nas_readarr_host_domain: "{{ veggie_base_domain_name }}"
         # Samba
         nas_samba_group_names: "{{ samba_groups }}"
         # Servarr
@@ -105,11 +105,11 @@
         # Sonarr
         nas_sonarr_cpus: "2"
         nas_sonarr1080_api_key: "{{ vault_sonarr1080_api_key }}"
-        nas_sonarr1080_host_domain: "{{ veggie_nas_domain_name }}"
+        nas_sonarr1080_host_domain: "{{ veggie_base_domain_name }}"
         nas_sonarr4k_api_key: "{{ vault_sonarr4k_api_key }}"
-        nas_sonarr4k_host_domain: "{{ veggie_nas_domain_name }}"
+        nas_sonarr4k_host_domain: "{{ veggie_base_domain_name }}"
         # Syncthing
-        nas_syncthing_host_domain: "{{ veggie_nas_domain_name }}"
+        nas_syncthing_host_domain: "{{ veggie_base_domain_name }}"
         # TimeMachine
         nas_time_machine_data_directory: "{{ vault_time_machine_data_directory }}"
         nas_time_machine_hostname: "{{ vault_time_machine_hostname }}"

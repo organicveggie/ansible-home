@@ -125,7 +125,6 @@ nas_time_machine_hostname: "{{ vault_time_machine_hostname }}"
 ###
 ### Veggie Common
 ###
-veggie_base_domain_name: "{{ veggie_domain }}"
 veggie_domain: "{{ vault_veggie_domain }}"
 veggie_fqdn: "{{ veggie_hostname }}.{{ veggie_domain }}"
 veggie_hostname: "{{ vault_veggie_hostname }}"
