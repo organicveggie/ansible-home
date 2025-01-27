@@ -45,7 +45,7 @@
         nas_docker_macvlan_network_parent: "{{ veggie_nas_docker_macvlan_network_parent }}"
         nas_docker_macvlan_subnet: "{{ veggie_nas_docker_macvlan_subnet }}"
         # Domain name
-        nas_veggie_domain: "{{ veggie_domain }}"
+        nas_site_domain: "{{ veggie_domain }}"
         nas_domain_name: "{{ veggie_nas_domain_name }}"
         # Glances
         nas_glances_config_data: "{{ _glances_config_data }}"
