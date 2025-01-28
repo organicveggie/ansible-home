@@ -29,8 +29,6 @@
     - "{{ nas_servarr_zfs_dataset }}/downloads"
     - "{{ nas_servarr_zfs_dataset }}/downloads/torrents"
     - "{{ nas_servarr_zfs_dataset }}/downloads/usenet"
-    # - "{{ nas_servarr_zfs_dataset }}/books"
-    # - "{{ nas_servarr_zfs_dataset }}/music"
 
 - name: "servarr | Set owner/group for datasets"
   ansible.builtin.file:
@@ -44,10 +42,8 @@
     - "{{ nas_servarr_path }}/downloads"
     - "{{ nas_servarr_path }}/downloads/torrents"
     - "{{ nas_servarr_path }}/downloads/usenet"
-    # - "{{ nas_servarr_path }}/books"
-    # - "{{ nas_servarr_path }}/music"
 
-- name: "servarr | Create folders for completed downloads"
+- name: "servarr | Create folders for downloads"
   ansible.builtin.file:
     path: "{{ item }}"
     state: "directory"
@@ -57,6 +53,12 @@
   loop:
     - "{{ nas_servarr_path }}/downloads/torrents/completed"
     - "{{ nas_servarr_path }}/downloads/usenet/completed"
+    - "{{ nas_servarr_path }}/downloads/usenet/movies"
+    - "{{ nas_servarr_path }}/downloads/usenet/movies/1080p"
+    - "{{ nas_servarr_path }}/downloads/usenet/movies/2160p"
+    - "{{ nas_servarr_path }}/downloads/usenet/tv"
+    - "{{ nas_servarr_path }}/downloads/usenet/tv/1080p"
+    - "{{ nas_servarr_path }}/downloads/usenet/tv/2160p"
 
 - name: "servarr | Setup Docker network"
   community.docker.docker_network:
