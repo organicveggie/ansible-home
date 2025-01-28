@@ -1,9 +1,9 @@
 ---
-- name: "Create radarr Docker config volume"
+- name: "{{ radarr_docker_role_label }} | Create radarr Docker config volume"
   community.docker.docker_volume:
     name: "{{ radarr_docker_volume_config_name }}"
 
-- name: "Set Docker mount list for volume mounts"
+- name: "{{ radarr_docker_role_label }} | Set Docker mount list for volume mounts"
   ansible.builtin.set_fact:
     _radarr_docker_mount_list:
       - source: "{{ radarr_docker_volume_config_name }}"
@@ -16,26 +16,26 @@
         target: "/data/media/movies"
         type: "bind"
 
-- name: "Build container FQDN"
+- name: "{{ radarr_docker_role_label }} | Build container FQDN"
   ansible.builtin.set_fact:
     _radarr_docker_fqdn: "{{ radarr_docker_host_name }}.{{ radarr_docker_host_domain }}"
 
-- name: "Create placeholder array for default network"
+- name: "{{ radarr_docker_role_label }} | Create placeholder array for default network"
   ansible.builtin.set_fact:
     _radarr_docker_default_networks:
       - name: "{{ radarr_docker_network }}"
         aliases: "{{ radarr_docker_network_aliases | default(omit) }}"
 
-- name: "Define all Docker networks for this container"
+- name: "{{ radarr_docker_role_label }} | Define all Docker networks for this container"
   ansible.builtin.set_fact:
     _radarr_docker_all_networks: >
       {{ _radarr_docker_default_networks + radarr_docker_extra_networks }}
 
-- name: "Define placeholder map for Docker labels"
+- name: "{{ radarr_docker_role_label }} | Define placeholder map for Docker labels"
   ansible.builtin.set_fact:
     _radarr_docker_labels: {}
 
-- name: "Define Docker labels with Traefik disabled"
+- name: "{{ radarr_docker_role_label }} | Define Docker labels with Traefik disabled"
   ansible.builtin.set_fact:
     _radarr_docker_labels: "{{ _radarr_docker_labels | default({}) |
       combine({item.key: item.value}) }}"
@@ -44,7 +44,7 @@
       value: "{{ radarr_available_externally }}"
   when: "not radarr_docker_available_externally"
 
-- name: "Define Docker labels with Traefik enabled"
+- name: "{{ radarr_docker_role_label }} | Define Docker labels with Traefik enabled"
   ansible.builtin.set_fact:
     _radarr_docker_labels: "{{ _radarr_docker_labels | default({}) |
       combine({item.key: item.value}) }}"
@@ -65,13 +65,13 @@
       value: "{{ radarr_docker_web_port }}"
   when: "radarr_docker_available_externally"
 
-- name: "Define user-supplied extra Docker labels"
+- name: "{{ radarr_docker_role_label }} | Define user-supplied extra Docker labels"
   ansible.builtin.set_fact:
     _radarr_docker_labels: "{{ _radarr_docker_labels | default({}) |
       combine({item.key: item.value}) }}"
   loop: "{{ radarr_docker_extra_labels | dict2items }}"
 
-- name: "radarr Docker Container"
+- name: "{{ radarr_docker_role_label }} | radarr Docker Container"
   community.docker.docker_container:
     name: "{{ radarr_docker_name }}"
     image: "{{ radarr_docker_image }}:{{ radarr_docker_image_version }}"
