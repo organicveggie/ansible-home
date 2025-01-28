@@ -80,12 +80,16 @@
         nas_navidrome_spotify_client_secret: "{{ navidrome_spotify_client_secret }}" 
         # Node-RED
         nas_nodered_timezone: "{{ home_timezone }}"
+        # Overseerr
+        nas_overseerr_host_domain: "{{ veggie_base_domain_name }}"
         # Plex
         nas_plex_claim: "{{ vault_plex_docker_claim }}"
         nas_plex_network_ipv4: "{{ vault_plex_network_ipv4 }}"
         nas_plex_music_path: "{{ _nas_plex_music_path }}"
         nas_plex_old_music_path: "{{ _nas_plex_old_music_path }}"
         nas_plex_videos_path: "{{ _nas_plex_videos_path }}"
+        # Prowlarr
+        nas_prowlarr_host_domain: "{{ veggie_base_domain_name }}"
         # Radarr
         nas_radarr_cpus: "2"
         nas_radarr1080_api_key: "{{ vault_radarr1080_api_key }}"
@@ -95,6 +99,8 @@
         # Readarr
         nas_readarr_api_key: "{{ vault_readarr_api_key }}"
         nas_readarr_host_domain: "{{ veggie_base_domain_name }}"
+        # Sabnzbd
+        nas_sabnzbd_host_domain: "{{ veggie_base_domain_name }}"
         # Samba
         nas_samba_group_names: "{{ samba_groups }}"
         # Servarr

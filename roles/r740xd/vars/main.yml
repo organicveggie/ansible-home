@@ -141,7 +141,6 @@ nas_portainer_network_name: "portainer"
 ###
 ### Radarr
 ###
-nas_radarr_web_port: "7878"
 nas_radarr1080_config_volume_name: "radarr1080-config"
 nas_radarr1080_container_name: "radarr1080"
 nas_radarr1080_host_name: "radarr1080"
@@ -171,7 +170,6 @@ nas_servarr_username: "plex"
 ###
 ### Sonarr
 ###
-nas_sonarr_web_port: "7878"
 nas_sonarr1080_config_volume_name: "sonarr1080-config"
 nas_sonarr1080_container_name: "sonarr1080"
 nas_sonarr1080_host_name: "sonarr1080"

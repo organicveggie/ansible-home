@@ -93,27 +93,32 @@
   ansible.builtin.import_role:
     name: "lidarr"
   vars:
-    lidarr_docker_gid: "{{ _nas_servarr_gid }}"
-    lidarr_docker_uid: "{{ nas_servarr_uid }}"
-    lidarr_docker_timezone: "{{ nas_timezone }}"
-    lidarr_docker_network: "{{ nas_docker_networks.servarr.name }}"
-    lidarr_docker_data_source_path: "{{ nas_servarr_path }}"
     lidarr_docker_cpus: "{{ nas_lidarr_cpus }}"
+    lidarr_docker_data_source_path: "{{ nas_servarr_path }}"
+    lidarr_docker_gid: "{{ _nas_servarr_gid }}"
     lidarr_docker_host_domain: "{{ nas_lidarr_host_domain }}"
+    lidarr_docker_network: "{{ nas_docker_networks.servarr.name }}"
+    lidarr_docker_timezone: "{{ nas_timezone }}"
+    lidarr_docker_uid: "{{ nas_servarr_uid }}"
+    lidarr_docker_extra_bind_mounts:
+      - source: "/nas-mirror/music"
+        target: "/data/music"
 
 - name: "servarr | Setup prowlarr"
   ansible.builtin.import_role:
     name: "prowlarr"
   vars:
     prowlarr_docker_gid: "{{ _nas_servarr_gid }}"
-    prowlarr_docker_uid: "{{ nas_servarr_uid }}"
-    prowlarr_docker_timezone: "{{ nas_timezone }}"
+    prowlarr_docker_host_domain: "{{ nas_prowlarr_host_domain }}"
     prowlarr_docker_network: "{{ nas_docker_networks.servarr.name }}"
+    prowlarr_docker_timezone: "{{ nas_timezone }}"
+    prowlarr_docker_uid: "{{ nas_servarr_uid }}"
 
 - name: "servarr | Setup Radarr 1080p"
   ansible.builtin.import_role:
     name: "radarr"
   vars:
+    radarr_docker_role_label: "radarr1080"
     radarr_docker_available_externally: "true"
     radarr_docker_cpus: "{{ nas_radarr_cpus }}"
     radarr_docker_data_source_path: "{{ nas_servarr_path }}"
@@ -127,12 +132,13 @@
     radarr_docker_timezone: "{{ nas_timezone }}"
     radarr_docker_uid: "{{ nas_servarr_uid }}"
     radarr_docker_volume_config_name: "{{ nas_radarr1080_config_volume_name }}"
-    radarr_docker_web_port: "{{ nas_radarr_web_port }}"
+    radarr_docker_web_port: "{{ nas_radarr_web_port | default(omit) }}"
 
 - name: "servarr | Setup Radarr 4K"
   ansible.builtin.import_role:
     name: "radarr"
   vars:
+    radarr_docker_role_label: "radarr4k"
     radarr_docker_available_externally: "true"
     radarr_docker_cpus: "{{ nas_radarr_cpus }}"
     radarr_docker_data_source_path: "{{ nas_servarr_path }}"
@@ -146,7 +152,7 @@
     radarr_docker_timezone: "{{ nas_timezone }}"
     radarr_docker_uid: "{{ nas_servarr_uid }}"
     radarr_docker_volume_config_name: "{{ nas_radarr4k_config_volume_name }}"
-    radarr_docker_web_port: "{{ nas_radarr_web_port }}"
+    radarr_docker_web_port: "{{ nas_radarr_web_port | default(omit) }}"
 
 - name: "servarr | Setup Readarr"
   ansible.builtin.import_role:
@@ -182,6 +188,7 @@
   vars:
     sabnzbd_docker_data_source_path: "{{ nas_servarr_path }}"
     sabnzbd_docker_gid: "{{ _nas_servarr_gid }}"
+    sabnzbd_docker_host_domain: "{{ nas_sabnzbd_host_domain }}"
     sabnzbd_docker_network: "{{ nas_docker_networks.servarr.name }}"
     sabnzbd_docker_timezone: "{{ nas_timezone }}"
     sabnzbd_docker_uid: "{{ nas_servarr_uid }}"
@@ -203,7 +210,7 @@
     sonarr_docker_tv_source_path: "{{ nas_servarr_tv_source_path }}"
     sonarr_docker_uid: "{{ nas_servarr_uid }}"
     sonarr_docker_volume_config_name: "{{ nas_sonarr1080_config_volume_name }}"
-    sonarr_docker_web_port: "{{ nas_sonarr_web_port }}"
+    sonarr_docker_web_port: "{{ nas_sonarr_web_port | default(omit) }}"
   
 - name: "servarr | Setup Sonarr 4K"
   ansible.builtin.import_role:
@@ -222,7 +229,7 @@
     sonarr_docker_tv_source_path: "{{ nas_servarr_tv_source_path }}"
     sonarr_docker_uid: "{{ nas_servarr_uid }}"
     sonarr_docker_volume_config_name: "{{ nas_sonarr4k_config_volume_name }}"
-    sonarr_docker_web_port: "{{ nas_sonarr_web_port }}"
+    sonarr_docker_web_port: "{{ nas_sonarr_web_port | default(omit) }}"
 
 - name: "servarr | Setup Syncthing"
   ansible.builtin.import_role:
@@ -309,10 +316,11 @@
   ansible.builtin.import_role:
     name: "overseerr"
   vars:
-    overseerr_docker_timezone: "{{ nas_timezone }}"
-    overseerr_docker_network: "{{ nas_docker_networks.servarr.name }}"
     overseerr_docker_extra_hosts:
       "host.docker.internal": "{{ nas_docker_bridge_network_gateway }}"
       "plex": "{{ nas_plex_network_ipv4 }}"
     overseerr_docker_extra_networks:
       - name: "{{ nas_docker_networks.tautulli.name }}"
+    overseerr_docker_host_domain: "{{ nas_overseerr_host_domain }}"
+    overseerr_docker_network: "{{ nas_docker_networks.servarr.name }}"
+    overseerr_docker_timezone: "{{ nas_timezone }}"

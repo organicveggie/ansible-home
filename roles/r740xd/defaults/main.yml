@@ -120,6 +120,11 @@ nas_navidrome_spotify_client_id: null
 nas_navidrome_spotify_client_secret: null
 
 ###
+### Overseerr
+###
+nas_overseerr_host_domain: null
+
+###
 ### Plex
 ###
 nas_plex_container_name: "plex"
@@ -133,10 +138,16 @@ nas_plex_old_music_path: null
 nas_plex_videos_path: null
 
 ###
+### Prowlarr
+###
+nas_prowlarr_host_domain: null
+
+###
 ### Radarr
 ###
 nas_radarr_cpus: "2"
 nas_radarr_movie_source_path: null
+nas_radarr_web_port: null # optional
 nas_radarr1080_api_key: null
 nas_radarr1080_host_domain: null
 nas_radarr4k_api_key: null
@@ -147,6 +158,11 @@ nas_radarr4k_host_domain: null
 ###
 nas_readarr_api_key: null
 nas_readarr_host_domain: null
+
+###
+### Sabnzbd
+###
+nas_sabnzbd_host_domain: null
 
 ###
 ### Samba
@@ -169,6 +185,7 @@ nas_servarr_zfs_dataset: null
 ### Sonarr
 ###
 nas_sonarr_cpus: "2"
+nas_sonarr_web_port: null # optional
 nas_sonarr1080_api_key: null
 nas_sonarr1080_host_domain: null
 nas_sonarr4k_api_key: null
