@@ -13,6 +13,12 @@
         target: "/data"
         type: "bind"
 
+- name: "Define extra bind mounts"
+  ansible.builtin.set_fact:
+    _lidarr_docker_mount_list: "{{ _lidarr_docker_mount_list | default([]) + 
+      [{'source': item.source, 'target': item.target, 'type': 'bind'}] }}"
+  with_items: "{{ lidarr_docker_extra_bind_mounts }}"
+
 - name: "Build container FQDN"
   ansible.builtin.set_fact:
     _lidarr_docker_fqdn: "{{ lidarr_docker_host_name }}.{{ lidarr_docker_host_domain }}"
