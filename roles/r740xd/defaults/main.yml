@@ -214,6 +214,15 @@ nas_time_machine_username: "time-machine"
 nas_time_machine_uid: 1311
 nas_time_machine_zfs_dataset: null
 
+###
+### UniFi Controller
+###
+nas_unific_cpus: "2"
+nas_unific_hostname: "unific"
+nas_unific_host_domain: null
+nas_unific_memory: "2G"
+
+
 ##########
 
 nas_timezone: "America/New_York"

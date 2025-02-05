@@ -122,6 +122,8 @@
         nas_time_machine_network_ipv4: "{{ vault_time_machine_network_ipv4 }}"
         nas_time_machine_password: "{{ vault_time_machine_password }}"
         nas_time_machine_zfs_dataset: "{{ vault_time_machine_zfs_dataset }}"
+        # UniFi Controller
+        nas_unific_host_domain: "{{ veggie_base_domain_name }}"
         # NAS
         nas_timezone: "{{ home_timezone }}"
         nas_users: "{{ veggie_nas_users }}"

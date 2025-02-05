@@ -1,0 +1,25 @@
+---
+- name: "unific | Setup Docker network"
+  community.docker.docker_network:
+    name: "{{ nas_docker_networks.unific.name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "no"
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ nas_docker_networks.unific.subnet }}"
+        gateway: "{{ nas_docker_networks.unific.gateway }}"
+
+- name: "unific | Setup UniFi Controller container"
+  ansible.builtin.import_role:
+    name: "organicveggie.unific"
+  vars:
+    unific_available_externally: "true"
+    unific_cpus: "{{ nas_unific_cpus }}"
+    unific_docker_network_created: true
+    unific_hostname: "{{ nas_unific_hostname }}"
+    unific_host_domain: "{{ nas_unific_host_domain }}"
+    unific_memory: "{{ nas_unific_memory }}"
+    unific_network_name: "{{ nas_docker_networks.unific.name }}"
+    unific_timezone: "{{ nas_timezone }}"
+    unific_traefik_router_rule: "Host(`{{ nas_unific_hostname }}.{{ nas_unific_host_domain }}`)"

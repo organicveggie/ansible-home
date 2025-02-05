@@ -206,6 +206,8 @@ nas_traefik_syncthings_entrypoints:
 nas_traefik_syncthings_ports:
   - "22000:22000"
 nas_traefik_unific_entrypoints:
+  java_http:
+    address: ":8080"
   unific_speed_test:
     address: ":6789"
   unific_stun:
