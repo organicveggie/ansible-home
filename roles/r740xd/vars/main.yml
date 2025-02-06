@@ -218,5 +218,6 @@ nas_traefik_unific_entrypoints:
     address: ":19000/udp"
 nas_traefik_unific_ports:
   - "3478:3478"     # unific stun
+  - "8080:8080"     # unific java http
   - "10001:10001"   # unific dev discovery
   - "19000:19000"   # unific controller discovery
