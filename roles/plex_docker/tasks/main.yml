@@ -31,7 +31,7 @@
   ansible.builtin.set_fact:
     _plex_docker_network_mode: "{{ plex_docker_network_name | default('host') }}"
 
-- name: "Create array for Docker network"
+- name: "Create array for Docker networks"
   ansible.builtin.set_fact:
     _plex_docker_networks:
       - name: "{{ plex_docker_network_name }}"
@@ -39,11 +39,18 @@
         ipv4_address: "{{ plex_docker_network_ipv4 | default(omit) }}"
   when: "plex_docker_network_name | default('') | trim | length > 0"
 
+- name: "Include extra Docker networks"
+  ansible.builtin.set_fact:
+    _plex_docker_networks: "{{ _plex_docker_networks | default([]) + [item] }}"
+  loop: "{{ plex_docker_extra_networks }}"
+  when: "plex_docker_extra_networks | default([]) | length > 0"
+
 - name: "Debug Docker network"
   ansible.builtin.debug:
     msg:
       - "Default network: {{ _plex_docker_network_mode }}"
       - "plex_docker_network_name: {{ plex_docker_network_name }}"
+      - "_plex_docker_networks: {{ _plex_docker_networks }}"
 
 - name: "Create Plex Docker Container"
   community.docker.docker_container:

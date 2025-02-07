@@ -36,6 +36,7 @@ plex_docker_fqdn: "plex.example.com"
 # Network
 #####
 
+plex_docker_extra_networks: null
 plex_docker_network_aliases: null
 plex_docker_network_name: null
 plex_docker_network_ipv4: null

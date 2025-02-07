@@ -73,6 +73,17 @@
         iprange: "{{ nas_docker_macvlan_iprange }}"
   tags: ["docker", "network"]
 
+- name: "Setup Kometa Docker network"
+  community.docker.docker_network:
+    name: "{{ nas_docker_networks.kometa.name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "no"
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ nas_docker_networks.kometa.subnet }}"
+        gateway: "{{ nas_docker_networks.kometa.gateway }}"
+
 # # - ansible.builtin.import_tasks: "samba.yml"
 # #   tags: ["samba"]
 
