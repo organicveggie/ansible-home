@@ -110,6 +110,7 @@ nas_hass_pgsql_volume_init_name: "hass-pgsql-initscripts"
 ###
 nas_kometa_mdblist_cache_expiration: "60"
 nas_kometa_plex_db_cache: "2048" # MB
+nas_kometa_run_time: "02:00"
 nas_kometa_tmdb_language: "en"
 nas_kometa_tmdb_region: "US"
 

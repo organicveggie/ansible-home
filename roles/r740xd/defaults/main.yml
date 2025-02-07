@@ -95,11 +95,13 @@ nas_hass_zwave_device: null
 ###
 nas_kometa_cpus: "2"
 nas_kometa_memory: "2G"
+nas_kometa_libraries: null 
 nas_kometa_mdblist_apikey: null
 nas_kometa_plex_token: null
-nas_kometa_tmdb_apikey: null
+nas_kometa_plex_url: null
+nas_kometa_run_once_only: false
 nas_kometa_tautulli_apikey: null
-nas_kometa_libraries: null 
+nas_kometa_tmdb_apikey: null
 nas_kometa_trakt: null
 
 ###

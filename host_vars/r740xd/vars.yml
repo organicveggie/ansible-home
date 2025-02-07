@@ -73,13 +73,6 @@ hass_ecowitt_hass_webhook_id: "{{ vault_hass_ecowitt_hass_webhook_id }}"
 hass_zwave_device: "{{ vault_hass_zwave_device }}"
 
 ###
-### Kometa
-###
-kometa_docker_plex_url: "{{ vault_kometa_docker_plex_url }}"
-kometa_docker_plex_token: "{{ vault_kometa_docker_plex_token }}"
-kometa_docker_tautulli_apikey: "{{ vault_kometa_docker_tautulli_apikey }}"
-
-###
 ### Navidrome
 ###
 navidrome_base_url: "https://navidrome"

@@ -62,11 +62,13 @@
         # nas_hass_zwave_device: "{{ homeassistant_zwave_device }}"
         nas_hass_zwave_device: null
         # Kometa
+        nas_kometa_libraries: "{{ kometa_libraries }}"
         nas_kometa_mdblist_apikey: "{{ vault_kometa_docker_mdblist_apikey }}"
         nas_kometa_plex_token: "{{ vault_kometa_docker_plex_token }}"
-        nas_kometa_tmdb_apikey: "{{ vault_kometa_docker_tmdb_apikey }}"
+        nas_kometa_plex_url: "{{ vault_kometa_docker_plex_url }}"
+        nas_kometa_run_once_only: true
         nas_kometa_tautulli_apikey: "{{ vault_kometa_docker_tautulli_apikey }}"
-        nas_kometa_libraries: "{{ kometa_libraries }}"
+        nas_kometa_tmdb_apikey: "{{ vault_kometa_docker_tmdb_apikey }}"
         nas_kometa_trakt: "{{ kometa_trakt }}"
         # Lidarr
         nas_lidarr_cpus: "2"

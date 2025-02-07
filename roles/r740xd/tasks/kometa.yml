@@ -1,8 +1,4 @@
 ---
-- name: "kometa | Build Plex URL"
-  ansible.builtin.set_fact:
-    _nas_kometa_plex_url: "http://{{ nas_plex_container_name }}:{{ nas_plex_port }}"
-
 - name: "kometa | Build Tautulli URL"
   ansible.builtin.set_fact:
     _nas_kometa_tautulli_url: "http://{{ nas_tautulli_hostname }}:{{ nas_tautulli_web_port }}"
@@ -20,7 +16,7 @@
 
 - name: "kometa | Setup Kometa container"
   ansible.builtin.import_role:
-    name: "organicveggie.kometa"
+    name: "kometa"
   vars:
     kometa_docker_config_read_only: "true"
     kometa_docker_cpus: "{{ nas_kometa_cpus }}"
@@ -35,7 +31,9 @@
     kometa_docker_network_create: "false"
     kometa_docker_plex_db_cache: "{{ nas_kometa_plex_db_cache }}" # MB
     kometa_docker_plex_token: "{{ nas_kometa_plex_token }}"
-    kometa_docker_plex_url: "_nas_kometa_plex_url"
+    kometa_docker_plex_url: "{{ nas_kometa_plex_url }}"
+    kometa_docker_run_once_only: "{{ nas_kometa_run_once_only }}"
+    kometa_docker_run_time: "{{ nas_kometa_run_time }}"
     kometa_docker_timezone: "{{ nas_timezone }}"
     kometa_docker_tautulli_apikey: "{{ nas_kometa_tautulli_apikey }}"
     kometa_docker_tautulli_url: "{{ _nas_kometa_tautulli_url }}"

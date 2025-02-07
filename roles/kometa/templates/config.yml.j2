@@ -1,0 +1,128 @@
+---
+libraries:
+{{ kometa_docker_libraries }}
+
+{%- if kometa_docker_playlist_files %}
+playlist_files:
+{% for pf in kometa_docker_playlist_files %}
+  - {{ pf }}
+{% endfor %}
+{% endif %}
+
+settings:
+  cache: true
+  cache_expiration: 60
+  asset_directory: config/assets
+  asset_folders: true
+  asset_depth: 0
+  create_asset_folders: false
+  prioritize_assets: false
+  dimensional_asset_rename: false
+  download_url_assets: false
+  show_missing_season_assets: false
+  show_missing_episode_assets: false
+  show_asset_not_needed: true
+  sync_mode: append
+  minimum_items: 1
+  default_collection_order:
+  delete_below_minimum: true
+  delete_not_scheduled: false
+  run_again_delay: 2
+  missing_only_released: false
+  only_filter_missing: false
+  show_unmanaged: true
+  show_filtered: false
+  show_options: false
+  show_missing: true
+  show_missing_assets: true
+  save_report: false
+  tvdb_language: eng
+  ignore_ids:
+  ignore_imdb_ids:
+  item_refresh_delay: 0
+  playlist_sync_to_user: all
+  playlist_exclude_user:
+  playlist_report: false
+  verify_ssl: true
+  custom_repo:
+  check_nightly: false
+
+{# Required #}
+plex:
+  url: {{ kometa_docker_plex_url }}
+  token: {{ kometa_docker_plex_token }}
+  timeout: {{ kometa_docker_plex_timeout }}
+  clean_bundles: {{ kometa_docker_plex_clean_bundles }}
+  empty_trash: {{ kometa_docker_plex_empty_trash }}
+  optimize: {{ kometa_docker_plex_optimize }}
+{% if kometa_docker_plex_db_cache %}
+  db_cache: {{ kometa_docker_plex_db_cache }}
+{% endif %}
+
+{# Required #}
+tmdb:
+  apikey: {{ kometa_docker_tmdb_apikey }}
+  language: {{ kometa_docker_tmdb_language }}
+  region: {{ kometa_docker_tmdb_region }}
+  cache_expiration: {{ kometa_docker_tmdb_cache_expiration }}
+
+{# Optional #}
+webhooks:
+  error:
+  version:
+  run_start:
+  run_end:
+  changes:
+
+{% if kometa_docker_tautulli_url %}
+tautulli:
+  url: {{ kometa_docker_tautulli_url | default(omit) }}
+  apikey: {{ kometa_docker_tautulli_apikey | default(omit) }}
+{% endif %}
+
+{% if kometa_docker_omdb_apikey %}
+omdb:
+  apikey: {{ kometa_docker_omdb_apikey }}
+  cache_expiration: {{ kometa_docker_omdb_cache_expiration }}
+{% endif %}
+
+{% if kometa_docker_mdblist_apikey %}
+mdblist:
+  apikey: {{ kometa_docker_mdblist_apikey }}
+  cache_expiration: {{ kometa_docker_mdblist_cache_expiration }}
+{% endif %}
+
+{% if kometa_docker_notifiarr_apikey %}
+notifiarr:
+  apikey: {{ kometa_docker_notifiarr_apikey }}
+{% endif %}
+
+{% if kometa_docker_anidb_client %}
+anidb:
+  client: {{ kometa_docker_anidb_client }}
+  version: {{ kometa_docker_anidb_version }}
+  language: {{ kometa_docker_anidb_language }}
+  cache_expiration: {{ kometa_docker_anidb_cache_expiration }}
+  username: {{ kometa_docker_anidb_username }}
+  password: {{ kometa_docker_anidb_password }}
+{% endif %}
+
+{% if kometa_docker_radarr %}
+radarr:
+{{ kometa_docker_radarr }}
+{% endif %}
+
+{% if kometa_docker_sonarr %}
+sonarr:
+{{ kometa_docker_sonarr }}
+{% endif %}
+
+{% if kometa_docker_trakt %}
+trakt:
+{{ kometa_docker_trakt }}
+{% endif %}
+
+{% if kometa_docker_mal %}
+mal:
+{{ kometa_docker_mal }}
+{% endif %}
