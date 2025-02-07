@@ -66,7 +66,7 @@
         nas_kometa_mdblist_apikey: "{{ vault_kometa_docker_mdblist_apikey }}"
         nas_kometa_plex_token: "{{ vault_kometa_docker_plex_token }}"
         nas_kometa_plex_url: "{{ vault_kometa_docker_plex_url }}"
-        nas_kometa_run_once_only: true
+        nas_kometa_run_once_only: false
         nas_kometa_tautulli_apikey: "{{ vault_kometa_docker_tautulli_apikey }}"
         nas_kometa_tmdb_apikey: "{{ vault_kometa_docker_tmdb_apikey }}"
         nas_kometa_trakt: "{{ kometa_trakt }}"
