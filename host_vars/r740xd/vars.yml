@@ -86,6 +86,8 @@ nodered_credential_secret: "{{ vault_nodered_credential_secret }}"
 ### Plex
 ###
 # See https://www.plex.tv/claim
+nas_plex_cpus: 16
+nas_plex_memory: "16GB"
 plex_docker_claim: "{{ vault_plex_docker_claim }}"
 
 ###
