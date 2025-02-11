@@ -324,3 +324,28 @@
     overseerr_docker_host_domain: "{{ nas_overseerr_host_domain }}"
     overseerr_docker_network: "{{ nas_docker_networks.servarr.name }}"
     overseerr_docker_timezone: "{{ nas_timezone }}"
+
+- name: "servarr | Logrotate"
+  ansible.builtin.include_tasks:
+    file: "servarr_logrotate.yml"
+  vars:
+    servarr_logrotate_name: "{{ item.name }}"
+    servarr_logrotate_volume_name: "{{ item.volume }}"
+    servarr_logrotate_log_criteria: "*.txt"
+    servarr_logrotate_max_age: "{{ item.max_age | default('+8d') }}"
+  loop:
+    - name: "lidarr"
+      volume: "{{ lidarr_docker_volume_config_name }}"
+    - name: "radarr1080p"
+      volume: "{{ nas_radarr1080_config_volume_name }}"
+    - name: "radarr4k"
+      volume: "{{ nas_radarr4k_config_volume_name }}"
+    - name: "readarr"
+      volume: "{{ readarr_docker_volume_config_name }}"
+    - name: "sabnzbd"
+      volume: "{{ sabnzbd_docker_volume_config_name }}"
+      max_age: "+30d"
+    - name: "sonarr1080p"
+      volume: "{{ nas_sonarr1080_config_volume_name }}"
+    - name: "sonarr4k"
+      volume: "{{ nas_sonarr4k_config_volume_name }}"
