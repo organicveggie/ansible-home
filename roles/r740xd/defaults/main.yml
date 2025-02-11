@@ -107,7 +107,7 @@ nas_kometa_trakt: null
 ###
 ### Lidarr
 ###
-nas_lidarr_cpus: null
+nas_lidarr_cpus: "3"
 nas_lidarr_host_domain: null
 
 ###
@@ -147,7 +147,7 @@ nas_prowlarr_host_domain: null
 ###
 ### Radarr
 ###
-nas_radarr_cpus: "2"
+nas_radarr_cpus: "3"
 nas_radarr_movie_source_path: null
 nas_radarr_web_port: null # optional
 nas_radarr1080_api_key: null
@@ -186,7 +186,7 @@ nas_servarr_zfs_dataset: null
 ###
 ### Sonarr
 ###
-nas_sonarr_cpus: "2"
+nas_sonarr_cpus: "3"
 nas_sonarr_web_port: null # optional
 nas_sonarr1080_api_key: null
 nas_sonarr1080_host_domain: null

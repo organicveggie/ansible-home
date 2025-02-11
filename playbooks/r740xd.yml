@@ -71,7 +71,6 @@
         nas_kometa_tmdb_apikey: "{{ vault_kometa_docker_tmdb_apikey }}"
         nas_kometa_trakt: "{{ kometa_trakt }}"
         # Lidarr
-        nas_lidarr_cpus: "2"
         nas_lidarr_host_domain: "{{ veggie_base_domain_name }}"
         # Navidrome
         nas_navidrome_host_domain: "{{ veggie_base_domain_name }}"
@@ -93,7 +92,6 @@
         # Prowlarr
         nas_prowlarr_host_domain: "{{ veggie_base_domain_name }}"
         # Radarr
-        nas_radarr_cpus: "2"
         nas_radarr1080_api_key: "{{ vault_radarr1080_api_key }}"
         nas_radarr1080_host_domain: "{{ veggie_base_domain_name }}"
         nas_radarr4k_api_key: "{{ vault_radarr4k_api_key }}"
@@ -111,7 +109,6 @@
         nas_servarr_tv_source_path: "{{ vault_servarr_tv_path }}"
         nas_servarr_zfs_dataset: "{{ vault_servarr_zfs_dataset }}"
         # Sonarr
-        nas_sonarr_cpus: "2"
         nas_sonarr1080_api_key: "{{ vault_sonarr1080_api_key }}"
         nas_sonarr1080_host_domain: "{{ veggie_base_domain_name }}"
         nas_sonarr4k_api_key: "{{ vault_sonarr4k_api_key }}"
