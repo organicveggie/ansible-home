@@ -2,15 +2,18 @@
 - name: "plex | Set group id"
   ansible.builtin.set_fact:
     _nas_servarr_gid: "{{ nas_servarr_gid | default(nas_servarr_uid) }}"
+  tags: ["setup"]
 
 - name: "plex | Set group name"
   ansible.builtin.set_fact:
     _nas_servarr_groupname: "{{ nas_servarr_groupname | default(nas_servarr_username) }}"
+  tags: ["setup"]
 
 - name: "servarr | Create group"
   ansible.builtin.group:
     name: "{{ _nas_servarr_groupname }}"
     gid: "{{ _nas_servarr_gid }}"
+  tags: ["setup"]
 
 - name: "servarr | Create user"
   ansible.builtin.user:
@@ -19,6 +22,7 @@
     create_home: "false"
     groups: "{{ _nas_servarr_groupname }}"
     password: "!"
+  tags: ["setup"]
 
 - name: "servarr | Create ZFS datasets"
   community.general.zfs:
@@ -29,6 +33,7 @@
     - "{{ nas_servarr_zfs_dataset }}/downloads"
     - "{{ nas_servarr_zfs_dataset }}/downloads/torrents"
     - "{{ nas_servarr_zfs_dataset }}/downloads/usenet"
+  tags: ["setup", "zfs"]
 
 - name: "servarr | Set owner/group for datasets"
   ansible.builtin.file:
@@ -42,6 +47,7 @@
     - "{{ nas_servarr_path }}/downloads"
     - "{{ nas_servarr_path }}/downloads/torrents"
     - "{{ nas_servarr_path }}/downloads/usenet"
+  tags: ["setup", "zfs"]
 
 - name: "servarr | Create folders for downloads"
   ansible.builtin.file:
@@ -59,6 +65,7 @@
     - "{{ nas_servarr_path }}/downloads/usenet/tv"
     - "{{ nas_servarr_path }}/downloads/usenet/tv/1080p"
     - "{{ nas_servarr_path }}/downloads/usenet/tv/2160p"
+  tags: ["setup", "zfs"]
 
 - name: "servarr | Setup Docker network"
   community.docker.docker_network:
@@ -70,6 +77,7 @@
     ipam_config:
       - subnet: "{{ nas_docker_networks.servarr.subnet }}"
         gateway: "{{ nas_docker_networks.servarr.gateway }}"
+  tags: ["setup", "network"]
 
 - name: "servarr | Setup Calibre Docker"
   ansible.builtin.import_role:
@@ -81,6 +89,7 @@
     calibre_docker_network: "{{ nas_docker_networks.servarr.name }}"
     calibre_docker_data_source_path: "{{ nas_servarr_path }}"
     calibre_docker_trusted_ips: "{{ nas_docker_networks.servarr.subnet }}"
+  tags: ["setup", "docker"]
 
 - name: "servarr | Setup Flaresolverr"
   ansible.builtin.import_role:
@@ -88,6 +97,7 @@
   vars:
     flaresolverr_docker_timezone: "{{ nas_timezone }}"
     flaresolverr_docker_network: "{{ nas_docker_networks.servarr.name }}"
+  tags: ["flaresolverr"]
 
 - name: "servarr | Setup Lidarr"
   ansible.builtin.import_role:
@@ -103,6 +113,7 @@
     lidarr_docker_extra_bind_mounts:
       - source: "/nas-mirror/music"
         target: "/data/music"
+  tags: ["lidarr"]
 
 - name: "servarr | Setup prowlarr"
   ansible.builtin.import_role:
@@ -113,6 +124,7 @@
     prowlarr_docker_network: "{{ nas_docker_networks.servarr.name }}"
     prowlarr_docker_timezone: "{{ nas_timezone }}"
     prowlarr_docker_uid: "{{ nas_servarr_uid }}"
+  tags: ["prowlarr"]
 
 - name: "servarr | Setup Radarr 1080p"
   ansible.builtin.import_role:
@@ -133,6 +145,7 @@
     radarr_docker_uid: "{{ nas_servarr_uid }}"
     radarr_docker_volume_config_name: "{{ nas_radarr1080_config_volume_name }}"
     radarr_docker_web_port: "{{ nas_radarr_web_port | default(omit) }}"
+  tags: ["radarr"]
 
 - name: "servarr | Setup Radarr 4K"
   ansible.builtin.import_role:
@@ -153,6 +166,7 @@
     radarr_docker_uid: "{{ nas_servarr_uid }}"
     radarr_docker_volume_config_name: "{{ nas_radarr4k_config_volume_name }}"
     radarr_docker_web_port: "{{ nas_radarr_web_port | default(omit) }}"
+  tags: ["radarr"]
 
 - name: "servarr | Setup Readarr"
   ansible.builtin.import_role:
@@ -166,6 +180,7 @@
     readarr_docker_timezone: "{{ nas_timezone }}"
     readarr_docker_uid: "{{ nas_servarr_uid }}"
     readarr_docker_web_port: "{{ nas_readarr_web_port }}"
+  tags: ["readarr"]
 
 # - role: "recyclarr"
 #   vars:
@@ -192,6 +207,7 @@
     sabnzbd_docker_network: "{{ nas_docker_networks.servarr.name }}"
     sabnzbd_docker_timezone: "{{ nas_timezone }}"
     sabnzbd_docker_uid: "{{ nas_servarr_uid }}"
+  tags: ["sabnzbd"]
 
 - name: "servarr | Setup Sonarr 1080p"
   ansible.builtin.import_role:
@@ -211,7 +227,8 @@
     sonarr_docker_uid: "{{ nas_servarr_uid }}"
     sonarr_docker_volume_config_name: "{{ nas_sonarr1080_config_volume_name }}"
     sonarr_docker_web_port: "{{ nas_sonarr_web_port | default(omit) }}"
-  
+  tags: ["sonarr"]
+
 - name: "servarr | Setup Sonarr 4K"
   ansible.builtin.import_role:
     name: "sonarr"
@@ -230,6 +247,7 @@
     sonarr_docker_uid: "{{ nas_servarr_uid }}"
     sonarr_docker_volume_config_name: "{{ nas_sonarr4k_config_volume_name }}"
     sonarr_docker_web_port: "{{ nas_sonarr_web_port | default(omit) }}"
+  tags: ["sonarr"]
 
 - name: "servarr | Setup Syncthing"
   ansible.builtin.import_role:
@@ -242,6 +260,7 @@
     syncthing_docker_network: "{{ nas_docker_networks.servarr.name }}"
     syncthing_docker_timezone: "{{ nas_timezone }}"
     syncthing_docker_uid: "{{ nas_servarr_uid }}"
+  tags: ["syncthing"]
 
 - name: "servarr | Setup Unpackerr"
   ansible.builtin.import_role:
@@ -303,6 +322,7 @@
         delete_delay: "5m"
         delete_orig: false
         syncthing: true
+  tags: ["unpackerr"]
 
 - name: "servarr | Setup Cloudflared"
   ansible.builtin.import_role:
@@ -311,6 +331,7 @@
     cloudflared_docker_name: "{{ nas_servarr_cloudflared_container_name }}"
     cloudflared_docker_tunnel_token: "{{ nas_servarr_cloudflared_token }}"
     cloudflared_docker_network: "{{ nas_docker_networks.servarr.name  }}"
+  tags: ["cloudflare", "cloudflared"]
 
 - name: "servarr | Setup Overseerr"
   ansible.builtin.import_role:
@@ -324,6 +345,7 @@
     overseerr_docker_host_domain: "{{ nas_overseerr_host_domain }}"
     overseerr_docker_network: "{{ nas_docker_networks.servarr.name }}"
     overseerr_docker_timezone: "{{ nas_timezone }}"
+  tags: ["overseerr"]
 
 - name: "servarr | Logrotate"
   ansible.builtin.include_tasks:
@@ -349,3 +371,4 @@
       volume: "{{ nas_sonarr1080_config_volume_name }}"
     - name: "sonarr4k"
       volume: "{{ nas_sonarr4k_config_volume_name }}"
+  tags: ["logrotate"]
