@@ -1,0 +1,28 @@
+---
+- name: "servarr | {{ servarr_logrotate_name }} logrotate"
+  block:
+    - name: "servarr | Get {{ servarr_logrotate_name }} container volume"
+      community.docker.docker_volume_info:
+        name: "{{ servarr_logrotate_volume_name }}"
+      register: "_servarr_logrotate_volume_info"
+
+    - name: "servarr | Get {{ servarr_logrotate_name }} container volume path"
+      ansible.builtin.set_fact:
+        _servarr_logrotate_log_path: "{{ _servarr_logrotate_volume_info['volume']['Mountpoint'] }}/logs"
+      when: "_servarr_logrotate_volume_info.exists | default(false)"
+
+    - name: "servarr | Configure logrotate for {{ servarr_logrotate_name }}"
+      ansible.builtin.import_role: 
+        name: "nickhammond.logrotate"
+      vars:
+        logrotate_scripts:
+          - name: "{{ servarr_logrotate_name }}"
+            path: "{{ _servarr_logrotate_log_path }}/{{ servarr_logrotate_log_criteria }}"
+            options:
+              - "daily"
+              - "missingok"
+              - "nomail"
+              - "postrotate"
+              - "  /usr/bin/find {{ _servarr_logrotate_log_path }} -name \"*.txt\" -type f -mtime {{ servarr_logrotate_max_age }} -exec rm -f {} \\;"
+              - "endscript"
+      when: "_servarr_logrotate_volume_info.exists | default(false)"

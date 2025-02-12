@@ -1,0 +1,63 @@
+---
+- name: "samba | Add admin user to Samba groups"
+  ansible.builtin.user:
+    name: "{{ nas_admin_username }}"
+    groups: "{{ nas_samba_group_name }}"
+    append: true
+
+- name: "samba | Install Samba"
+  role: "vladgh.samba.server"
+  vars:
+    samba_domain_master: "auto"
+    samba_preferred_master: "auto"
+    samba_wins_support: false
+    # Defaults to true, which disables share browsing by Windows clients.
+    # See https://access.redhat.com/security/cve/cve-2017-7494
+    samba_mitigate_cve_2017_7494: false
+    samba_users:
+      - name: "{{ veggie_nas_admin_username }}"
+        password: "{{ veggie_nas_admin_samba_passwd }}"
+      - name: "retropie"
+        password: "{{ veggie_nas_retropie_password }}"
+      - name: "kstar"
+        password: "{{ veggie_kstar_password }}"
+    samba_shares:
+      - name: "books"
+        path: "{{ nas_path_books }}"
+        group: "book_writer"
+        write_list: +book_writer
+      - name: "documents"
+        path: "{{ nas_path_documents }}"
+        group: "doc_writer"
+        write_list: +doc_writer
+      - name: "music"
+        path: "{{ nas_path_music }}"
+        group: "music_writer"
+        write_list: +music_writer
+      - name: "music-old"
+        path: "{{ nas_path_music_old }}"
+        group: "music_writer"
+        write_list: +music_writer
+      - name: "photos"
+        path: "{{ nas_path_photos }}"
+        group: "photo_writer"
+        write_list: +photo_writer
+      - name: "roms"
+        path: "{{ nas_path_roms }}"
+        group: "rom_writer"
+        write_list: +rom_writer
+      - name: "source"
+        path: "{{ nas_path_source }}"
+        group: "source_writer"
+        write_list: +source_writer
+      - name: "videos"
+        path: "{{ nas_path_videos }}"
+        group: "media_writer"
+        write_list: +media_writer
+      - name: "kstar"
+        path: "{{ nas_path_kstar }}"
+        owner: "kstar"
+        group: "kstar"
+        create_mode: 0740
+        directory_mode: 0770
+  tags: ["samba", "smbd"]

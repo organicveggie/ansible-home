@@ -1,0 +1,47 @@
+---
+- name: "calibre-web | Create groups"
+  ansible.builtin.group:
+    name: "{{ nas_calibre_web_groupname }}"
+    gid: "{{ nas_calibre_web_gid }}"
+    system: "false"
+    state: "present"
+
+- name: "calibre-web | Create users"
+  ansible.builtin.user:
+    append: true
+    create_home: false
+    group: "{{ nas_calibre_web_groupname }}"
+    groups:
+      - "media_writer"
+    name: "{{ nas_calibre_web_username }}"
+    password: "*"
+    password_lock: true
+    shell: "/bin/false"
+    state: "present"
+    system: false
+    uid: "{{ nas_calibre_web_uid }}"
+
+- name: "calibre-web | Setup Docker network"
+  community.docker.docker_network:
+    name: "{{ nas_docker_networks.calibre_web.name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "no"
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ nas_docker_networks.calibre_web.subnet }}"
+        gateway: "{{ nas_docker_networks.calibre_web.gateway }}"
+
+- name: "calibre-web | Create container"
+  import_role: 
+    name: "organicveggie.calibre_web_docker"
+  vars:
+    calibre_web_docker_network_create: false
+    calibre_web_docker_book_dir: "{{ nas_calibre_web_book_dir }}"
+    calibre_web_docker_extra_networks:
+      - name: "{{ nas_docker_networks.calibre_web.name }}"
+    calibre_web_docker_gid: "{{ nas_calibre_web_gid }}"
+    calibre_web_docker_host_domain: "{{ nas_calibre_web_host_domain }}"
+    calibre_web_docker_hostname: "{{ nas_calibre_web_hostname }}"
+    calibre_web_docker_volume_name: "calibre-web-config"
+    calibre_web_docker_uid: "{{ nas_calibre_web_uid }}"

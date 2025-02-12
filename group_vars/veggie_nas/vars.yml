@@ -85,7 +85,7 @@ flaresolverr_docker_network_aliases:
 ### Glances
 ###
 glances_network_name: "glances"
-glances_network_subnet: "{{ vault_glances_network_subnet}}"
+glances_network_subnet: "{{ vault_glances_network_subnet }}"
 glances_network_gateway: "{{ vault_glances_network_gateway }}"
 glances_config_data:
   glances_docker_config:
@@ -125,7 +125,7 @@ homeassistant_network_gateway: "{{ vault_homeassistant_network_gateway }}"
 homeassistant_home_latitude: "{{ vault_homeassistant_home_latitude }}"
 homeassistant_home_longitude: "{{ vault_homeassistant_home_longitude }}"
 homeassistant_home_timezone: "{{ home_timezone }}"
-homeassistant_zwave_device: "/dev/serial/by-id/usb-1234"
+homeassistant_zwave_device: "{{ vault_homeassistant_zwave_device }}"
 homeassistant_host_name: "hass"
 
 ###
@@ -169,7 +169,8 @@ kometa_docker_tmdb_language: "en"
 kometa_docker_tmdb_region: "US"
 kometa_docker_tautulli_url: "http://{{ tautulli_service_name }}:{{ tautulli_web_port }}"
 kometa_docker_tautulli_apikey: "TODO-REPLACE-ME"
-kometa_docker_libraries: |2
+kometa_docker_libraries: "{{ kometa_libraries }}"
+kometa_libraries: |2
     Movies:
       report_path: /config/reports/Movies.yml
       template_variables:
@@ -474,7 +475,8 @@ kometa_docker_libraries: |2
         - pmm: myanimelist
 
 # See https://replit.com/@chazlarson/TraktAuth to generate the auth data.
-kometa_docker_trakt: |2
+kometa_docker_trakt: "{{ kometa_trakt }}"
+kometa_trakt: |2
     client_id: {{ vault_kometa_docker_trakt_client_id }}
     client_secret: {{ vault_kometa_docker_trakt_client_secret }}
     pin:
@@ -527,6 +529,12 @@ nas_path_roms: "{{ vault_nas_path_roms }}"
 nas_path_source: "{{ vault_nas_path_source }}"
 nas_path_videos: "{{ vault_nas_path_videos }}"
 nas_path_kstar: "{{ vault_nas_path_kstar }}"
+
+veggie_nas_docker_macvlan_gateway: "{{ vault_veggie_nas_docker_macvlan_gateway }}"
+veggie_nas_docker_macvlan_iprange: "{{ vault_veggie_nas_docker_macvlan_iprange }}"
+veggie_nas_docker_macvlan_network_parent: "{{ vault_veggie_nas_docker_macvlan_network_parent }}"
+veggie_nas_docker_macvlan_subnet: "{{ vault_veggie_nas_docker_macvlan_subnet }}"
+
 veggie_nas_admin_passwd: "{{ vault_nas_admin_passwd }}"
 veggie_nas_admin_samba_passwd: "{{ vault_nas_admin_samba_passwd }}"
 veggie_nas_admin_username: "{{ vault_nas_admin_username }}"
@@ -747,13 +755,13 @@ sabnzbd_docker_host_domain: "{{ veggie_nas_domain_name }}"
 ### Samba
 ###
 samba_groups:
-  - "book_writer"
-  - "doc_writer"
-  - "media_writer"
-  - "music_writer"
-  - "photo_writer"
-  - "rom_writer"
-  - "source_writer"
+  - name: "book_writer"
+  - name: "doc_writer"
+  - name: "media_writer"
+  - name: "music_writer"
+  - name: "photo_writer"
+  - name: "rom_writer"
+  - name: "source_writer"
 
 ###
 ### Servarr aka *arr
@@ -1285,6 +1293,8 @@ unpackerr_docker_host_domain: "{{ veggie_nas_domain_name }}"
 ###
 nas_groups: "{{ vault_nas_groups }}"
 nas_users: "{{ vault_nas_users }}"
+veggie_nas_groups: "{{ vault_nas_groups }}"
+veggie_nas_users: "{{ vault_nas_users }}"
 
 ###
 ### zwavejs2mqtt

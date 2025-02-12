@@ -1,0 +1,27 @@
+---
+- name: "tautulli | Setup Docker network"
+  community.docker.docker_network:
+    name: "{{ nas_docker_networks.tautulli.name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "no"
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ nas_docker_networks.tautulli.subnet }}"
+        gateway: "{{ nas_docker_networks.tautulli.gateway }}"
+
+- name: "tautulli | Setup Tautulli container"
+  ansible.builtin.import_role:
+    name: "organicveggie.tautulli_docker"
+  vars:
+    tautulli_docker_available_externally: "true"
+    tautulli_docker_extra_networks:
+      - name: "{{ nas_docker_networks.tautulli.name }}"
+    tautulli_docker_host_domain: "{{ nas_domain_name }}"
+    tautulli_docker_hostname: "{{ nas_tautulli_hostname }}"
+    tautulli_docker_name: "{{ mas_tautulli_container_name }}"
+    tautulli_docker_network: "{{ nas_docker_networks.tautulli.name }}"
+    tautulli_docker_network_create: false
+    tautulli_docker_timezone: "{{ nas_timezone }}"
+    tautulli_docker_web_port: "{{ nas_tautulli_web_port }}"
+    

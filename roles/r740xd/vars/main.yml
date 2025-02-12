@@ -1,0 +1,224 @@
+---
+# vars file for r740xd
+nas_extra_packages:
+  - "smartmontools"
+  - "htop"
+  - "zfsutils-linux"
+  - "bonnie++"
+  - "unzip"
+  - "lm-sensors"
+  # TODO: https://github.com/bcicen/ctop?tab=readme-ov-file#install
+  # - "ctop"
+  - "mbuffer"
+  - "net-tools"
+  - "screen"
+  - "tmux"
+
+###
+### Calibre Web
+###
+nas_calibre_web_username: "calibre"
+nas_calibre_web_groupname: "calibre"
+nas_calibre_web_network_name: "calibre-web"
+
+###
+### Diun
+###
+nas_diun_group: "diun"
+nas_diun_network_name: "diun"
+nas_diun_uid: 2450
+nas_diun_user: "diun"
+
+###
+### Docker
+###
+nas_docker_bridge_network_gateway: "172.17.0.1"
+nas_docker_networks:
+  traefik:
+    name: "traefik"
+    gateway: "172.30.1.1"
+    subnet: "172.30.1.0/24"
+  portainer:
+    name: "portainer"
+    gateway: "172.30.2.1"
+    subnet: "172.30.2.0/24"
+  calibre_web:
+    name: "calibre-web"
+    gateway: "172.30.3.1"
+    subnet: "172.30.3.0/24"
+  diun:
+    name: "diun"
+    gateway: "172.30.4.1"
+    subnet: "172.30.4.0/24"
+  glances:
+    name: "glances"
+    gateway: "172.30.5.1"
+    subnet: "172.30.5.0/24"
+  hass:
+    name: "hass"
+    gateway: "172.30.6.1"
+    subnet: "172.30.6.0/24"
+  navidrome:
+    name: "navidrome"
+    gateway: "172.30.7.1"
+    subnet: "172.30.7.0/24"
+  node_red:
+    name: "node-red"
+    gateway: "172.30.8.1"
+    subnet: "172.30.8.0/24"
+  servarr:
+    name: "servarr"
+    gateway: "172.30.9.1"
+    subnet: "172.30.9.0/24"
+  influxdb:
+    name: "influxdb"
+    gateway: "172.30.10.1"
+    subnet: "172.30.10.0/24"
+  grafana:
+    name: "grafana"
+    gateway: "172.30.11.1"
+    subnet: "172.30.11.0/24"
+  kometa:
+    name: "kometa"
+    gateway: "172.30.12.1"
+    subnet: "172.30.12.0/24"
+  restic:
+    name: "restic"
+    gateway: "172.30.13.1"
+    subnet: "172.30.13.0/24"    
+  tautulli:
+    name: "tautulli"
+    gateway: "172.30.14.1"
+    subnet: "172.30.14.0/24"    
+  unific:
+    name: "unific"
+    gateway: "172.30.15.1"
+    subnet: "172.30.15.0/24"    
+
+###
+### Home Assistant
+###
+nas_hass_network_name: "hass"
+nas_hass_pgsql_image: "postgres:15-bullseye"
+nas_hass_pgsql_name: "hass-pgsql"
+nas_hass_pgsql_volume_conf_name: "hass-pgsql-conf"
+nas_hass_pgsql_volume_data_name: "hass-pgsql-data"
+nas_hass_pgsql_volume_init_name: "hass-pgsql-initscripts"
+
+###
+### Kometa
+###
+nas_kometa_mdblist_cache_expiration: "60"
+nas_kometa_plex_db_cache: "2048" # MB
+nas_kometa_run_time: "02:00"
+nas_kometa_tmdb_language: "en"
+nas_kometa_tmdb_region: "US"
+
+###
+### Navidrome
+###
+nas_navidrome_image_cache_size: "500MB"
+nas_navidrome_network_name: "navidrome"
+
+###
+### Node-RED
+###
+nas_nodered_network_name: "node-red"
+
+###
+### Plex
+###
+nas_plex_gid: 32400
+nas_plex_groupname: "plex"
+nas_plex_port: 32400
+nas_plex_uid: 32400
+nas_plex_username: "plex"
+
+###
+### Portainer
+###
+nas_portainer_network_name: "portainer"
+
+###
+### Radarr
+###
+nas_radarr1080_config_volume_name: "radarr1080-config"
+nas_radarr1080_container_name: "radarr1080"
+nas_radarr1080_host_name: "radarr1080"
+nas_radarr1080_network_aliases:
+  - "radarr1080"
+nas_radarr4k_config_volume_name: "radarr4k-config"
+nas_radarr4k_container_name: "radarr4k"
+nas_radarr4k_host_name: "radarr4k"
+nas_radarr4k_network_aliases:
+  - "radarr4k"
+
+###
+### Readarr
+###
+nas_readarr_host_name: "readarr"
+nas_readarr_web_port: "8787"
+  
+###
+### Servarr
+###
+nas_servarr_cloudflared_container_name: "servarr-cloudflared"
+nas_servarr_gid: 4200
+nas_servarr_groupname: "servarr"
+nas_servarr_uid: 4200
+nas_servarr_username: "plex" # TODO: fixme
+
+###
+### Sonarr
+###
+nas_sonarr1080_config_volume_name: "sonarr1080-config"
+nas_sonarr1080_container_name: "sonarr1080"
+nas_sonarr1080_host_name: "sonarr1080"
+nas_sonarr1080_network_aliases:
+  - "sonarr1080"
+nas_sonarr4k_config_volume_name: "sonarr4k-config"
+nas_sonarr4k_container_name: "sonarr4k"
+nas_sonarr4k_host_name: "sonarr4k"
+nas_sonarr4k_network_aliases:
+  - "sonarr4k"
+
+###
+### Tautulli
+###
+nas_tautulli_web_port: "8181"
+
+###
+### TimeMachine
+###
+nas_time_machine_docker_name: "time-machine"
+nas_time_machine_workgroup: "TMWORKGROUP"
+
+###
+### Traefik
+###
+nas_traefik_http_ports:
+  - '80:80'
+  - '443:443'
+nas_traefik_syncthings_entrypoints:
+  syncthing_tcp:
+    address: ":22000"
+  syncthing_udp:
+    address: ":22000/udp"
+nas_traefik_syncthings_ports:
+  - "22000:22000"
+nas_traefik_unific_entrypoints:
+  java_http:
+    address: ":8080"
+  unific_speed_test:
+    address: ":6789"
+  unific_stun:
+    address: ":3478/udp"
+  unific_dev_discovery:
+    address: ":10001/udp"
+  unific_controller_discovery:
+    address: ":19000/udp"
+nas_traefik_unific_ports:
+  - "3478:3478"     # unific stun
+  - "8080:8080"     # unific java http
+  - "10001:10001"   # unific dev discovery
+  - "19000:19000"   # unific controller discovery

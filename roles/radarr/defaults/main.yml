@@ -63,3 +63,9 @@ radarr_docker_host_name: "radarr"
 # Domain name to use for the Traefik endpoint. Combined with [radarr_docker_host_name] to form the
 # FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
 radarr_docker_host_domain: "example.com"
+
+#####
+# Ansible
+#####
+
+radarr_docker_role_label: "radarr-docker"

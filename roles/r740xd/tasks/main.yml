@@ -1,0 +1,144 @@
+---
+- name: "Set login banner"
+  ansible.builtin.copy:
+    src: "motd.txt"
+    dest: "/etc/motd"
+    mode: "0644"
+  tags: ["motd"]
+
+- name: "Create NAS groups"
+  ansible.builtin.group:
+    name: "{{ item.name }}"
+    gid: "{{ item.gid | default(omit) }}"
+    system: "{{ item.system | default(omit) }}"
+    state: "{{ item.state | default('present') }}"
+  loop: "{{ nas_groups }}"
+  tags: ["groups", "users", "usergroups"]
+
+- name: "Create NAS users"
+  ansible.builtin.import_role:
+    name: "organicveggie.ansible-users"
+  vars:
+    users_list_host: "{{ nas_users }}"
+  tags: ["groups", "users", "usergroups"]
+
+- name: "Run common operations for all veggie servers"
+  ansible.builtin.import_role:
+    name: "veggie_common"
+  vars:
+    veggie_common_hostname: "{{ nas_domain_name }}"
+    veggie_common_timezone: "{{ nas_timezone }}"
+    veggie_common_admin_username: "{{ nas_admin_username }}"
+    veggie_common_admin_passwd: "{{ nas_admin_passwd }}"
+    veggie_common_extra_packages: "{{ nas_extra_packages }}"
+  tags: ["common"]
+
+- name: "Setup Logrotate"
+  ansible.builtin.import_role: 
+    name: "nickhammond.logrotate"
+  vars:
+    # TODO: Move this into rclone setup
+    logrotate_scripts:
+      - name: "rclone"
+        path: "/var/log/rclone.log"
+        options:
+          - "daily"
+          - "rotate 7"
+          - "missingok"
+          - "compress"
+          - "delaycompress"
+          - "copytruncate"
+  tags: ["logrotate"]
+
+- name: "Install Docker"
+  ansible.builtin.import_tasks: "docker.yml"
+  tags: ["docker"]
+
+- name: "Install Portainer"
+  ansible.builtin.import_tasks: "portainer.yml"
+  tags: ["portainer"]
+
+- name: "Create Docker macvlan network"
+  community.docker.docker_network:
+    name: "{{ nas_docker_macvlan_network_name }}"
+    driver: "macvlan"
+    driver_options:
+      parent: "{{ nas_docker_macvlan_network_parent }}"
+    enable_ipv6: false
+    internal: false
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ nas_docker_macvlan_subnet }}"
+        gateway: "{{ nas_docker_macvlan_gateway }}"
+        iprange: "{{ nas_docker_macvlan_iprange }}"
+  tags: ["docker", "network"]
+
+- name: "Setup Kometa Docker network"
+  community.docker.docker_network:
+    name: "{{ nas_docker_networks.kometa.name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "no"
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ nas_docker_networks.kometa.subnet }}"
+        gateway: "{{ nas_docker_networks.kometa.gateway }}"
+
+# # - ansible.builtin.import_tasks: "samba.yml"
+# #   tags: ["samba"]
+
+- ansible.builtin.import_tasks: "time-machine.yml"
+  vars:
+    nas_time_machine_network_name: "{{ nas_docker_macvlan_network_name }}"
+  tags: ["time-machine", "timemachine", "tim"]
+
+- ansible.builtin.import_tasks: "calibre-web.yml"
+  tags: ["calibre-web", "calibreweb", "calibre_web"]
+
+- ansible.builtin.import_tasks: "diun.yml"
+  tags: ["diun"]
+
+- ansible.builtin.import_tasks: "glances.yml"
+  tags: ["glances"]
+
+- ansible.builtin.import_tasks: "hass.yml"
+  vars:
+    nas_hass_host_domain: "{{ nas_domain_name }}"
+  tags: ["hass", "home-assistant", "homeassistant"]
+
+- ansible.builtin.import_tasks: "navidrome.yml"
+  tags: ["navidrome"]
+
+- ansible.builtin.import_tasks: "node-red.yml"
+  tags: ["node-red", "nodered"]
+
+- ansible.builtin.import_tasks: "plex.yml"
+  vars:
+    nas_plex_network_name: "{{ nas_docker_macvlan_network_name }}"
+  tags: ["plex", "pms"]
+
+- ansible.builtin.import_tasks: "tautulli.yml"
+  tags: ["tautulli"]
+
+- ansible.builtin.import_tasks: "kometa.yml"
+  tags: ["kometa", "pmm", "plex-media-manager"]
+
+- ansible.builtin.import_tasks: "servarr.yml"
+  tags: ["servarr"]
+
+- ansible.builtin.import_tasks: "unific.yml"
+  tags: ["unific"]
+
+# # - ansible.builtin.import_tasks: "influxdb.yml"
+# #   tags: ["influxdb"]
+
+# TODO: Grafana
+
+# TODO: Watchtower
+
+# Traefik needs to be last so all of the networks exist.
+- ansible.builtin.import_tasks: "traefik.yml"
+  tags: ["traefik"]
+
+# # # - ansible.builtin.import_playbook: "playbooks/media-storage/media-storage.yml"
+# # #   tags: ["media", "media-storage"]

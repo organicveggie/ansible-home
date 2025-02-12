@@ -1,0 +1,65 @@
+---
+- name: "diun | Set group id"
+  ansible.builtin.set_fact:
+    _nas_diun_gid: "{{ nas_diun_gid | default(nas_diun_uid) }}"
+
+- name: "diun | Set group name"
+  ansible.builtin.set_fact:
+    _nas_diun_groupname: "{{ nas_diun_group | default(nas_diun_user) }}"
+
+- name: "diun | Create Diun group"
+  ansible.builtin.group:
+    name: "{{ _nas_diun_groupname }}"
+    gid: "{{ _nas_diun_gid }}"
+    state: "present"
+
+- name: "diun | Create Diun user"
+  ansible.builtin.user:
+    name: "{{ nas_diun_user }}"
+    password: "*"
+    shell: "/bin/false"
+    system: false
+    uid: "{{ nas_diun_uid }}"
+    group: "{{ _nas_diun_groupname }}"
+    password_lock: true
+
+- name: "diun | Create Diun directories"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ nas_diun_user }}"
+    group: "{{ _nas_diun_groupname }}"
+    mode: "0770"
+  with_items:
+    - "{{ nas_diun_config_dir }}"
+
+- name: "diun | Setup Diun Docker network"
+  community.docker.docker_network:
+    name: "{{ nas_docker_networks.diun.name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "no"
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ nas_docker_networks.diun.subnet }}"
+        gateway: "{{ nas_docker_networks.diun.gateway }}"
+
+- name: "diun | Create Diun container"
+  ansible.builtin.import_role:
+    name: "diun"
+  vars:
+    nas_diun_user: "{{ nas_diun_user }}"
+    nas_diun_uid: "{{ nas_diun_uid }}"
+    nas_diun_group: "{{ _nas_diun_groupname }}"
+    nas_diun_docker_network_name: "{{ nas_docker_networks.diun.name }}"
+    nas_diun_docker_timezone: "{{ nas_timezone }}"
+    nas_diun_notify_mail_host: "{{ nas_diun_notify_mail_host }}"
+    nas_diun_notify_mail_port: "{{ nas_diun_notify_mail_port }}"
+    nas_diun_notify_mail_ssl: true
+    nas_diun_notify_mail_insecure_skip_verify: false
+    nas_diun_notify_mail_username: "{{ nas_diun_notify_mail_username }}"
+    nas_diun_notify_mail_password: "{{ nas_diun_notify_mail_password }}"
+    nas_diun_notify_mail_from: "{{ nas_diun_notify_mail_from }}"
+    nas_diun_notify_mail_to: "{{ nas_diun_notify_mail_to }}"
+    nas_diun_regopts_dockerio_user: "{{ nas_diun_regopts_dockerio_user }}"
+    nas_diun_regopts_dockerio_passwd: "{{ nas_diun_regopts_dockerio_passwd }}"

@@ -1,0 +1,32 @@
+---
+- name: "kometa | Build Tautulli URL"
+  ansible.builtin.set_fact:
+    _nas_kometa_tautulli_url: "http://{{ nas_tautulli_hostname }}:{{ nas_tautulli_web_port }}"
+
+- name: "kometa | Setup Kometa container"
+  ansible.builtin.import_role:
+    name: "kometa"
+  vars:
+    kometa_docker_config_read_only: "true"
+    kometa_docker_cpus: "{{ nas_kometa_cpus }}"
+    kometa_docker_extra_networks:
+      - name: "{{ nas_docker_networks.kometa.name }}"
+      - name: "{{ nas_docker_networks.tautulli.name | default(omit) }}"
+    kometa_docker_libraries: "{{ nas_kometa_libraries | default(omit) }}"
+    kometa_docker_mdblist_apikey: "{{ nas_kometa_mdblist_apikey }}"
+    kometa_docker_mdblist_cache_expiration: "{{ nas_kometa_mdblist_cache_expiration }}"
+    kometa_docker_memory: "{{ nas_kometa_memory }}"
+    kometa_docker_network: "{{ nas_docker_networks.kometa.name }}"
+    kometa_docker_network_create: "false"
+    kometa_docker_plex_db_cache: "{{ nas_kometa_plex_db_cache }}" # MB
+    kometa_docker_plex_token: "{{ nas_kometa_plex_token }}"
+    kometa_docker_plex_url: "{{ nas_kometa_plex_url }}"
+    kometa_docker_run_once_only: "{{ nas_kometa_run_once_only }}"
+    kometa_docker_run_time: "{{ nas_kometa_run_time }}"
+    kometa_docker_timezone: "{{ nas_timezone }}"
+    kometa_docker_tautulli_apikey: "{{ nas_kometa_tautulli_apikey }}"
+    kometa_docker_tautulli_url: "{{ _nas_kometa_tautulli_url }}"
+    kometa_docker_tmdb_language: "{{ nas_kometa_tmdb_language }}"
+    kometa_docker_tmdb_region: "{{ nas_kometa_tmdb_region }}"
+    kometa_docker_tmdb_apikey: "{{ nas_kometa_tmdb_apikey }}"
+    kometa_docker_trakt: "{{ nas_kometa_trakt | default(omit) }}"

@@ -1,0 +1,18 @@
+---
+- name: "docker | Create ZFS dataset for Docker`"
+  community.general.zfs:
+    name: "{{ nas_docker_zfs_dataset }}"
+    state: present
+
+- name: "docker | Install Pip"
+  ansible.builtin.import_role:
+    name: "geerlingguy.pip"
+
+- name: "docker | Install Docker"
+  ansible.builtin.import_role:
+    name: "geerlingguy.docker"
+  vars:
+    docker_home: "{{ nas_docker_home }}"
+    docker_daemon_options:
+      storage-driver: "zfs"
+      data-root: "{{ nas_docker_home }}/data"

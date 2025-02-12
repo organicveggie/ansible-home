@@ -23,6 +23,8 @@ lidarr_docker_timezone: "America/New_York"
 lidarr_docker_data_source_path: "/data"
 lidarr_docker_volume_config_name: "lidarr-config"
 
+lidarr_docker_extra_bind_mounts: []
+
 # Number of vCPUs to allocate to the container.
 lidarr_docker_cpus: "1"
 

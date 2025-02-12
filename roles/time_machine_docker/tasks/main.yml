@@ -12,12 +12,18 @@
       - name: "{{ time_machine_docker_network }}"
         aliases: "{{ time_machine_docker_network_aliases | default(omit) }}"
         ipv4_address: "{{ time_machine_docker_network_ipv4_addr | default(omit) }}"
-        mac_address: "{{ time_machine_docker_network_mac_addr | default(omit) }}"
+        # mac_address: "{{ time_machine_docker_network_mac_addr | default(omit) }}"
 
 - name: "Define all Docker networks for this container"
   ansible.builtin.set_fact:
     _time_machine_docker_all_networks: >
       {{ _time_machine_docker_default_networks + time_machine_docker_extra_networks }}
+
+- name: "Debug network"
+  ansible.builtin.debug:
+    msg:
+      - "time_machine_docker_network: {{ time_machine_docker_network }}"
+      - "_time_machine_docker_all_networks: {{ _time_machine_docker_all_networks }}"
 
 - name: "Define environment variables"
   ansible.builtin.set_fact:

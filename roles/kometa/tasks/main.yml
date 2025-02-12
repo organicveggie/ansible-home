@@ -1,0 +1,83 @@
+---
+- name: "Create Kometa Docker volume"
+  community.docker.docker_volume:
+    name: "{{ kometa_docker_volume_name }}"
+
+- name: "Get info on Docker volume"
+  community.docker.docker_volume_info:
+    name: "{{ kometa_docker_volume_name }}"
+  register: "kometa_docker_volume_info"
+
+- name: "Build target path to Docker volume"
+  ansible.builtin.set_fact:
+    _kometa_docker_volume_path:
+      "{{ kometa_docker_volume_info['volume']['Mountpoint'] }}"
+
+- name: "Create subfolders"
+  ansible.builtin.file:
+    name: "{{ _kometa_docker_volume_path }}/{{ item }}"
+    state: "directory"
+    mode: "0770"
+  loop:
+    - "assets"
+    - "reports"
+
+- name: "Create config file"
+  ansible.builtin.template:
+    src: "templates/config.yml.j2"
+    dest: "{{ _kometa_docker_volume_path }}/config.yml"
+    mode: "0644"
+  register: _kometa_docker_config
+
+- name: "Set Docker mount list for volume mounts"
+  ansible.builtin.set_fact:
+    _kometa_docker_mount_list:
+      - source: "{{ kometa_docker_volume_name }}"
+        target: "/config"
+        type: "volume"
+
+- name: "Create array for standard environment variables"
+  ansible.builtin.set_fact:
+    _kometa_docker_std_env_vars:
+      "KOMETA_READ_ONLY_CONFIG": "{{ kometa_docker_config_read_only | string | default(omit) }}"
+      "KOMETA_RUN": "{{ kometa_docker_run_once_only | string | default(omit) }}"
+      "TZ": "{{ kometa_docker_timezone }}"   
+
+- name: "Define all environment variables for this container"
+  ansible.builtin.set_fact:
+    _kometa_docker_env_vars: >
+      {{ _kometa_docker_std_env_vars | ansible.builtin.combine(kometa_docker_extra_env_vars) }}
+
+- name: "Define restart policy when configured to run-once"
+  ansible.builtin.set_fact:
+    _kometa_docker_restart_policy: "no"
+  when: "kometa_docker_run_once_only"
+
+- name: "Define restart policy when configured to run continuously"
+  ansible.builtin.set_fact:
+    _kometa_docker_restart_policy: "unless-stopped"
+  when: "not kometa_docker_run_once_only"
+
+- name: "Create Kometa Docker container"  # noqa: args[module]
+  community.docker.docker_container:
+    name: "{{ kometa_docker_name }}"
+    image: "{{ kometa_docker_image_name }}:{{ kometa_docker_image_version }}"
+    pull: true
+    mounts: "{{ _kometa_docker_mount_list }}"
+    env: "{{ _kometa_docker_env_vars}}"
+    network_mode: "{{ kometa_docker_network }}"
+    networks: "{{ kometa_docker_extra_networks }}"
+    restart_policy: "{{ _kometa_docker_restart_policy }}"
+    restart: "{{ _kometa_docker_config.changed | default(false) }}"
+    memory: "{{ kometa_docker_memory }}"
+    cpus: "{{ kometa_docker_cpus }}"
+    command_handling: "correct"
+    container_default_behavior: "no_defaults"
+    auto_remove: false
+    detach: true
+    init: true
+    interactive: true
+    paused: false
+    privileged: false
+    read_only: false
+    tty: true

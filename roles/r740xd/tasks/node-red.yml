@@ -1,0 +1,20 @@
+---
+- name: "node-red| Setup Docker network"
+  community.docker.docker_network:
+    name: "{{ nas_docker_networks.node_red.name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "no"
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ nas_docker_networks.node_red.subnet }}"
+        gateway: "{{ nas_docker_networks.node_red.gateway }}"
+
+- name: "node-red | Setup Node-RED"
+  ansible.builtin.import_role:
+    name: "nodered"
+  vars:
+    nodered_docker_network_name: "{{ nas_docker_networks.node_red.name }}"
+    nodered_docker_timezone: "{{ nas_nodered_timezone }}"
+    nodered_docker_extra_networks:
+      - name: "{{ nas_docker_networks.hass.name }}"

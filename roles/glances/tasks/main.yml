@@ -32,7 +32,7 @@
   ansible.builtin.set_fact:
     _glances_docker_mount_list: >
       {{ _glances_docker_mount_list | default([]) + [item] }}
-  loop: "{{ glances_docker_extra_bind_mounts | default({}) }}"
+  loop: "{{ glances_docker_extra_bind_mounts | default([]) }}"
 
 # - ansible.builtin.debug:
 #     msg: "{{ _glances_docker_mount_list }}"
