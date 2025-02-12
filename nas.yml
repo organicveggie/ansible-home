@@ -26,18 +26,6 @@
 - ansible.builtin.import_playbook: "playbooks/docker.yml"
   tags: ["docker", "portainer"]
 
-- ansible.builtin.import_playbook: "playbooks/samba.yml"
-  tags: ["samba"]
-
-- ansible.builtin.import_playbook: "playbooks/time-machine.yml"
-  tags: ["time-machine", "timemachine", "tim"]
-
-# - ansible.builtin.import_playbook: "playbooks/media-storage/media-storage.yml"
-#   tags: ["media", "media-storage"]
-
-- ansible.builtin.import_playbook: "playbooks/calibre-web.yml"
-  tags: ["calibre", "calibre-web", "calibre-web"]
-
 - ansible.builtin.import_playbook: "playbooks/diun.yml"
   tags: ["diun"]
 
@@ -47,23 +35,8 @@
 - ansible.builtin.import_playbook: "playbooks/hass.yml"
   tags: ["hass", "homeassistant", "home-assistant"]
 
-- ansible.builtin.import_playbook: "playbooks/navidrome.yml"
-  tags: ["navidrome"]
-
 - ansible.builtin.import_playbook: "playbooks/node-red.yml"
   tags: ["nodered", "node-red"]
-
-- ansible.builtin.import_playbook: "playbooks/plex.yml"
-  tags: ["plex", "pms", "plex-docker", "plex_docker"]
-
-- ansible.builtin.import_playbook: "playbooks/kometa.yml"
-  tags: ["kometa", "pmm", "plex-media-manager"]
-
-- ansible.builtin.import_playbook: "playbooks/tautulli.yml"
-  tags: ["tautulli"]
-
-- ansible.builtin.import_playbook: "playbooks/servarr.yml"
-  tags: ["servarr"]
 
 - ansible.builtin.import_playbook: "playbooks/influxdb.yml"
   tags: ["influxdb"]
