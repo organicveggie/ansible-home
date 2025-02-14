@@ -59,6 +59,8 @@
         nas_hass_pgsql_admin_password: "{{ homeassistant_pgsql_admin_password }}"
         nas_hass_pgsql_init_tempates_dir: "{{ homeassistant_pgsql_init_tempates_dir }}"
         nas_hass_timezone: "{{ home_timezone }}"
+        # InfluxDB
+        nas_influxdb_host_domain: "{{ veggie_nas_domain_name }}"
         # nas_hass_zwave_device: "{{ homeassistant_zwave_device }}"
         nas_hass_zwave_device: null
         # Kometa

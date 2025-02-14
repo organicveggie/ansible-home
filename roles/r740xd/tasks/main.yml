@@ -106,6 +106,9 @@
     nas_hass_host_domain: "{{ nas_domain_name }}"
   tags: ["hass", "home-assistant", "homeassistant"]
 
+- ansible.builtin.import_tasks: "influxdb.yml"
+  tags: ["influxdb"]
+
 - ansible.builtin.import_tasks: "navidrome.yml"
   tags: ["navidrome"]
 

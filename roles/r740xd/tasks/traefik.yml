@@ -25,6 +25,7 @@
     - "{{ nas_docker_networks.calibre_web.name }}"
     - "{{ nas_docker_networks.glances.name }}"
     - "{{ nas_docker_networks.hass.name }}"
+    - "{{ nas_docker_networks.influxdb.name }}"
     - "{{ nas_docker_networks.navidrome.name }}"
     - "{{ nas_docker_networks.node_red.name }}"
     - "{{ nas_docker_networks.portainer.name }}"
