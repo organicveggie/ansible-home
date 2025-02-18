@@ -28,6 +28,7 @@
     - "{{ nas_docker_networks.influxdb.name }}"
     - "{{ nas_docker_networks.navidrome.name }}"
     - "{{ nas_docker_networks.node_red.name }}"
+    - "{{ nas_docker_networks.overseerr.name }}"
     - "{{ nas_docker_networks.portainer.name }}"
 
 - name: "traefik | Process Servarr network"

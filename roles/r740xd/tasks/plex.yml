@@ -31,6 +31,7 @@
     plex_docker_cpus: "{{ nas_plex_cpus }}"
     plex_docker_extra_networks:
       - name: "{{ nas_docker_networks.kometa.name }}"
+      - name: "{{ nas_docker_networks.overseerr.name }}"
     plex_docker_fqdn: "plex.{{ nas_site_domain }}"
     plex_docker_gid: "{{ _nas_plex_gid }}"
     plex_docker_groupname: "{{ _nas_plex_groupname }}"

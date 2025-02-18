@@ -94,6 +94,10 @@ nas_docker_networks:
     name: "unific"
     gateway: "172.30.15.1"
     subnet: "172.30.15.0/24"    
+  overseerr:
+    name: "overseerr"
+    gateway: "172.30.16.1"
+    subnet: "172.30.16.0/24"    
 
 ###
 ### Home Assistant

@@ -333,20 +333,6 @@
     cloudflared_docker_network: "{{ nas_docker_networks.servarr.name  }}"
   tags: ["cloudflare", "cloudflared"]
 
-- name: "servarr | Setup Overseerr"
-  ansible.builtin.import_role:
-    name: "overseerr"
-  vars:
-    overseerr_docker_extra_hosts:
-      "host.docker.internal": "{{ nas_docker_bridge_network_gateway }}"
-      "plex": "{{ nas_plex_network_ipv4 }}"
-    overseerr_docker_extra_networks:
-      - name: "{{ nas_docker_networks.tautulli.name }}"
-    overseerr_docker_host_domain: "{{ nas_overseerr_host_domain }}"
-    overseerr_docker_network: "{{ nas_docker_networks.servarr.name }}"
-    overseerr_docker_timezone: "{{ nas_timezone }}"
-  tags: ["overseerr"]
-
 - name: "servarr | Logrotate"
   ansible.builtin.include_tasks:
     file: "servarr_logrotate.yml"

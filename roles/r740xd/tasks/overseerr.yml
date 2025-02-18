@@ -1,0 +1,24 @@
+---
+- name: "overseerr | Setup Docker network"
+  community.docker.docker_network:
+    name: "{{ nas_docker_networks.overseerr.name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "no"
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ nas_docker_networks.overseerr.subnet }}"
+        gateway: "{{ nas_docker_networks.overseerr.gateway }}"
+  tags: ["setup", "network"]
+
+- name: "servarr | Setup Overseerr"
+  ansible.builtin.import_role:
+    name: "overseerr"
+  vars:
+    overseerr_docker_extra_networks:
+      - name: "{{ nas_docker_networks.servarr.name }}"
+      - name: "{{ nas_docker_networks.tautulli.name }}"
+    overseerr_docker_host_domain: "{{ nas_overseerr_host_domain }}"
+    overseerr_docker_network: "{{ nas_docker_networks.overseerr.name }}"
+    overseerr_docker_timezone: "{{ nas_timezone }}"
+  tags: ["overseerr"]
