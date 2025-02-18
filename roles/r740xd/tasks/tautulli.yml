@@ -17,7 +17,7 @@
     tautulli_docker_available_externally: "true"
     tautulli_docker_extra_networks:
       - name: "{{ nas_docker_networks.tautulli.name }}"
-    tautulli_docker_host_domain: "{{ nas_domain_name }}"
+    tautulli_docker_host_domain: "{{ mas_tautulli_host_domain }}"
     tautulli_docker_hostname: "{{ nas_tautulli_hostname }}"
     tautulli_docker_name: "{{ mas_tautulli_container_name }}"
     tautulli_docker_network: "{{ nas_docker_networks.tautulli.name }}"

@@ -210,6 +210,7 @@ nas_syncthing_host_domain: null
 ###
 mas_tautulli_container_name: "tautulli"
 nas_tautulli_hostname: "tautulli"
+mas_tautulli_host_domain: null
 
 ###
 ### TimeMachine

@@ -30,6 +30,7 @@
     - "{{ nas_docker_networks.node_red.name }}"
     - "{{ nas_docker_networks.overseerr.name }}"
     - "{{ nas_docker_networks.portainer.name }}"
+    - "{{ nas_docker_networks.tautulli.name }}"
 
 - name: "traefik | Process Servarr network"
   when: "nas_docker_networks.servarr.name | default('') | trim | length > 0"

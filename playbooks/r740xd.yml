@@ -117,6 +117,8 @@
         nas_sonarr4k_host_domain: "{{ veggie_base_domain_name }}"
         # Syncthing
         nas_syncthing_host_domain: "{{ veggie_base_domain_name }}"
+        # Tautulli
+        mas_tautulli_host_domain: "{{ veggie_base_domain_name }}"
         # TimeMachine
         nas_time_machine_data_directory: "{{ vault_time_machine_data_directory }}"
         nas_time_machine_hostname: "{{ vault_time_machine_hostname }}"
