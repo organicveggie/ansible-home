@@ -1,6 +1,7 @@
 ---
 # tasks file for traefik3
 
+# Create config volume
 - name: "traefik3 | Create Docker config volume"
   community.docker.docker_volume:
     name: "{{ traefik3_docker_volume_config_name }}"
@@ -23,6 +24,49 @@
     _traefik3_docker_bind_mount_list: "{{_traefik3_docker_bind_mount_list | default([]) + 
       [ {'source': item.key, 'target': item.value, 'read_only': true, 'type': 'bind'} ] }}"
   loop: "{{ traefik3_docker_bind_mounts | dict2items }}"
+- name: "traefik3 | Dashboard labels"
+  ansible.builtin.set_fact:
+    _traefik3_dashboard_labels:
+      "traefik.http.routers.dashboard.rule": "Host(`{{ traefik3_dashboard_fqdn }}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+      "traefik.http.routers.dashboard.service": "=api@internal"
+  when: "traefik3_dashboard_enabled"
+
+- name: "traefik3 | Dashboard middleware"
+  when: "traefik3_dashboard_enabled && traefik3_dashboard_middleware_names"
+  block:
+    - name: "traefik3 | Define router middleware label"
+      ansible.builtin.set_fact:
+        _traefik3_dashboard_middleware_label:
+          "traefik.http.routers.dashboard.middlewares": "{{ traefik3_dashboard_middleware_names }}"
+
+    - name: "traefik3 | Dashboard router middleware label"
+      ansible.builtin.set_fact:
+        _traefik3_dashboard_labels: >
+          {{ _traefik3_dashboard_labels | default({}) | combine(_traefik3_dashboard_middleware_label) }}
+
+    - name: "traefik3 | Dashboard middleware labels"
+      ansible.builtin.set_fact:
+        _traefik3_dashboard_labels: >
+          {{ _traefik3_dashboard_labels | default({}) |
+          combine({"traefik.http.middleware." + item.key: item.value}) }}
+        loop: "{{ traefik3_dashboard_middleware_labels }}"
+
+- name: "traefik3 | Global HTTP-to-HTTPS redirect labels"
+  when: "traefik3_redirect_http"
+  ansible.builtin.set_fact:
+    _traefik3_traefik3_http_redirect_labels: "{{ traefik3_http_redirect_labels }}"
+
+- name: "traefik3 | All container labels"
+  ansible.builtin.set_fact:
+    _traefik3_all_labels: >
+      {{ _traefik3_all_labels | default({}) | combine(item) }}
+  loop:
+    - "{{ _traefik3_dashboard_labels }}"
+    - "{{ _traefik3_traefik3_http_redirect_labels }}"
+
+- name: "traefik3 | Debug labels"
+  ansible.builtin.debug:
+    msg: "{{ _traefik3_all_labels }}"
 
 - name: "traefik3 | Create traefik.yml"
   ansible.builtin.template:

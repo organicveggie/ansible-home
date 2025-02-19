@@ -1,6 +1,4 @@
 ---
-# defaults file for traefik3
-
 #####
 # Container settings
 #####
@@ -51,3 +49,29 @@ traefik3_docker_port_map_list:
   - '443:443'
 
 traefik3_docker_letsencrypt_email: null
+
+###
+### Traefik configuration
+###
+
+# Dictionary of entrypoint configuration options.
+# https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/
+traefik3_conf_entrypoints: null
+
+# Dictionary of Provider options.
+# https://doc.traefik.io/traefik/reference/install-configuration/providers/overview/
+traefik3_conf_providers: null
+
+# Dictionary of certificate resolver options.
+# https://doc.traefik.io/traefik/reference/install-configuration/tls/certificate-resolvers/overview/
+traefik3_conf_cert_resolvers: null
+
+traefik3_dashboard_enabled: true
+traefik3_dashboard_fqdn: "traefik3.example.com"
+
+# List of middleware names 
+traefik3_dashboard_middleware_names: null
+
+# Map of label names to values
+traefik3_dashboard_middleware_labels: {}
+

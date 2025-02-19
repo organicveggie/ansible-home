@@ -147,5 +147,8 @@
 - ansible.builtin.import_tasks: "traefik.yml"
   tags: ["traefik"]
 
+- ansible.builtin.import_tasks: "traefik3.yml"
+  tags: ["traefik3"]
+
 # # # - ansible.builtin.import_playbook: "playbooks/media-storage/media-storage.yml"
 # # #   tags: ["media", "media-storage"]

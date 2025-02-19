@@ -353,6 +353,33 @@ nas_traefik_letsencrypt_ca_server: "https://acme-v02.api.letsencrypt.org/directo
 nas_traefik_letsencrypt_email: null
 
 ###
+### Traefik3 Controller
+###
+
+# List of middleware names 
+nas_traefik3_dashboard_middleware_names: null
+
+# Map of label names to values
+nas_traefik3_dashboard_middleware_labels: {}
+
+# Include a global redirect to https
+nas_traefik3_redirect_http: true
+
+# Dictionary of Provider options.
+# https://doc.traefik.io/traefik/reference/install-configuration/providers/overview/
+nas_traefik3_conf_providers: 
+  docker: {}
+
+# Dictionary of TLS certificate resolver options.
+# https://doc.traefik.io/traefik/reference/install-configuration/tls/certificate-resolvers/overview/
+nas_traefik3_conf_cert_resolvers:
+  letsencrypt:
+    acme:
+      caServer: "https://acme-v02.api.letsencrypt.org/directory"
+      dnsChallenge:
+        provider: "route53"
+
+###
 ### UniFi Controller
 ###
 nas_unific_cpus: "2"
