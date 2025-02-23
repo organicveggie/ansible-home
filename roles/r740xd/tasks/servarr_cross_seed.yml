@@ -1,0 +1,26 @@
+---
+- name: "servarr | cross-seed | Build torznab urls"
+  ansible.builtin.set_fact:
+    _nas_cross_seed_torznab_urls: >
+      {{ _nas_cross_seed_torznab_urls | default([]) + ["http://prowlarr:9696/" + item + "/api?apikey=" + nas_cross_seed_prowlarr_api_key] }}
+  loop: "{{ nas_cross_seed_prowlarr_indexer_ids }}"
+
+- name: "servarr | cross-seed | Setup"
+  ansible.builtin.import_role:
+    name: "cross-seed"
+  vars:
+    cross_seed_action: "inject"
+    cross_seed_api_key: "{{ nas_cross_seed_api_key }}"
+    cross_seed_duplicate_categories: true
+    cross_seed_match_mode: "{{ nas_cross_seed_match_mode }}"
+    cross_seed_network_name: "{{ nas_docker_networks.servarr.name }}"
+    cross_seed_qbittorrrent_url: "{{ nas_cross_seed_qbittorrent_url }}"
+    cross_seed_radarr_urls: 
+      - "http://{{ nas_radarr1080_container_name }}:7878/?apikey={{ nas_cross_seed_radarr1080_apikey }}"
+      - "http://{{ nas_radarr4k_container_name }}:7878/?apikey={{ nas_cross_seed_radarr4k_apikey }}"
+    cross_seed_search_delay: "60"
+    cross_seed_season_from_episode: null
+    cross_seed_sonarr_urls:
+      - "http://{{ nas_sonarr1080_container_name }}:8989/?apikey={{ nas_cross_seed_sonarr1080_apikey }}"
+      - "http://{{ nas_sonarr4k_container_name }}:8989/?apikey={{ nas_cross_seed_sonarr4k_apikey }}"
+    cross_seed_torznab_urls: "{{ _nas_cross_seed_torznab_urls }}"

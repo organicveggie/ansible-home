@@ -30,6 +30,15 @@
         nas_calibre_web_uid: "{{ vault_calibre_web_docker_uid }}"
         # Cloudflare
         nas_servarr_cloudflared_token: "{{ vault_servarr_cloudflared_token }}"
+        # Cross-Seed
+        nas_cross_seed_api_key: "{{ vault_cross_seed_api_key }}"
+        nas_cross_seed_prowlarr_api_key: "{{ vault_cross_seed_prowlarr_api_key }}"
+        nas_cross_seed_prowlarr_indexer_ids: ["9", "11", "12"]
+        nas_cross_seed_qbittorrent_url: "{{ vault_cross_seed_qbittorrent_url }}"
+        nas_cross_seed_radarr1080_apikey: "{{ vault_cross_seed_radarr1080_apikey }}"
+        nas_cross_seed_radarr4k_apikey: "{{ vault_cross_seed_radarr4k_apikey }}"
+        nas_cross_seed_sonarr1080_apikey: "{{ vault_cross_seed_sonarr1080_apikey }}"
+        nas_cross_seed_sonarr4k_apikey: "{{ vault_cross_seed_sonarr4k_apikey }}"
         # Diun
         nas_diun_notify_mail_host: "{{ vault_diun_notify_mail_host }}"
         nas_diun_notify_mail_port: "{{ vault_diun_notify_mail_port }}"

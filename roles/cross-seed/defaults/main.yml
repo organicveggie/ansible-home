@@ -1,0 +1,62 @@
+---
+# defaults file for cross-seed
+
+#####
+# Cross-Seed settings
+#####
+
+cross_seed_radarr_urls: []
+cross_seed_sonarr_urls: []
+cross_seed_torznab_urls: []
+
+cross_seed_rtorrrent_url: null
+cross_seed_qbittorrrent_url: null
+cross_seed_transmission_url: null
+cross_seed_deluge_url: null
+
+cross_seed_action: "inject"
+cross_seed_api_key: null
+cross_seed_duplicate_categories: false
+cross_seed_link_category: "cross-seed-link"
+cross_seed_match_mode: "flexible"
+cross_seed_rss_cadence: null
+cross_seed_search_delay: "30"
+cross_seed_season_from_episode: 1
+
+#####
+# Container settings
+#####
+
+# Name of the Docker container.
+cross_seed_name: "cross-seed"
+
+# Base name of the Docker image to use for the container.
+cross_seed_image_name: "ghcr.io/cross-seed/cross-seed"
+
+# Specific Docker image version to use for the container.
+cross_seed_image_version: "latest"
+
+# Number of vCPUs to allocate to the container.
+cross_seed_cpus: "1"
+
+# Amount of memory to allocate to the container.
+cross_seed_memory: "512M"
+
+# Name of the primary network.
+cross_seed_network_name: null
+
+# Container aliases on the default network.
+cross_seed_network_aliases: null
+
+# List of additional networks to join.
+cross_seed_extra_networks: []
+
+#####
+# Docker volumes and folders
+#####
+
+# Name of the Docker volume to create to store config files.
+cross_seed_config_volume_name: "cross-seed-config"
+
+# Name of the Docker volume to create to store torrent files.
+cross_seed_torrent_volume_name: "cross-seed-torrents"
