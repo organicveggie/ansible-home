@@ -358,3 +358,8 @@
     - name: "sonarr4k"
       volume: "{{ nas_sonarr4k_config_volume_name }}"
   tags: ["logrotate"]
+
+- name: "servarr | Cross-Seed"
+  ansible.builtin.import_tasks:
+    file: "servarr_cross_seed.yml"
+  tags: ["cross-seed", "cross_seed", "crossseed"]

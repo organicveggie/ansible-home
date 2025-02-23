@@ -1,0 +1,67 @@
+---
+# tasks file for cross-seed
+
+- name: "cross-seed | Create config volume: {{ cross_seed_config_volume_name }}"
+  community.docker.docker_volume:
+    name: "{{ cross_seed_config_volume_name }}"
+
+- name: "cross-seed | Create torrent volume: {{ cross_seed_torrent_volume_name }}"
+  community.docker.docker_volume:
+    name: "{{ cross_seed_torrent_volume_name }}"
+
+- name: "cross-seed | Get info on config volume"
+  community.docker.docker_volume_info:
+    name: "{{ cross_seed_config_volume_name }}"
+  register: "_cross_seed_config_volume_info"
+
+- name: "cross-seed | Create config file"
+  ansible.builtin.template:
+    src: "templates/config.js.j2"
+    dest: "{{ _cross_seed_config_volume_info.volume.Mountpoint }}/config.js"
+    mode: "0644"
+  register: _cross_seed_config
+
+- name: "cross-seed | Set Docker mount list for volume mounts"
+  ansible.builtin.set_fact:
+    _cross_seed_mount_list:
+      - source: "{{ cross_seed_config_volume_name }}"
+        target: "/config"
+        type: "volume"
+      - source: "{{ cross_seed_torrent_volume_name }}"
+        target: "/cross-seeds"
+        type: "volume"
+
+- name: "cross-seed | Create placeholder array for default network"
+  ansible.builtin.set_fact:
+    _cross_seed_default_networks:
+      - name: "{{ cross_seed_network_name }}"
+        aliases: "{{ cross_seed_network_aliases | default(omit) }}"
+
+- name: "cross-seed | Define all networks for this container"
+  ansible.builtin.set_fact:
+    _cross_seed_all_networks: >
+      {{ cross_seed_extra_networks | default([]) + _cross_seed_default_networks }}
+
+- name: "cross-seed | Create container"  # noqa: args[module]
+  community.docker.docker_container:
+    name: "{{ cross_seed_name }}"
+    image: "{{ cross_seed_image_name }}:{{ cross_seed_image_version }}"
+    pull: true
+    mounts: "{{ _cross_seed_mount_list }}"
+    network_mode: "{{ cross_seed_network_name }}"
+    networks: "{{ _cross_seed_all_networks }}"
+    restart_policy: "unless-stopped"
+    restart: "{{ _cross_seed_config.changed | default(false) }}"
+    memory: "{{ cross_seed_memory }}"
+    cpus: "{{ cross_seed_cpus }}"
+    command: "daemon"
+    command_handling: "correct"
+    container_default_behavior: "no_defaults"
+    auto_remove: false
+    detach: true
+    init: true
+    interactive: true
+    paused: false
+    privileged: false
+    read_only: false
+    tty: true

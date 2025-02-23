@@ -17,6 +17,19 @@ nas_calibre_web_hostname: "calibre-web"
 nas_calibre_web_uid: null
 
 ###
+### Cross-Seed
+###
+nas_cross_seed_api_key: null
+nas_cross_seed_match_mode: "strict"
+nas_cross_seed_prowlarr_api_key: null
+nas_cross_seed_prowlarr_indexer_ids: []
+nas_cross_seed_qbittorrrent_url: null
+nas_cross_seed_radarr1080_apikey: null
+nas_cross_seed_radarr4k_apikey: null
+nas_cross_seed_sonarr1080_apikey: null
+nas_cross_seed_sonarr4k_apikey: null
+
+###
 ### Diun
 ###
 nas_diun_config_dir: "/etc/diun"
