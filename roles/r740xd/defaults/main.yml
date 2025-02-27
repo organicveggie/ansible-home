@@ -189,11 +189,99 @@ nas_sabnzbd_host_domain: null
 ###
 ### Samba
 ###
-# List of group names for Samba groups. The admin user will automatically be added to these
-# groups.
-nas_samba_group_names: []
-nas_samba_admin_username: "admin"
-nas_samba_admin_password: "password"
+# Dictionary of user names to comma separated lists of additional group names.
+# See documentation for samba_docker_extra_user_groups.
+nas_samba_extra_user_groups: {}
+
+# Dictionary of group names to GIDs.
+# See documentation for samba_docker_gids
+nas_samba_group_ids: {}
+
+# Comma separated list of subnets to allow access to the Samba server.
+nas_samba_hosts_allow: null
+
+# IPv4 address of the Samba server.
+nas_samba_network_ipv4: null
+
+# Dictionary of unique share ids to Samba share details.
+# See documentation for samba_docker_shares
+nas_samba_shares:
+  "books": |
+    [books]
+    path = "/shares/books"
+    browsable = yes
+    guest ok = no
+    valid users = +book_writer
+    write list = +book_writer
+  "documents": |
+    [documents]
+    path = "/shares/documents"
+    browsable = yes
+    guest ok = no
+    valid users = +doc_writer
+    write list = +doc_writer
+  "music": |
+    [music]
+    path = "/shares/music"
+    browsable = yes
+    guest ok = no
+    valid users = +music_writer
+    write list = +music_writer
+  "musicold": |
+    [music old]
+    path = "/shares/music-old"
+    browsable = yes
+    guest ok = no
+    valid users = +music_writer
+    write list = +music_writer
+  "musictodo": |
+    [music todo]
+    path = "/shares/music-todo"
+    browsable = yes
+    guest ok = no
+    valid users = +music_writer
+    write list = +music_writer
+  "photos": |
+    [photos]
+    path = "/shares/photos"
+    browsable = yes
+    guest ok = no
+    valid users = +photo_writer
+    write list = +photo_writer
+  "roms": |
+    [roms]
+    path = "/shares/roms"
+    browsable = yes
+    guest ok = no
+    valid users = +rom_writer
+    write list = +rom_writer
+  "videos": |
+    [videos]
+    path = "/shares/videos"
+    browsable = yes
+    guest ok = no
+    valid users = +media_writer
+    write list = +media_writer
+
+# Dictionary mapping source folders on the host to mount points in the container.
+nas_samba_share_mounts:
+  "/nas-mirror/books": "/shares/books"
+  "/nas-mirror/documents": "/shares/documents"
+  "/nas-mirror/music": "/shares/music"
+  "/nas-mirror/music-old": "/shares/music-old"
+  "/nas-mirror/music-todo": "/shares/music-todo"
+  "/nas-mirror/photos": "/shares/photos"
+  "/nas-mirror/roms": "/shares/roms"
+  "/data/servarr/downloads/torrents/": "/shares/torrentz"
+  "/data/videos": "/shares/videos"
+
+# Dictionary of user names to create and the associated passwords.
+# See documentation for samba_docker_accounts
+nas_samba_user_acounts: {}
+
+# Dictionary of user names to UIDs.
+# See documentation for samba_docker_uids
+nas_samba_user_ids: {}
 
 ###
 ### Servarr

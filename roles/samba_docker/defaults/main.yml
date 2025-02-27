@@ -1,0 +1,125 @@
+---
+# defaults file for samba_docker
+
+#####
+# Samba settings
+#####
+
+# Set to any value to disable the avahi service.
+samba_docker_avahi_disable: null
+
+# Name of avahi samba service.
+# Defaults to hostname.
+samba_docker_avahi_name: null
+
+# List of options for the global stanza in smb.conf.
+samba_docker_global_options: []
+
+# Dictionary of key/value pairs to place in the global stanza.
+# If the Samba key contains a space, replace it with _SPACE_.
+# If the Samba key contains a colo, replace it with _COLON_.
+#
+# Examples:
+#   "casesignames": "no"                # casesignames = no
+#   "min_SPACE_protocol": "SMB2"        # min protocol = SMB2
+#   "fruit_COLON_metadata": "stream"    # fruit:metadata = stream
+samba_docker_global_key_values: {}
+
+# Samba log level.
+# https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html#LOGLEVEL
+samba_docker_log_level: "1"
+
+# Server string is the equivalent of the NT Description field.
+samba_docker_server_string: "Docker Samba Server"
+
+# Timezone assigned to the container.
+samba_docker_timezone: "America/New_York"
+
+# NT-Domain-Name or Workgroup-Name.
+samba_docker_workgroup: "WORKGROUP"
+
+# Set to any value to disable the wsdd2 service.
+samba_docker_wsdd2_disable: null
+
+# List of parameters for the wsdd2 service.
+# By default, wsdd2 starts without any parameters
+samba_docker_wsdd2_params: null
+
+#####
+# Samba Account settings
+#####
+
+# Dictionary of user names to create and the associated passwords.
+# For plaintext passwords, simply specify the password as the value.
+# For a hashed password, use the syntax:
+#   "user:1002:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX:8846F7EAEE8FB117AD06BDD830B7586C:[U          ]:LCT-5FE1F7DF:"
+# To create a hash password, use this command:
+#   docker run -ti --rm --entrypoint create-hash.sh ghcr.io/servercontainers/samba
+#
+# Examples:
+#   "bob": "bobsplaintextpassword"
+#   "john": "john:1000:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX:8846F7EAEE8FB117AD06BDD830B7586C:[U          ]:LCT-67BD3F42:"
+samba_docker_accounts: {}
+
+# Dictionary of user names to UIDs.
+# User name must match an entry in samba_docker_accounts.
+#
+# Examples:
+#   "bob": 1001
+#   "john": 1003
+samba_docker_uids: {}
+
+# Dictionary of group names to GIDs.
+# Do *not* include default user groups, because those are automatically generated
+# e.g.group names in this dictionary should *not* match the names from samba_docker_accounts.
+#
+# Examples:
+#   "mygroup": 2001
+#   "othergroup": 2002
+samba_docker_gids: {}
+
+# Dictionary of user names to comma separated lists of additional group names.
+# User names must match entries in samba_docker_accounts.
+# Groups must match either samba_docker_accounts or samba_docker_groups.
+samba_docker_extra_user_groups: {}
+
+# Dictionary of unique share ids to Samba share details.
+# Details can be multiline or separated by semicolons.
+#
+# Examples:
+#   "bobonly": "[Bob Share]; path=/shares/bob; valid users = bob; guest ok = no; read only = no; browseable = yes""
+samba_docker_shares: {}
+
+#####
+# Container settings
+#####
+
+# Name of the Docker container.
+samba_docker_name: "samba"
+
+# Base name of the Docker image to use for the container.
+samba_docker_image_name: "ghcr.io/servercontainers/samba"
+
+# Specific Docker image version to use for the container.
+samba_docker_image_version: "latest"
+
+# Number of vCPUs to allocate to the container.
+samba_docker_cpus: "1"
+
+# Amount of memory to allocate to the container.
+samba_docker_memory: "512M"
+
+# Name of the primary network.
+samba_docker_network_name: null
+
+# IPv4 address for Samba on the primary network.
+samba_docker_network_ipv4: null
+
+# Container aliases on the default network.
+samba_docker_network_aliases: null
+
+# List of additional networks to join.
+samba_docker_extra_networks: []
+
+# List of additional capabilities to add to the container.
+samba_docker_extra_capabilities: []
