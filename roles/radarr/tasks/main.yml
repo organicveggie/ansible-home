@@ -3,7 +3,7 @@
   community.docker.docker_volume:
     name: "{{ radarr_docker_volume_config_name }}"
 
-- name: "{{ radarr_docker_role_label }} | Set Docker mount list for volume mounts"
+- name: "{{ radarr_docker_role_label }} | Set base Docker mount list"
   ansible.builtin.set_fact:
     _radarr_docker_mount_list:
       - source: "{{ radarr_docker_volume_config_name }}"
@@ -15,6 +15,14 @@
       - source: "{{ radarr_docker_movie_source_path }}"
         target: "/data/media/movies"
         type: "bind"
+
+- name: "{{ radarr_docker_role_label }} | Check additional mount list"
+  ansible.builtin.set_fact:
+    _radarr_docker_extra_mount_list: "{{ radarr_docker_extra_mounts | default([])  }}"
+
+- name: "{{ radarr_docker_role_label }} | Set additional mount list"
+  ansible.builtin.set_fact:
+    _radarr_docker_mount_list: "{{ _radarr_docker_mount_list + _radarr_docker_extra_mount_list }}"
 
 - name: "{{ radarr_docker_role_label }} | Build container FQDN"
   ansible.builtin.set_fact:

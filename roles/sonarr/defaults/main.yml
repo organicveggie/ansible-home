@@ -38,6 +38,10 @@ sonarr_docker_web_port: "8989"
 # Dictionary of extra key value pairs to set as labels on the Docker container.
 sonarr_docker_extra_labels: {}
 
+# List of additional container mounts. Elements should be dictionaries like
+# https://docs.ansible.com/ansible/latest/collections/community/docker/docker_container_module.html#parameter-mounts.
+radarr_docker_extra_mounts: []
+
 # Default Docker network.
 sonarr_docker_network: "servarr"
 
@@ -63,3 +67,9 @@ sonarr_docker_host_name: "sonarr"
 # Domain name to use for the Traefik endpoint. Combined with [sonarr_docker_host_name] to form the
 # FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
 sonarr_docker_host_domain: "example.com"
+
+#####
+# Ansible
+#####
+
+sonarr_docker_role_label: "sonarr-docker"

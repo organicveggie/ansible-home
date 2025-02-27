@@ -5,6 +5,8 @@
 # Cross-Seed settings
 #####
 
+cross_seed_port: "2468"
+
 cross_seed_radarr_urls: []
 cross_seed_sonarr_urls: []
 cross_seed_torznab_urls: []
@@ -22,6 +24,18 @@ cross_seed_match_mode: "flexible"
 cross_seed_rss_cadence: null
 cross_seed_search_delay: "30"
 cross_seed_season_from_episode: 1
+
+#####
+# Cross-Seed trigger script
+#####
+
+cross_seed_script_group: null
+cross_seed_script_owner: null
+cross_seed_host: "{{ cross_seed_name }}"
+cross_seed_xseed_log_file: "/config/logs/xseed.log"
+cross_seed_xseed_logid_file: "/config/logs/xseed-id.log"
+cross_seed_xseed_torrent_clients: []
+cross_seed_xseed_usenet_clients: []
 
 #####
 # Container settings
