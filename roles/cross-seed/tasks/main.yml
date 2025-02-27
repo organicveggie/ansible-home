@@ -42,6 +42,30 @@
     _cross_seed_all_networks: >
       {{ cross_seed_extra_networks | default([]) + _cross_seed_default_networks }}
 
+- name: "cross-seed | Create xseed script directory"
+  ansible.builtin.file:
+    path: "/opt/xseed"
+    mode: "0755"
+    state: "directory"
+    owner: "{{ cross_seed_script_owner }}"
+    group: "{{ cross_seed_script_group }}"
+
+- name: "cross-seed | Create xseed script"
+  ansible.builtin.template:
+    src: "templates/xseed.sh.j2"
+    dest: "/opt/xseed/xseed.sh"
+    mode: "0754"
+    owner: "{{ cross_seed_script_owner }}"
+    group: "{{ cross_seed_script_group }}"
+
+- name: "cross-seed | Create env file"
+  ansible.builtin.template:
+    src: "templates/xseed.env.j2"
+    dest: "/opt/xseed/xseed.env"
+    mode: "0600"
+    owner: "{{ cross_seed_script_owner }}"
+    group: "{{ cross_seed_script_group }}"
+
 - name: "cross-seed | Create container"  # noqa: args[module]
   community.docker.docker_container:
     name: "{{ cross_seed_name }}"

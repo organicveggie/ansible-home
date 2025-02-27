@@ -79,6 +79,16 @@
         gateway: "{{ nas_docker_networks.servarr.gateway }}"
   tags: ["setup", "network"]
 
+- name: "servarr | Cross-Seed"
+  ansible.builtin.import_tasks:
+    file: "servarr_cross_seed.yml"
+  vars:
+    cross_seed_script_owner: "{{ nas_servarr_uid }}"
+    cross_seed_script_group: "{{ _nas_servarr_gid }}"
+    cross_seed_xseed_torrent_clients: ["ultra-qbit-yukon"]
+    cross_seed_xseed_usenet_clients: ["SABnzbd"]
+  tags: ["cross-seed", "cross_seed", "crossseed"]
+
 - name: "servarr | Setup Calibre Docker"
   ansible.builtin.import_role:
     name: "calibre_docker"
@@ -134,6 +144,10 @@
     radarr_docker_available_externally: "true"
     radarr_docker_cpus: "{{ nas_radarr_cpus }}"
     radarr_docker_data_source_path: "{{ nas_servarr_path }}"
+    radarr_docker_extra_mounts:
+      - source: "/opt/xseed"
+        target: "/xseed"
+        type: "bind"
     radarr_docker_gid: "{{ _nas_servarr_gid }}"
     radarr_docker_host_domain: "{{ nas_radarr1080_host_domain }}"
     radarr_docker_host_name: "{{ nas_radarr1080_host_name }}"
@@ -155,6 +169,10 @@
     radarr_docker_available_externally: "true"
     radarr_docker_cpus: "{{ nas_radarr_cpus }}"
     radarr_docker_data_source_path: "{{ nas_servarr_path }}"
+    radarr_docker_extra_mounts:
+      - source: "/opt/xseed"
+        target: "/xseed"
+        type: "bind"
     radarr_docker_gid: "{{ _nas_servarr_gid }}"
     radarr_docker_host_domain: "{{ nas_radarr4k_host_domain }}"
     radarr_docker_host_name: "{{ nas_radarr4k_host_name }}"
@@ -216,6 +234,10 @@
     sonarr_docker_available_externally: "true"
     sonarr_docker_cpus: "{{ nas_sonarr_cpus }}"
     sonarr_docker_data_source_path: "{{ nas_servarr_path }}"
+    sonarr_docker_extra_mounts:
+      - source: "/opt/xseed/xseed.sh"
+        target: "/xseed/xseed.sh"
+        type: "bind"
     sonarr_docker_gid: "{{ _nas_servarr_gid }}"
     sonarr_docker_host_domain: "{{ nas_sonarr1080_host_domain }}"
     sonarr_docker_host_name: "{{ nas_sonarr1080_host_name }}"
@@ -236,6 +258,10 @@
     sonarr_docker_available_externally: "true"
     sonarr_docker_cpus: "{{ nas_sonarr_cpus }}"
     sonarr_docker_data_source_path: "{{ nas_servarr_path }}"
+    sonarr_docker_extra_mounts:
+      - source: "/opt/xseed/xseed.sh"
+        target: "/xseed/xseed.sh"
+        type: "bind"
     sonarr_docker_gid: "{{ _nas_servarr_gid }}"
     sonarr_docker_host_domain: "{{ nas_sonarr4k_host_domain }}"
     sonarr_docker_host_name: "{{ nas_sonarr4k_host_name }}"
@@ -358,8 +384,3 @@
     - name: "sonarr4k"
       volume: "{{ nas_sonarr4k_config_volume_name }}"
   tags: ["logrotate"]
-
-- name: "servarr | Cross-Seed"
-  ansible.builtin.import_tasks:
-    file: "servarr_cross_seed.yml"
-  tags: ["cross-seed", "cross_seed", "crossseed"]

@@ -1,9 +1,9 @@
 ---
-- name: "Create sonarr Docker config volume"
+- name: "{{ sonarr_docker_role_label }} | Create sonarr Docker config volume"
   community.docker.docker_volume:
     name: "{{ sonarr_docker_volume_config_name }}"
 
-- name: "Set Docker mount list for volume mounts"
+- name: "{{ sonarr_docker_role_label }} | Set base Docker mount list"
   ansible.builtin.set_fact:
     _sonarr_docker_mount_list:
       - source: "{{ sonarr_docker_volume_config_name }}"
@@ -16,26 +16,34 @@
         target: "/data/media/tv"
         type: "bind"
 
-- name: "Build container FQDN"
+- name: "{{ sonarr_docker_role_label }} | Check additional mount list"
+  ansible.builtin.set_fact:
+    _sonarr_docker_extra_mount_list: "{{ sonarr_docker_extra_mounts | default([])  }}"
+
+- name: "{{ sonarr_docker_role_label }} | Set additional mount list"
+  ansible.builtin.set_fact:
+    _sonarr_docker_mount_list: "{{ _sonarr_docker_mount_list + _sonarr_docker_extra_mount_list }}"
+
+- name: "{{ sonarr_docker_role_label }} | Build container FQDN"
   ansible.builtin.set_fact:
     _sonarr_docker_fqdn: "{{ sonarr_docker_host_name }}.{{ sonarr_docker_host_domain }}"
 
-- name: "Create placeholder array for default network"
+- name: "{{ sonarr_docker_role_label }} | Create placeholder array for default network"
   ansible.builtin.set_fact:
     _sonarr_docker_default_networks:
       - name: "{{ sonarr_docker_network }}"
         aliases: "{{ sonarr_docker_network_aliases | default(omit) }}"
 
-- name: "Define all Docker networks for this container"
+- name: "{{ sonarr_docker_role_label }} | Define all Docker networks for this container"
   ansible.builtin.set_fact:
     _sonarr_docker_all_networks: >
       {{ _sonarr_docker_default_networks + sonarr_docker_extra_networks }}
 
-- name: "Define placeholder map for Docker labels"
+- name: "{{ sonarr_docker_role_label }} | Define placeholder map for Docker labels"
   ansible.builtin.set_fact:
     _sonarr_docker_labels: {}
 
-- name: "Define Docker labels with Traefik disabled"
+- name: "{{ sonarr_docker_role_label }} | Define Docker labels with Traefik disabled"
   ansible.builtin.set_fact:
     _sonarr_docker_labels: "{{ _sonarr_docker_labels | default({}) |
       combine({item.key: item.value}) }}"
@@ -44,7 +52,7 @@
       value: "{{ sonarr_available_externally }}"
   when: "not sonarr_docker_available_externally"
 
-- name: "Define Docker labels with Traefik enabled"
+- name: "{{ sonarr_docker_role_label }} | Define Docker labels with Traefik enabled"
   ansible.builtin.set_fact:
     _sonarr_docker_labels: "{{ _sonarr_docker_labels | default({}) |
       combine({item.key: item.value}) }}"
@@ -65,13 +73,13 @@
       value: "{{ sonarr_docker_web_port }}"
   when: "sonarr_docker_available_externally"
 
-- name: "Define user-supplied extra Docker labels"
+- name: "{{ sonarr_docker_role_label }} | Define user-supplied extra Docker labels"
   ansible.builtin.set_fact:
     _sonarr_docker_labels: "{{ _sonarr_docker_labels | default({}) |
       combine({item.key: item.value}) }}"
   loop: "{{ sonarr_docker_extra_labels | dict2items }}"
 
-- name: "sonarr Docker Container"
+- name: "{{ sonarr_docker_role_label }} | sonarr Docker Container"
   community.docker.docker_container:
     name: "{{ sonarr_docker_name }}"
     image: "{{ sonarr_docker_image }}:{{ sonarr_docker_image_version }}"

@@ -87,7 +87,7 @@ module.exports = {
     /**
      * The port you wish to listen on for daemon mode.
      */
-    port: 2468,
+    port: {{ cross_seed_port }},
     /**
      * cross-seed will send POST requests to these urls with a JSON payload of
      * { title, body, extra }. Conforms to the caronc/apprise REST API.
