@@ -113,7 +113,10 @@
         # Sabnzbd
         nas_sabnzbd_host_domain: "{{ veggie_base_domain_name }}"
         # Samba
-        nas_samba_group_names: "{{ samba_groups }}"
+        nas_samba_group_ids: "{{ vault_nas_samba_group_ids }}"
+        nas_samba_hosts_allow: "{{ vault_nas_samba_hosts_allow }}"
+        nas_samba_network_ipv4: "{{ vault_nas_samba_network_ipv4 }}"
+        nas_samba_user_acounts: "{{ vault_nas_samba_user_acounts }}"
         # Servarr
         nas_servarr_movie_source_path: "{{ vault_servarr_movie_path }}"
         nas_servarr_path: "{{ vault_servarr_path }}"

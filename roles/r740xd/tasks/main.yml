@@ -84,8 +84,8 @@
       - subnet: "{{ nas_docker_networks.kometa.subnet }}"
         gateway: "{{ nas_docker_networks.kometa.gateway }}"
 
-# # - ansible.builtin.import_tasks: "samba.yml"
-# #   tags: ["samba"]
+- ansible.builtin.import_tasks: "samba.yml"
+  tags: ["samba"]
 
 - ansible.builtin.import_tasks: "time-machine.yml"
   vars:
