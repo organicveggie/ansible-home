@@ -1,0 +1,83 @@
+---
+# defaults file for watchtower
+
+# Timezone assigned to the container.
+watchtower_docker_timezone: "America/New_York"
+
+# Remove old images after updating.
+watchtower_docker_cleanup: false
+
+# Monitor and update containers whose names are not in a given set of names.
+# Comma- or space-separated string list.
+watchtower_docker_disable_containers: null
+
+# Include restarting containers.
+watchtower_docker_include_restarting: false
+
+# Include created and exited containers.
+watchtower_docker_include_stopped: false
+
+# Logging format to use for console output.
+# One of: Auto, LogFmt, Pretty or JSON
+watchtower_docker_logging_format: "Auto"
+
+# Polling interval in seconds.
+# Specify either polling interval or schedule, but not both.
+watchtower_docker_poll_interval: null
+
+# Remove anonymous volumes after updating.
+watchtower_docker_remove_anon_volumes: false
+
+# Start any stopped containers that have had their image updated.
+watchtower_docker_revive_stopped: false
+
+# Restart one image at time instead of stopping and starting all at once.
+watchtower_docker_rolling_restart: false
+
+# Run Watchertower once and exit.
+# Overrides watchtower_docker_poll_interval and watchtower_docker_schedule.
+watchtower_docker_run_once: false
+
+# Cron expression in 6 fields (rather than the traditional 5) which defines when and how often to
+# check for new images.
+#                              |--------------------- Seconds (0-59)
+#                              |   |----------------- Minutes (0-59)
+#                              |   |   |------------- Hours (0-23)
+#                              |   |   |   |--------- Day of the month (1-31)
+#                              |   |   |   |   |----- Month (1-12; or JAN to DEC)
+#                              |   |   |   |   |   |- Day of the week (0-6; or SUN to SAT; or 7 for Sunday)
+#                              |   |   |   |   |   |
+#                              *   *   *   *   *   *
+# watchtower_docker_schedule: "0   30  2   *   *   *"
+watchtower_docker_schedule: null
+
+# Timeout before the container is forcefully stopped.
+watchtower_docker_timeout: "10s"
+
+#####
+# Container settings
+#####
+
+# Name of the Docker container.
+watchtower_docker_name: "watchtower"
+
+# Base name of the Docker image to use for the container.
+watchtower_docker_image_name: "containrrr/watchtower"
+
+# Specific Docker image version to use for the container.
+watchtower_docker_image_version: "latest"
+
+# Number of vCPUs to allocate to the container.
+watchtower_docker_cpus: "1"
+
+# Amount of memory to allocate to the container.
+watchtower_docker_memory: "512M"
+
+# Name of the primary network.
+watchtower_docker_network_name: null
+
+# Container aliases on the default network.
+watchtower_docker_network_aliases: null
+
+# List of additional networks to join.
+watchtower_docker_extra_networks: []

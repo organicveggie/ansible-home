@@ -1,0 +1,71 @@
+---
+# tasks file for watchtower
+
+- name: "watchtower | Check for poll interval or schedule"
+  ansible.builtin.fail:
+    msg: "You may specify watchtower_docker_poll_interval or watchtower_docker_schedule, but not both"
+  when: >
+    (_poll_interval | length > 0) and (_schedule | length > 0)
+  vars:
+    _poll_interval: "{{ watchtower_docker_poll_interval | default('') }}"
+    _schedule: "{{ watchtower_docker_schedule | default('') }}"
+
+- name: "watchtower | Create placeholder array for default network"
+  ansible.builtin.set_fact:
+    _watchtower_docker_default_networks:
+      - name: "{{ watchtower_docker_network_name }}"
+        aliases: "{{ watchtower_docker_network_aliases | default(omit) }}"
+
+- name: "watchtower | Define all networks for this container"
+  ansible.builtin.set_fact:
+    _watchtower_docker_all_networks: >
+      {{ watchtower_docker_extra_networks | default([]) + _watchtower_docker_default_networks }}
+
+- name: "watchtower | Define environment variables"
+  ansible.builtin.set_fact:
+    _watchtower_docker_env_vars: >
+      {{ _watchtower_docker_env_vars | default({}) | combine({item.key: item.value | string }) }}
+  no_log: true
+  loop: "{{ _watchtower_required_env_vars | dict2items }}"
+  vars:
+    _watchtower_required_env_vars:
+      "TZ": "{{ watchtower_docker_timezone | default(omit) }}"
+      "WATCHTOWER_CLEANUP": "{{ watchtower_docker_cleanup | default(omit) }}"
+      "WATCHTOWER_DISABLE_CONTAINERS": "{{ watchtower_docker_disable_containers | default(omit) }}"
+      "WATCHTOWER_INCLUDE_RESTARTING": "{{ watchtower_docker_include_restarting | default(omit) }}"
+      "WATCHTOWER_INCLUDE_STOPPED": "{{ watchtower_docker_include_stopped | default(omit) }}"
+      "WATCHTOWER_LOG_FORMAT": "{{ watchtower_docker_logging_format | default(omit) }}"
+      "WATCHTOWER_POLL_INTERVAL": "{{ watchtower_docker_poll_interval | default(omit) }}"
+      "WATCHTOWER_REMOVE_VOLUMES": "{{ watchtower_docker_remove_anon_volumes | default(omit) }}"
+      "WATCHTOWER_REVIVE_STOPPED": "{{ watchtower_docker_revive_stopped | default(omit) }}"
+      "WATCHTOWER_ROLLING_RESTART": "{{ watchtower_docker_rolling_restart | default(omit) }}"
+      "WATCHTOWER_RUN_ONCE": "{{ watchtower_docker_run_once | default(omit) }}"
+      "WATCHTOWER_SCHEDULE": "{{ watchtower_docker_schedule | default(omit) }}"
+      "WATCHTOWER_TIMEOUT": "{{ watchtower_docker_timeout | default(omit) }}"
+
+- name: "watchtower | Create container"
+  community.docker.docker_container:
+    name: "{{ watchtower_docker_name }}"
+    image: "{{ watchtower_docker_image_name }}:{{ watchtower_docker_image_version }}"
+    pull: true
+    mounts:
+      - source: "/var/run/docker.sock"
+        target: "/var/run/docker.sock"
+        type: "bind"
+        read_only: false
+    env: "{{ _watchtower_docker_env_vars }}"
+    network_mode: "{{ watchtower_docker_network_name }}"
+    networks: "{{ _watchtower_docker_all_networks }}"
+    restart_policy: "unless-stopped"
+    memory: "{{ watchtower_docker_memory }}"
+    cpus: "{{ watchtower_docker_cpus }}"
+    command_handling: "correct"
+    container_default_behavior: "no_defaults"
+    auto_remove: false
+    detach: true
+    init: true
+    interactive: true
+    paused: false
+    privileged: false
+    read_only: false
+    tty: true

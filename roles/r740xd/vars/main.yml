@@ -97,7 +97,11 @@ nas_docker_networks:
   overseerr:
     name: "overseerr"
     gateway: "172.30.16.1"
-    subnet: "172.30.16.0/24"    
+    subnet: "172.30.16.0/24"
+  watchtower:
+    name: "watchtower"
+    gateway: "172.30.17.1"
+    subnet: "172.30.17.0/24"
 
 ###
 ### Home Assistant
