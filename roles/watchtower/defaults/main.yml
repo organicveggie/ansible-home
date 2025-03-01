@@ -21,6 +21,9 @@ watchtower_docker_include_stopped: false
 # One of: Auto, LogFmt, Pretty or JSON
 watchtower_docker_logging_format: "Auto"
 
+# Disable ANSI color escape codes in log output.
+watchtower_docker_logging_no_color: false
+
 # Polling interval in seconds.
 # Specify either polling interval or schedule, but not both.
 watchtower_docker_poll_interval: null
