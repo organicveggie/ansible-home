@@ -22,6 +22,8 @@
     watchtower_docker_disable_containers: "{{ _nas_docker_watchtower_disable_containers | join(',')}}"
     watchtower_docker_include_restarting: false
     watchtower_docker_include_stopped: false
+    watchtower_docker_logging_format: "logfmt"
+    watchtower_docker_logging_no_color: true
     watchtower_docker_network_name: "{{ nas_docker_networks.watchtower.name }}"
     watchtower_docker_remove_anon_volumes: true
     watchtower_docker_revive_stopped: false

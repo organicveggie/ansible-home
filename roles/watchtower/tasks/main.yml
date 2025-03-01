@@ -29,6 +29,7 @@
   loop: "{{ _watchtower_required_env_vars | dict2items }}"
   vars:
     _watchtower_required_env_vars:
+      "NO_COLOR": "{{ watchtower_docker_logging_no_color | default(omit) }}"
       "TZ": "{{ watchtower_docker_timezone | default(omit) }}"
       "WATCHTOWER_CLEANUP": "{{ watchtower_docker_cleanup | default(omit) }}"
       "WATCHTOWER_DISABLE_CONTAINERS": "{{ watchtower_docker_disable_containers | default(omit) }}"
