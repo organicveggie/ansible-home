@@ -1,0 +1,39 @@
+---
+- name: "watchtower | Setup Docker network"
+  community.docker.docker_network:
+    name: "{{ nas_docker_networks.watchtower.name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "no"
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ nas_docker_networks.watchtower.subnet }}"
+        gateway: "{{ nas_docker_networks.watchtower.gateway }}"
+
+- name: "watchtower | Define list of containers to skip"
+  ansible.builtin.set_fact:
+    _nas_docker_watchtower_disable_containers: []
+
+- name: "watchtower | Setup"
+  ansible.builtin.include_role:
+    name: "watchtower"
+  vars:
+    watchtower_docker_cleanup: true
+    watchtower_docker_disable_containers: "{{ _nas_docker_watchtower_disable_containers | join(',')}}"
+    watchtower_docker_include_restarting: false
+    watchtower_docker_include_stopped: false
+    watchtower_docker_network_name: "{{ nas_docker_networks.watchtower.name }}"
+    watchtower_docker_remove_anon_volumes: true
+    watchtower_docker_revive_stopped: false
+    watchtower_docker_rolling_restart: true
+    #                            |--------------------- Seconds (0-59)
+    #                            |   |----------------- Minutes (0-59)
+    #                            |   |   |------------- Hours (0-23)
+    #                            |   |   |   |--------- Day of the month (1-31)
+    #                            |   |   |   |   |----- Month (1-12; or JAN to DEC)
+    #                            |   |   |   |   |   |- Day of the week (0-6; or SUN to SAT; or 7 for Sunday)
+    #                            |   |   |   |   |   |
+    #                            *   *   *   *   *   *
+    watchtower_docker_schedule: "0   0   4   *   *   *"
+    watchtower_docker_timezone: "{{ nas_timezone }}"
+    # watchtower_docker_run_once: true

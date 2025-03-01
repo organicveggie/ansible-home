@@ -135,6 +135,9 @@
 - ansible.builtin.import_tasks: "unific.yml"
   tags: ["unific"]
 
+- ansible.builtin.import_tasks: "watchtower.yml"
+  tags: ["watchtower"]
+
 # # - ansible.builtin.import_tasks: "influxdb.yml"
 # #   tags: ["influxdb"]
 
