@@ -1,20 +1,94 @@
 ---
 # tasks file for traefik3
 
-# Create config volume
-- name: "traefik3 | Create Docker config volume"
+- name: "traefik3 | Create config volume"
   community.docker.docker_volume:
     name: "{{ traefik3_docker_volume_config_name }}"
   register: "_traefik3_docker_volume_info"
 
-- name: "traefik3 | Build target path to Docker volume"
+- name: "traefik3 | Get info on config volume"
+  community.docker.docker_volume_info:
+    name: "{{ traefik3_volume_name }}"
+  register: "_traefik3_docker_volume_info"
+
+- name: "traefik3 | Build target path to config volume"
   ansible.builtin.set_fact:
     _traefik3_docker_volume_path:
       "{{ _traefik3_docker_volume_info['volume']['Mountpoint'] }}"
 
+- name: "traefik3 | Access Log options"
+  ansible.builtin.set_fact:
+    _traefik3_access_log_all_options:
+      accessLog: >
+        {{ __access_log_options | combine(__access_log_extras) }}
+  when: "traefik3_conf_access_log_enabled"
+  vars:
+    __access_log_extras: "{{ traefik3_conf_access_log_extra_options | default({}) }}"
+    __access_log_options:
+      bufferingSize: "{{ traefik3_conf_access_log_buffering_size | int }}"
+      filePath: "{{ traefik3_conf_access_log_file }}"
+      filters: "{{ traefik3_conf_access_log_filters | default({}) }}"
+      format: "{{ traefik3_conf_access_log_format }}"
+      fields:
+        defaultMode: "{{ traefik3_conf_access_log_fields_default_mode }}"
+        headers: "{{ traefik3_conf_access_log_fields_headers | default({}) }}"
+        names: "{{ traefik3_conf_access_log_fields_names | default({})  }}"
+
+- name: "traefik3 | Dashboard options"
+  ansible.builtin.set_fact:
+    _traefik3_dashboard_entrypoints:
+      http:
+        address: "{{ traefik3_dashboard_port_insecure }}"
+      https:
+        address: "{{ traefik3_dashboard_port_secure }}"
+    _traefik3_dashboard_ports:
+      "{{ traefik3_dashboard_port_insecure }}": "80"
+      "{{ traefik3_dashboard_port_secure }}": "443"
+  when: "traefik3_dashboard_enabled"
+
+- name: "traefik3 | Logging options"
+  ansible.builtin.set_fact:
+    _traefik3_logging_all_options:
+      log: >
+        {{ __logging_quick_options | combine(__logging_extras) }}
+  vars:
+    __logging_extras: "{{ traefik3_conf_logging_extra_options | default({}) }}"
+    __logging_quick_options:
+        filePath: "{{ traefik3_conf_logging_file }}"
+        format: "{{ traefik3_conf_logging_format }}"
+        level: "{{ traefik3_conf_logging_level }}"
+
+- name: "traefik3 | Metrics options"
+  ansible.builtin.set_fact:
+    _traefik3_metrics_all_options:
+      metrics: "{{ traefik3_conf_metrics }}"
+
+- name: "traefik3 | Create config file"
+  ansible.builtin.template:
+    src: "templates/traefik.yml.j2"
+    dest: "{{ _traefik3_volume_path }}/traefik.yml"
+    mode: "0644"
+  vars:
+    _traefik3_conf_cert_resolvers:
+      certificatesResolvers: "{{ nas_traefik3_conf_cert_resolvers }}"
+    _traefik3_conf_entrypoints:
+      entrypoints: "{{ traefik3_conf_entrypoints | combine(_traefik3_dashboard_entrypoints | default({})) }}"
+    _traefik3_conf_providers:
+      providers: "{{ traefik3_conf_providers }}"
+    _traefik3_conf_tracing:
+      tracing: "{{ traefik3_conf_tracing_options | default({}) }}"
+  register: _traefik3_config
+
 - name: "traefik3 | Set Docker mount list for volume mounts"
   ansible.builtin.set_fact:
     _traefik3_docker_volume_mount_list:
+      {{ _traefik3_bind_mounts + _traefik3_volume_mounts }}
+  vars:
+    _traefik3_bind_mounts:
+      - source: "/var/run/docker.sock"
+        target: "/var/run/docker.sock"
+        type: "bind"
+    _traefik3_volume_mounts:
       - source: "{{ traefik3_docker_volume_config_name }}"
         target: "/etc/traefik"
         type: "volume"
@@ -28,11 +102,11 @@
   ansible.builtin.set_fact:
     _traefik3_dashboard_labels:
       "traefik.http.routers.dashboard.rule": "Host(`{{ traefik3_dashboard_fqdn }}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
-      "traefik.http.routers.dashboard.service": "=api@internal"
+      "traefik.http.routers.dashboard.service": "api@internal"
   when: "traefik3_dashboard_enabled"
 
 - name: "traefik3 | Dashboard middleware"
-  when: "traefik3_dashboard_enabled && traefik3_dashboard_middleware_names"
+  when: "traefik3_dashboard_enabled and traefik3_dashboard_middleware_names"
   block:
     - name: "traefik3 | Define router middleware label"
       ansible.builtin.set_fact:
@@ -52,16 +126,16 @@
         loop: "{{ traefik3_dashboard_middleware_labels }}"
 
 - name: "traefik3 | Global HTTP-to-HTTPS redirect labels"
-  when: "traefik3_redirect_http"
   ansible.builtin.set_fact:
-    _traefik3_traefik3_http_redirect_labels: "{{ traefik3_http_redirect_labels }}"
+    _traefik3_http_redirect_labels: "{{ traefik3_http_redirect_labels }}"
+  when: "traefik3_redirect_http"
 
-- name: "traefik3 | All container labels"
+- name: "traefik3 | Define container labels"
   ansible.builtin.set_fact:
     _traefik3_all_labels: >
-      {{ _traefik3_all_labels | default({}) | combine(item) }}
-  loop:
-    - "{{ _traefik3_dashboard_labels }}"
+      {{ __labels_dashboard | combine(__labels_http_redirect) }}
+  vars:
+    __labels_dashboard: "{{ _traefik3_dashboard_labels | default({}) }}"
     - "{{ _traefik3_traefik3_http_redirect_labels }}"
 
 - name: "traefik3 | Debug labels"

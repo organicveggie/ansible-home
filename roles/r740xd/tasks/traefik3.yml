@@ -31,6 +31,8 @@
     - "{{ nas_docker_networks.overseerr.name }}"
     - "{{ nas_docker_networks.portainer.name }}"
     - "{{ nas_docker_networks.tautulli.name }}"
+  vars:
+    "_traefik_role_name": "traefik3"
 
 - name: "traefik3 | Process Servarr network"
   when: "nas_docker_networks.servarr.name | default('') | trim | length > 0"
@@ -45,15 +47,21 @@
       block:
         - name: "traefik3 | Enable Servarr extra network"
           ansible.builtin.set_fact:
-            _nas_traefik3_extra_networks: "{{ _nas_traefik3_extra_networks | default([]) + [{'name': nas_docker_networks.servarr.name}] }}"
+            _nas_traefik3_extra_networks: >
+              {{ _nas_traefik3_extra_networks | default([]) + [_nas_traefik3_network_servarr] }}
+          vars:
+            _nas_traefik3_network_servarr:
+              name: "{{ nas_docker_networks.servarr.name }}"
 
         - name: "traefik3 | Enable SyncThings (Servarr) ports"
           ansible.builtin.set_fact:
-            _nas_traefik3_extra_ports: "{{ _nas_traefik3_extra_ports | default([]) + nas_traefik_syncthings_ports }}"
+            _nas_traefik3_extra_ports: >
+              {{ _nas_traefik3_extra_ports | default([]) + nas_traefik_syncthings_ports }}
         
         - name: "traefik3 | Enable SyncThings (Servarr) entrypoints"
           ansible.builtin.set_fact:
-            _nas_traefik3_entrypoints: "{{ _nas_traefik3_entrypoints | default({}) | combine(nas_traefik_syncthings_entrypoints) }}"
+            _nas_traefik3_entrypoints: >
+              {{ _nas_traefik3_entrypoints | default({}) | combine(nas_traefik_syncthings_entrypoints) }}
 
 - name: "traefik3 | Process UniFi Controller network"
   when: "nas_docker_networks.unific.name | default('') | trim | length > 0"
@@ -68,34 +76,54 @@
       block:
         - name: "traefik3 | Enable UniFi extra network"
           ansible.builtin.set_fact:
-            _nas_traefik3_extra_networks: "{{ _nas_traefik3_extra_networks | default([]) + [{'name': nas_docker_networks.unific.name}] }}"
+            _nas_traefik3_extra_networks: >
+              {{ _nas_traefik3_extra_networks | default([]) + [_nas_traefik3_network_unific] }}
+          vars:
+            _nas_traefik3_network_unific:
+              name: "{{ nas_docker_networks.unific.name }}"
 
         - name: "traefik3 | Enable UniFi Controlller ports"
           ansible.builtin.set_fact:
-            _nas_traefik3_extra_ports: "{{ _nas_traefik3_extra_ports | default([]) + nas_traefik_unific_ports }}"
+            _nas_traefik3_extra_ports: >
+              {{ _nas_traefik3_extra_ports | default([]) + nas_traefik_unific_ports }}
         
         - name: "traefik3 | Enable UniFi Controller entrypoints"
           ansible.builtin.set_fact:
-            _nas_traefik3_entrypoints: "{{ _nas_traefik3_entrypoints | default({}) | combine(nas_traefik_unific_entrypoints) }}"
+            _nas_traefik3_entrypoints: >
+              {{ _nas_traefik3_entrypoints | default({}) | combine(nas_traefik_unific_entrypoints) }}
 
 - name: "traefik3 | Define all ports"
   ansible.builtin.set_fact:
-    _nas_traefik3_all_ports: "{{ (_nas_traefik3_extra_ports | default([]) + nas_traefik_http_ports) | sort }}"
+    _nas_traefik3_all_ports: >
+      {{ _nas_traefik3_extra_ports | default([]) | sort }}
 
 - ansible.builtin.debug:
     msg:
       - "Entrypoints: {{ _nas_traefik3_entrypoints | default({}) }}"
       - "Extra networks: {{ _nas_traefik3_extra_networks | default([]) }}"
-      - "All ports: {{ _nas_traefik3_all_ports | default([]) }}"
+      - "Entrypoint ports: {{ _nas_traefik3_all_ports | default([]) }}"
 
 - name: "traefik3 | Setup Traefik"
   ansible.builtin.import_role:
     name: "traefik3"
   vars:
+    traefik3_conf_access_log_enabled: false
+    traefik3_conf_cert_resolvers: "{{ nas_traefik3_conf_cert_resolvers }}"
+    traefik3_conf_entrypoints: "{{ _nas_traefik3_entrypoints }}"
+    traefik3_conf_logging_level: "INFO"
+    traefik3_conf_providers: "{{ nas_traefik3_conf_providers }}"
+    traefik3_cpus: "2"
     traefik3_dashboard_fqdn: "{{ _nas_traefik3_fqdn }}"
     traefik3_dashboard_middleware_labels: "{{ nas_traefik3_dashboard_middleware_labels }}"
     traefik3_dashboard_middleware_names: "{{ nas_traefik3_dashboard_middleware_names }}"
+    traefik3_dashboard_port_insecure: "{{ nas_traefik3_dashboard_port_insecure }}"
+    traefik3_dashboard_port_secure: "{{ nas_traefik3_dashboard_port_secure }}"
+    traefik3_extra_env_vars:
+      AWS_HOSTED_ZONE_ID: "{{ acme_route53_hosted_zone_id }}"
+      AWS_ACCESS_KEY_ID: "{{ letsencrypt_aws_access_key }}"
+      AWS_SECRET_ACCESS_KEY: "{{ letsencrypt_aws_secret_key }}"
+      AWS_REGION: "us-east-1"
+    traefik3_extra_networks: "{{ _nas_traefik_extra_networks }}"
     traefik3_redirect_http: "{{ nas_traefik3_redirect_http }}"
-    traefik3_conf_providers: "{{ nas_traefik3_conf_providers }}"
-    traefik3_conf_entrypoints: "{{ _nas_traefik3_entrypoints }}"
-    traefik3_conf_cert_resolvers: "{{ nas_traefik3_conf_cert_resolvers }}"
+    traefik3_memory: "1G"
+    traefik3_timezone: "{{ nas_timezone }}"

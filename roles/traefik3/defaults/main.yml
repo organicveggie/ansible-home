@@ -54,6 +54,48 @@ traefik3_docker_letsencrypt_email: null
 ### Traefik configuration
 ###
 
+traefik3_conf_access_log_buffering_size: "500"
+
+# True to enable Traefik access logs.
+traefik3_conf_access_log_enabled: false
+
+traefik3_conf_access_log_fields_default_mode: "keep"
+traefik3_conf_access_log_fields_headers: {}
+traefik3_conf_access_log_fields_names:
+  ClientAddr: "drop"
+  ClientHost: "keep"
+  ClientPort: "drop"
+  ClientUsername: "drop"
+  DownstreamContentSize: "drop"
+  RequestHost: "keep"
+  RequestLine: "keep"
+  RequestMethod: "keep"
+  RequestPath: "keep"
+  RequestProtocol: "keep"
+  RequestScheme: "keep"
+  RouterName: "keep"
+  ServiceName: "keep"
+  StartLocal: "keep"
+
+# Path to the main Traefik access log file.
+traefik3_conf_access_log_file: "/var/log/traefik-access.log"
+
+traefik3_conf_access_log_filters: {}
+
+# common or json
+traefik3_conf_access_log_format: "common"
+traefik3_conf_access_log_extra_options: {}
+
+# Path to the main Traefik log file.
+traefik3_conf_logging_file: "/var/log/traefik.log"
+
+# common or json
+traefik3_conf_logging_format: "common"
+traefik3_conf_logging_level: "ERROR"
+traefik3_conf_logging_extra_options: {}
+
+traefik3_conf_metrics: {}
+
 # Dictionary of entrypoint configuration options.
 # https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/
 traefik3_conf_entrypoints: null
@@ -66,6 +108,9 @@ traefik3_conf_providers: null
 # https://doc.traefik.io/traefik/reference/install-configuration/tls/certificate-resolvers/overview/
 traefik3_conf_cert_resolvers: null
 
+traefik3_conf_tracing_enabled: false
+traefik3_conf_tracing_options: {}
+
 traefik3_dashboard_enabled: true
 traefik3_dashboard_fqdn: "traefik3.example.com"
 
@@ -75,3 +120,47 @@ traefik3_dashboard_middleware_names: null
 # Map of label names to values
 traefik3_dashboard_middleware_labels: {}
 
+traefik3_dashboard_port_insecure: "80"
+traefik3_dashboard_port_secure: "443"
+
+# Include a global redirect to https
+traefik3_redirect_http: true
+
+traefik3_timezone: "America/New_York"
+
+#####
+# Container settings
+#####
+
+# Name of the Docker container.
+traefik3_name: "traefik3"
+
+# Base name of the Docker image to use for the container.
+traefik3_image_name: "traefik"
+
+# Specific Docker image version to use for the container.
+traefik3_image_version: "v3"
+
+# Number of vCPUs to allocate to the container.
+traefik3_cpus: "1"
+
+# Amount of memory to allocate to the container.
+traefik3_memory: "512M"
+
+# Extra environment variables to pass to Traefik
+traefik3_extra_env_vars: {}
+
+traefik3_network_name: null
+
+# Container aliases on the default network.
+traefik3_network_aliases: null
+
+# List of additional networks to join.
+traefik3_extra_networks: []
+
+#####
+# Docker volumes and folders
+#####
+
+# Name of the Docker volume to create to store data files.
+traefik3_volume_name: "traefik3"

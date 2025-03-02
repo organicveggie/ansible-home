@@ -118,8 +118,8 @@ nas_docker_networks:
     subnet: "172.30.17.0/24"
   traefik3:
     name: "traefik3"
-    gateway: "172.30.17.1"
-    subnet: "172.30.17.0/24"    
+    gateway: "172.30.18.1"
+    subnet: "172.30.18.0/24"    
 
 ###
 ### Home Assistant
@@ -228,6 +228,8 @@ nas_time_machine_workgroup: "TMWORKGROUP"
 ###
 ### Traefik
 ###
+nas_traefik3_dashboard_port_insecure: "8880"
+nas_traefik3_dashboard_port_secure: "4443"
 nas_traefik_http_ports:
   - '80:80'
   - '443:443'
