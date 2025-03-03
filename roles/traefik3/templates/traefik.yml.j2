@@ -18,7 +18,7 @@ entryPoints:
 # https://doc.traefik.io/traefik/reference/install-configuration/api-dashboard/
 api:
     dashboard: true
-    insecure: true
+    insecure: {{ traefik3_dashboard_api_insecure | default(false) }}
 {% endif %}
 
 # https://doc.traefik.io/traefik/reference/install-configuration/tls/certificate-resolvers/acme/

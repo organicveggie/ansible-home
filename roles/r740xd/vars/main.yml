@@ -228,8 +228,6 @@ nas_time_machine_workgroup: "TMWORKGROUP"
 ###
 ### Traefik
 ###
-nas_traefik3_dashboard_port_insecure: "8880"
-nas_traefik3_dashboard_port_secure: "4443"
 nas_traefik_http_ports:
   - '80:80'
   - '443:443'
