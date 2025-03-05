@@ -65,6 +65,9 @@ nas_docker_macvlan_network_parent: null
 # IPv4 subnet for the macvlan network.
 nas_docker_macvlan_subnet: null
 
+# List of users who should be added to the docker group.
+nas_docker_users: []
+
 ##########
 
 # Base domain name for machine and containers running on it.

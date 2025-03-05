@@ -16,3 +16,10 @@
     docker_daemon_options:
       storage-driver: "zfs"
       data-root: "{{ nas_docker_home }}/data"
+
+- name: "docker | Add users to group"
+  ansible.builtin.user:
+    append: true
+    groups: ["docker"]
+    name: "{{ item }}"
+  loop: "{{ nas_docker_users | default([]) }}"
