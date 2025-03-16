@@ -94,19 +94,28 @@
   vars:
     traefik_image: "traefik:2.11"
     traefik_container_environment:
-      AWS_HOSTED_ZONE_ID: "{{ acme_route53_hosted_zone_id }}"
-      AWS_ACCESS_KEY_ID: "{{ letsencrypt_aws_access_key }}"
-      AWS_SECRET_ACCESS_KEY: "{{ letsencrypt_aws_secret_key }}"
-      AWS_REGION: "us-east-1"
+      AWS_HOSTED_ZONE_ID: "{{ nas_aws_route53_hosted_zone_id }}"
+      AWS_ACCESS_KEY_ID: "{{ nas_aws_route53_access_key_id }}"
+      AWS_SECRET_ACCESS_KEY: "{{ nas_aws_route53_secret_access_key }}"
+      AWS_REGION: "{{ nas_aws_route53_region }}"
     traefik_qs_https: "true"
     # traefik_qs_https_redirect: "true"
     traefik_qs_https_le: "true"
-    traefik_qs_https_le_mail: "{{ letsencrypt_email }}"
+    traefik_qs_https_le_mail: "{{ nas_traefik_letsencrypt_email }}"
     traefik_qs_log_level: INFO
     traefik_ports: "{{ _nas_traefik_all_ports }}"
     traefik_hostname: "{{ _nas_traefik_fqdn }}"
     traefik_confkey_api:
       dashboard: true # use this for enabling the dashboard
+    traefik_confkey_certificatesResolvers:
+      letsencrypt:
+        acme:
+          email: "{{ nas_traefik_letsencrypt_email }}"
+          caServer: "{{ traefik_le_ca_server }}"
+          dnsChallenge:
+            provider: route53
+            resolvers:
+              - "8.8.8.8:53" # Use external DNS to verify TXT record changes
     traefik_labels:
       traefik.enable: "true"
       # Dashboard

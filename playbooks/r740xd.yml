@@ -23,6 +23,11 @@
         # Admin user
         nas_admin_username: "{{ veggie_nas_admin_username }}"
         nas_admin_passwd: "{{ veggie_nas_admin_passwd }}"
+        # AWS Route53
+        nas_aws_route53_hosted_zone_id: "{{ vault_nas_aws_route53_hosted_zone_id }}"
+        nas_aws_route53_access_key_id: "{{ vault_nas_aws_route53_access_key_id }}"
+        nas_aws_route53_region: "{{ vault_nas_aws_route53_region }}"
+        nas_aws_route53_secret_access_key: "{{ vault_nas_aws_route53_secret_access_key }}"
         # Calibre Web
         nas_calibre_web_book_dir: "{{ vault_calibre_web_docker_book_dir }}"
         nas_calibre_web_gid: "{{ vault_calibre_web_docker_gid }}"
@@ -138,6 +143,8 @@
         nas_time_machine_network_ipv4: "{{ vault_time_machine_network_ipv4 }}"
         nas_time_machine_password: "{{ vault_time_machine_password }}"
         nas_time_machine_zfs_dataset: "{{ vault_time_machine_zfs_dataset }}"
+        # Traefik
+        nas_traefik_letsencrypt_email: "{{ primary_email_address }}"
         # UniFi Controller
         nas_unific_host_domain: "{{ veggie_base_domain_name }}"
         # NAS

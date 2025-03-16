@@ -8,6 +8,14 @@ nas_admin_passwd: null
 nas_admin_user: null
 
 ###
+### AWS: Route53
+###
+nas_aws_route53_access_key_id: null
+nas_aws_route53_hosted_zone_id: null
+nas_aws_route53_region: "us-east1"
+nas_aws_route53_secret_access_key: null
+
+###
 ### Calibre Web
 ###
 nas_calibre_web_book_dir: null
@@ -327,6 +335,12 @@ nas_time_machine_password: null
 nas_time_machine_username: "time-machine"
 nas_time_machine_uid: 1311
 nas_time_machine_zfs_dataset: null
+
+###
+### Traefik
+###
+nas_traefik_letsencrypt_ca_server: "https://acme-v02.api.letsencrypt.org/directory"
+nas_traefik_letsencrypt_email: null
 
 ###
 ### UniFi Controller
