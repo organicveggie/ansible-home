@@ -146,10 +146,10 @@
 #         address: ":3200"
     traefik_confkey_serversTransport:
       insecureSkipVerify: "true"
-    # traefik_confkey_log:
-    #   level: DEBUG
-    #   filePath: "/var/log/traefik.log"
-    # traefik_confkey_accessLog:
+    traefik_confkey_log:
+      level: INFO
+      # filePath: "/etc/traefik/log/traefik.log"
+      # traefik_confkey_accessLog:
     #   filePath: "/etc/traefik/log/traefik-access.log"
     #   bufferingSize: 500
     #   format: "json"
