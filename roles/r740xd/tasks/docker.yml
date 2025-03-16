@@ -12,10 +12,14 @@
   ansible.builtin.import_role:
     name: "geerlingguy.docker"
   vars:
+    docker_add_repo: true
     docker_home: "{{ nas_docker_home }}"
     docker_daemon_options:
       storage-driver: "zfs"
       data-root: "{{ nas_docker_home }}/data"
+    docker_install_compose_plugin: true
+    docker_compose_package: "docker-compose-plugin"
+    docker_compose_package_state: present
 
 - name: "docker | Add users to group"
   ansible.builtin.user:
