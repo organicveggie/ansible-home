@@ -348,8 +348,9 @@ nas_time_machine_zfs_dataset: null
 ###
 ### Traefik
 ###
-nas_traefik_letsencrypt_ca_server: "https://acme-v02.api.letsencrypt.org/directory"
-# nas_traefik_letsencrypt_ca_server: "https://acme-staging-v02.api.letsencrypt.org/directory"
+letsencrypt_ca_server_staging: "https://acme-staging-v02.api.letsencrypt.org/directory"
+letsencrypt_ca_server_prod: "https://acme-v02.api.letsencrypt.org/directory"
+nas_traefik_letsencrypt_ca_server: "{{ letsencrypt_ca_server_staging }}"
 nas_traefik_letsencrypt_email: null
 
 ###
@@ -368,16 +369,22 @@ nas_traefik3_redirect_http: true
 # Dictionary of Provider options.
 # https://doc.traefik.io/traefik/reference/install-configuration/providers/overview/
 nas_traefik3_conf_providers: 
-  docker: {}
+  docker:
+    defaultRule: "Host(`traefik.r740xd.home.bealetech`)"
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
 
 # Dictionary of TLS certificate resolver options.
 # https://doc.traefik.io/traefik/reference/install-configuration/tls/certificate-resolvers/overview/
 nas_traefik3_conf_cert_resolvers:
   letsencrypt:
     acme:
-      caServer: "https://acme-v02.api.letsencrypt.org/directory"
+      caServer: "{{ letsencrypt_ca_server_prod }}"
       dnsChallenge:
         provider: "route53"
+        resolvers:
+          - "1.1.1.1:53"
+          - "8.8.8.8:53" # Use external DNS to verify TXT record changes
 
 ###
 ### UniFi Controller

@@ -108,7 +108,18 @@
     name: "traefik3"
   vars:
     traefik3_conf_access_log_enabled: true
-    traefik3_conf_cert_resolvers: "{{ nas_traefik3_conf_cert_resolvers }}"
+    # traefik3_conf_cert_resolvers: "{{ nas_traefik3_conf_cert_resolvers }}"
+    traefik3_conf_cert_resolvers:
+      letsencrypt:
+        acme:
+          caServer: "{{ letsencrypt_ca_server_staging }}"
+          # email: "{{ nas_traefik_letsencrypt_email }}"
+          storage: "/etc/traefik/acme/acme.json"
+          dnsChallenge:
+            provider: "route53"
+            resolvers:
+              - "1.1.1.1:53"
+              - "8.8.8.8:53" # Use external DNS to verify TXT record changes
     traefik3_conf_entrypoints: "{{ _nas_traefik3_entrypoints }}"
     traefik3_conf_logging_level: "DEBUG"
     traefik3_conf_providers: "{{ nas_traefik3_conf_providers }}"
@@ -118,10 +129,10 @@
     traefik3_dashboard_middleware_labels: "{{ nas_traefik3_dashboard_middleware_labels }}"
     traefik3_dashboard_middleware_names: "{{ nas_traefik3_dashboard_middleware_names }}"
     traefik3_extra_env_vars:
-      AWS_HOSTED_ZONE_ID: "{{ acme_route53_hosted_zone_id }}"
-      AWS_ACCESS_KEY_ID: "{{ letsencrypt_aws_access_key }}"
-      AWS_SECRET_ACCESS_KEY: "{{ letsencrypt_aws_secret_key }}"
-      AWS_REGION: "us-east-1"
+      AWS_HOSTED_ZONE_ID: "{{ nas_aws_route53_hosted_zone_id }}"
+      AWS_ACCESS_KEY_ID: "{{ nas_aws_route53_access_key_id }}"
+      AWS_SECRET_ACCESS_KEY: "{{ nas_aws_route53_secret_access_key }}"
+      AWS_REGION: "{{ nas_aws_route53_region }}"
     traefik3_extra_networks: "{{ _nas_traefik_extra_networks }}"
     traefik3_redirect_http: "{{ nas_traefik3_redirect_http }}"
     traefik3_memory: "1G"

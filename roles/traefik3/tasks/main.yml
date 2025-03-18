@@ -114,7 +114,7 @@
     mode: "0644"
   vars:
     _traefik3_conf_cert_resolvers:
-      certificatesResolvers: "{{ nas_traefik3_conf_cert_resolvers }}"
+      certificatesResolvers: "{{ traefik3_conf_cert_resolvers }}"
     _traefik3_conf_entrypoints:
       entrypoints: "{{ traefik3_conf_entrypoints | combine(_traefik3_dashboard_entrypoints | default({})) }}"
     _traefik3_conf_providers:
