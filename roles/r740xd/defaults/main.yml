@@ -373,6 +373,7 @@ nas_traefik3_conf_providers:
     defaultRule: "Host(`traefik.r740xd.home.bealetech`)"
     endpoint: "unix:///var/run/docker.sock"
     exposedByDefault: false
+    constraints: "Label(`org.opencontainers.image.title`, `Traefik`) && LabelRegex(`org.opencontainers.image.version`, `^v3.*`)"
 
 # Dictionary of TLS certificate resolver options.
 # https://doc.traefik.io/traefik/reference/install-configuration/tls/certificate-resolvers/overview/

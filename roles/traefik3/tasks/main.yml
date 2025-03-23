@@ -68,8 +68,17 @@
         _traefik3_dashboard_entrypoints:
           http:
             address: ":{{ traefik3_dashboard_port_insecure }}"
+            reusePort: true
+            http:
+              redirections:
+                entryPoint:
+                  to: https
+                  scheme: https
+
           https:
             address: ":{{ traefik3_dashboard_port_secure }}"
+            reusePort: true
+            asDefault: true
 
     - name: "traefik3 | Dashboard | insecure api entrypoint"
       ansible.builtin.set_fact:
@@ -79,16 +88,19 @@
         _traefik3_dashboard_insecure_entrypoint:
           traefik:
             address: ":8181"
+            reusePort: true
       when: "traefik3_dashboard_api_insecure"
 
     - name: "traefik3 | Dashboard | labels"
       ansible.builtin.set_fact:
         _traefik3_dashboard_labels:
           # "traefik.http.routers.traefik.rule": "Host(`{{ traefik3_dashboard_fqdn }}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
-          "traefik.http.routers.traefik.service": "api@internal"
-          "traefik.http.routers.traefik.entrypoints": "https"
-          "traefik.http.routers.traefik.tls.certresolver": "letsencrypt"
-          "traefik.http.routers.traefik.tls.domains[0].main": "{{ traefik3_dashboard_fqdn }}"
+          "traefik.http.routers.dashboard.rule": "Host(`{{ traefik3_dashboard_fqdn }}`)"
+          "traefik.http.routers.dashboard.service": "api@internal"
+          "traefik.http.routers.dashboard.entrypoints": "https"
+          "traefik.http.routers.dashboard.tls": "true"
+          "traefik.http.routers.dashboard.tls.certresolver": "letsencrypt"
+          "traefik.http.routers.dashboard.tls.domains[0].main": "{{ traefik3_dashboard_fqdn }}"
 
 - name: "traefik3 | Logging options"
   ansible.builtin.set_fact:

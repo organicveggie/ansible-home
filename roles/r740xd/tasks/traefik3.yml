@@ -113,10 +113,13 @@
       letsencrypt:
         acme:
           caServer: "{{ letsencrypt_ca_server_staging }}"
-          # email: "{{ nas_traefik_letsencrypt_email }}"
-          storage: "/etc/traefik/acme/acme.json"
+          email: "{{ nas_traefik_letsencrypt_email }}"
+          # storage: "/etc/traefik/acme/acme.json"
           dnsChallenge:
+            delayBeforeCheck: "10"
             provider: "route53"
+            propagation:
+              delayBeforeChecks: "10s"
             resolvers:
               - "1.1.1.1:53"
               - "8.8.8.8:53" # Use external DNS to verify TXT record changes
@@ -124,7 +127,7 @@
     traefik3_conf_logging_level: "DEBUG"
     traefik3_conf_providers: "{{ nas_traefik3_conf_providers }}"
     traefik3_cpus: "2"
-    traefik3_dashboard_api_insecure: "true"
+    traefik3_dashboard_api_insecure: "false"
     traefik3_dashboard_fqdn: "{{ _nas_traefik3_fqdn }}"
     traefik3_dashboard_middleware_labels: "{{ nas_traefik3_dashboard_middleware_labels }}"
     traefik3_dashboard_middleware_names: "{{ nas_traefik3_dashboard_middleware_names }}"
@@ -133,6 +136,7 @@
       AWS_ACCESS_KEY_ID: "{{ nas_aws_route53_access_key_id }}"
       AWS_SECRET_ACCESS_KEY: "{{ nas_aws_route53_secret_access_key }}"
       AWS_REGION: "{{ nas_aws_route53_region }}"
+      AWS_TTL: "120"
     traefik3_extra_networks: "{{ _nas_traefik_extra_networks }}"
     traefik3_redirect_http: "{{ nas_traefik3_redirect_http }}"
     traefik3_memory: "1G"
