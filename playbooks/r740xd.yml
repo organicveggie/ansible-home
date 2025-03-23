@@ -116,6 +116,7 @@
         # Readarr
         nas_readarr_api_key: "{{ vault_readarr_api_key }}"
         nas_readarr_host_domain: "{{ veggie_base_domain_name }}"
+        nas_readarr_library_path: "{{ vault_readarr_library_path }}"
         # Sabnzbd
         nas_sabnzbd_host_domain: "{{ veggie_base_domain_name }}"
         # Samba

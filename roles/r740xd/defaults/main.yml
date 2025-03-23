@@ -191,6 +191,7 @@ nas_radarr4k_host_domain: null
 ###
 nas_readarr_api_key: null
 nas_readarr_host_domain: null
+nas_readarr_library_path: null
 
 ###
 ### Sabnzbd

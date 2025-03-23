@@ -3,7 +3,7 @@
   community.docker.docker_volume:
     name: "{{ readarr_docker_volume_config_name }}"
 
-- name: "Set Docker mount list for volume mounts"
+- name: "Set Docker mount list for mounts"
   ansible.builtin.set_fact:
     _readarr_docker_mount_list:
       - source: "{{ readarr_docker_volume_config_name }}"
@@ -12,6 +12,11 @@
       - source: "{{ readarr_docker_data_source_path }}"
         target: "/data"
         type: "bind"
+
+- name: "Include additional mount points"
+  ansible.builtin.set_fact:
+    _readarr_docker_mount_list: "{{ _readarr_docker_mount_list + [item] }}"
+  loop: "{{ readarr_docker_extra_mounts | default([]) }}"
 
 - name: "Build container FQDN"
   ansible.builtin.set_fact:

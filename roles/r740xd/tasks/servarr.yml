@@ -2,12 +2,32 @@
 - name: "servarr | Set group id"
   ansible.builtin.set_fact:
     _nas_servarr_gid: "{{ nas_servarr_gid | default(nas_servarr_uid) }}"
-  tags: ["setup"]
+  tags:
+    - "setup"
+    - "cross-seed"
+    - "lidarr"
+    - "prowlarr"
+    - "radarr"
+    - "readarr"
+    - "sabnzbd"
+    - "sonarr"
+    - "syncthing"
+    - "unpackerr"
 
 - name: "servarr | Set group name"
   ansible.builtin.set_fact:
     _nas_servarr_groupname: "{{ nas_servarr_groupname | default(nas_servarr_username) }}"
-  tags: ["setup"]
+  tags:
+    - "setup"
+    - "cross-seed"
+    - "lidarr"
+    - "prowlarr"
+    - "radarr"
+    - "readarr"
+    - "sabnzbd"
+    - "sonarr"
+    - "syncthing"
+    - "unpackerr"
 
 - name: "servarr | Create group"
   ansible.builtin.group:
@@ -99,7 +119,7 @@
     calibre_docker_network: "{{ nas_docker_networks.servarr.name }}"
     calibre_docker_data_source_path: "{{ nas_servarr_path }}"
     calibre_docker_trusted_ips: "{{ nas_docker_networks.servarr.subnet }}"
-  tags: ["setup", "docker"]
+  tags: ["setup", "calibre"]
 
 - name: "servarr | Setup Flaresolverr"
   ansible.builtin.import_role:
@@ -191,6 +211,10 @@
     name: "readarr"
   vars:
     readarr_docker_data_source_path: "{{ nas_servarr_path }}"
+    readarr_docker_extra_mounts:
+      - source: "{{ nas_readarr_library_path }}"
+        target: "/data/books"
+        type: "bind"
     readarr_docker_gid: "{{ _nas_servarr_gid }}"
     readarr_docker_host_domain: "{{ nas_readarr_host_domain }}"
     readarr_docker_host_name: "{{ nas_readarr_host_name }}"

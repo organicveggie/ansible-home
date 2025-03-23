@@ -23,6 +23,10 @@ readarr_docker_timezone: "America/New_York"
 readarr_docker_data_source_path: "/data"
 readarr_docker_volume_config_name: "readarr-config"
 
+# List of additional mounts to add to the container. Each element should be a dictionary
+# matching https://docs.ansible.com/ansible/2.9/modules/docker_container_module.html#parameter-mounts.
+readarr_docker_extra_mounts: []
+
 # Number of vCPUs to allocate to the container.
 readarr_docker_cpus: "2"
 
