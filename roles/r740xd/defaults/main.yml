@@ -341,6 +341,7 @@ nas_time_machine_zfs_dataset: null
 ### Traefik
 ###
 nas_traefik_letsencrypt_ca_server: "https://acme-v02.api.letsencrypt.org/directory"
+# nas_traefik_letsencrypt_ca_server: "https://acme-staging-v02.api.letsencrypt.org/directory"
 nas_traefik_letsencrypt_email: null
 
 ###

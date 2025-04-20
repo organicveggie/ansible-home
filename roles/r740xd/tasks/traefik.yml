@@ -98,6 +98,9 @@
       AWS_ACCESS_KEY_ID: "{{ nas_aws_route53_access_key_id }}"
       AWS_SECRET_ACCESS_KEY: "{{ nas_aws_route53_secret_access_key }}"
       AWS_REGION: "{{ nas_aws_route53_region }}"
+      AWS_POLLING_INTERVAL: "15"
+      AWS_PROPAGATION_TIMEOUT: "900"
+      AWS_TTL: "60"
     traefik_qs_https: "true"
     # traefik_qs_https_redirect: "true"
     traefik_qs_https_le: "true"
@@ -111,9 +114,11 @@
       letsencrypt:
         acme:
           email: "{{ nas_traefik_letsencrypt_email }}"
-          caServer: "{{ traefik_le_ca_server }}"
+          caServer: "{{ nas_traefik_letsencrypt_ca_server }}"
           dnsChallenge:
             provider: route53
+            delayBeforeCheck: "10s"
+            disablePropagationCheck: true
             resolvers:
               - "8.8.8.8:53" # Use external DNS to verify TXT record changes
     traefik_labels:
@@ -132,23 +137,11 @@
       traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: "https"
     traefik_extra_networks: "{{ _nas_traefik_extra_networks }}"
     traefik_confkey_entryPoints: "{{ _nas_traefik_entrypoints }}"
-#       java_http:
-#         address: ":8080"
-#       resilio_sync_tcp:
-#         address: ":55555"
-#       resilio_sync_udp:
-#         address: ":55555/udp"
-#       syncthing_tcp:
-#         address: ":22000"
-#       syncthing_udp:
-#         address: ":22000/udp"
-#       zwavejsui:
-#         address: ":3200"
     traefik_confkey_serversTransport:
       insecureSkipVerify: "true"
     traefik_confkey_log:
       level: INFO
-      # filePath: "/etc/traefik/log/traefik.log"
+      filePath: "/etc/traefik/log/traefik.log"
       # traefik_confkey_accessLog:
     #   filePath: "/etc/traefik/log/traefik-access.log"
     #   bufferingSize: 500
