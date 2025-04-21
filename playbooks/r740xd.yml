@@ -69,6 +69,7 @@
         # Home Assistant
         nas_hass_ecowitt_hass_auth_token: "{{ vault_homeassistant_ecowitt_hass_auth_token }}"
         nas_hass_ecowitt_hass_webhook_id: "{{ vault_homeassistant_ecowitt_hass_webhook_id }}"
+        nas_hass_host_domain: "{{ vault_veggie_home_domain }}"
         nas_hass_latitude: "{{ homeassistant_home_latitude }}"
         nas_hass_longitude: "{{ homeassistant_home_longitude }}"
         nas_hass_pgsql_admin_password: "{{ homeassistant_pgsql_admin_password }}"

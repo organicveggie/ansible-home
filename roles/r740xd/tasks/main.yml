@@ -102,8 +102,6 @@
   tags: ["glances"]
 
 - ansible.builtin.import_tasks: "hass.yml"
-  vars:
-    nas_hass_host_domain: "{{ nas_domain_name }}"
   tags: ["hass", "home-assistant", "homeassistant"]
 
 - ansible.builtin.import_tasks: "influxdb.yml"

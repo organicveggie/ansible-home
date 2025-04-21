@@ -109,8 +109,6 @@ nas_hass_host_domain: null
 nas_hass_host_name: "hass"
 nas_hass_latitude: null
 nas_hass_longitude: null
-nas_hass_pgsql_admin_password: null
-nas_hass_pgsql_init_tempates_dir: null
 nas_hass_timezone: null
 nas_hass_zwave_device: null
 

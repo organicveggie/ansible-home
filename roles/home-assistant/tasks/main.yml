@@ -1,8 +1,111 @@
 ---
-- name: "Setup Home Assistant on Docker"
-  ansible.builtin.import_tasks: "hass.yml"
-  tags: ["docker", "homeassistant", "home-assistant"]
+- name: "Define Home Assistant URL"
+  ansible.builtin.set_fact:
+    _hass_url: "https://{{ hass_host_name }}.{{ hass_host_domain }}"
 
-- name: "Setup Ecowitt to Home Assistant Poxy on Docker"
-  ansible.builtin.import_tasks: "ecowitt.yml"
-  tags: ["docker", "ecowitt"]
+- name: "Define Hass Ecowitt Proxy fqdn"
+  ansible.builtin.set_fact:
+    _hass_ecowitt_fqdn: "ecowitt.{{ hass_host_domain }}"
+
+- include_role:
+    name: "organicveggie.home_assistant_docker"
+  tags: ["docker", "hass", "homeassistant", "service"]
+  vars:
+    hass_docker_host_domain: "{{ hass_host_domain }}"
+    hass_docker_host_name: "{{ hass_host_name }}"
+    hass_docker_network_aliases: "{{ hass_network_aliases }}"
+    hass_docker_network_internal: "{{ hass_network_internal }}"
+    hass_docker_network_name: "{{ hass_network_name }}"
+    hass_docker_network_subnet: "{{ hass_network_subnet }}"
+    hass_docker_network_gateway: "{{ hass_network_gateway }}"
+    hass_docker_home_timezone: "{{ hass_home_timezone }}"
+    hass_docker_url: "{{ hass_url }}"
+    hass_docker_use_volumes: "{{ hass_use_volumes }}"
+    hass_docker_volume_config_name: "{{ hass_volume_config_name }}"
+    hass_docker_web_port: "{{ hass_web_port }}"
+
+- name: "Get info on the Home Assistant Docker config volume"
+  community.docker.docker_volume_info:
+    name: "{{ hass_volume_config_name }}"
+  register: "_conf_volume_info"
+
+- name: "Create Home Assistant config folders - Part 1"
+  ansible.builtin.file:
+    path: "{{ _conf_volume_info.volume.Mountpoint }}/{{ item.path }}"
+    state: "directory"
+    mode: "{{ item.mode }}"
+  with_community.general.filetree: "../templates/hass/"
+  when: "item.state == 'directory'"
+
+- name: "Create Home Assistant config folders - Part 2"
+  ansible.builtin.file:
+    path: "{{ _conf_volume_info.volume.Mountpoint }}/{{ item.path }}"
+    state: "directory"
+    mode: "{{ item.mode }}"
+  with_community.general.filetree: "../files/"
+  when: "item.state == 'directory'"
+
+- name: "Copy Home Assistant templated config files"
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ _conf_volume_info.volume.Mountpoint }}/{{ item.path | splitext | first }}"
+    mode: "0600"
+    owner: "root"
+    group: "root"
+  with_community.general.filetree: "../templates/hass/"
+  when: "item.state == 'file'"
+  notify: "Restart Home Assistant Docker"
+
+- name: "Copy Home Assistant raw config files"
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ _conf_volume_info.volume.Mountpoint }}/{{ item.path }}"
+    mode: "0600"
+    owner: "root"
+    group: "root"
+  with_community.general.filetree: "../files/"
+  when: "item.state == 'file'"
+  notify: "Restart Home Assistant Docker"
+
+- name: "Create Home Assistant placeholder config files"
+  ansible.builtin.file:
+    path: "{{ _conf_volume_info.volume.Mountpoint }}/{{ item }}"
+    mode: "0664"
+    owner: "root"
+    group: "root"
+    state: "touch"
+  loop:
+    - "automations.yaml"
+    - "scenes.yaml"
+    - "scripts.yaml"
+
+- name: "Create Ecowitt to Home Assistant Proxy Docker container" # noqa: args[module]
+  community.docker.docker_container:
+    name: "{{ hass_ecowitt_name }}"
+    image: "{{ hass_ecowitt_docker_image_name }}:{{ hass_ecowitt_docker_image_version }}"
+    pull: true
+    env:
+      "HASS_URL": "{{ _hass_url }}"
+      "HASS_AUTH_TOKEN": "{{ hass_ecowitt_hass_auth_token }}"
+      "HASS_WEBHOOK_ID": "{{ hass_ecowitt_hass_webhook_id }}"
+      "SERVER_PORT": "{{ hass_ecowitt_docker_port }}"
+      "TZ": "{{ hass_home_timezone }}"
+    network_mode: "{{ hass_network_name }}"
+    restart_policy: unless-stopped
+    memory: "{{ hass_ecowitt_docker_memory }}"
+    cpus: "{{ hass_ecowitt_docker_cpus }}"
+    container_default_behavior: "no_defaults"
+    auto_remove: false
+    detach: true
+    init: false
+    interactive: false
+    paused: false
+    privileged: false
+    read_only: false
+    tty: false
+    labels:
+      "traefik.enable": "true"
+      "traefik.http.routers.hass_ecowitt.rule": "Host(`{{ _hass_ecowitt_fqdn }}`)"
+      "traefik.http.routers.hass_ecowitt.entrypoints": "http"
+      "traefik.http.routers.hass_ecowitt.priority": "1000"
+      "traefik.http.services.hass_ecowitt.loadbalancer.server.port": "{{ hass_ecowitt_docker_port }}"

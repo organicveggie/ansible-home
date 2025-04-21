@@ -18,40 +18,17 @@
       - subnet: "{{ nas_docker_networks.hass.subnet }}"
         gateway: "{{ nas_docker_networks.hass.gateway }}"
 
-- name: "hass | Run PostgreSQL setup"
-  ansible.builtin.import_role:
-    name: "hass_postgres_setup"
-  vars:
-    pgsql_init_tempates_dir: "{{ nas_hass_pgsql_init_tempates_dir }}"
-
-- name: "hass | Setup PostgreSQL Docker container"
-  ansible.builtin.import_role:
-    name: "organicveggie.postgres_docker"
-  vars:
-    postgres_docker_admin_password: "{{ nas_hass_pgsql_admin_password }}"
-    postgres_docker_image: "{{ nas_hass_pgsql_image }}"
-    postgres_docker_name: "{{ nas_hass_pgsql_name }}"
-    postgres_docker_network_create: false
-    postgres_docker_network_name: "{{ nas_docker_networks.hass.name }}"
-    postgres_docker_use_volumes: true
-    postgres_docker_volume_init_name: "{{ nas_hass_pgsql_volume_init_name }}"
-    postgres_docker_volume_conf_name: "{{ nas_hass_pgsql_volume_conf_name }}"
-    postgres_docker_volume_data_name: "{{ nas_hass_pgsql_volume_data_name }}"
-    postgres_docker_available_externally: "false"
-    postgres_docker_initscripts:
-      - "{{ nas_hass_pgsql_init_tempates_dir }}/01_create_role_db.sql"
-
-- name: "hass | Setup Z-Wave JS UI container"
-  ansible.builtin.import_role:
-    name: "organicveggie.zwavejsui"
-  vars:
-    zwavejsui_docker_device: "{{ nas_hass_zwave_device }}"
-    zwavejsui_docker_host_domain: "{{ nas_hass_host_domain }}"
-    zwavejsui_docker_network: "{{ nas_docker_networks.hass.name }}"
-    zwavejsui_docker_timezone: "{{ nas_hass_timezone }}"
-  when:
-    - "nas_hass_zwave_device is defined"
-    - "nas_hass_zwave_device not in (None, omit)"
+# - name: "hass | Setup Z-Wave JS UI container"
+#   ansible.builtin.import_role:
+#     name: "organicveggie.zwavejsui"
+#   vars:
+#     zwavejsui_docker_device: "{{ nas_hass_zwave_device }}"
+#     zwavejsui_docker_host_domain: "{{ nas_hass_host_domain }}"
+#     zwavejsui_docker_network: "{{ nas_docker_networks.hass.name }}"
+#     zwavejsui_docker_timezone: "{{ nas_hass_timezone }}"
+#   when:
+#     - "nas_hass_zwave_device is defined"
+#     - "nas_hass_zwave_device not in (None, omit)"
 
 - name: "hass | Setup Home Assistant container"
   ansible.builtin.import_role:
@@ -59,13 +36,16 @@
   vars:
     hass_network_aliases:
       - "{{ _nas_hass_fqdn }}"
+    hass_docker_network_name: "{{ nas_docker_networks.hass.name }}"
+    hass_network_subnet: "{{ nas_docker_networks.hass.subnet }}"
     hass_home_latitude: "{{ nas_hass_latitude }}"
     hass_home_longitude: "{{ nas_hass_longitude }}"
     hass_host_domain: "{{ nas_hass_host_domain }}"
     hass_host_name: "{{ nas_hass_host_name }}"
     hass_home_timezone: "{{ nas_hass_timezone }}"
-    hass_zwave_device: "{{ nas_hass_zwave_device }}"
+    # hass_zwave_device: "{{ nas_hass_zwave_device }}"
     hass_network_name: "{{ nas_docker_networks.hass.name }}"
     hass_ecowitt_hass_auth_token: "{{ nas_hass_ecowitt_hass_auth_token | default(omit) }}"
     hass_ecowitt_hass_webhook_id: "{{ nas_hass_ecowitt_hass_webhook_id | default(omit) }}"
     hass_ecowitt_hass_url: "{{ _nas_hass_ecowitt_url }}"
+
