@@ -94,7 +94,7 @@
   vars:
     traefik_image: "traefik:2.11"
     traefik_container_environment:
-      AWS_HOSTED_ZONE_ID: "{{ nas_aws_route53_hosted_zone_id }}"
+      # AWS_HOSTED_ZONE_ID: "{{ nas_aws_route53_hosted_zone_id }}"
       AWS_ACCESS_KEY_ID: "{{ nas_aws_route53_access_key_id }}"
       AWS_SECRET_ACCESS_KEY: "{{ nas_aws_route53_secret_access_key }}"
       AWS_REGION: "{{ nas_aws_route53_region }}"
