@@ -1,7 +1,7 @@
 ---
 - name: "Define Home Assistant URL"
   ansible.builtin.set_fact:
-    _hass_url: "https://{{ hass_host_name }}.{{ hass_host_domain }}"
+    _hass_url: "http://{{ hass_host_name }}:{{ hass_web_port }}"
 
 - name: "Define Hass Ecowitt Proxy fqdn"
   ansible.builtin.set_fact:
@@ -88,6 +88,7 @@
       "HASS_URL": "{{ _hass_url }}"
       "HASS_AUTH_TOKEN": "{{ hass_ecowitt_hass_auth_token }}"
       "HASS_WEBHOOK_ID": "{{ hass_ecowitt_hass_webhook_id }}"
+      "ECOWITT_PROXY_LOGLEVEL": "INFO"
       "SERVER_PORT": "{{ hass_ecowitt_docker_port }}"
       "TZ": "{{ hass_home_timezone }}"
     network_mode: "{{ hass_network_name }}"
@@ -105,7 +106,17 @@
     tty: false
     labels:
       "traefik.enable": "true"
+      "traefik.docker.network": "{{ hass_network_name }}"
+      # HTTP router
       "traefik.http.routers.hass_ecowitt.rule": "Host(`{{ _hass_ecowitt_fqdn }}`)"
       "traefik.http.routers.hass_ecowitt.entrypoints": "http"
       "traefik.http.routers.hass_ecowitt.priority": "1000"
+      # HTTPS router
+      "traefik.http.routers.hass_ecowitt_secure.rule": "Host(`{{ _hass_ecowitt_fqdn }}`)"
+      "traefik.http.routers.hass_ecowitt_secure.entrypoints": "https"
+      "traefik.http.routers.hass_ecowitt_secure.priority": "1000"
+      "traefik.http.routers.hass_ecowitt_secure.service": "hass_ecowitt"
+      "traefik.http.routers.hass_ecowitt_secure.tls.certresolver": "letsencrypt"
+      "traefik.http.routers.hass_ecowitt_secure.tls.domains[0].main": "*.{{ hass_host_domain }}"
+      # Service
       "traefik.http.services.hass_ecowitt.loadbalancer.server.port": "{{ hass_ecowitt_docker_port }}"

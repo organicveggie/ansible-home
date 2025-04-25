@@ -18,17 +18,17 @@
       - subnet: "{{ nas_docker_networks.hass.subnet }}"
         gateway: "{{ nas_docker_networks.hass.gateway }}"
 
-# - name: "hass | Setup Z-Wave JS UI container"
-#   ansible.builtin.import_role:
-#     name: "organicveggie.zwavejsui"
-#   vars:
-#     zwavejsui_docker_device: "{{ nas_hass_zwave_device }}"
-#     zwavejsui_docker_host_domain: "{{ nas_hass_host_domain }}"
-#     zwavejsui_docker_network: "{{ nas_docker_networks.hass.name }}"
-#     zwavejsui_docker_timezone: "{{ nas_hass_timezone }}"
-#   when:
-#     - "nas_hass_zwave_device is defined"
-#     - "nas_hass_zwave_device not in (None, omit)"
+- name: "hass | Setup Z-Wave JS UI container"
+  ansible.builtin.import_role:
+    name: "organicveggie.zwavejsui"
+  vars:
+    zwavejsui_docker_device: "{{ nas_hass_zwave_device }}"
+    zwavejsui_docker_host_domain: "{{ nas_hass_host_domain }}"
+    zwavejsui_docker_network: "{{ nas_docker_networks.hass.name }}"
+    zwavejsui_docker_timezone: "{{ nas_hass_timezone }}"
+  when:
+    - "nas_hass_zwave_device is defined"
+    - "nas_hass_zwave_device not in (None, omit)"
 
 - name: "hass | Setup Home Assistant container"
   ansible.builtin.import_role:
@@ -43,7 +43,7 @@
     hass_host_domain: "{{ nas_hass_host_domain }}"
     hass_host_name: "{{ nas_hass_host_name }}"
     hass_home_timezone: "{{ nas_hass_timezone }}"
-    # hass_zwave_device: "{{ nas_hass_zwave_device }}"
+    hass_zwave_device: "{{ nas_hass_zwave_device }}"
     hass_network_name: "{{ nas_docker_networks.hass.name }}"
     hass_ecowitt_hass_auth_token: "{{ nas_hass_ecowitt_hass_auth_token | default(omit) }}"
     hass_ecowitt_hass_webhook_id: "{{ nas_hass_ecowitt_hass_webhook_id | default(omit) }}"
