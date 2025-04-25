@@ -129,12 +129,13 @@
       traefik.http.routers.traefik.tls.certresolver: "letsencrypt"
       traefik.http.routers.traefik.tls.domains[0].main: "{{ _nas_traefik_fqdn }}"
       # Global redirect to https
-      traefik.http.routers.http-catchall.rule: "hostregexp(`{host:.+}`)"
-      traefik.http.routers.http-catchall.entrypoints: "http"
-      traefik.http.routers.http-catchall.middlewares: "redirect-to-https"
-      traefik.http.routers.http-catchall.priority: "10"
+      # traefik.http.routers.http-catchall.rule: "hostregexp(`{host:.+}`)" # TODO
+      # traefik.http.routers.http-catchall.rule: "!hostregexp(`{host:ecowitt.*}`)"
+      # traefik.http.routers.http-catchall.entrypoints: "http"
+      # traefik.http.routers.http-catchall.middlewares: "redirect-to-https"
+      # traefik.http.routers.http-catchall.priority: "10"
       # Middleware redirect
-      traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: "https"
+      # traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: "https"
     traefik_extra_networks: "{{ _nas_traefik_extra_networks }}"
     traefik_confkey_entryPoints: "{{ _nas_traefik_entrypoints }}"
     traefik_confkey_serversTransport:
@@ -142,24 +143,26 @@
     traefik_confkey_log:
       level: INFO
       filePath: "/etc/traefik/log/traefik.log"
-      # traefik_confkey_accessLog:
-    #   filePath: "/etc/traefik/log/traefik-access.log"
-    #   bufferingSize: 500
-    #   format: "json"
-    #   fields:
-    #     # defaultMode: "drop"
-    #     names:
-    #       ClientAddr: "drop"
+    traefik_confkey_accessLog:
+      # filePath: "/etc/traefik/log/traefik-access.log"
+      bufferingSize: 500
+      format: "json"
+      fields:
+        defaultMode: "drop"
+        # defaultMode: "keep"
+        names:
+          ClientAddr: "keep"
     #       ClientHost: "keep"
     #       ClientPort: "drop"
     #       ClientUsername: "drop"
     #       DownstreamContentSize: "drop"
-    #       RequestHost: "keep"
+          RequestHost: "keep"
     #       RequestLine: "keep"
-    #       RequestMethod: "keep"
-    #       RequestPath: "keep"
-    #       RequestProtocol: "keep"
-    #       RequestScheme: "keep"
-    #       RouterName": "keep"
-    #       ServiceName: "keep"
-    #       StartLocal: "keep"
+          RequestMethod: "keep"
+          RequestPath: "keep"
+          # RequestProtocol: "keep"
+          RequestScheme: "keep"
+          RouterName": "keep"
+          ServiceName: "keep"
+          StartLocal: "keep"
+          DownstreamStatus: "keep"
