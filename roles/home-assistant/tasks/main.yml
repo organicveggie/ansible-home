@@ -120,3 +120,6 @@
       "traefik.http.routers.hass_ecowitt_secure.tls.domains[0].main": "*.{{ hass_host_domain }}"
       # Service
       "traefik.http.services.hass_ecowitt.loadbalancer.server.port": "{{ hass_ecowitt_docker_port }}"
+      # "traefik.http.services.hass_ecowitt.loadbalancer.healthcheck.path": "/health"
+      # "traefik.http.services.hass_ecowitt.loadbalancer.healthcheck.scheme": "http"
+      # "traefik.http.services.hass_ecowitt.loadbalancer.healthcheck.interval": "10s"
