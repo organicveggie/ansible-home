@@ -213,6 +213,11 @@ nas_time_machine_workgroup: "TMWORKGROUP"
 nas_traefik_http_ports:
   - '80:80'
   - '443:443'
+nas_traefik_zwavejsui_entrypoints:
+  zwavejsui:
+    address: ":3000"
+nas_traefik_zwavejsui_ports:
+  - "3000:3000"
 nas_traefik_syncthings_entrypoints:
   syncthing_tcp:
     address: ":22000"

@@ -24,7 +24,6 @@
     # - "{{ nas_docker_networks.traefik.name }}"
     - "{{ nas_docker_networks.calibre_web.name }}"
     - "{{ nas_docker_networks.glances.name }}"
-    - "{{ nas_docker_networks.hass.name }}"
     - "{{ nas_docker_networks.influxdb.name }}"
     - "{{ nas_docker_networks.navidrome.name }}"
     - "{{ nas_docker_networks.node_red.name }}"
@@ -77,6 +76,29 @@
         - name: "traefik | Enable UniFi Controller entrypoints"
           ansible.builtin.set_fact:
             _nas_traefik_entrypoints: "{{ _nas_traefik_entrypoints | default({}) | combine(nas_traefik_unific_entrypoints) }}"
+
+- name: "traefik | Process Home Assistant network"
+  when: "nas_docker_networks.hass.name | default('') | trim | length > 0"
+  block:
+    - name: "traefik | Check if Home Assistant network exists"
+      community.docker.docker_network_info:
+        name: "{{ nas_docker_networks.hass.name }}"
+      register: "_nas_traefik_hass_network_info"
+
+    - name: "traefik | Configure Traefik for Home Assistant"
+      when: "_nas_traefik_hass_network_info.exists"
+      block:
+        - name: "traefik | Enable Home Assistant extra network"
+          ansible.builtin.set_fact:
+            _nas_traefik_extra_networks: "{{ _nas_traefik_extra_networks | default([]) + [{'name': nas_docker_networks.hass.name}] }}"
+
+        # - name: "traefik | Enable Z-Wave JS UI ports"
+        #   ansible.builtin.set_fact:
+        #     _nas_traefik_extra_ports: "{{ _nas_traefik_extra_ports | default([]) + nas_traefik_zwavejsui_ports }}"
+
+        # - name: "traefik | Enable Z-Wave JS UI entrypoints"
+        #   ansible.builtin.set_fact:
+        #     _nas_traefik_entrypoints: "{{ _nas_traefik_entrypoints | default({}) | combine(nas_traefik_zwavejsui_entrypoints) }}"
 
 - name: "traefik | Define all ports"
   ansible.builtin.set_fact:
