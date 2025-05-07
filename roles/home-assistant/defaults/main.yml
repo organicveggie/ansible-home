@@ -52,3 +52,8 @@ hass_ecowitt_docker_cpus: "1"
 hass_ecowitt_hass_auth_token: "ABCD"
 hass_ecowitt_hass_webhook_id: "1234"
 
+###
+### Devices / Entities
+###
+hass_espresso_machine_device_id: "d94e677d5e0eadbce78ceb5b66116f66"
+hass_espresso_machine_entity_id: "switch.plug_in_appliance_module"

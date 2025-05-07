@@ -1,0 +1,82 @@
+---
+- alias: "Espresso Machine - On"
+  trigger:
+  - platform: time
+    at: "07:00"
+  condition:
+  - condition: template
+    value_template: "{% raw %}{{ not(bool(states('binary_sensor.is_commute_day'))) }}{% endraw %}"
+  - condition: template
+    value_template: "{% raw %}{{ not(bool(states('binary_sensor.is_vacation_mode'))) }}{% endraw %}"
+  action:
+  - type: turn_on
+    device_id: "{{ hass_espresso_machine_device_id }}"
+    entity_id: "{{ hass_espresso_machine_entity_id }}"
+    domain: "switch"
+  mode: "single"
+
+- alias: "Espresso Machine - Off (Weekend)"
+  trigger:
+  - platform: time
+    at: "14:00"
+  condition:
+  - condition: template
+    value_template: "{% raw %}{{ bool(states('binary_sensor.is_weekend')) }}{% endraw %}"
+  - condition: template
+    value_template: "{% raw %}{{ not(bool(states('binary_sensor.is_vacation_mode'))) }}{% endraw %}"
+  action:
+  - type: turn_off
+    device_id: "{{ hass_espresso_machine_device_id }}"
+    entity_id: "{{ hass_espresso_machine_entity_id }}"
+    domain: "switch"
+  mode: "single"
+
+- alias: "Espresso Machine - On (Commute Days)"
+  trigger:
+  - platform: time
+    at: "06:00"
+  condition:
+  - condition: template
+    value_template: "{% raw %}{{ bool(states('binary_sensor.is_commute_day')) }}{% endraw %}"
+  - condition: template
+    value_template: "{% raw %}{{ not(bool(states('binary_sensor.is_vacation_mode'))) }}{% endraw %}"
+  action:
+  - type: turn_on
+    device_id: "{{ hass_espresso_machine_device_id }}"
+    entity_id: "{{ hass_espresso_machine_entity_id }}"
+    domain: "switch"
+  mode: "single"
+
+- alias: "Espresso Machine - Off (Commute Days)"
+  trigger:
+  - platform: time
+    at: "07:45"
+  condition:
+  - condition: template
+    value_template: "{% raw %}{{ bool(states('binary_sensor.is_commute_day')) }}{% endraw %}"
+  - condition: template
+    value_template: "{% raw %}{{ not(bool(states('binary_sensor.is_vacation_mode'))) }}{% endraw %}"
+  action:
+  - type: turn_off
+    device_id: "{{ hass_espresso_machine_device_id }}"
+    entity_id: "{{ hass_espresso_machine_entity_id }}"
+    domain: "switch"
+  mode: "single"
+
+- alias: "Espresso Machine - Off (Workday)"
+  trigger:
+  - platform: time
+    at: "12:00"
+  condition:
+  - condition: template
+    value_template: "{% raw %}{{ bool(states('binary_sensor.is_weekday')) }}{% endraw %}"
+  - condition: template
+    value_template: "{% raw %}{{ not(bool(states('binary_sensor.is_commute_day'))) }}{% endraw %}"
+  - condition: template
+    value_template: "{% raw %}{{ not(bool(states('binary_sensor.is_vacation_mode'))) }}{% endraw %}"
+  action:
+  - type: turn_off
+    device_id: "{{ hass_espresso_machine_device_id }}"
+    entity_id: "{{ hass_espresso_machine_entity_id }}"
+    domain: "switch"
+  mode: "single"
