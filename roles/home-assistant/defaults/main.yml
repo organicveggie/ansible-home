@@ -13,7 +13,7 @@ hass_home_longitude: "77.0365"
 hass_home_name: "home"
 
 # Default system of units in the location where Home Assistant is running.
-hass_home_units: "imperial"
+hass_home_units: "us_customary"
 
 hass_host_domain: "example.com"
 hass_host_name: "hass"
