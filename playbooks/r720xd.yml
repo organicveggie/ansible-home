@@ -1,0 +1,14 @@
+---
+- name: "Setup r720xd"
+  hosts: "veggie_nas"
+  remote_user: "sean"
+  become: true
+
+  roles:
+    - name: "Install Docker"
+      ansible.builtin.import_tasks: "docker.yml"
+      tags: ["docker"]
+
+    - name: "Install Portainer"
+      ansible.builtin.import_tasks: "portainer.yml"
+      tags: ["portainer"]
