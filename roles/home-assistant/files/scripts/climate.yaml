@@ -1,0 +1,83 @@
+disable_hvac:
+  alias: Disable HVAC
+  description: ""
+  icon: mdi:hvac-off
+  sequence:
+    - action: climate.set_temperature
+      metadata: {}
+      data:
+        target_temp_high: 80
+        target_temp_low: 60
+        hvac_mode: fan_only
+      target:
+        device_id: 2261a489df17ce2f6c6bf1b58cb582f4
+    - action: climate.set_fan_mode
+      metadata: {}
+      data:
+        fan_mode: schedule
+      target:
+        device_id: 2261a489df17ce2f6c6bf1b58cb582f4
+
+reset_hvac_heat_cool:
+  alias: Reset HVAC heat/cool
+  description: ""
+  icon: mdi:hvac
+  sequence:
+    - action: climate.set_temperature
+      metadata: {}
+      data:
+        target_temp_high: 75
+        target_temp_low: 68
+        hvac_mode: heat_cool
+      target:
+        device_id: 2261a489df17ce2f6c6bf1b58cb582f4
+    - action: climate.set_fan_mode
+      metadata: {}
+      data:
+        fan_mode: schedule
+      target:
+        device_id: 2261a489df17ce2f6c6bf1b58cb582f4
+
+hvac_off:
+  alias: Turn HVAC off
+  description: ""
+  icon: mdi:hvac-off
+  sequence:
+    - action: climate.set_fan_mode
+      metadata: {}
+      data:
+        fan_mode: "off"
+      target:
+        device_id: 2261a489df17ce2f6c6bf1b58cb582f4
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 5
+        milliseconds: 0
+    - action: climate.turn_off
+      metadata: {}
+      data: {}
+      target:
+        device_id: 2261a489df17ce2f6c6bf1b58cb582f4
+
+hvac_on:
+  alias: Turn HVAC on
+  description: ""
+  icon: mdi:hvac
+  sequence:
+    - action: climate.turn_on
+      metadata: {}
+      data: {}
+      target:
+        device_id: 2261a489df17ce2f6c6bf1b58cb582f4
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 5
+        milliseconds: 0
+    - action: climate.set_fan_mode
+      metadata: {}
+      data:
+        fan_mode: schedule
+      target:
+        device_id: 2261a489df17ce2f6c6bf1b58cb582f4

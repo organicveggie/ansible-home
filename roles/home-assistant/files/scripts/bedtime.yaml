@@ -1,18 +1,9 @@
-bedtime_cleanup:
+bedtime_shutdown:
+  alias: "Bedtime shutdown"
+  description: "Reset HVAC setings and turn off lights"
   sequence:
-    # Turn the thermostat on and set it to Heat/Cool
-    - action: climate.set_hvac_mode
-      metadata: {}
-      data:
-        hvac_mode: heat_cool
-      target:
-        entity_id: climate.other_thermostat
-
-    # Set the thermostat fan to run on a schedule
-    - device_id: 2261a489df17ce2f6c6bf1b58cb582f4
-      domain: select
-      entity_id: select.other_thermostat_fan_speed
-      type: select_last
+    # Reset the HVAC system to normal heat/cool settings.
+    - action: script.reset_hvac_heat_cool
 
     # Turn off all of the inside lights
     - action: light.turn_off
