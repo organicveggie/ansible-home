@@ -1,0 +1,45 @@
+views:
+  - title: Home
+    type: masonry
+    icon: mdi:home
+    visible:
+      - user: 9d9c904a165043318dbe0e934b9df8cc
+      - user: 6b0ba59246e8436daedbbd88f6f6fe04
+    cards:
+      - type: light
+        entity: light.dining_room
+      - type: light
+        entity: light.living_room
+      - type: thermostat
+        entity: climate.other_thermostat
+        features:
+          - type: climate-hvac-modes
+      - type: custom:apexcharts-card
+        graph_span: 30h
+        header:
+          show: true
+          title: Outside
+          show_states: true
+          colorize_states: true
+        series:
+          - entity: sensor.gw1000b_pro_outdoor_temperature
+            name: Temp
+            yaxis_id: temp
+            stroke_width: 3
+            show:
+              extremas: true
+              legend_value: false
+          - entity: sensor.gw1000b_pro_humidity
+            name: Humidity
+            yaxis_id: humidity
+            stroke_width: 2
+            show:
+              extremas: true
+              legend_value: false
+        yaxis:
+          - id: temp
+          - id: humidity
+            opposite: true
+            decimals: 0
+            min: ~20
+            max: ~100

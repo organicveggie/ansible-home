@@ -30,3 +30,13 @@ template: !include_dir_merge_list templates
 frontend:
   extra_module_url:
     - /www/community/lovelace-card-mod/card-mod.js
+
+lovelace:
+  mode: "storage"
+  dashboards:
+    quick-yaml:
+      mode: "yaml"
+      title: "Quick"
+      icon: "mdi:clock-fast"
+      show_in_sidebar: true
+      filename: "dashboards/quick.yaml"
