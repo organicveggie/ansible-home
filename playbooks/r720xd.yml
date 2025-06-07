@@ -4,10 +4,8 @@
   remote_user: "sean"
   become: true
 
-  roles:
-    - name: "Install Docker"
-      ansible.builtin.import_tasks: "docker.yml"
-      tags: ["docker"]
+- ansible.builtin.import_playbook: "docker.yml"
+  tags: ["docker"]
 
     - name: "Install Portainer"
       ansible.builtin.import_tasks: "portainer.yml"
