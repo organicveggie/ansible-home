@@ -7,6 +7,7 @@ acme_route53_hosted_zone_id: "{{ vault_acme_route53_hosted_zone_id }}"
 letsencrypt_aws_access_key: "{{ vault_letsencrypt_aws_access_key }}"
 letsencrypt_aws_secret_key: "{{ vault_letsencrypt_aws_secret_key }}"
 letsencrypt_email: "{{ primary_email_address }}"
+route53_xyz_hosted_zone_id: "{{ vault_route53_xyz_hosted_zone_id }}"
 
 ###
 ### AWS

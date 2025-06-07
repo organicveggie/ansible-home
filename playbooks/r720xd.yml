@@ -7,6 +7,5 @@
 - ansible.builtin.import_playbook: "docker.yml"
   tags: ["docker"]
 
-    - name: "Install Portainer"
-      ansible.builtin.import_tasks: "portainer.yml"
-      tags: ["portainer"]
+- ansible.builtin.import_playbook: "traefik3.yml"
+  tags: ["traefik3"]
