@@ -1,0 +1,13 @@
+---
+- binary_sensor:
+  - name: "Is HVAC heat temp disabled"
+    state: >
+      {%raw%}{{ state_attr("climate.other_thermostat", "min_temp")|int(0) <={%endraw%} {{ hass_hvac_disable_temp_heat }} {%raw%}}}{%endraw%}
+
+  - name: "Is HVAC cool temp disabled"
+    state: >
+      {%raw%}{{ state_attr("climate.other_thermostat", "max_temp")|int(100) >={%endraw%} {{ hass_hvac_disable_temp_cool }} {%raw%}}}{%endraw%}
+
+  - name: "Is HVAC disabled"
+    state: >
+      {%raw%}{{ states("sensor.is_hvac_cool_temp_disabled") and states("sensor.is_hvac_heat_temp_disabled") }}{%endraw%}

@@ -6,17 +6,17 @@ disable_hvac:
     - action: climate.set_temperature
       metadata: {}
       data:
-        target_temp_high: 80
-        target_temp_low: 60
+        target_temp_high: "{{ hass_hvac_disable_temp_cool }}"
+        target_temp_low: "{{ hass_hvac_disable_temp_heat }}"
         hvac_mode: fan_only
       target:
-        device_id: 2261a489df17ce2f6c6bf1b58cb582f4
+        device_id: "{{ hass_hvac_thermostat_device_id }}"
     - action: climate.set_fan_mode
       metadata: {}
       data:
         fan_mode: schedule
       target:
-        device_id: 2261a489df17ce2f6c6bf1b58cb582f4
+        device_id: "{{ hass_hvac_thermostat_device_id }}"
 
 reset_hvac_heat_cool:
   alias: Reset HVAC heat/cool
@@ -26,17 +26,17 @@ reset_hvac_heat_cool:
     - action: climate.set_temperature
       metadata: {}
       data:
-        target_temp_high: 75
-        target_temp_low: 68
+        target_temp_high: "{{ hass_hvac_enable_temp_cool }}"
+        target_temp_low: "{{ hass_hvac_enable_temp_heat }}"
         hvac_mode: heat_cool
       target:
-        device_id: 2261a489df17ce2f6c6bf1b58cb582f4
+        device_id: "{{ hass_hvac_thermostat_device_id }}"
     - action: climate.set_fan_mode
       metadata: {}
       data:
         fan_mode: schedule
       target:
-        device_id: 2261a489df17ce2f6c6bf1b58cb582f4
+        device_id: "{{ hass_hvac_thermostat_device_id }}"
 
 hvac_off:
   alias: Turn HVAC off
@@ -48,7 +48,7 @@ hvac_off:
       data:
         fan_mode: "off"
       target:
-        device_id: 2261a489df17ce2f6c6bf1b58cb582f4
+        device_id: "{{ hass_hvac_thermostat_device_id }}"
     - delay:
         hours: 0
         minutes: 0
@@ -58,7 +58,7 @@ hvac_off:
       metadata: {}
       data: {}
       target:
-        device_id: 2261a489df17ce2f6c6bf1b58cb582f4
+        device_id: "{{ hass_hvac_thermostat_device_id }}"
 
 hvac_on:
   alias: Turn HVAC on
@@ -69,7 +69,7 @@ hvac_on:
       metadata: {}
       data: {}
       target:
-        device_id: 2261a489df17ce2f6c6bf1b58cb582f4
+        device_id: "{{ hass_hvac_thermostat_device_id }}"
     - delay:
         hours: 0
         minutes: 0
@@ -80,4 +80,4 @@ hvac_on:
       data:
         fan_mode: schedule
       target:
-        device_id: 2261a489df17ce2f6c6bf1b58cb582f4
+        device_id: "{{ hass_hvac_thermostat_device_id }}"

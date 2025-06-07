@@ -57,3 +57,12 @@ hass_ecowitt_hass_webhook_id: "1234"
 ###
 hass_espresso_machine_device_id: "d94e677d5e0eadbce78ceb5b66116f66"
 hass_espresso_machine_entity_id: "switch.plug_in_appliance_module"
+
+###
+### HVAC
+###
+hass_hvac_thermostat_device_id: "2261a489df17ce2f6c6bf1b58cb582f4"
+hass_hvac_disable_temp_heat: "55"
+hass_hvac_disable_temp_cool: "85"
+hass_hvac_enable_temp_heat: "68"
+hass_hvac_enable_temp_cool: "75"
