@@ -1,0 +1,128 @@
+views:
+  - title: Home
+    type: masonry
+    icon: mdi:tablet-cellphone
+    cards:
+      - type: entities
+        entities:
+          - entity: sensor.gw1000b_pro_outdoor_temperature
+            type: custom:multiple-entity-row
+            name: Humidity / Temperature
+            show_state: false
+            card_mod:
+              style: |
+                :host {
+                  color: green
+                  font-weight: bold
+                  font-size: x-large
+                }
+            entities:
+              - entity: sensor.gw1000b_pro_humidity
+                '--name': humidity
+                name: false
+                format: precision0
+                styles:
+                  font-size: large
+              - entity: sensor.gw1000b_pro_outdoor_temperature
+                '--name': temp
+                name: false
+                format: precision1
+                styles:
+                  font-weight: bold
+                  font-size: large
+        state_color: true
+        grid_options: null
+        title: Outside
+      - type: entities
+        entities:
+          - entity: sensor.gw1000b_pro_indoor_temperature
+            type: custom:multiple-entity-row
+            name: Atrium
+            show_state: false
+            entities:
+              - entity: sensor.gw1000b_pro_indoor_humidity
+                name: humidity
+              - entity: sensor.gw1000b_pro_indoor_temperature
+                name: temp
+          - type: section
+          - entity: sensor.gw1000b_pro_temperature_1
+            type: custom:multiple-entity-row
+            name: Garage
+            show_state: false
+            entities:
+              - entity: sensor.gw1000b_pro_humidity_1
+                name: humidity
+              - entity: sensor.gw1000b_pro_temperature_1
+                name: temp
+          - type: section
+          - entity: sensor.gw1000b_pro_outdoor_temperature
+            type: custom:multiple-entity-row
+            name: Outside
+            show_state: false
+            entities:
+              - entity: sensor.gw1000b_pro_humidity
+                name: humidity
+              - entity: sensor.gw1000b_pro_outdoor_temperature
+                name: temp
+          - type: section
+          - entity: sensor.gw1000b_pro_temperature_4
+            type: custom:multiple-entity-row
+            name: Primary Bedroom
+            show_state: false
+            entities:
+              - entity: sensor.gw1000b_pro_humidity_4
+                name: humidity
+              - entity: sensor.gw1000b_pro_temperature_4
+                name: temp
+          - type: section
+          - entity: sensor.gw1000b_pro_temperature_2
+            type: custom:multiple-entity-row
+            name: Wine Fridge
+            show_state: false
+            entities:
+              - entity: sensor.gw1000b_pro_humidity_2
+                name: humidity
+              - entity: sensor.gw1000b_pro_temperature_2
+                name: temp
+        state_color: false
+        title: Temperatures
+      - type: custom:bubble-card
+        card_type: climate
+        entity: climate.other_thermostat
+        sub_button:
+          - name: HVAC modes menu
+            select_attribute: hvac_modes
+            state_background: false
+            show_arrow: false
+        force_icon: true
+        show_name: true
+        show_state: false
+        show_last_changed: false
+        show_attribute: true
+        hide_target_temp_low: false
+        state_color: false
+        name: Thermostat
+        icon: mdi:heat-pump-outline
+        show_icon: true
+        attribute: current_temperature
+        card_layout: large
+      - type: vertical-stack
+        cards:
+          - type: custom:big-slider-card
+            entity: light.dining_room
+            bold_text: true
+          - type: custom:big-slider-card
+            entity: light.ceiling_cans
+            name: Kitchen
+            bold_text: true
+          - type: custom:big-slider-card
+            entity: light.living_room
+            bold_text: true
+          - type: custom:big-slider-card
+            entity: light.wine_fridge
+            bold_text: true
+      - type: entities
+        entities:
+          - entity: switch.water_circulator_switch
+            name: Bathroom hot water
+          - entity: switch.plug_in_appliance_module
