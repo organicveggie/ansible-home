@@ -1,0 +1,40 @@
+---
+- sensor:
+  - name: "Wind Direction Text"
+    state: >
+      {% set wind_dir = states("sensor.gw1000b_pro_wind_direction") | int(0) %}
+      {% if wind_dir >= 348 or wind_dir < 11 %}
+        N
+      {% elif wind_dir >= 11 and wind_dir < 33 %}
+        NNE
+      {% elif wind_dir >= 33 and wind_dir < 56 %}
+        NE
+      {% elif wind_dir >= 56 and wind_dir < 78 %}
+        ENE
+      {% elif wind_dir >= 79 and wind_dir < 101 %}
+        E
+      {% elif wind_dir >= 101 and wind_dir < 124 %}
+        ESE
+      {% elif wind_dir >= 124 and wind_dir < 146 %}
+        SE
+      {% elif wind_dir >= 146 and wind_dir < 169 %}
+        SSE
+      {% elif wind_dir >= 169 and wind_dir < 191 %}
+        S
+      {% elif wind_dir >= 191 and wind_dir < 214 %}
+        SSW
+      {% elif wind_dir >= 214 and wind_dir < 236 %}
+        SW
+      {% elif wind_dir >= 236 and wind_dir < 259 %}
+        WSW
+      {% elif wind_dir >= 259 and wind_dir < 281 %}
+        W
+      {% elif wind_dir >= 281 and wind_dir < 304 %}
+        WNW
+      {% elif wind_dir >= 304 and wind_dir < 326 %}
+        NW
+      {% elif wind_dir >= 326 and wind_dir < 348 %}
+        NNW
+      {% else %}
+        UNKNOWN
+      {% endif %}
