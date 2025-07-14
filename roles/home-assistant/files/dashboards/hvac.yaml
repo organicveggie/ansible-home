@@ -1,0 +1,94 @@
+views:
+  - title: HVAC
+    type: custom:grid-layout
+    cards:
+      - type: custom:bubble-card
+        card_type: climate
+        entity: climate.other_thermostat
+        sub_button:
+          - name: HVAC modes menu
+            select_attribute: hvac_modes
+            state_background: false
+            show_arrow: false
+        card_layout: large
+      - type: custom:button-card
+        entity: climate.other_thermostat
+        icon: mdi:hvac-off
+        color_type: card
+        name: Disable HVAC
+        show_state: false
+        show_last_changed: false
+        size: 60px
+        style:
+          height: 100px
+        tap_action:
+          action: call-service
+          service: script.disable_hvac
+      - type: custom:button-card
+        entity: climate.other_thermostat
+        icon: mdi:heat-pump-outline
+        color_type: card
+        name: Re-enable HVAC
+        show_state: false
+        show_last_changed: false
+        size: 60px
+        style:
+          height: 100px
+        tap_action:
+          action: call-service
+          service: script.reset_hvac_heat_cool
+      - type: custom:button-card
+        entity: climate.other_thermostat
+        icon: mdi:hvac-off
+        color_type: card
+        name: Turn HVAC off
+        show_state: false
+        show_last_changed: false
+        size: 60px
+        style:
+          height: 100px
+        tap_action:
+          action: call-service
+          service: script.hvac_off
+        card_mod:
+          style: |
+            {% if states('climate.other_thermostat') == 'off' %}
+             ha-card {
+              background-color: gray !important;
+              pointer-events: none;
+            }
+            {% endif %}
+      - type: custom:button-card
+        entity: climate.other_thermostat
+        icon: mdi:hvac
+        color_type: card
+        name: Turn HVAC on
+        show_state: false
+        show_last_changed: false
+        size: 60px
+        style:
+          height: 100px
+        tap_action:
+          action: call-service
+          service: script.hvac_on
+        card_mod:
+          style: |
+            {% if states('climate.other_thermostat') == 'heat_cool' %}
+             ha-card {
+              background-color: gray !important;
+              pointer-events: none;
+            }
+            {% endif %}
+      - type: custom:button-card
+        icon: mdi:bed
+        color_type: card
+        name: Bed time
+        show_state: false
+        show_last_changed: false
+        size: 60px
+        style:
+          height: 100px
+        tap_action:
+          action: call-service
+          service: script.bedtime_shutdown
+          type: custom:button-card
