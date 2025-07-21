@@ -17,8 +17,8 @@ r720xd_extra_packages:
 ### Docker
 ###
 r720xd_docker_networks:
-  traefik:
-    name: "traefik"
+  traefik3:
+    name: "traefik3"
     gateway: "172.40.1.1"
     subnet: "172.40.1.0/24"
   portainer:

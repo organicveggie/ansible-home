@@ -25,3 +25,7 @@
 - name: "Install Portainer"
   ansible.builtin.import_tasks: "portainer.yml"
   tags: ["portainer"]
+
+- name: "Install Traefik3"
+  ansible.builtin.import_tasks: "traefik3.yml"
+  tags: ["traefik", "traefik3"]
