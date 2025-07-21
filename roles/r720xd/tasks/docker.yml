@@ -1,0 +1,24 @@
+---
+- name: "docker | Install Pip"
+  ansible.builtin.import_role:
+    name: "geerlingguy.pip"
+
+- name: "docker | Install Docker"
+  ansible.builtin.import_role:
+    name: "geerlingguy.docker"
+  vars:
+    docker_add_repo: true
+    docker_home: "{{ r720xd_docker_home_docker_home }}"
+    docker_daemon_options:
+      storage-driver: "zfs"
+      data-root: "{{ r720xd_docker_home }}/data"
+    docker_install_compose_plugin: true
+    docker_compose_package: "docker-compose-plugin"
+    docker_compose_package_state: present
+
+- name: "docker | Add users to group"
+  ansible.builtin.user:
+    append: true
+    groups: ["docker"]
+    name: "{{ item }}"
+  loop: "{{ r720xd_docker_users | default([]) }}"

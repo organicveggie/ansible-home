@@ -1,0 +1,30 @@
+---
+# defaults file for r720xd
+
+##########
+# Docker
+##########
+
+# Main folder for Docker files.
+r720xd_docker_home: "/var/lib/docker"
+
+r720xd_docker_users: []
+
+##########
+# Host
+##########
+
+r720xd_admin_username: "admin"
+r720xd_admin_passwd: "password"
+
+# Base domain name for machine and containers running on it.
+r720xd_fqdn: "host.subdomain.example.com"
+
+# Base domain for the entire site / location.
+r720xd_site_domain: "subdomain.example.com"
+
+r720xd_timezone: "America/New_York"
+
+# List of dictionaries of Linux users to create. Each entry in the list should be a dictionary
+# in the form to match ansible.builtin.user.
+r720xd_users: []
