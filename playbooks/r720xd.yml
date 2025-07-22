@@ -1,0 +1,17 @@
+---
+- name: "Setup r720 servers"
+  hosts: "r720"
+  remote_user: "sean"
+  become: true
+
+  roles:
+    - role: "r720xd"
+      vars:
+        # Docker
+        r720xd_docker_home: "{{ vault_r720xd_docker_home }}"
+        r720xd_docker_users: "{{ docker_users }}"
+        # Host
+        r720xd_fqdn: "{{ vault_r720xd_fqdn }}"
+        r720xd_site_domain: "{{ server_site_domain }}"
+        r720xd_timezone: "{{ server_timezone }}"
+        r720xd_users: []

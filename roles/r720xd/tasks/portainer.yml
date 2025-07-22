@@ -1,0 +1,18 @@
+---
+- name: "portainer | Create Portainer Docker network"
+  community.docker.docker_network:
+    name: "{{ r720xd_docker_networks.portainer.name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "no"
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ r720xd_docker_networks.portainer.subnet }}"
+        gateway: "{{ r720xd_docker_networks.portainer.gateway }}"
+
+- name: "portainer | Launch Portainer container"
+  ansible.builtin.import_role:
+    name: "portainer"
+  vars:
+    portainer_docker_home: "{{ r720xd_docker_home }}"
+    portainer_host_domain: "{{ r720xd_fqdn }}"

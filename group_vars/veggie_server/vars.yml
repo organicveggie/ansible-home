@@ -1,0 +1,19 @@
+---
+###
+### Docker
+###
+docker_users: "{{ vault_docker_users }}"
+
+###
+### Portainer
+###
+portainer_admin_password: "{{ vault_portainer_admin_password }}"
+
+###
+### Server Common
+###
+server_admin_email: "{{ vault_server_admin_email }}"
+server_latitude: "{{ vault_server_latitude }}"
+server_longitude: "{{ vault_server_longitude }}"
+server_site_domain: "{{ vault_server_site_domain }}"
+server_timezone: "{{ vault_server_timezone }}"

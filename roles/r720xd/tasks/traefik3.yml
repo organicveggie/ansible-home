@@ -1,0 +1,11 @@
+---
+- name: "traefik3 | Create Traefik3 Docker network"
+  community.docker.docker_network:
+    name: "{{ r720xd_docker_networks.traefik3.name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "no"
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ r720xd_docker_networks.traefik3.subnet }}"
+        gateway: "{{ r720xd_docker_networks.traefik3.gateway }}"

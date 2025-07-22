@@ -1,0 +1,32 @@
+api:
+  dashboard: true
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
+      # caServer: https://acme-v02.api.letsencrypt.org/directory
+      dnsChallenge:
+        delayBeforeCheck: "10s"
+        disablePropagationCheck: true
+        provider: "route53"
+        resolvers:
+          - "8.8.8.8:53"
+      email: "{{ traefik3_docker_letsencrypt_email }}"
+
+entryPoints:
+  http:
+    address: ":80"
+  https:
+    address: ":443"
+
+log:
+    filePath: "/etc/traefik/log/traefik.log"
+    level: "INFO"
+
+
+providers:
+  docker:
+    defaultRule: "Host(`traefik3.r720xd.350mva.xyz`)"
+    exposedByDefault: false
+  

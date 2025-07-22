@@ -1,0 +1,21 @@
+---
+###
+### Docker
+###
+nas_docker_zfs_dataset: "nas/data/docker"
+nas_docker_home: "/mnt/{{ nas_docker_zfs_dataset }}"
+
+nas_docker_networks:
+  traefik3:
+    name: "traefik3"
+    gateway: "172.31.1.1"
+    subnet: "172.31.1.0/24"
+
+###
+### Veggie Common
+###
+veggie_base_domain_name: "{{ veggie_domain }}"
+veggie_domain: "{{ vault_veggie_domain }}"
+veggie_fqdn: "{{ veggie_hostname }}.{{ veggie_domain }}"
+veggie_hostname: "{{ vault_veggie_hostname }}"
+veggie_nas_domain_name: "{{ veggie_fqdn }}"

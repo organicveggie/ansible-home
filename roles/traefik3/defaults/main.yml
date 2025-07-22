@@ -1,0 +1,53 @@
+---
+# defaults file for traefik3
+
+#####
+# Container settings
+#####
+
+# Name of the Docker container.
+traefik3_docker_name: "traefik3"
+
+# Base name of the Docker image to use for the container.
+traefik3_docker_image: "traefik"
+
+# Specific Docker image version to use for the container.
+traefik3_docker_image_version: "v3"
+
+traefik3_docker_volume_config_name: "traefik3-config"
+
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+traefik3_docker_extra_labels: {}
+
+# Default Docker network.
+traefik3_docker_network: "traefik3"
+
+# List of additional networks the container should attach to. Elements should be dictionaries like
+# https://docs.ansible.com/ansible/latest/collections/community/docker/docker_container_module.html#parameter-networks.
+traefik3_docker_extra_networks: []
+
+# List of aliases for this container in the default network. These names can be used in the default
+# network to reach this container.
+traefik3_docker_network_aliases: []
+
+# Host name to use for the Traefik endpoint. Combined with [traefik3_docker_host_domain] to form the
+# FQDN for the endpoint.
+traefik3_docker_host_name: "traefik3"
+
+# Domain name to use for the Traefik endpoint. Combined with [traefik3_docker_host_name] to form the
+# FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
+traefik3_docker_host_domain: "example.com"
+
+# Number of vCPUs to allocate to the container.
+traefik3_docker_cpus: "1"
+
+# Amount of memory to allocate to the container.
+traefik3_docker_memory: "1GB"
+
+traefik3_docker_extra_env_vars: {}
+
+traefik3_docker_port_map_list:
+  - '80:80'
+  - '443:443'
+
+traefik3_docker_letsencrypt_email: null

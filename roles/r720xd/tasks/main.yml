@@ -1,0 +1,31 @@
+---
+# tasks file for r720xd
+- name: "Set login banner"
+  ansible.builtin.template:
+    src: "templates/motd.txt.j2"
+    dest: "/etc/motd"
+    mode: "0644"
+  tags: ["motd"]
+
+- name: "Run common operations for all veggie servers"
+  ansible.builtin.import_role:
+    name: "veggie_common"
+  vars:
+    veggie_common_admin_passwd: "{{ r720xd_admin_passwd }}"
+    veggie_common_admin_username: "{{ r720xd_admin_username }}"
+    veggie_common_extra_packages: "{{ r720xd_extra_packages }}"
+    veggie_common_hostname: "{{ r720xd_fqdn }}"
+    veggie_common_timezone: "{{ r720xd_timezone }}"
+  tags: ["common"]
+
+- name: "Install Docker"
+  ansible.builtin.import_tasks: "docker.yml"
+  tags: ["docker"]
+
+- name: "Install Portainer"
+  ansible.builtin.import_tasks: "portainer.yml"
+  tags: ["portainer"]
+
+- name: "Install Traefik3"
+  ansible.builtin.import_tasks: "traefik3.yml"
+  tags: ["traefik", "traefik3"]

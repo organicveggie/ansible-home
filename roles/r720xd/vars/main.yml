@@ -1,0 +1,27 @@
+---
+r720xd_extra_packages:
+  - "smartmontools"
+  - "htop"
+  - "zfsutils-linux"
+  - "bonnie++"
+  - "unzip"
+  - "lm-sensors"
+  # TODO: https://github.com/bcicen/ctop?tab=readme-ov-file#install
+  # - "ctop"
+  - "mbuffer"
+  - "net-tools"
+  - "screen"
+  - "tmux"
+
+###
+### Docker
+###
+r720xd_docker_networks:
+  traefik3:
+    name: "traefik3"
+    gateway: "172.40.1.1"
+    subnet: "172.40.1.0/24"
+  portainer:
+    name: "portainer"
+    gateway: "172.40.2.1"
+    subnet: "172.40.2.0/24"

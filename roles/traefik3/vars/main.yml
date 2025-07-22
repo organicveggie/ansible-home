@@ -1,0 +1,6 @@
+---
+# vars file for traefik3
+
+traefik3_docker_bind_mounts:
+  "/etc/localtime": "/etc/localtime"
+  "/var/run/docker.sock": "/var/run/docker.sock"
