@@ -1,5 +1,8 @@
 ---
 # tasks file for traefik3
+- name: "traefik3 | Build container FQDN"
+  ansible.builtin.set_fact:
+    _traefik3_docker_fqdn: "{{ traefik3_docker_host_name }}.{{ traefik3_docker_host_domain }}"
 
 - name: "traefik3 | Create container volumes"
   community.docker.docker_volume:
@@ -63,6 +66,16 @@
 - name: "traefik3 | Dashboard"
   when: "traefik3_dashboard_enabled"
   block:
+    - name: "traefik3 | Dashboard | Set default FQDN"
+      ansible.builtin.set_fact:
+        _traefik3_dashboard_fqdn: "{{ _traefik3_docker_fqdn }}"
+      when: "traefik3_dashboard_fqdn | default('') | length <= 0"
+
+    - name: "traefik3 | Dashboard | Use explicitly defined FQDN"
+      ansible.builtin.set_fact:
+        _traefik3_dashboard_fqdn: "{{ traefik3_dashboard_fqdn }}"
+      when: "traefik3_dashboard_fqdn | default('') | length > 0"
+
     - name: "traefik3 | Dashboard | entrypoints"
       ansible.builtin.set_fact:
         _traefik3_dashboard_entrypoints:
@@ -94,13 +107,13 @@
     - name: "traefik3 | Dashboard | labels"
       ansible.builtin.set_fact:
         _traefik3_dashboard_labels:
-          # "traefik.http.routers.traefik.rule": "Host(`{{ traefik3_dashboard_fqdn }}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
-          "traefik.http.routers.dashboard.rule": "Host(`{{ traefik3_dashboard_fqdn }}`)"
+          # "traefik.http.routers.traefik.rule": "Host(`{{ _traefik3_dashboard_fqdn }}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+          "traefik.http.routers.dashboard.rule": "Host(`{{ _traefik3_dashboard_fqdn }}`)"
           "traefik.http.routers.dashboard.service": "api@internal"
           "traefik.http.routers.dashboard.entrypoints": "https"
           "traefik.http.routers.dashboard.tls": "true"
           "traefik.http.routers.dashboard.tls.certresolver": "letsencrypt"
-          "traefik.http.routers.dashboard.tls.domains[0].main": "{{ traefik3_dashboard_fqdn }}"
+          "traefik.http.routers.dashboard.tls.domains[0].main": "{{ _traefik3_dashboard_fqdn }}"
 
 - name: "traefik3 | Logging options"
   ansible.builtin.set_fact:
@@ -137,8 +150,7 @@
 
 - name: "traefik3 | Set Docker mount list for volume mounts"
   ansible.builtin.set_fact:
-    _traefik3_docker_volume_mount_list:
-      {{ _traefik3_bind_mounts + _traefik3_volume_mounts }}
+    _traefik3_docker_volume_mount_list: "{{ _traefik3_bind_mounts + _traefik3_volume_mounts }}"
   vars:
     _traefik3_bind_mounts:
       - source: "/var/run/docker.sock"
@@ -160,7 +172,7 @@
 - name: "traefik3 | Dashboard labels"
   ansible.builtin.set_fact:
     _traefik3_dashboard_labels:
-      "traefik.http.routers.dashboard.rule": "Host(`{{ traefik3_dashboard_fqdn }}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+      "traefik.http.routers.dashboard.rule": "Host(`{{ _traefik3_dashboard_fqdn }}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
       "traefik.http.routers.dashboard.service": "api@internal"
   when: "traefik3_dashboard_enabled"
 
@@ -193,13 +205,9 @@
       {{ __labels_dashboard | combine(__labels_http_redirect) | combine(__labels_traefik_enable) }}
   vars:
     __labels_dashboard: "{{ _traefik3_dashboard_labels | default({}) }}"
-    - "{{ _traefik3_traefik3_http_redirect_labels }}"
+    __labels_http_redirect: "{{ _traefik3_traefik3_http_redirect_labels }}"
     __labels_traefik_enable:
       traefik.enable: "true"
-
-- name: "traefik3 | Debug labels"
-  ansible.builtin.debug:
-    msg: "{{ _traefik3_all_labels }}"
 
 - name: "traefik3 | Create traefik.yml"
   ansible.builtin.template:
@@ -207,14 +215,6 @@
     dest: "{{ _traefik3_docker_volume_path }}/traefik.yml"
     mode: "0664"
   register: "_traefik3_docker_config"
-
-- name: "traefik3 | Debug traefik.yml"
-  ansible.builtin.debug:
-    msg: "{{ _traefik3_docker_volume_path }}/traefik.yml"
-
-- name: "traefik3 | Build container FQDN"
-  ansible.builtin.set_fact:
-    _traefik3_docker_fqdn: "{{ traefik3_docker_host_name }}.{{ traefik3_docker_host_domain }}"
 
 - name: "traefik3 | Create placeholder array for default network"
   ansible.builtin.set_fact:
@@ -250,48 +250,57 @@
       combine({item.key: item.value}) }}"
   loop: "{{ traefik3_docker_extra_env_vars | dict2items }}"
 
-- name: "traefik3 | Define placeholder Docker labels"
-  ansible.builtin.set_fact:
-    _traefik3_docker_labels: "{{ _traefik3_docker_labels | default({}) |
-     combine({item.key: item.value}) }}"
-  loop:
-    - key: "traefik.enable"
-      value: "true"
-    - key: "traefik.http.routers.traefik3.entrypoints"
-      value: "https"
-    - key: "traefik.http.routers.traefik3.service"
-      value: "api@internal"
-    - key: "traefik.http.routers.traefik3.tls.certresolver"
-      value: "letsencrypt"
-    - key: "traefik.http.routers.traefik3.tls.domains[0].main"
-      value: "{{ _traefik3_docker_fqdn }}"
+# - name: "traefik3 | Define placeholder Docker labels"
+#   ansible.builtin.set_fact:
+#     _traefik3_docker_labels: "{{ _traefik3_docker_labels | default({}) |
+#      combine({item.key: item.value}) }}"
+#   loop:
+#     - key: "traefik.enable"
+#       value: "true"
+#     - key: "traefik.http.routers.traefik3.entrypoints"
+#       value: "https"
+#     - key: "traefik.http.routers.traefik3.service"
+#       value: "api@internal"
+#     - key: "traefik.http.routers.traefik3.tls.certresolver"
+#       value: "letsencrypt"
+#     - key: "traefik.http.routers.traefik3.tls.domains[0].main"
+#       value: "{{ _traefik3_docker_fqdn }}"
 
-- name: "traefik3 | Define user-supplied extra Docker labels"
-  ansible.builtin.set_fact:
-    _traefik3_docker_labels: "{{ _traefik3_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
-  loop: "{{ traefik3_docker_extra_labels | dict2items }}"
+# - name: "traefik3 | Define user-supplied extra Docker labels"
+#   ansible.builtin.set_fact:
+#     _traefik3_docker_labels: "{{ _traefik3_docker_labels | default({}) |
+#       combine({item.key: item.value}) }}"
+#   loop: "{{ traefik3_docker_extra_labels | dict2items }}"
 
-- name: "traefik3 | Create Traefik3 Docker container"  # noqa: args[module]
-  community.docker.docker_container:
-    name: "{{ traefik3_docker_name }}"
-    image: "{{ traefik3_docker_image }}:{{ traefik3_docker_image_version }}"
-    pull: true
-    mounts: "{{ _traefik3_docker_volume_mount_list + _traefik3_docker_bind_mount_list }}"
-    env: "{{ _traefik3_docker_env_vars | default({}) }}"
-    network_mode: "{{ traefik3_docker_network }}"
-    networks: "{{ traefik3_docker_extra_networks }}"
-    published_ports: "{{ _traefik3_docker_ports | default([]) }}"    restart: "{{ _traefik3_docker_config.changed | default(false) }}"
-    memory: "{{ traefik3_docker_memory }}"
-    cpus: "{{ traefik3_docker_cpus }}"
-    command_handling: "correct"
-    container_default_behavior: "no_defaults"
-    auto_remove: false
-    detach: true
-    init: true
-    interactive: true
-    paused: false
-    privileged: false
-    read_only: false
-    tty: true
-    labels: "{{ _traefik3_docker_labels }}"
+- name: "traefik3 | Debug container labels"
+  ansible.builtin.debug:
+    msg: "{{ _traefik3_all_labels }}"
+
+- name: "traefik3 | Debug traefik.yml"
+  ansible.builtin.debug:
+    msg: "{{ _traefik3_docker_volume_path }}/traefik.yml"
+
+# - name: "traefik3 | Create Traefik3 Docker container"  # noqa: args[module]
+#   community.docker.docker_container:
+#     name: "{{ traefik3_docker_name }}"
+#     image: "{{ traefik3_docker_image }}:{{ traefik3_docker_image_version }}"
+#     pull: true
+#     mounts: "{{ _traefik3_docker_volume_mount_list + _traefik3_docker_bind_mount_list }}"
+#     env: "{{ _traefik3_docker_env_vars | default({}) }}"
+#     network_mode: "{{ traefik3_docker_network }}"
+#     networks: "{{ traefik3_docker_extra_networks }}"
+#     published_ports: "{{ _traefik3_docker_ports | default([]) }}"
+#     restart: "{{ _traefik3_docker_config.changed | default(false) }}"
+#     memory: "{{ traefik3_docker_memory }}"
+#     cpus: "{{ traefik3_docker_cpus }}"
+#     command_handling: "correct"
+#     container_default_behavior: "no_defaults"
+#     auto_remove: false
+#     detach: true
+#     init: true
+#     interactive: true
+#     paused: false
+#     privileged: false
+#     read_only: false
+#     tty: true
+#     labels: "{{ _traefik3_docker_labels }}"

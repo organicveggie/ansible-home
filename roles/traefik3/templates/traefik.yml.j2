@@ -40,10 +40,6 @@ certificatesResolvers:
 # https://doc.traefik.io/traefik/reference/install-configuration/observability/metrics/
 {{ _traefik3_metrics_all_options | to_nice_yaml(indent=2, width=256) }}
 
-#metrics:
-#  influxDB2:
-#    address: http://localhost:8086
-
 # https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/
 {{ _traefik3_logging_all_options | to_nice_yaml(indent=2, width=256) }}
 
