@@ -1,0 +1,10 @@
+---
+- name: "traefik3 | dashboard router labels | {{ item.field }} | build key/value"
+  ansible.builtin.set_fact:
+    __label_kv: >
+          { "key": "traefik.{{ item.router }}.routers.dashboard.{{ item.field }}", 
+            "value": "{{ item.value }}" }
+
+- name: "traefik3 | dashboard router labels | {{ item.field }} | add to labels"
+  ansible.builtin.set_fact:
+    _traefik3_dashboard_labels: "{{ _traefik3_dashboard_labels | default({}) | combine({__label_kv.key: __label_kv.value}) }}"

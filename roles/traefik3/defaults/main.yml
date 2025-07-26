@@ -49,8 +49,6 @@ traefik3_port_map_list:
   - '80:80'
   - '443:443'
 
-traefik3_letsencrypt_email: null
-
 ###
 ### Docker volumes and folders
 ###
@@ -65,19 +63,15 @@ traefik3_log_volume_name: "traefik3-logs"
 ### Traefik configuration
 ###
 
-traefik3_conf_access_log_buffering_size: "500"
+# traefik3_conf_access_log_buffering_size: 500
 
 # True to enable Traefik access logs.
 traefik3_conf_access_log_enabled: false
 
-traefik3_conf_access_log_fields_default_mode: "keep"
+traefik3_conf_access_log_fields_default_mode: "drop"
 traefik3_conf_access_log_fields_extras: {}
 traefik3_conf_access_log_fields_names:
-  ClientAddr: "drop"
   ClientHost: "keep"
-  ClientPort: "drop"
-  ClientUsername: "drop"
-  DownstreamContentSize: "drop"
   RequestHost: "keep"
   RequestLine: "keep"
   RequestMethod: "keep"
@@ -87,6 +81,14 @@ traefik3_conf_access_log_fields_names:
   RouterName: "keep"
   ServiceName: "keep"
   StartLocal: "keep"
+
+traefik3_conf_access_log_headers_default_mode: "keep"
+traefik3_conf_access_log_headers_extras: {}
+traefik3_conf_access_log_headers_names:
+  # Redact the User-Agent header value
+  User-Agent: redact
+  # Drop the Authorization header value
+  Authorization: drop
 
 # Pathname to the Traefik access log file.
 traefik3_conf_access_log_file: "/var/log/traefik/access.log"
@@ -122,6 +124,18 @@ traefik3_conf_cert_resolvers: null
 traefik3_conf_tracing_enabled: false
 traefik3_conf_tracing_options: {}
 
+###
+### Dashboard
+###
+
+traefik3_dashboard_entrypoint_observability:
+  accessLogs: false
+  metrics: false
+  tracing: false
+
+# Make the insecure (HTTP) to secure (HTTPS) redirect for the dashboard permanent.
+traefik3_dashboard_entrypoint_permanent_redirect: true
+
 # Enable the API in insecure mode, which means that the API will be available directly on the
 # entryPoint named traefik, on path /api.
 traefik3_dashboard_api_insecure: false
@@ -138,11 +152,35 @@ traefik3_dashboard_middleware_names: null
 # Map of label names to values
 traefik3_dashboard_middleware_labels: {}
 
-# HTTP port for the dashboard.
-traefik3_dashboard_port_insecure: "80"
+# Name of HTTP entrypoint for the dashboard
+# traefik3_dashboard_entrypoint_insecure: "http"
 
-# HTTPS port for the dashboard.
-traefik3_dashboard_port_secure: "443"
+# # HTTP port for the dashboard.
+# traefik3_dashboard_entrypoint_insecure_port: "80"
+
+# # Name of the HTTPS entrypoint for the dashboard
+# traefik3_dashboard_entrypoint_secure: "https"
+
+# # HTTPS port for the dashboard.
+# traefik3_dashboard_entrypoint_secure_port: "443"
+
+###
+### Entrypoints
+###
+
+# Name of the HTTP entrypoint
+traefik3_entrypoint_insecure: "http"
+
+# Port for the HTTP entrypoint
+traefik3_entrypoint_insecure_port: "80"
+
+# Name of the HTTPS entrypoint
+traefik3_entrypoint_secure: "https"
+
+# Port for the HTTPS entrypoint
+traefik3_entrypoint_secure_port: "443"
+
+traefik3_trusted_ips: null
 
 # Include a global redirect to https for every http endpoint.
 traefik3_redirect_http: true

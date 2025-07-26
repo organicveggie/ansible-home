@@ -1,12 +1,5 @@
 ---
 # vars file for traefik3
-traefik3_http_redirect_labels:
-  "traefik.http.routers.http-catchall.rule": "hostregexp(`{host:.+}`)"
-  "traefik.http.routers.http-catchall.entrypoints": "http"
-  "traefik.http.routers.http-catchall.middlewares": "redirect-to-https"
-  "traefik.http.routers.http-catchall.priority": "10"
-  "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme": "https"
-
-traefik3_docker_bind_mounts:
+traefik3_bind_mounts:
   "/etc/localtime": "/etc/localtime"
   "/var/run/docker.sock": "/var/run/docker.sock"

@@ -1,0 +1,13 @@
+---
+- name: "{{ _traefik3_role_name | default('traefik3', true) }} | network"
+  block:
+    - name: "{{ _traefik3_role_name | default('traefik3', true) }} | network | Check if {{ item }} network exists"
+      community.docker.docker_network_info:
+        name: "{{ item }}"
+      register: "_network_info"
+
+    - name: "{{ _traefik3_role_name | default('traefik3', true) }} | network | Enable {{ item }} extra network"
+      ansible.builtin.set_fact:
+        _server_traefik3_extra_networks: "{{ _server_traefik3_extra_networks | default([]) + [{'name': item}] }}"
+      when: "_network_info.exists"
+  when: "item | default('', true) | trim | length > 0"

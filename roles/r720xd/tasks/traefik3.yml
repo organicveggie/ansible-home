@@ -9,3 +9,47 @@
     ipam_config:
       - subnet: "{{ r720xd_docker_networks.traefik3.subnet }}"
         gateway: "{{ r720xd_docker_networks.traefik3.gateway }}"
+
+- name: "traefik3 | Process extra networks"
+  ansible.builtin.include_tasks:
+    file: "traefik3_network.yml"
+  loop:
+    - "{{ r720xd_docker_networks.portainer.name }}"
+
+- name: "traefik3 | Setup traefik3 container"
+  ansible.builtin.import_role:
+    name: "traefik3"
+  vars:
+    traefik3_host_domain: "{{ r720xd_fqdn }}"
+    traefik3_timezone: "{{ r720xd_timezone }}"
+    traefik3_conf_providers:
+      docker:
+        endpoint: "unix:///var/run/docker.sock"
+        exposedByDefault: false
+    traefik3_conf_access_log_enabled: true
+    traefik3_conf_logging_extra_options:
+      maxSize: 150
+      maxBackups: 10
+    traefik3_conf_cert_resolvers:
+      letsencrypt:
+        acme:
+          caServer: "{{ r720xd_traefik_letsencrypt_use_prod | ternary(r720xd_letsencrypt_server_prod, r720xd_letsencrypt_server_staging) }}"
+          dnsChallenge:
+            delayBeforeCheck: "10s"
+            disablePropagationCheck: true
+            provider: "route53"
+            resolvers:
+              - "1.1.1.1:53"
+              - "8.8.8.8:53"
+          email: "{{ r720xd_traefik_letsencrypt_email }}"
+    traefik3_conf_logging_level: "INFO"
+    traefik3_redirect_http: "{{ r720xd_traefik_https_redirect }}"
+    traefik3_trusted_ips: "{{ r720xd_traefik_trusted_ips }}"
+    traefik3_extra_env_vars:
+      AWS_ACCESS_KEY_ID: "{{ r720xd_route53_access_key_id }}"
+      AWS_SECRET_ACCESS_KEY: "{{ r720xd_route53_secret_access_key }}"
+      AWS_REGION: "{{ r720xd_route53_region }}"
+      AWS_POLLING_INTERVAL: "{{ r720xd_route53_polling_interval }}"
+      AWS_PROPAGATION_TIMEOUT: "{{ r720xd_route53_propagation_timeout }}"
+      AWS_TTL: "{{ r720xd_route53_ttl }}"
+    traefik3_extra_networks: "{{ _server_traefik3_extra_networks }}"

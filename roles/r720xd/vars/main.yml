@@ -25,3 +25,9 @@ r720xd_docker_networks:
     name: "portainer"
     gateway: "172.40.2.1"
     subnet: "172.40.2.0/24"
+
+###
+### Let's Encrypt
+###
+r720xd_letsencrypt_server_staging: "https://acme-staging-v02.api.letsencrypt.org/directory"
+r720xd_letsencrypt_server_prod: https://acme-v02.api.letsencrypt.org/directory
