@@ -128,9 +128,10 @@ traefik3_conf_tracing_options: {}
 ### Dashboard
 ###
 
+# https://doc.traefik.io/traefik/routing/entrypoints/#observability-options
 traefik3_dashboard_entrypoint_observability:
   accessLogs: false
-  metrics: false
+  metrics: true
   tracing: false
 
 # Make the insecure (HTTP) to secure (HTTPS) redirect for the dashboard permanent.
@@ -148,21 +149,6 @@ traefik3_dashboard_fqdn: null
 
 # List of middleware names 
 traefik3_dashboard_middleware_names: null
-
-# Map of label names to values
-traefik3_dashboard_middleware_labels: {}
-
-# Name of HTTP entrypoint for the dashboard
-# traefik3_dashboard_entrypoint_insecure: "http"
-
-# # HTTP port for the dashboard.
-# traefik3_dashboard_entrypoint_insecure_port: "80"
-
-# # Name of the HTTPS entrypoint for the dashboard
-# traefik3_dashboard_entrypoint_secure: "https"
-
-# # HTTPS port for the dashboard.
-# traefik3_dashboard_entrypoint_secure_port: "443"
 
 ###
 ### Entrypoints

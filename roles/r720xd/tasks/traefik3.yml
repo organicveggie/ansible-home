@@ -53,3 +53,5 @@
       AWS_PROPAGATION_TIMEOUT: "{{ r720xd_route53_propagation_timeout }}"
       AWS_TTL: "{{ r720xd_route53_ttl }}"
     traefik3_extra_networks: "{{ _server_traefik3_extra_networks }}"
+    traefik3_conf_metrics:
+      addInternals: true
