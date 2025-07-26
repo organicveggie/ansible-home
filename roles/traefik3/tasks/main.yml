@@ -49,7 +49,7 @@
                   permanent: "{{ traefik3_dashboard_entrypoint_permanent_redirect }}"
             observability: "{{ traefik3_dashboard_entrypoint_observability | default(omit) }}"
 
-    - name: "traefik3 | Dashboard | insecure entrypoint"
+    - name: "traefik3 | Dashboard | secure entrypoint"
       ansible.builtin.set_fact:
         _traefik3_dashboard_secure_entrypoint: "{ '{{ traefik3_entrypoint_secure }}': {{ __secure_fields }} }"
       vars:
@@ -78,74 +78,38 @@
       when: "traefik3_dashboard_api_insecure"
 
     - name: "traefik3 | Dashboard | middleware"
+      ansible.builtin.set_fact:
+        _traefik3_dashboard_labels: >
+          {{ _traefik3_dashboard_labels | default({}, true) | combine({__key: __value}) }}
+      vars:
+        __key: "traefik.http.routers.dashboard.middlewares"
+        __value: "{{ traefik3_dashboard_middleware_names }}"
       when: "traefik3_dashboard_middleware_names | default('', true) | string | length > 0"
-      block:
-        - name: "traefik3 | Dashboard | middleware | build labels"
-          ansible.builtin.include_tasks:
-            file: "dashboard_label.yml"
-          vars:
-            item:
-              field: "middlewares"
-              router: "{{ traefik3_entrypoint_insecure }}"
-              value: "{{ traefik3_dashboard_middleware_names }}"
 
     - name: "traefik3 | Dashboard | router labels"
-      ansible.builtin.include_tasks:
-        file: "dashboard_label.yml"
-      loop:
-        # - field: "rule"
-        #   router: "{{ traefik3_entrypoint_insecure }}"
-        #   value: "Host(`{{ _traefik3_dashboard_fqdn }}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
-        - field: "service"
-          router: "{{ traefik3_entrypoint_insecure }}"
-          value: "api@internal"
-        - field: "entrypoints"
-          router: "{{ traefik3_entrypoint_insecure }}"
-          value: "{{ traefik3_entrypoint_secure }}"
-        - field: "tls"
-          router: "{{ traefik3_entrypoint_insecure }}"
-          value: "true"
-        - field: "tls.certresolver"
-          router: "{{ traefik3_entrypoint_insecure }}"
-          value: "letsencrypt"
-        - field: "tls.domains[0].main"
-          router: "{{ traefik3_entrypoint_insecure }}"
-          value: "{{ _traefik3_dashboard_fqdn }}"
-
-- name: "traefik3 | Global HTTP-to-HTTPS redirect labels"
-  when: "traefik3_redirect_http | default(true)"
-  block:
-    - name: "traefik3 | redirect labels | assemble"
-      ansible.builtin.include_tasks:
-        file: "extra_labels.yml"
-      loop:
-        - field: "routers.http-catchall.rule"
-          entrypoint: "{{ traefik3_entrypoint_insecure }}"
-          value: "hostregexp(`{host:.+}`)"
-        - field: "routers.http-catchall.entrypoints"
-          entrypoint: "{{ traefik3_entrypoint_insecure }}"
-          value: "{{ traefik3_entrypoint_insecure }}"
-        - field: "routers.http-catchall.middlewares"
-          entrypoint: "{{ traefik3_entrypoint_insecure }}"
-          value: "redirect-to-https"
-        - field: "routers.http-catchall.priorit"
-          entrypoint: "{{ traefik3_entrypoint_insecure }}"
-          value: "10"
-        - field: "middlewares.redirect-to-https.redirectscheme.scheme"
-          entrypoint: "{{ traefik3_entrypoint_insecure }}"
-          value: "https"
-
-    - name: "traefik3 | redirect labels"
       ansible.builtin.set_fact:
-        _traefik3_http_redirect_labels: "{{ _traefik3_extra_labels }}"
+        _traefik3_dashboard_labels: >
+          {{ _traefik3_dashboard_labels | default({}, true) | combine({item.key: item.value}) }}
+      loop:
+        - key: "traefik.http.routers.dashboard.rule"
+          value: "Host(`{{ _traefik3_dashboard_fqdn }}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+        - key: "traefik.http.routers.dashboard.service"
+          value: "api@internal"
+        - key: "traefik.http.routers.dashboard.entrypoints"
+          value: "{{ traefik3_entrypoint_secure }}"
+        - key: "traefik.http.routers.dashboard.tls"
+          value: "true"
+        - key: "traefik.http.routers.dashboard.tls.certresolver"
+          value: "letsencrypt"
+        - key: "traefik.http.routers.dashboard.tls.domains[0].main"
+          value: "{{ _traefik3_dashboard_fqdn }}"
 
 - name: "traefik3 | Define container labels"
   ansible.builtin.set_fact:
     _traefik3_all_labels: >
-      {{ __labels_dashboard | combine(__labels_http_redirect) | combine(__labels_traefik_enable) }}
+      {{ __labels_dashboard | combine(__labels_traefik_enable) }}
   vars:
     __labels_dashboard: "{{ _traefik3_dashboard_labels | default({}, true) }}"
-    __labels_http_redirect: "{{ _traefik3_http_redirect_labels | default({}, true) }}"
     __labels_traefik_enable:
       traefik.enable: "true"
 
@@ -201,7 +165,7 @@
         __access_log_extras: "{{ traefik3_conf_access_log_extra_options | default({}, true) }}"
         __access_logs_filters: "{{ _traefik3_access_log_filters | default({}, true) }}"
         __access_log_options:
-          bufferingSize: "{{ traefik3_conf_access_log_buffering_size | int }}"
+          bufferingSize: "{{ traefik3_conf_access_log_buffering_size | default(0, true) | int }}"
           filePath: "{{ traefik3_conf_access_log_file }}"
           format: "{{ traefik3_conf_access_log_format }}"
           fields:
