@@ -28,6 +28,9 @@
         nas_aws_route53_access_key_id: "{{ vault_nas_aws_route53_access_key_id }}"
         nas_aws_route53_region: "{{ vault_nas_aws_route53_region }}"
         nas_aws_route53_secret_access_key: "{{ vault_nas_aws_route53_secret_access_key }}"
+        # Bazarr
+        nas_bazarr1080_host_domain: "{{ veggie_new_base_domain_name }}"
+        nas_bazarr4k_host_domain: "{{ veggie_new_base_domain_name }}"
         # Calibre Web
         nas_calibre_web_book_dir: "{{ vault_calibre_web_docker_book_dir }}"
         nas_calibre_web_gid: "{{ vault_calibre_web_docker_gid }}"

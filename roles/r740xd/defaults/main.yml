@@ -16,6 +16,16 @@ nas_aws_route53_region: "us-east1"
 nas_aws_route53_secret_access_key: null
 
 ###
+### Bazarr
+###
+nas_bazarr_cpus: "2"
+nas_bazarr_memory: "1GB"
+nas_bazarr_movie_source_path: null
+nas_bazarr_web_port: null # optional
+nas_bazarr1080_host_domain: null
+nas_bazarr4k_host_domain: null
+
+###
 ### Calibre Web
 ###
 nas_calibre_web_book_dir: null

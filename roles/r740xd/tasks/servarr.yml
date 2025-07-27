@@ -4,13 +4,20 @@
     _nas_servarr_gid: "{{ nas_servarr_gid | default(nas_servarr_uid) }}"
   tags:
     - "setup"
+    - "bazarr"
+    - "bazarr1080"
+    - "bazarr4k"
     - "cross-seed"
     - "lidarr"
     - "prowlarr"
     - "radarr"
+    - "radarr1080"
+    - "radarr4k"
     - "readarr"
     - "sabnzbd"
     - "sonarr"
+    - "sonarr1080"
+    - "sonarr4k"
     - "syncthing"
     - "unpackerr"
 
@@ -382,6 +389,42 @@
     cloudflared_docker_tunnel_token: "{{ nas_servarr_cloudflared_token }}"
     cloudflared_docker_network: "{{ nas_docker_networks.servarr.name  }}"
   tags: ["cloudflare", "cloudflared"]
+
+- name: "bazarr | Setup Bazarr 1080p"
+  ansible.builtin.import_role:
+    name: "bazarr"
+  vars:
+    bazarr_docker_cpus: "{{ nas_bazarr_cpus }}"
+    bazarr_docker_gid: "{{ _nas_servarr_gid }}"
+    bazarr_docker_host_domain: "{{ nas_bazarr1080_host_domain }}"
+    bazarr_docker_host_name: "{{ nas_bazarr1080_host_name }}"
+    bazarr_docker_memory: "{{ nas_bazarr_memory }}"
+    bazarr_docker_movie_source_path: "{{ nas_servarr_movie_source_path }}/1080p"
+    bazarr_docker_name: "{{ nas_bazarr1080_container_name }}"
+    bazarr_docker_network_aliases: "{{ nas_bazarr1080_network_aliases }}"
+    bazarr_docker_role_label: "bazarr1080"
+    bazarr_docker_tv_source_path: "{{ nas_servarr_tv_source_path }}/1080p"
+    bazarr_docker_uid: "{{ nas_servarr_uid }}"
+    bazarr_docker_web_port: "{{ nas_bazarr_web_port }}"
+  tags: ["bazarr", "bazarr1080"]
+
+- name: "bazarr | Setup Bazarr 4K"
+  ansible.builtin.import_role:
+    name: "bazarr"
+  vars:
+    bazarr_docker_cpus: "{{ nas_bazarr_cpus }}"
+    bazarr_docker_gid: "{{ _nas_servarr_gid }}"
+    bazarr_docker_host_domain: "{{ nas_bazarr4k_host_domain }}"
+    bazarr_docker_host_name: "{{ nas_bazarr4k_host_name }}"
+    bazarr_docker_memory: "{{ nas_bazarr_memory }}"
+    bazarr_docker_movie_source_path: "{{ nas_servarr_movie_source_path }}/2160p"
+    bazarr_docker_name: "{{ nas_bazarr4k_container_name }}"
+    bazarr_docker_network_aliases: "{{ nas_bazarr4k_network_aliases }}"
+    bazarr_docker_role_label: "bazarr4k"
+    bazarr_docker_tv_source_path: "{{ nas_servarr_tv_source_path }}/2160p"
+    bazarr_docker_uid: "{{ nas_servarr_uid }}"
+    bazarr_docker_web_port: "{{ nas_bazarr_web_port }}"
+  tags: ["bazarr", "bazarr4k"]
 
 - name: "servarr | Logrotate"
   ansible.builtin.include_tasks:

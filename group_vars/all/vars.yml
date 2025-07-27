@@ -27,6 +27,7 @@ home_latitude: "{{ vault_home_latitude }}"
 home_longitude: "{{ vault_home_longitude }}"
 home_timezone: "{{ vault_home_timezone }}"
 veggie_base_domain_name: "{{ vault_veggie_base_domain_name }}"
+veggie_new_base_domain_name: "{{ vault_veggie_new_base_domain_name }}"
 
 ###
 ### Home Assistant
