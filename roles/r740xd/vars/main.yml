@@ -15,6 +15,20 @@ nas_extra_packages:
   - "tmux"
 
 ###
+### Bazarr
+###1
+nas_bazarr1080_config_volume_name: "bazarr1080-config"
+nas_bazarr1080_container_name: "bazarr1080"
+nas_bazarr1080_host_name: "bazarr1080"
+nas_bazarr1080_network_aliases:
+  - "bazarr1080"
+nas_bazarr4k_config_volume_name: "bazarr4k-config"
+nas_bazarr4k_container_name: "bazarr4k"
+nas_bazarr4k_host_name: "bazarr4k"
+nas_bazarr4k_network_aliases:
+  - "bazarr4k"
+
+###
 ### Calibre Web
 ###
 nas_calibre_web_username: "calibre"

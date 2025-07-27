@@ -1,0 +1,3 @@
+---
+# TCP port number to expose to handle HTTP traffic for Bazarr Web UI.
+bazarr_docker_web_port_default: "6767"
