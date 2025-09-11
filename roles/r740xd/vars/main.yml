@@ -116,6 +116,10 @@ nas_docker_networks:
     name: "watchtower"
     gateway: "172.30.17.1"
     subnet: "172.30.17.0/24"
+  traefik3:
+    name: "traefik3"
+    gateway: "172.30.18.1"
+    subnet: "172.30.18.0/24"    
 
 ###
 ### Home Assistant

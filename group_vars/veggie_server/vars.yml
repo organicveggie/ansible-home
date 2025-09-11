@@ -1,5 +1,13 @@
 ---
 ###
+### AWS
+###
+server_aws_route53_access_key_id: "{{ vault_server_aws_route53_access_key_id }}"
+server_aws_route53_secret_access_key: "{{ vault_server_aws_route53_secret_access_key }}"
+server_aws_route53_hosted_zone_id: "{{ vault_server_aws_route53_hosted_zone_id }}"
+server_aws_route53_region: "{{ vault_server_aws_route53_region }}"
+
+###
 ### Docker
 ###
 docker_users: "{{ vault_docker_users }}"
@@ -17,3 +25,8 @@ server_latitude: "{{ vault_server_latitude }}"
 server_longitude: "{{ vault_server_longitude }}"
 server_site_domain: "{{ vault_server_site_domain }}"
 server_timezone: "{{ vault_server_timezone }}"
+
+###
+### Traefik
+###
+server_traefik_trusted_ips: "{{ vault_server_traefik_trusted_ips }}"

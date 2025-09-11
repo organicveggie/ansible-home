@@ -5,12 +5,6 @@
 nas_docker_zfs_dataset: "nas/data/docker"
 nas_docker_home: "/mnt/{{ nas_docker_zfs_dataset }}"
 
-nas_docker_networks:
-  traefik3:
-    name: "traefik3"
-    gateway: "172.31.1.1"
-    subnet: "172.31.1.0/24"
-
 ###
 ### Veggie Common
 ###

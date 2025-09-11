@@ -135,6 +135,7 @@
     traefik_confkey_certificatesResolvers:
       letsencrypt:
         acme:
+          storage: "/etc/traefik/acme/acme.json"
           email: "{{ nas_traefik_letsencrypt_email }}"
           caServer: "{{ nas_traefik_letsencrypt_ca_server }}"
           dnsChallenge:
@@ -142,6 +143,7 @@
             delayBeforeCheck: "10s"
             disablePropagationCheck: true
             resolvers:
+              - "1.1.1.1:53" # Use external DNS to verify TXT record changes
               - "8.8.8.8:53" # Use external DNS to verify TXT record changes
     traefik_labels:
       traefik.enable: "true"

@@ -1,9 +1,18 @@
 ---
 # https://doc.traefik.io/traefik/reference/install-configuration/providers/overview/
 {{ _traefik3_conf_providers | to_nice_yaml(indent=2, width=256) }}
+providers:
+  docker:
+    defaultRule: "Host(`traefik3.r720xd.350mva.xyz`)"
+    exposedByDefault: false
 
 # https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/
 {{ _traefik3_conf_entrypoints | to_nice_yaml(indent=2, width=256) }}
+entryPoints:
+  http:
+    address: ":80"
+  https:
+    address: ":443"
 
 {% if traefik3_dashboard_enabled %}
 # https://doc.traefik.io/traefik/reference/install-configuration/api-dashboard/
@@ -12,10 +21,24 @@ api:
     insecure: {{ traefik3_dashboard_api_insecure | default(false) }}
 {% endif %}
 
+# https://doc.traefik.io/traefik/reference/install-configuration/tls/certificate-resolvers/acme/
+{{ _traefik3_conf_cert_resolvers | to_nice_yaml(indent=2, width=256) }}
+certificatesResolvers:
+  letsencrypt:
+    acme:
+	  caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
+      # caServer: https://acme-v02.api.letsencrypt.org/directory
+      dnsChallenge:
+        delayBeforeCheck: "10s"
+        disablePropagationCheck: true
+        provider: "route53"
+        resolvers:
+          - "8.8.8.8:53"
+      email: "{{ traefik3_docker_letsencrypt_email }}"
+
 {% if _traefik3_metrics_all_options.metrics | length > 0 %}
 # https://doc.traefik.io/traefik/reference/install-configuration/observability/metrics/
 {{ _traefik3_metrics_all_options | to_nice_yaml(indent=2, width=256) }}
-{% endif %}
 
 # https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/
 {{ _traefik3_logging_all_options | to_nice_yaml(indent=2, width=256) }}
@@ -29,6 +52,3 @@ api:
 # https://doc.traefik.io/traefik/reference/install-configuration/observability/tracing/
 {{ _traefik3_conf_tracing | to_nice_yaml(indent=2, width=256) }}
 {% endif %}
-
-# https://doc.traefik.io/traefik/reference/install-configuration/tls/certificate-resolvers/acme/
-{{ _traefik3_conf_cert_resolvers | to_nice_yaml(indent=2, width=256) }}
