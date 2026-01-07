@@ -33,20 +33,6 @@ r720xd_users: []
 # Manyfold
 ##########
 
-r720xd_manyfold_groupname: "manyfold"
-r720xd_manyfold_username: "manyfold"
-
-r720xd_manyfold_gid: 2500
-r720xd_manyfold_uid: 2500
-
-r720xd_manyfold_pgsql_admin_user: "manyfold"
-r720xd_manyfold_pgsql_admin_passwd: "manyfold-password"
-r720xd_manyfold_pgsql_name: "manyfold-pgsql"
-
-r720xd_manyfold_redis_name: "manyfold-redis"
-r720xd_manyfold_redis_volume_config: "manyfold-redis-config"
-r720xd_manyfold_redis_volume_data: "manyfold-redis-data"
-
 ##########
 # Traefik
 ##########
