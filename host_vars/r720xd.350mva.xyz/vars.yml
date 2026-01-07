@@ -6,6 +6,11 @@ nas_docker_zfs_dataset: "nas/data/docker"
 nas_docker_home: "/mnt/{{ nas_docker_zfs_dataset }}"
 
 ###
+### Manyfold
+###
+manyfold_secret_key: "{{ vault_r720xd_manyfold_secret_key }}"
+
+###
 ### Veggie Common
 ###
 veggie_base_domain_name: "{{ veggie_domain }}"

@@ -1,0 +1,67 @@
+---
+- name: "manyfold | Create group"
+  ansible.builtin.group:
+    name: "{{ r720xd_manyfold_groupname }}"
+    gid: "{{ r720xd_manyfold_gid }}"
+  tags: ["setup"]
+
+- name: "manyfold | Create user"
+  ansible.builtin.user:
+    name: "{{ r720xd_manyfold_username }}"
+    uid: "{{ r720xd_manyfold_uid }}"
+    create_home: "false"
+    groups: "{{ r720xd_manyfold_groupname }}"
+    password: "!"
+  tags: ["setup"]
+
+- name: "manyfold | Create Manyfold Docker network"
+  community.docker.docker_network:
+    name: "{{ r720xd_docker_networks.manyfold.name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "no"
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ r720xd_docker_networks.manyfold.subnet }}"
+        gateway: "{{ r720xd_docker_networks.manyfold.gateway }}"
+
+- name: "manyfold | Install Postgres 15"
+  ansible.builtin.import_role:
+    name: "organicveggie.postgres_docker"
+  vars:
+    postgres_docker_admin_user: "{{ r720xd_manyfold_pgsql_admin_user }}"
+    postgres_docker_admin_password: "{{ r720xd_manyfold_pgsql_admin_passwd }}"
+    postgres_docker_image: "postgres:15"
+    postgres_docker_name: "{{ r720xd_manyfold_pgsql_name }}"
+    postgres_docker_network_name: "{{ r720xd_docker_networks.manyfold.name }}"
+    postgres_docker_volume_init_name: "manyfold-pgsql-initscripts"
+    postgres_docker_volume_conf_name: "manyfold-pgsql-conf"
+    postgres_docker_volume_data_name: "manyfold-pgsql-data"
+
+- name: "manyfold | Install Redis 7"
+  ansible.builtin.import_role:
+    name: "redis"
+  vars:
+    redis_docker_name: "{{ r720xd_manyfold_redis_name }}"
+    redis_docker_image_version: "7"
+    redis_docker_network: "{{ r720xd_docker_networks.manyfold.name }}"
+    redis_docker_volume_config: "{{ r720xd_manyfold_redis_volume_config }}"
+    redis_docker_volume_data: "{{ r720xd_manyfold_redis_volume_data }}"
+    redis_docker_config_persist_appendonly: true
+    # redis_docker_config_loglevel: "warning"
+
+- name: "manyfold | Launch Manyfold container"
+  ansible.builtin.import_role:
+    name: "manyfold"
+  vars:
+    manyfold_docker_network_name: "{{ r720xd_docker_networks.manyfold.name }}"
+    manyfold_docker_db_host_name: "{{ r720xd_manyfold_pgsql_name }}"
+    manyfold_docker_db_username: "{{ r720xd_manyfold_pgsql_admin_user }}"
+    manyfold_docker_db_userpasswd: "{{ r720xd_manyfold_pgsql_admin_passwd }}"
+    manyfold_docker_redis_host_name: "{{ r720xd_manyfold_redis_name }}"
+    manyfold_docker_redis_db_num: 1
+    manyfold_docker_timezone: "{{ r720xd_timezone }}"
+    manyfold_docker_uid: "{{ r720xd_manyfold_uid }}"
+    manyfold_docker_gid: "{{ r720xd_manyfold_gid }}"
+    manyfold_docker_host_domain: "{{ r720xd_site_domain }}"
+    manyfold_docker_secret_key: '{{ manyfold_secret_key }}'

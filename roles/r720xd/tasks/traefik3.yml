@@ -15,6 +15,7 @@
     file: "traefik3_network.yml"
   loop:
     - "{{ docker_networks.portainer.name }}"
+    - "{{ docker_networks.manyfold.name }}"
 
 - name: "traefik3 | Setup traefik3 container"
   ansible.builtin.import_role:
