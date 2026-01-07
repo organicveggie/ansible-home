@@ -26,6 +26,12 @@ r720xd_docker_networks:
     gateway: "172.40.2.1"
     subnet: "172.40.2.0/24"
 
+# Override subnets for backward compatability
+docker_networks.traefik3.gateway: "172.40.1.1"
+docker_networks.traefik3.subnet: "172.40.1.0/24"
+docker_networks.portainer.gateway: "172.40.2.1"
+docker_networks.portainer.subnet: "172.40.2.0/24"
+
 ###
 ### Let's Encrypt
 ###

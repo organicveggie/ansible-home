@@ -30,6 +30,83 @@ veggie_base_domain_name: "{{ vault_veggie_base_domain_name }}"
 veggie_new_base_domain_name: "{{ vault_veggie_new_base_domain_name }}"
 
 ###
+### Docker
+###
+docker_networks:
+  traefik:
+    name: "traefik"
+    gateway: "172.30.1.1"
+    subnet: "172.30.1.0/24"
+  portainer:
+    name: "portainer"
+    gateway: "172.30.2.1"
+    subnet: "172.30.2.0/24"
+  calibre_web:
+    name: "calibre-web"
+    gateway: "172.30.3.1"
+    subnet: "172.30.3.0/24"
+  diun:
+    name: "diun"
+    gateway: "172.30.4.1"
+    subnet: "172.30.4.0/24"
+  glances:
+    name: "glances"
+    gateway: "172.30.5.1"
+    subnet: "172.30.5.0/24"
+  hass:
+    name: "hass"
+    gateway: "172.30.6.1"
+    subnet: "172.30.6.0/24"
+  navidrome:
+    name: "navidrome"
+    gateway: "172.30.7.1"
+    subnet: "172.30.7.0/24"
+  node_red:
+    name: "node-red"
+    gateway: "172.30.8.1"
+    subnet: "172.30.8.0/24"
+  servarr:
+    name: "servarr"
+    gateway: "172.30.9.1"
+    subnet: "172.30.9.0/24"
+  influxdb:
+    name: "influxdb"
+    gateway: "172.30.10.1"
+    subnet: "172.30.10.0/24"
+  grafana:
+    name: "grafana"
+    gateway: "172.30.11.1"
+    subnet: "172.30.11.0/24"
+  kometa:
+    name: "kometa"
+    gateway: "172.30.12.1"
+    subnet: "172.30.12.0/24"
+  restic:
+    name: "restic"
+    gateway: "172.30.13.1"
+    subnet: "172.30.13.0/24"
+  tautulli:
+    name: "tautulli"
+    gateway: "172.30.14.1"
+    subnet: "172.30.14.0/24"
+  unific:
+    name: "unific"
+    gateway: "172.30.15.1"
+    subnet: "172.30.15.0/24"
+  overseerr:
+    name: "overseerr"
+    gateway: "172.30.16.1"
+    subnet: "172.30.16.0/24"
+  watchtower:
+    name: "watchtower"
+    gateway: "172.30.17.1"
+    subnet: "172.30.17.0/24"
+  traefik3:
+    name: "traefik3"
+    gateway: "172.30.18.1"
+    subnet: "172.30.18.0/24"
+
+###
 ### Home Assistant
 ###
 veggie_home_assistant_hostname: "{{ vault_hass_hostname }}"
@@ -37,7 +114,7 @@ veggie_hass_db_user: "{{ vault_hass_db_user }}"
 veggie_hass_db_password: "{{ vault_hass_db_password }}"
 
 ###
-### InfluxDB 
+### InfluxDB
 ###
 influxdb_admin_user: "{{ vault_influxdb_admin_user }}"
 influxdb_admin_password: "{{ vault_influxdb_admin_password }}"
