@@ -102,6 +102,7 @@
       "DATABASE_URL": "{{ _manyfold_docker_db_url }}"
       "REDIS_URL": "{{ _manyfold_docker_redis_url }}"
       "SECRET_KEY_BASE": "{{ manyfold_docker_secret_key | default(omit) }}"
+      "MULTIUSER": "enabled"
     mounts: "{{ _manyfold_docker_mount_list }}"
     network_mode: "{{ manyfold_docker_network }}"
     networks: "{{ _manyfold_docker_all_networks }}"
