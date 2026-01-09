@@ -14,17 +14,6 @@ r720xd_extra_packages:
   - "tmux"
 
 ###
-### Docker
-###
-
-# Override subnets for backward compatability.
-# TODO: Switch to default subnets.
-docker_networks.traefik3.gateway: "172.40.1.1"
-docker_networks.traefik3.subnet: "172.40.1.0/24"
-docker_networks.portainer.gateway: "172.40.2.1"
-docker_networks.portainer.subnet: "172.40.2.0/24"
-
-###
 ### Let's Encrypt
 ###
 r720xd_letsencrypt_server_staging: "https://acme-staging-v02.api.letsencrypt.org/directory"
