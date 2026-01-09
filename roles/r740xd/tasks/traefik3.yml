@@ -31,6 +31,7 @@
     - "{{ docker_networks.overseerr.name }}"
     - "{{ docker_networks.portainer.name }}"
     - "{{ docker_networks.tautulli.name }}"
+    - "{{ docker_networks.manyfold.name }}"
   vars:
     "_traefik_role_name": "traefik3"
 

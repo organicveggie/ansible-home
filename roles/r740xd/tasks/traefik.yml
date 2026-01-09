@@ -30,6 +30,7 @@
     - "{{ docker_networks.overseerr.name }}"
     - "{{ docker_networks.portainer.name }}"
     - "{{ docker_networks.tautulli.name }}"
+    - "{{ docker_networks.manyfold.name }}"
 
 - name: "traefik | Process Servarr network"
   when: "docker_networks.servarr.name | default('') | trim | length > 0"

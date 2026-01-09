@@ -152,6 +152,10 @@
   ansible.builtin.import_tasks: "watchtower.yml"
   tags: ["watchtower"]
 
+- name: "Setup Manyfold"
+  ansible.builtin.import_tasks: "manyfold.yml"
+  tags: ["manyfold"]
+
 # # - ansible.builtin.import_tasks: "influxdb.yml"
 # #   tags: ["influxdb"]
 
@@ -164,9 +168,9 @@
   ansible.builtin.import_tasks: "traefik.yml"
   tags: ["traefik"]
 
-- name: "Setup Traefik 3"
-  ansible.builtin.import_tasks: "traefik3.yml"
-  tags: ["traefik3"]
+# - name: "Setup Traefik 3"
+#   ansible.builtin.import_tasks: "traefik3.yml"
+#   tags: ["traefik3"]
 
 # # # - ansible.builtin.import_playbook: "playbooks/media-storage/media-storage.yml"
 # # #   tags: ["media", "media-storage"]
