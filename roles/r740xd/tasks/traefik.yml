@@ -104,7 +104,8 @@
   ansible.builtin.set_fact:
     _nas_traefik_all_ports: "{{ (_nas_traefik_extra_ports | default([]) + nas_traefik_http_ports) | sort }}"
 
-- ansible.builtin.debug:
+- name: "traefik | Debug entrypoints"
+  ansible.builtin.debug:
     msg:
       - "Entrypoints: {{ _nas_traefik_entrypoints | default({}) }}"
       - "Extra networks: {{ _nas_traefik_extra_networks | default([]) }}"

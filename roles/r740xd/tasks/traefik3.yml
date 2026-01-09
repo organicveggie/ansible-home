@@ -98,6 +98,7 @@
       {{ _nas_traefik3_extra_ports | default([]) | sort }}
 
 - ansible.builtin.debug:
+    name: "traefik3 | Debug entrypoints"
     msg:
       - "Entrypoints: {{ _nas_traefik3_entrypoints | default({}) }}"
       - "Extra networks: {{ _nas_traefik3_extra_networks | default([]) }}"

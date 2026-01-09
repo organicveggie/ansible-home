@@ -19,7 +19,7 @@
     name: "watchtower"
   vars:
     watchtower_docker_cleanup: true
-    watchtower_docker_disable_containers: "{{ _nas_docker_watchtower_disable_containers | join(',')}}"
+    watchtower_docker_disable_containers: "{{ _nas_docker_watchtower_disable_containers | join(',') }}"
     watchtower_docker_include_restarting: false
     watchtower_docker_include_stopped: false
     watchtower_docker_logging_format: "logfmt"

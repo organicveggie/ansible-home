@@ -84,56 +84,72 @@
       - subnet: "{{ docker_networks.kometa.subnet }}"
         gateway: "{{ docker_networks.kometa.gateway }}"
 
-- ansible.builtin.import_tasks: "samba.yml"
+- name: "Install Samba"
+  ansible.builtin.import_tasks: "samba.yml"
   tags: ["samba"]
 
-- ansible.builtin.import_tasks: "time-machine.yml"
+- name: "Setup TimeMachine"
+  ansible.builtin.import_tasks: "time-machine.yml"
   vars:
     nas_time_machine_network_name: "{{ nas_docker_macvlan_network_name }}"
   tags: ["time-machine", "timemachine", "tim"]
 
-- ansible.builtin.import_tasks: "calibre-web.yml"
+- name: "Setup Calibre Web"
+  ansible.builtin.import_tasks: "calibre-web.yml"
   tags: ["calibre-web", "calibreweb", "calibre_web"]
 
-- ansible.builtin.import_tasks: "diun.yml"
+- name: "Setup Diun"
+  ansible.builtin.import_tasks: "diun.yml"
   tags: ["diun"]
 
-- ansible.builtin.import_tasks: "glances.yml"
+- name: "Setup Glances"
+  ansible.builtin.import_tasks: "glances.yml"
   tags: ["glances"]
 
-- ansible.builtin.import_tasks: "hass.yml"
+- name: "Setup Home Assistant"
+  ansible.builtin.import_tasks: "hass.yml"
   tags: ["hass", "home-assistant", "homeassistant"]
 
-- ansible.builtin.import_tasks: "influxdb.yml"
+- name: "Setup InfluxDB"
+  ansible.builtin.import_tasks: "influxdb.yml"
   tags: ["influxdb"]
 
-- ansible.builtin.import_tasks: "navidrome.yml"
+- name: "Setup Navidrome"
+  ansible.builtin.import_tasks: "navidrome.yml"
   tags: ["navidrome"]
 
-- ansible.builtin.import_tasks: "node-red.yml"
+- name: "Setup Node-Red"
+  ansible.builtin.import_tasks: "node-red.yml"
   tags: ["node-red", "nodered"]
 
-- ansible.builtin.import_tasks: "overseerr.yml"
+- name: "Setup Overseer"
+  ansible.builtin.import_tasks: "overseerr.yml"
   tags: ["overseerr"]
 
-- ansible.builtin.import_tasks: "plex.yml"
+- name: "Setup Plex"
+  ansible.builtin.import_tasks: "plex.yml"
   vars:
     nas_plex_network_name: "{{ nas_docker_macvlan_network_name }}"
   tags: ["plex", "pms"]
 
-- ansible.builtin.import_tasks: "tautulli.yml"
+- name: "Setup Tautulli"
+  ansible.builtin.import_tasks: "tautulli.yml"
   tags: ["tautulli"]
 
-- ansible.builtin.import_tasks: "kometa.yml"
+- name: "Setup Kometa"
+  ansible.builtin.import_tasks: "kometa.yml"
   tags: ["kometa", "pmm", "plex-media-manager"]
 
-- ansible.builtin.import_tasks: "servarr.yml"
+- name: "Setup Servarr apps"
+  ansible.builtin.import_tasks: "servarr.yml"
   tags: ["servarr"]
 
-- ansible.builtin.import_tasks: "unific.yml"
+- name: "Setup Unifi Controller"
+  ansible.builtin.import_tasks: "unific.yml"
   tags: ["unific"]
 
-- ansible.builtin.import_tasks: "watchtower.yml"
+- name: "Setup Watchtower"
+  ansible.builtin.import_tasks: "watchtower.yml"
   tags: ["watchtower"]
 
 # # - ansible.builtin.import_tasks: "influxdb.yml"
@@ -144,10 +160,12 @@
 # TODO: Watchtower
 
 # Traefik needs to be last so all of the networks exist.
-- ansible.builtin.import_tasks: "traefik.yml"
+- name: "Setup Traefik"
+  ansible.builtin.import_tasks: "traefik.yml"
   tags: ["traefik"]
 
-- ansible.builtin.import_tasks: "traefik3.yml"
+- name: "Setup Traefik 3"
+  ansible.builtin.import_tasks: "traefik3.yml"
   tags: ["traefik3"]
 
 # # # - ansible.builtin.import_playbook: "playbooks/media-storage/media-storage.yml"
