@@ -28,34 +28,42 @@
 - name: "{{ redis_docker_role_label }} | Define Docker labels"
   ansible.builtin.set_fact:
     _redis_docker_labels: "{{ _redis_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__redis_docker_label.key: __redis_docker_label.value}) }}"
   with_items:
     - key: "traefik.enable"
       value: "{{ redis_docker_available_externally | string }}"
+  loop_control:
+    loop_var: __redis_docker_label
 
 - name: "{{ redis_docker_role_label }} | Define base commands"
   ansible.builtin.set_fact:
-    _redis_docker_cmds: "{{ _redis_docker_cmds | default([]) + [item] }}"
+    _redis_docker_cmds: "{{ _redis_docker_cmds | default([]) + [__redis_docker_cmd] }}"
   loop:
     - "redis-server"
     - "--loglevel"
     - "{{ redis_docker_config_loglevel }}"
+  loop_control:
+    loop_var: __redis_docker_cmd
 
 - name: "{{ redis_docker_role_label }} | Enable AOF persistence"
   ansible.builtin.set_fact:
-    _redis_docker_cmds: "{{ _redis_docker_cmds | default([]) + [item] }}"
+    _redis_docker_cmds: "{{ _redis_docker_cmds | default([]) + [__redis_docker_persist_aof_cmd] }}"
   loop:
     - "--appendonly"
     - "yes"
+  loop_control:
+    loop_var: __redis_docker_persist_aof_cmd
   when: "redis_docker_config_persist_appendonly"
 
 - name: "{{ redis_docker_role_label }} | Enable RDB snapshot persistence"
   ansible.builtin.set_fact:
-    _redis_docker_cmds: "{{ _redis_docker_cmds | default([]) + [item] }}"
+    _redis_docker_cmds: "{{ _redis_docker_cmds | default([]) + [__redis_docker_persist_rdb_cmd] }}"
   loop:
     - "--save"
     - "{{ redis_docker_config_persist_rdb_interval }}"
     - "{{ redis_docker_config_persist_rdb_writeops }}"
+  loop_control:
+    loop_var: __redis_docker_persist_rdb_cmd
   when: "redis_docker_config_persist_rdb"
 
 - name: "{{ redis_docker_role_label }} | redis Docker Container"
