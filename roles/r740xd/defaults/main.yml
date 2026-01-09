@@ -51,7 +51,6 @@ nas_cross_seed_sonarr4k_apikey: null
 ### Diun
 ###
 nas_diun_config_dir: "/etc/diun"
-nas_diun_network_name: "diun"
 nas_diun_notify_mail_host: null
 nas_diun_notify_mail_port: null
 nas_diun_notify_mail_username: null

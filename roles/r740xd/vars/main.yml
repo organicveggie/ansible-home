@@ -33,13 +33,11 @@ nas_bazarr4k_network_aliases:
 ###
 nas_calibre_web_username: "calibre"
 nas_calibre_web_groupname: "calibre"
-nas_calibre_web_network_name: "calibre-web"
 
 ###
 ### Diun
 ###
 nas_diun_group: "diun"
-nas_diun_network_name: "diun"
 nas_diun_uid: 2450
 nas_diun_user: "diun"
 
@@ -51,7 +49,6 @@ nas_docker_bridge_network_gateway: "172.17.0.1"
 ###
 ### Home Assistant
 ###
-nas_hass_network_name: "hass"
 nas_hass_pgsql_image: "postgres:15-bullseye"
 nas_hass_pgsql_name: "hass-pgsql"
 nas_hass_pgsql_volume_conf_name: "hass-pgsql-conf"
@@ -77,12 +74,6 @@ nas_kometa_tmdb_region: "US"
 ### Navidrome
 ###
 nas_navidrome_image_cache_size: "500MB"
-nas_navidrome_network_name: "navidrome"
-
-###
-### Node-RED
-###
-nas_nodered_network_name: "node-red"
 
 ###
 ### Plex
@@ -92,11 +83,6 @@ nas_plex_groupname: "plex"
 nas_plex_port: 32400
 nas_plex_uid: 32400
 nas_plex_username: "plex"
-
-###
-### Portainer
-###
-nas_portainer_network_name: "portainer"
 
 ###
 ### Radarr
