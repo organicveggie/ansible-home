@@ -1,20 +1,20 @@
 ---
 - name: "traefik3 | Create Traefik3 Docker network"
   community.docker.docker_network:
-    name: "{{ r720xd_docker_networks.traefik3.name }}"
+    name: "{{ docker_networks.traefik3.name }}"
     driver: "bridge"
     enable_ipv6: "no"
     internal: "no"
     scope: "local"
     ipam_config:
-      - subnet: "{{ r720xd_docker_networks.traefik3.subnet }}"
-        gateway: "{{ r720xd_docker_networks.traefik3.gateway }}"
+      - subnet: "{{ docker_networks.traefik3.subnet }}"
+        gateway: "{{ docker_networks.traefik3.gateway }}"
 
 - name: "traefik3 | Process extra networks"
   ansible.builtin.include_tasks:
     file: "traefik3_network.yml"
   loop:
-    - "{{ r720xd_docker_networks.portainer.name }}"
+    - "{{ docker_networks.portainer.name }}"
 
 - name: "traefik3 | Setup traefik3 container"
   ansible.builtin.import_role:
