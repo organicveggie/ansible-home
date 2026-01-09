@@ -3,7 +3,6 @@
   community.docker.docker_volume:
     name: "{{ item }}"
   loop:
-    - "{{ manyfold_docker_volume_config }}"
     - "{{ manyfold_docker_volume_libraries }}"
 
 - name: "{ manyfold_docker_role_label } | Get library container volume"
@@ -24,9 +23,6 @@
 - name: "{{ manyfold_docker_role_label }} | Set Docker mount list"
   ansible.builtin.set_fact:
     _manyfold_docker_mount_list:
-      - source: "{{ manyfold_docker_volume_config }}"
-        target: "/config"
-        type: "volume"
       - source: "{{ manyfold_docker_volume_libraries }}"
         target: "/libraries"
         type: "volume"

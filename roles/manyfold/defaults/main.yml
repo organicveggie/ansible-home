@@ -27,7 +27,6 @@ manyfold_docker_uid: "1000"
 # Timezone to use inside the container.
 manyfold_docker_timezone: "America/New_York"
 
-manyfold_docker_volume_config: "manyfold-config"
 manyfold_docker_volume_libraries: "manyfold-libraries"
 
 # Dictionary of extra key value pairs to set as labels on the Docker container.
