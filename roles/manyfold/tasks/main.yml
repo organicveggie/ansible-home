@@ -11,14 +11,16 @@
     name: "{{ manyfold_docker_volume_libraries }}"
   register: "_manyfold_docker_libraries_volume"
 
-- name: "{{ manyfold_docker_role_label }} }| Make libraries folder"
+- name: "{{ manyfold_docker_role_label }} }| Set ownership on libraries folder"
   ansible.builtin.file:
-    path: "{{ _manyfold_docker_libraries_volume['volume']['Mountpoint'] }}/libraries"
+    path: "{{ item }}"
     state: "directory"
     mode: "0775"
     owner: "{{ manyfold_docker_uid }}"
     group: "{{ manyfold_docker_gid }}"
-
+  loop:
+    - "{{ _manyfold_docker_libraries_volume['volume']['Mountpoint'] }}"
+    
 - name: "{{ manyfold_docker_role_label }} | Set Docker mount list"
   ansible.builtin.set_fact:
     _manyfold_docker_mount_list:
