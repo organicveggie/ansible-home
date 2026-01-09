@@ -105,6 +105,10 @@ docker_networks:
     name: "traefik3"
     gateway: "172.30.18.1"
     subnet: "172.30.18.0/24"
+  manyfold:
+    name: "manyfold"
+    gateway: "172.30.19.1"
+    subnet: "172.30.19.0/24"
 
 ###
 ### Home Assistant
