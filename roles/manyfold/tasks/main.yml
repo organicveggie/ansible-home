@@ -1,9 +1,11 @@
 ---
 - name: "{{ manyfold_docker_role_label }} | Create Manyfold Docker volumes"
   community.docker.docker_volume:
-    name: "{{ item }}"
+    name: "{{ __manyfold_volume_name }}"
   loop:
     - "{{ manyfold_docker_volume_libraries }}"
+  loop_control:
+    loop_var: __manyfold_volume_name
 
 - name: "{ manyfold_docker_role_label } | Get library container volume"
   community.docker.docker_volume_info:
@@ -12,13 +14,15 @@
 
 - name: "{{ manyfold_docker_role_label }} }| Set ownership on libraries folder"
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ __manyfold_volume_mountpoint }}"
     state: "directory"
     mode: "0775"
     owner: "{{ manyfold_docker_uid }}"
     group: "{{ manyfold_docker_gid }}"
   loop:
     - "{{ _manyfold_docker_libraries_volume['volume']['Mountpoint'] }}"
+  loop_control:
+    loop_var: __manyfold_volume_mountpoint
     
 - name: "{{ manyfold_docker_role_label }} | Set Docker mount list"
   ansible.builtin.set_fact:
@@ -60,7 +64,7 @@
 - name: "{{ manyfold_docker_role_label }} | Define Docker labels with Traefik enabled"
   ansible.builtin.set_fact:
     _manyfold_docker_labels: "{{ _manyfold_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__manyfold_traefik_label.key: __manyfold_traefik_label.value}) }}"
   with_items:
     - key: "traefik.docker.network"
       value: "{{ manyfold_docker_network }}"
@@ -74,13 +78,17 @@
       value: "*.{{ manyfold_docker_host_domain }}"
     - key: "traefik.http.services.manyfold.loadbalancer.server.port"
       value: "{{ manyfold_docker_web_port | string }}"
+  loop_control:
+    loop_var: __manyfold_traefik_label
   when: "manyfold_docker_available_externally"
 
 - name: "{{ manyfold_docker_role_label }} | Define user-supplied extra Docker labels"
   ansible.builtin.set_fact:
     _manyfold_docker_labels: "{{ _manyfold_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__manyfold_docker_extra_label.key: __manyfold_docker_extra_label.value}) }}"
   loop: "{{ manyfold_docker_extra_labels | dict2items }}"
+  loop_control:
+    loop_var: __manyfold_docker_extra_label
 
 - name: "{{ manyfold_docker_role_label }} | Create Docker Container"
   community.docker.docker_container:
