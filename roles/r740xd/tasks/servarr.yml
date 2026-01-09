@@ -96,14 +96,14 @@
 
 - name: "servarr | Setup Docker network"
   community.docker.docker_network:
-    name: "{{ nas_docker_networks.servarr.name }}"
+    name: "{{ docker_networks.servarr.name }}"
     driver: "bridge"
     enable_ipv6: "no"
     internal: "no"
     scope: "local"
     ipam_config:
-      - subnet: "{{ nas_docker_networks.servarr.subnet }}"
-        gateway: "{{ nas_docker_networks.servarr.gateway }}"
+      - subnet: "{{ docker_networks.servarr.subnet }}"
+        gateway: "{{ docker_networks.servarr.gateway }}"
   tags: ["setup", "network"]
 
 - name: "servarr | Cross-Seed"
@@ -123,9 +123,9 @@
     calibre_docker_gid: "{{ _nas_servarr_gid }}"
     calibre_docker_uid: "{{ nas_servarr_uid }}"
     calibre_docker_timezone: "{{ nas_timezone }}"
-    calibre_docker_network: "{{ nas_docker_networks.servarr.name }}"
+    calibre_docker_network: "{{ docker_networks.servarr.name }}"
     calibre_docker_data_source_path: "{{ nas_servarr_path }}"
-    calibre_docker_trusted_ips: "{{ nas_docker_networks.servarr.subnet }}"
+    calibre_docker_trusted_ips: "{{ docker_networks.servarr.subnet }}"
   tags: ["setup", "calibre"]
 
 - name: "servarr | Setup Flaresolverr"
@@ -133,7 +133,7 @@
     name: "flaresolverr"
   vars:
     flaresolverr_docker_timezone: "{{ nas_timezone }}"
-    flaresolverr_docker_network: "{{ nas_docker_networks.servarr.name }}"
+    flaresolverr_docker_network: "{{ docker_networks.servarr.name }}"
   tags: ["flaresolverr"]
 
 - name: "servarr | Setup Lidarr"
@@ -144,7 +144,7 @@
     lidarr_docker_data_source_path: "{{ nas_servarr_path }}"
     lidarr_docker_gid: "{{ _nas_servarr_gid }}"
     lidarr_docker_host_domain: "{{ nas_lidarr_host_domain }}"
-    lidarr_docker_network: "{{ nas_docker_networks.servarr.name }}"
+    lidarr_docker_network: "{{ docker_networks.servarr.name }}"
     lidarr_docker_timezone: "{{ nas_timezone }}"
     lidarr_docker_uid: "{{ nas_servarr_uid }}"
     lidarr_docker_extra_bind_mounts:
@@ -158,7 +158,7 @@
   vars:
     prowlarr_docker_gid: "{{ _nas_servarr_gid }}"
     prowlarr_docker_host_domain: "{{ nas_prowlarr_host_domain }}"
-    prowlarr_docker_network: "{{ nas_docker_networks.servarr.name }}"
+    prowlarr_docker_network: "{{ docker_networks.servarr.name }}"
     prowlarr_docker_timezone: "{{ nas_timezone }}"
     prowlarr_docker_uid: "{{ nas_servarr_uid }}"
   tags: ["prowlarr"]
@@ -180,7 +180,7 @@
     radarr_docker_host_name: "{{ nas_radarr1080_host_name }}"
     radarr_docker_movie_source_path: "{{ nas_servarr_movie_source_path }}"
     radarr_docker_name: "{{ nas_radarr1080_container_name }}"
-    radarr_docker_network: "{{ nas_docker_networks.servarr.name }}"
+    radarr_docker_network: "{{ docker_networks.servarr.name }}"
     radarr_docker_network_aliases: "{{ nas_radarr1080_network_aliases }}"
     radarr_docker_timezone: "{{ nas_timezone }}"
     radarr_docker_uid: "{{ nas_servarr_uid }}"
@@ -205,7 +205,7 @@
     radarr_docker_host_name: "{{ nas_radarr4k_host_name }}"
     radarr_docker_movie_source_path: "{{ nas_servarr_movie_source_path }}"
     radarr_docker_name: "{{ nas_radarr4k_container_name }}"
-    radarr_docker_network: "{{ nas_docker_networks.servarr.name }}"
+    radarr_docker_network: "{{ docker_networks.servarr.name }}"
     radarr_docker_network_aliases: "{{ nas_radarr4k_network_aliases }}"
     radarr_docker_timezone: "{{ nas_timezone }}"
     radarr_docker_uid: "{{ nas_servarr_uid }}"
@@ -225,7 +225,7 @@
     readarr_docker_gid: "{{ _nas_servarr_gid }}"
     readarr_docker_host_domain: "{{ nas_readarr_host_domain }}"
     readarr_docker_host_name: "{{ nas_readarr_host_name }}"
-    readarr_docker_network: "{{ nas_docker_networks.servarr.name }}"
+    readarr_docker_network: "{{ docker_networks.servarr.name }}"
     readarr_docker_timezone: "{{ nas_timezone }}"
     readarr_docker_uid: "{{ nas_servarr_uid }}"
     readarr_docker_web_port: "{{ nas_readarr_web_port }}"
@@ -253,7 +253,7 @@
     sabnzbd_docker_data_source_path: "{{ nas_servarr_path }}"
     sabnzbd_docker_gid: "{{ _nas_servarr_gid }}"
     sabnzbd_docker_host_domain: "{{ nas_sabnzbd_host_domain }}"
-    sabnzbd_docker_network: "{{ nas_docker_networks.servarr.name }}"
+    sabnzbd_docker_network: "{{ docker_networks.servarr.name }}"
     sabnzbd_docker_timezone: "{{ nas_timezone }}"
     sabnzbd_docker_uid: "{{ nas_servarr_uid }}"
   tags: ["sabnzbd"]
@@ -273,7 +273,7 @@
     sonarr_docker_host_domain: "{{ nas_sonarr1080_host_domain }}"
     sonarr_docker_host_name: "{{ nas_sonarr1080_host_name }}"
     sonarr_docker_name: "{{ nas_sonarr1080_container_name }}"
-    sonarr_docker_network: "{{ nas_docker_networks.servarr.name }}"
+    sonarr_docker_network: "{{ docker_networks.servarr.name }}"
     sonarr_docker_network_aliases: "{{ nas_sonarr1080_network_aliases }}"
     sonarr_docker_timezone: "{{ nas_timezone }}"
     sonarr_docker_tv_source_path: "{{ nas_servarr_tv_source_path }}"
@@ -297,7 +297,7 @@
     sonarr_docker_host_domain: "{{ nas_sonarr4k_host_domain }}"
     sonarr_docker_host_name: "{{ nas_sonarr4k_host_name }}"
     sonarr_docker_name: "{{ nas_sonarr4k_container_name }}"
-    sonarr_docker_network: "{{ nas_docker_networks.servarr.name }}"
+    sonarr_docker_network: "{{ docker_networks.servarr.name }}"
     sonarr_docker_network_aliases: "{{ nas_sonarr4k_network_aliases }}"
     sonarr_docker_timezone: "{{ nas_timezone }}"
     sonarr_docker_tv_source_path: "{{ nas_servarr_tv_source_path }}"
@@ -314,7 +314,7 @@
     syncthing_docker_data_source_path: "{{ nas_servarr_path }}"
     syncthing_docker_host_domain: "{{ nas_syncthing_host_domain }}"
     syncthing_docker_gid: "{{ _nas_servarr_gid }}"
-    syncthing_docker_network: "{{ nas_docker_networks.servarr.name }}"
+    syncthing_docker_network: "{{ docker_networks.servarr.name }}"
     syncthing_docker_timezone: "{{ nas_timezone }}"
     syncthing_docker_uid: "{{ nas_servarr_uid }}"
   tags: ["syncthing"]
@@ -326,11 +326,11 @@
     unpackerr_docker_gid: "{{ _nas_servarr_gid }}"
     unpackerr_docker_uid: "{{ nas_servarr_uid }}"
     unpackerr_docker_timezone: "{{ nas_timezone }}"
-    unpackerr_docker_network: "{{ nas_docker_networks.servarr.name }}"
+    unpackerr_docker_network: "{{ docker_networks.servarr.name }}"
     unpackerr_docker_data_source_path: "{{ nas_servarr_path }}"
     unpackerr_docker_web_upstreams:
-      - "{{ nas_docker_networks.servarr.gateway }}"
-      - "{{ nas_docker_networks.servarr.subnet }}"
+      - "{{ docker_networks.servarr.gateway }}"
+      - "{{ docker_networks.servarr.subnet }}"
     unpackerr_docker_radarr:
       - url: "http://{{ nas_radarr1080_host_name }}:{{ nas_radarr_web_port }}"
         api_key: "{{ nas_radarr1080_api_key }}"
@@ -387,7 +387,7 @@
   vars:
     cloudflared_docker_name: "{{ nas_servarr_cloudflared_container_name }}"
     cloudflared_docker_tunnel_token: "{{ nas_servarr_cloudflared_token }}"
-    cloudflared_docker_network: "{{ nas_docker_networks.servarr.name  }}"
+    cloudflared_docker_network: "{{ docker_networks.servarr.name  }}"
   tags: ["cloudflare", "cloudflared"]
 
 - name: "bazarr | Setup Bazarr 1080p"

@@ -1,14 +1,14 @@
 ---
 - name: "influxdb | Setup Docker network"
   community.docker.docker_network:
-    name: "{{ nas_docker_networks.influxdb.name }}"
+    name: "{{ docker_networks.influxdb.name }}"
     driver: "bridge"
     enable_ipv6: "no"
     internal: "no"
     scope: "local"
     ipam_config:
-      - subnet: "{{ nas_docker_networks.influxdb.subnet }}"
-        gateway: "{{ nas_docker_networks.influxdb.gateway }}"
+      - subnet: "{{ docker_networks.influxdb.subnet }}"
+        gateway: "{{ docker_networks.influxdb.gateway }}"
   tags: ["docker", "network", "networks"]
 
 - name: "influxdb | Create container"
@@ -16,7 +16,7 @@
     name: "influxdb2_docker"
   vars:
     influxdb_docker_name: "{{ nas_influxdb_container_name }}"
-    influxdb_docker_network: "{{ nas_docker_networks.influxdb.name }}"
+    influxdb_docker_network: "{{ docker_networks.influxdb.name }}"
     influxdb_docker_config_volume_name: "{{ nas_influxdb_config_volume_name }}"
     influxdb_docker_data_volume_name: "{{ nas_influxdb_data_volume_name }}"
     influxdb_docker_hostname: "{{ nas_influxdb_host_name }}"

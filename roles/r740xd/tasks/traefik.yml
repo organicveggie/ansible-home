@@ -5,14 +5,14 @@
 
 # - name: "traefik`1` | Setup Docker network"
 #   community.docker.docker_network:
-#     name: "{{ nas_docker_networks.traefik.name }}"
+#     name: "{{ docker_networks.traefik.name }}"
 #     driver: "bridge"
 #     enable_ipv6: "no"
 #     internal: "no"
 #     scope: "local"
 #     ipam_config:
-#       - subnet: "{{ nas_docker_networks.traefik.subnet }}"
-#         gateway: "{{ nas_docker_networks.traefik.gateway }}"
+#       - subnet: "{{ docker_networks.traefik.subnet }}"
+#         gateway: "{{ docker_networks.traefik.gateway }}"
 
 ###
 ### Configure additional networks, ports, and entrypoints
@@ -21,22 +21,22 @@
   ansible.builtin.include_tasks:
     file: "traefik_network.yml"
   loop:
-    # - "{{ nas_docker_networks.traefik.name }}"
-    - "{{ nas_docker_networks.calibre_web.name }}"
-    - "{{ nas_docker_networks.glances.name }}"
-    - "{{ nas_docker_networks.influxdb.name }}"
-    - "{{ nas_docker_networks.navidrome.name }}"
-    - "{{ nas_docker_networks.node_red.name }}"
-    - "{{ nas_docker_networks.overseerr.name }}"
-    - "{{ nas_docker_networks.portainer.name }}"
-    - "{{ nas_docker_networks.tautulli.name }}"
+    # - "{{ docker_networks.traefik.name }}"
+    - "{{ docker_networks.calibre_web.name }}"
+    - "{{ docker_networks.glances.name }}"
+    - "{{ docker_networks.influxdb.name }}"
+    - "{{ docker_networks.navidrome.name }}"
+    - "{{ docker_networks.node_red.name }}"
+    - "{{ docker_networks.overseerr.name }}"
+    - "{{ docker_networks.portainer.name }}"
+    - "{{ docker_networks.tautulli.name }}"
 
 - name: "traefik | Process Servarr network"
-  when: "nas_docker_networks.servarr.name | default('') | trim | length > 0"
+  when: "docker_networks.servarr.name | default('') | trim | length > 0"
   block:
     - name: "traefik | Check if Servarr network exists"
       community.docker.docker_network_info:
-        name: "{{ nas_docker_networks.servarr.name }}"
+        name: "{{ docker_networks.servarr.name }}"
       register: "_nas_traefik_servarr_network_info"
 
     - name: "traefik | Configure for Servarr tools"
@@ -44,7 +44,7 @@
       block:
         - name: "traefik | Enable Servarr extra network"
           ansible.builtin.set_fact:
-            _nas_traefik_extra_networks: "{{ _nas_traefik_extra_networks | default([]) + [{'name': nas_docker_networks.servarr.name}] }}"
+            _nas_traefik_extra_networks: "{{ _nas_traefik_extra_networks | default([]) + [{'name': docker_networks.servarr.name}] }}"
 
         - name: "traefik | Enable SyncThings (Servarr) ports"
           ansible.builtin.set_fact:
@@ -55,11 +55,11 @@
             _nas_traefik_entrypoints: "{{ _nas_traefik_entrypoints | default({}) | combine(nas_traefik_syncthings_entrypoints) }}"
 
 - name: "traefik | Process UniFi Controller network"
-  when: "nas_docker_networks.unific.name | default('') | trim | length > 0"
+  when: "docker_networks.unific.name | default('') | trim | length > 0"
   block:
     - name: "traefik | Check if UniFi Controller network exists"
       community.docker.docker_network_info:
-        name: "{{ nas_docker_networks.unific.name }}"
+        name: "{{ docker_networks.unific.name }}"
       register: "_nas_traefik_unific_network_info"
 
     - name: "traefik | Configure Traefik for UniFi Controller"
@@ -67,7 +67,7 @@
       block:
         - name: "traefik | Enable UniFi extra network"
           ansible.builtin.set_fact:
-            _nas_traefik_extra_networks: "{{ _nas_traefik_extra_networks | default([]) + [{'name': nas_docker_networks.unific.name}] }}"
+            _nas_traefik_extra_networks: "{{ _nas_traefik_extra_networks | default([]) + [{'name': docker_networks.unific.name}] }}"
 
         - name: "traefik | Enable UniFi Controlller ports"
           ansible.builtin.set_fact:
@@ -78,11 +78,11 @@
             _nas_traefik_entrypoints: "{{ _nas_traefik_entrypoints | default({}) | combine(nas_traefik_unific_entrypoints) }}"
 
 - name: "traefik | Process Home Assistant network"
-  when: "nas_docker_networks.hass.name | default('') | trim | length > 0"
+  when: "docker_networks.hass.name | default('') | trim | length > 0"
   block:
     - name: "traefik | Check if Home Assistant network exists"
       community.docker.docker_network_info:
-        name: "{{ nas_docker_networks.hass.name }}"
+        name: "{{ docker_networks.hass.name }}"
       register: "_nas_traefik_hass_network_info"
 
     - name: "traefik | Configure Traefik for Home Assistant"
@@ -90,7 +90,7 @@
       block:
         - name: "traefik | Enable Home Assistant extra network"
           ansible.builtin.set_fact:
-            _nas_traefik_extra_networks: "{{ _nas_traefik_extra_networks | default([]) + [{'name': nas_docker_networks.hass.name}] }}"
+            _nas_traefik_extra_networks: "{{ _nas_traefik_extra_networks | default([]) + [{'name': docker_networks.hass.name}] }}"
 
         # - name: "traefik | Enable Z-Wave JS UI ports"
         #   ansible.builtin.set_fact:

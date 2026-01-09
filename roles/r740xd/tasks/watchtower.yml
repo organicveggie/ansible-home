@@ -1,14 +1,14 @@
 ---
 - name: "watchtower | Setup Docker network"
   community.docker.docker_network:
-    name: "{{ nas_docker_networks.watchtower.name }}"
+    name: "{{ docker_networks.watchtower.name }}"
     driver: "bridge"
     enable_ipv6: "no"
     internal: "no"
     scope: "local"
     ipam_config:
-      - subnet: "{{ nas_docker_networks.watchtower.subnet }}"
-        gateway: "{{ nas_docker_networks.watchtower.gateway }}"
+      - subnet: "{{ docker_networks.watchtower.subnet }}"
+        gateway: "{{ docker_networks.watchtower.gateway }}"
 
 - name: "watchtower | Define list of containers to skip"
   ansible.builtin.set_fact:
@@ -24,7 +24,7 @@
     watchtower_docker_include_stopped: false
     watchtower_docker_logging_format: "logfmt"
     watchtower_docker_logging_no_color: true
-    watchtower_docker_network_name: "{{ nas_docker_networks.watchtower.name }}"
+    watchtower_docker_network_name: "{{ docker_networks.watchtower.name }}"
     watchtower_docker_remove_anon_volumes: true
     watchtower_docker_revive_stopped: false
     watchtower_docker_rolling_restart: true

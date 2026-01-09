@@ -13,7 +13,7 @@
     cross_seed_api_key: "{{ nas_cross_seed_api_key }}"
     cross_seed_duplicate_categories: true
     cross_seed_match_mode: "{{ nas_cross_seed_match_mode }}"
-    cross_seed_network_name: "{{ nas_docker_networks.servarr.name }}"
+    cross_seed_network_name: "{{ docker_networks.servarr.name }}"
     cross_seed_qbittorrrent_url: "{{ nas_cross_seed_qbittorrent_url }}"
     cross_seed_radarr_urls: 
       - "http://{{ nas_radarr1080_container_name }}:7878/?apikey={{ nas_cross_seed_radarr1080_apikey }}"

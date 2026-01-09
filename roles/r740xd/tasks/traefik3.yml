@@ -5,14 +5,14 @@
 
 - name: "traefik3 | Setup Docker network"
   community.docker.docker_network:
-    name: "{{ nas_docker_networks.traefik3.name }}"
+    name: "{{ docker_networks.traefik3.name }}"
     driver: "bridge"
     enable_ipv6: "no"
     internal: "no"
     scope: "local"
     ipam_config:
-      - subnet: "{{ nas_docker_networks.traefik3.subnet }}"
-        gateway: "{{ nas_docker_networks.traefik3.gateway }}"
+      - subnet: "{{ docker_networks.traefik3.subnet }}"
+        gateway: "{{ docker_networks.traefik3.gateway }}"
 
 ###
 ### Configure additional networks, ports, and entrypoints
@@ -21,25 +21,25 @@
   ansible.builtin.include_tasks:
     file: "traefik_network.yml"
   loop:
-    - "{{ nas_docker_networks.traefik3.name }}"
-    - "{{ nas_docker_networks.calibre_web.name }}"
-    - "{{ nas_docker_networks.glances.name }}"
-    - "{{ nas_docker_networks.hass.name }}"
-    - "{{ nas_docker_networks.influxdb.name }}"
-    - "{{ nas_docker_networks.navidrome.name }}"
-    - "{{ nas_docker_networks.node_red.name }}"
-    - "{{ nas_docker_networks.overseerr.name }}"
-    - "{{ nas_docker_networks.portainer.name }}"
-    - "{{ nas_docker_networks.tautulli.name }}"
+    - "{{ docker_networks.traefik3.name }}"
+    - "{{ docker_networks.calibre_web.name }}"
+    - "{{ docker_networks.glances.name }}"
+    - "{{ docker_networks.hass.name }}"
+    - "{{ docker_networks.influxdb.name }}"
+    - "{{ docker_networks.navidrome.name }}"
+    - "{{ docker_networks.node_red.name }}"
+    - "{{ docker_networks.overseerr.name }}"
+    - "{{ docker_networks.portainer.name }}"
+    - "{{ docker_networks.tautulli.name }}"
   vars:
     "_traefik_role_name": "traefik3"
 
 - name: "traefik3 | Process Servarr network"
-  when: "nas_docker_networks.servarr.name | default('') | trim | length > 0"
+  when: "docker_networks.servarr.name | default('') | trim | length > 0"
   block:
     - name: "traefik3 | Check if Servarr network exists"
       community.docker.docker_network_info:
-        name: "{{ nas_docker_networks.servarr.name }}"
+        name: "{{ docker_networks.servarr.name }}"
       register: "_nas_traefik_servarr_network_info"
 
     - name: "traefik3 | Configure for Servarr tools"
@@ -51,7 +51,7 @@
               {{ _nas_traefik3_extra_networks | default([]) + [_nas_traefik3_network_servarr] }}
           vars:
             _nas_traefik3_network_servarr:
-              name: "{{ nas_docker_networks.servarr.name }}"
+              name: "{{ docker_networks.servarr.name }}"
 
         - name: "traefik3 | Enable SyncThings (Servarr) ports"
           ansible.builtin.set_fact:
@@ -64,11 +64,11 @@
               {{ _nas_traefik3_entrypoints | default({}) | combine(nas_traefik_syncthings_entrypoints) }}
 
 - name: "traefik3 | Process UniFi Controller network"
-  when: "nas_docker_networks.unific.name | default('') | trim | length > 0"
+  when: "docker_networks.unific.name | default('') | trim | length > 0"
   block:
     - name: "traefik3 | Check if UniFi Controller network exists"
       community.docker.docker_network_info:
-        name: "{{ nas_docker_networks.unific.name }}"
+        name: "{{ docker_networks.unific.name }}"
       register: "_nas_traefik_unific_network_info"
 
     - name: "traefik3 | Configure Traefik for UniFi Controller"
@@ -80,7 +80,7 @@
               {{ _nas_traefik3_extra_networks | default([]) + [_nas_traefik3_network_unific] }}
           vars:
             _nas_traefik3_network_unific:
-              name: "{{ nas_docker_networks.unific.name }}"
+              name: "{{ docker_networks.unific.name }}"
 
         - name: "traefik3 | Enable UniFi Controlller ports"
           ansible.builtin.set_fact:

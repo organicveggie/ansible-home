@@ -35,14 +35,14 @@
 
 - name: "diun | Setup Diun Docker network"
   community.docker.docker_network:
-    name: "{{ nas_docker_networks.diun.name }}"
+    name: "{{ docker_networks.diun.name }}"
     driver: "bridge"
     enable_ipv6: "no"
     internal: "no"
     scope: "local"
     ipam_config:
-      - subnet: "{{ nas_docker_networks.diun.subnet }}"
-        gateway: "{{ nas_docker_networks.diun.gateway }}"
+      - subnet: "{{ docker_networks.diun.subnet }}"
+        gateway: "{{ docker_networks.diun.gateway }}"
 
 - name: "diun | Create Diun container"
   ansible.builtin.import_role:
@@ -51,7 +51,7 @@
     nas_diun_user: "{{ nas_diun_user }}"
     nas_diun_uid: "{{ nas_diun_uid }}"
     nas_diun_group: "{{ _nas_diun_groupname }}"
-    nas_diun_docker_network_name: "{{ nas_docker_networks.diun.name }}"
+    nas_diun_docker_network_name: "{{ docker_networks.diun.name }}"
     nas_diun_docker_timezone: "{{ nas_timezone }}"
     nas_diun_notify_mail_host: "{{ nas_diun_notify_mail_host }}"
     nas_diun_notify_mail_port: "{{ nas_diun_notify_mail_port }}"
