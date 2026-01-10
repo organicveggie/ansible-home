@@ -544,6 +544,14 @@ manyfold_redis_docker_image_version: 7
 manyfold_redis_volume_conf_name: "{{ manyfold_redis_name }}-config"
 manyfold_redis_volume_data_name: "{{ manyfold_redis_name }}-data"
 
+manyfold_smtp_server: "{{ vault_manyfold_smtp_server }}"
+manyfold_smtp_port: "{{ vault_manyfold_smtp_port }}"
+manyfold_smtp_auth: "{{ vault_manyfold_smtp_auth }}"
+manyfold_smtp_username: "{{ vault_manyfold_smtp_username }}"
+manyfold_smtp_password: "{{ vault_manyfold_smtp_password }}"
+manyfold_smtp_public_hostname: "{{ vault_manyfold_smtp_public_hostname }}"
+
+
 ###
 ### NAS
 ###

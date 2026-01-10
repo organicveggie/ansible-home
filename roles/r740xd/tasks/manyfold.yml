@@ -66,3 +66,10 @@
     manyfold_docker_gid: "{{ manyfold_group_id }}"
     manyfold_docker_host_domain: "{{ vault_veggie_new_base_domain_name }}"
     manyfold_docker_secret_key: '{{ manyfold_secret_key }}'
+    manyfold_docker_smtp_enabled: true
+    manyfold_docker_smtp_server: "{{ manyfold_smtp_server }}"
+    manyfold_docker_smtp_port: "{{ manyfold_smtp_port }}"
+    manyfold_docker_smtp_auth: "{{ manyfold_smtp_auth }}"
+    manyfold_docker_smtp_username: "{{ manyfold_smtp_username }}"
+    manyfold_docker_smtp_password: "{{ manyfold_smtp_password }}"
+    manyfold_docker_smtp_public_hostname: "{{ manyfold_smtp_public_hostname }}"

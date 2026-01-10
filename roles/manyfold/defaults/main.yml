@@ -61,6 +61,31 @@ manyfold_docker_redis_db_num: 0
 # If unset a random one will be generated on init, the database is locked to this key.
 manyfold_docker_secret_key: null
 
+# Email support
+manyfold_docker_smtp_enabled: false
+manyfold_docker_smtp_server: "smtp.example.com"
+manyfold_docker_smtp_port: 25
+manyfold_docker_smtp_username: null
+manyfold_docker_smtp_password: null
+manyfold_docker_smtp_from_address: null
+manyfold_docker_smtp_domain: null
+manyfold_docker_smtp_auth: "plain"
+
+# If connecting to your mail server over SSL, should the server identity be verified? Set to “none”
+# to disable, for things like self-signed SSL certificates, or “peer” to enable verification (which
+# is the default).
+manyfold_docker_smtp_ssl_verify_mode: "peer"
+
+manyfold_docker_smtp_open_timeout: 5
+manyfold_docker_smtp_read_timeout: 5
+
+# The hostname of your publicly-accessible service, e.g. try.manyfold.app. This variable is used to
+# create links in emails, and must be set for email delivery to work.
+manyfold_docker_public_hostname: "manyfold.example.com"
+
+# If your public service is on a non-standard port, set it here (e.g. 3214).
+manyfold_docker_public_port: null
+
 #####
 # Traefik
 #####
