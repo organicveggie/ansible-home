@@ -24,6 +24,7 @@
     ipam_config:
       - subnet: "{{ docker_networks.manyfold.subnet }}"
         gateway: "{{ docker_networks.manyfold.gateway }}"
+  tags: ["setup", "network"]
 
 - name: "manyfold | Install Postgres {{ manyfold_pgsql_docker_image_version | string }}"
   ansible.builtin.import_role:
@@ -37,6 +38,7 @@
     postgres_docker_volume_init_name: "{{ manyfold_pgsql_volume_init_name }}"
     postgres_docker_volume_conf_name: "{{ manyfold_pgsql_volume_conf_name }}"
     postgres_docker_volume_data_name: "{{ manyfold_pgsql_volume_data_name }}"
+  tags: ["postgres"]
 
 - name: "manyfold | Install Redis {{ manyfold_redis_docker_image_version | string }}"
   ansible.builtin.import_role:
@@ -49,6 +51,7 @@
     redis_docker_volume_data: "{{ manyfold_redis_volume_data_name }}"
     redis_docker_config_persist_appendonly: true
     redis_docker_config_loglevel: "{{ manyfold_redis_config_loglevel }}"
+  tags: ["redis"]
 
 - name: "manyfold | Launch Manyfold container"
   ansible.builtin.import_role:
@@ -73,3 +76,13 @@
     manyfold_docker_smtp_username: "{{ manyfold_smtp_username }}"
     manyfold_docker_smtp_password: "{{ manyfold_smtp_password }}"
     manyfold_docker_smtp_public_hostname: "{{ manyfold_smtp_public_hostname }}"
+  tags: ["manyfold"]
+
+- name: "manyfold | Setup Cloudflared"
+  ansible.builtin.import_role:
+    name: "cloudflared_docker"
+  vars:
+    cloudflared_docker_name: "manyfold-cloudflared"
+    cloudflared_docker_tunnel_token: "{{ manyfold_cloudflared_token }}"
+    cloudflared_docker_network: "{{ docker_networks.manyfold.name }}"
+  tags: ["cloudflare", "cloudflared"]

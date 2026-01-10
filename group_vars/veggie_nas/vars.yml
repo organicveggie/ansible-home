@@ -551,6 +551,8 @@ manyfold_smtp_username: "{{ vault_manyfold_smtp_username }}"
 manyfold_smtp_password: "{{ vault_manyfold_smtp_password }}"
 manyfold_smtp_public_hostname: "{{ vault_manyfold_smtp_public_hostname }}"
 
+manyfold_cloudflared_name: "{{ manyfold_container_name }}-cloudflared"
+manyfold_cloudflared_token: "{{ vault_manyfold_cloudflared_token }}"
 
 ###
 ### NAS
