@@ -15,6 +15,9 @@
     file: "traefik3_network.yml"
   loop:
     - "{{ docker_networks.portainer.name }}"
+    - "{{ docker_networks.manyfold.name }}"
+  loop_control:
+    loop_var: __r720xd_traefik3_docker_network
 
 - name: "traefik3 | Setup traefik3 container"
   ansible.builtin.import_role:
@@ -52,6 +55,6 @@
       AWS_POLLING_INTERVAL: "{{ r720xd_route53_polling_interval }}"
       AWS_PROPAGATION_TIMEOUT: "{{ r720xd_route53_propagation_timeout }}"
       AWS_TTL: "{{ r720xd_route53_ttl }}"
-    traefik3_extra_networks: "{{ _server_traefik3_extra_networks }}"
+    traefik3_extra_networks: "{{ _r720xd_traefik3_extra_networks }}"
     traefik3_conf_metrics:
       addInternals: true

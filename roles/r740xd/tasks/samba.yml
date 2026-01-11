@@ -24,7 +24,7 @@
     _samba_extra_user_groups: >
       {{ nas_samba_extra_user_groups | default({}) | dict2items | 
       rejectattr('key', veggie_nas_admin_username) | 
-      combine({veggie_nas_admin_username: _samba_admin_user_groups })}}
+      combine({veggie_nas_admin_username: _samba_admin_user_groups}) }}
 
 - name: "samba | Install Samba"
   ansible.builtin.import_role:

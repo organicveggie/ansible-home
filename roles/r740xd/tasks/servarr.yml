@@ -387,7 +387,7 @@
   vars:
     cloudflared_docker_name: "{{ nas_servarr_cloudflared_container_name }}"
     cloudflared_docker_tunnel_token: "{{ nas_servarr_cloudflared_token }}"
-    cloudflared_docker_network: "{{ docker_networks.servarr.name  }}"
+    cloudflared_docker_network: "{{ docker_networks.servarr.name }}"
   tags: ["cloudflare", "cloudflared"]
 
 - name: "bazarr | Setup Bazarr 1080p"

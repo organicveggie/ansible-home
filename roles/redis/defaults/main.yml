@@ -1,0 +1,56 @@
+---
+#####
+# Container settings
+#####
+
+# Name of the Docker container.
+redis_docker_name: "redis"
+
+# Base name of the Docker image to use for the container.
+redis_docker_image: "redis"
+
+# Specific Docker image version to use for the container.
+redis_docker_image_version: "latest"
+
+# Number of vCPUs to allocate to the container.
+redis_docker_cpus: "2"
+
+# Amount of memory to allocate to the container.
+redis_docker_memory: "2GB"
+
+redis_docker_volume_data: "redis-data"
+
+# Default Docker network.
+redis_docker_network: "redis"
+
+# List of additional networks the container should attach to. Elements should be dictionaries like
+# https://docs.ansible.com/ansible/latest/collections/community/docker/docker_container_module.html#parameter-networks.
+redis_docker_extra_networks: []
+
+# List of aliases for this container in the default network. These names can be used in the default
+# network to reach this container.
+redis_docker_network_aliases: []
+
+#####
+# Redis config settings
+#####
+
+redis_docker_config_persist_appendonly: false
+redis_docker_config_persist_rdb: false
+redis_docker_config_persist_rdb_interval: 60
+redis_docker_config_persist_rdb_writeops: 1
+
+redis_docker_config_loglevel: "notice"
+
+#####
+# Traefik
+#####
+
+# Disable the use of Traefik as a proxy.
+redis_docker_available_externally: false
+
+#####
+# Ansible
+#####
+
+redis_docker_role_label: "redis"

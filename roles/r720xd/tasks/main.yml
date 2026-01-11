@@ -26,6 +26,10 @@
   ansible.builtin.import_tasks: "portainer.yml"
   tags: ["portainer"]
 
+- name: "Install Manyfold"
+  ansible.builtin.import_tasks: "manyfold.yml"
+  tags: ["manyfold"]
+
 - name: "Install Traefik3"
   ansible.builtin.import_tasks: "traefik3.yml"
   tags: ["traefik", "traefik3"]

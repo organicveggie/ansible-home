@@ -20,5 +20,7 @@
   ansible.builtin.user:
     append: true
     groups: ["docker"]
-    name: "{{ item }}"
+    name: "{{ __r720xd_docker_user }}"
   loop: "{{ r720xd_docker_users | default([]) }}"
+  loop_control:
+    loop_var: __r720xd_docker_user

@@ -31,6 +31,7 @@
     - "{{ docker_networks.overseerr.name }}"
     - "{{ docker_networks.portainer.name }}"
     - "{{ docker_networks.tautulli.name }}"
+    - "{{ docker_networks.manyfold.name }}"
   vars:
     "_traefik_role_name": "traefik3"
 
@@ -98,6 +99,7 @@
       {{ _nas_traefik3_extra_ports | default([]) | sort }}
 
 - ansible.builtin.debug:
+    name: "traefik3 | Debug entrypoints"
     msg:
       - "Entrypoints: {{ _nas_traefik3_entrypoints | default({}) }}"
       - "Extra networks: {{ _nas_traefik3_extra_networks | default([]) }}"

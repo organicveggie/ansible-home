@@ -36,7 +36,7 @@
     plex_docker_fqdn: "plex.{{ nas_site_domain }}"
     plex_docker_gid: "{{ _nas_plex_gid }}"
     plex_docker_groupname: "{{ _nas_plex_groupname }}"
-    plex_docker_memory: "{{ nas_plex_memory  }}"
+    plex_docker_memory: "{{ nas_plex_memory }}"
     plex_docker_name: "{{ nas_plex_container_name }}"
     plex_docker_network_name: "{{ nas_plex_network_name }}"
     plex_docker_network_ipv4: "{{ nas_plex_network_ipv4 }}"

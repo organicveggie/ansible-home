@@ -1,0 +1,108 @@
+---
+#####
+# Container settings
+#####
+
+# Name of the Docker container.
+manyfold_docker_name: "manyfold"
+
+# Base name of the Docker image to use for the container.
+manyfold_docker_image: "lscr.io/linuxserver/manyfold"
+
+# Specific Docker image version to use for the container.
+manyfold_docker_image_version: "latest"
+
+# Number of vCPUs to allocate to the container.
+manyfold_docker_cpus: "2"
+
+# Amount of memory to allocate to the container.
+manyfold_docker_memory: "2GB"
+
+# Group ID to use inside the container.
+manyfold_docker_gid: "1000"
+
+# User ID to use inside the container.
+manyfold_docker_uid: "1000"
+
+# Timezone to use inside the container.
+manyfold_docker_timezone: "America/New_York"
+
+manyfold_docker_volume_libraries: "manyfold-libraries"
+
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+manyfold_docker_extra_labels: {}
+
+# Default Docker network.
+manyfold_docker_network: "manyfold"
+
+# List of additional networks the container should attach to. Elements should be dictionaries like
+# https://docs.ansible.com/ansible/latest/collections/community/docker/docker_container_module.html#parameter-networks.
+manyfold_docker_extra_networks: []
+
+# List of aliases for this container in the default network. These names can be used in the default
+# network to reach this container.
+manyfold_docker_network_aliases: []
+
+#####
+# Config options
+#####
+
+manyfold_docker_db_host_name: "postgres"
+manyfold_docker_db_port: 5432
+manyfold_docker_db_name: "manyfold"
+manyfold_docker_db_username: "admin"
+manyfold_docker_db_userpasswd: "password"
+
+manyfold_docker_redis_host_name: "redis"
+manyfold_docker_redis_port: 6379
+manyfold_docker_redis_db_num: 0
+
+# Browser session and database encryption key.
+# If unset a random one will be generated on init, the database is locked to this key.
+manyfold_docker_secret_key: null
+
+# Email support
+manyfold_docker_smtp_enabled: false
+manyfold_docker_smtp_server: "smtp.example.com"
+manyfold_docker_smtp_port: 25
+manyfold_docker_smtp_username: null
+manyfold_docker_smtp_password: null
+manyfold_docker_smtp_from_address: null
+manyfold_docker_smtp_domain: null
+manyfold_docker_smtp_auth: "plain"
+
+# If connecting to your mail server over SSL, should the server identity be verified? Set to “none”
+# to disable, for things like self-signed SSL certificates, or “peer” to enable verification (which
+# is the default).
+manyfold_docker_smtp_ssl_verify_mode: "peer"
+
+manyfold_docker_smtp_open_timeout: 5
+manyfold_docker_smtp_read_timeout: 5
+
+# The hostname of your publicly-accessible service, e.g. try.manyfold.app. This variable is used to
+# create links in emails, and must be set for email delivery to work.
+manyfold_docker_public_hostname: "manyfold.example.com"
+
+# If your public service is on a non-standard port, set it here (e.g. 3214).
+manyfold_docker_public_port: null
+
+#####
+# Traefik
+#####
+
+# Enable the use of Traefik as a proxy.
+manyfold_docker_available_externally: true
+
+# Host name to use for the Traefik endpoint. Combined with [manyfold_docker_host_domain] to form the
+# FQDN for the endpoint.
+manyfold_docker_host_name: "manyfold"
+
+# Domain name to use for the Traefik endpoint. Combined with [manyfold_docker_host_name] to form the
+# FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
+manyfold_docker_host_domain: "example.com"
+
+#####
+# Ansible
+#####
+
+manyfold_docker_role_label: "manyfold"

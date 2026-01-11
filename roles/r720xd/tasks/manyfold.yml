@@ -1,0 +1,68 @@
+---
+- name: "manyfold | Create group"
+  ansible.builtin.group:
+    name: "{{ manyfold_group_name }}"
+    gid: "{{ manyfold_group_id }}"
+  tags: ["setup"]
+
+- name: "manyfold | Create user"
+  ansible.builtin.user:
+    name: "{{ manyfold_user_name }}"
+    uid: "{{ manyfold_user_id }}"
+    create_home: "false"
+    groups: "{{ manyfold_group_name }}"
+    password: "!"
+  tags: ["setup"]
+
+- name: "manyfold | Create Manyfold Docker network"
+  community.docker.docker_network:
+    name: "{{ docker_networks.manyfold.name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "no"
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ docker_networks.manyfold.subnet }}"
+        gateway: "{{ docker_networks.manyfold.gateway }}"
+
+- name: "manyfold | Install Postgres {{ manyfold_pgsql_docker_image_version | string }}"
+  ansible.builtin.import_role:
+    name: "organicveggie.postgres_docker"
+  vars:
+    postgres_docker_admin_user: "{{ manyfold_pgsql_admin_user }}"
+    postgres_docker_admin_password: "{{ manyfold_pgsql_admin_passwd }}"
+    postgres_docker_image: "postgres:{{ manyfold_pgsql_docker_image_version | string }}"
+    postgres_docker_name: "{{ manyfold_pgsql_name }}"
+    postgres_docker_network_name: "{{ docker_networks.manyfold.name }}"
+    postgres_docker_volume_init_name: "{{ manyfold_pgsql_volume_init_name }}"
+    postgres_docker_volume_conf_name: "{{ manyfold_pgsql_volume_conf_name }}"
+    postgres_docker_volume_data_name: "{{ manyfold_pgsql_volume_data_name }}"
+
+- name: "manyfold | Install Redis {{ manyfold_redis_docker_image_version | string }}"
+  ansible.builtin.import_role:
+    name: "redis"
+  vars:
+    redis_docker_name: "{{ manyfold_redis_name }}"
+    redis_docker_image_version: "{{ manyfold_redis_docker_image_version | string }}"
+    redis_docker_network: "{{ docker_networks.manyfold.name }}"
+    redis_docker_volume_config: "{{ manyfold_redis_volume_conf_name }}"
+    redis_docker_volume_data: "{{ manyfold_redis_volume_data_name }}"
+    redis_docker_config_persist_appendonly: true
+    redis_docker_config_loglevel: "{{ manyfold_redis_config_loglevel }}"
+
+- name: "manyfold | Launch Manyfold container"
+  ansible.builtin.import_role:
+    name: "manyfold"
+  vars:
+    manyfold_docker_name: "{{ manyfold_container_name }}"
+    manyfold_docker_network_name: "{{ docker_networks.manyfold.name }}"
+    manyfold_docker_db_host_name: "{{ manyfold_pgsql_name }}"
+    manyfold_docker_db_username: "{{ manyfold_pgsql_admin_user }}"
+    manyfold_docker_db_userpasswd: "{{ manyfold_pgsql_admin_passwd }}"
+    manyfold_docker_redis_host_name: "{{ manyfold_redis_name }}"
+    manyfold_docker_redis_db_num: 1
+    manyfold_docker_timezone: "{{ r720xd_timezone }}"
+    manyfold_docker_uid: "{{ manyfold_user_id }}"
+    manyfold_docker_gid: "{{ manyfold_group_id }}"
+    manyfold_docker_host_domain: "{{ r720xd_site_domain }}"
+    manyfold_docker_secret_key: '{{ manyfold_secret_key }}'

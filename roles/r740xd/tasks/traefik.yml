@@ -30,6 +30,7 @@
     - "{{ docker_networks.overseerr.name }}"
     - "{{ docker_networks.portainer.name }}"
     - "{{ docker_networks.tautulli.name }}"
+    - "{{ docker_networks.manyfold.name }}"
 
 - name: "traefik | Process Servarr network"
   when: "docker_networks.servarr.name | default('') | trim | length > 0"
@@ -104,7 +105,8 @@
   ansible.builtin.set_fact:
     _nas_traefik_all_ports: "{{ (_nas_traefik_extra_ports | default([]) + nas_traefik_http_ports) | sort }}"
 
-- ansible.builtin.debug:
+- name: "traefik | Debug entrypoints"
+  ansible.builtin.debug:
     msg:
       - "Entrypoints: {{ _nas_traefik_entrypoints | default({}) }}"
       - "Extra networks: {{ _nas_traefik_extra_networks | default([]) }}"

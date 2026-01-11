@@ -1,0 +1,207 @@
+---
+- name: "{{ manyfold_docker_role_label }} | Create Manyfold Docker volumes"
+  community.docker.docker_volume:
+    name: "{{ __manyfold_volume_name }}"
+  loop:
+    - "{{ manyfold_docker_volume_libraries }}"
+  loop_control:
+    loop_var: __manyfold_volume_name
+
+- name: "{ manyfold_docker_role_label } | Get library container volume"
+  community.docker.docker_volume_info:
+    name: "{{ manyfold_docker_volume_libraries }}"
+  register: "_manyfold_docker_libraries_volume"
+
+- name: "{{ manyfold_docker_role_label }} }| Set ownership on libraries folder"
+  ansible.builtin.file:
+    path: "{{ __manyfold_volume_mountpoint }}"
+    state: "directory"
+    mode: "0775"
+    owner: "{{ manyfold_docker_uid }}"
+    group: "{{ manyfold_docker_gid }}"
+  loop:
+    - "{{ _manyfold_docker_libraries_volume['volume']['Mountpoint'] }}"
+  loop_control:
+    loop_var: __manyfold_volume_mountpoint
+    
+- name: "{{ manyfold_docker_role_label }} | Set Docker mount list"
+  ansible.builtin.set_fact:
+    _manyfold_docker_mount_list:
+      - source: "{{ manyfold_docker_volume_libraries }}"
+        target: "/libraries"
+        type: "volume"
+
+- name: "{{ manyfold_docker_role_label }} | Build container FQDN"
+  ansible.builtin.set_fact:
+    _manyfold_docker_fqdn: "{{ manyfold_docker_host_name }}.{{ manyfold_docker_host_domain }}"
+
+- name: "{{ manyfold_docker_role_label }} | Build database url"
+  ansible.builtin.set_fact:
+    _manyfold_docker_db_url: >-
+      postgresql://{{ manyfold_docker_db_username }}:{{ manyfold_docker_db_userpasswd }}@{{ manyfold_docker_db_host_name }}:{{ manyfold_docker_db_port }}/{{ manyfold_docker_db_name }}
+
+- name: "{{ manyfold_docker_role_label }} | Build redis url"
+  ansible.builtin.set_fact:
+    _manyfold_docker_redis_url: >-
+      redis://{{ manyfold_docker_redis_host_name }}:{{ manyfold_docker_redis_port | string }}/{{ manyfold_docker_redis_db_num | string }}
+
+- name: "{{ manyfold_docker_role_label }} | Create placeholder array for default network"
+  ansible.builtin.set_fact:
+    _manyfold_docker_default_networks:
+      - name: "{{ manyfold_docker_network }}"
+        aliases: "{{ manyfold_docker_network_aliases | default(omit) }}"
+
+- name: "{{ manyfold_docker_role_label }} | Define all Docker networks for this container"
+  ansible.builtin.set_fact:
+    _manyfold_docker_all_networks: >
+      {{ _manyfold_docker_default_networks + manyfold_docker_extra_networks }}
+
+- name: "{{ manyfold_docker_role_label }} | Define base map for Docker labels"
+  ansible.builtin.set_fact:
+    _manyfold_docker_labels:
+      "traefik.enable": "{{ manyfold_docker_available_externally | string }}"
+
+- name: "{{ manyfold_docker_role_label }} | Define Docker labels with Traefik enabled"
+  ansible.builtin.set_fact:
+    _manyfold_docker_labels: "{{ _manyfold_docker_labels | default({}) |
+      combine({__manyfold_traefik_label.key: __manyfold_traefik_label.value}) }}"
+  with_items:
+    - key: "traefik.docker.network"
+      value: "{{ manyfold_docker_network }}"
+    - key: "traefik.http.routers.manyfold.rule"
+      value: "Host(`{{ _manyfold_docker_fqdn }}`)"
+    - key: "traefik.http.routers.manyfold.entrypoints"
+      value: "http,https"
+    - key: "traefik.http.routers.manyfold.tls.certresolver"
+      value: "letsencrypt"
+    - key: "traefik.http.routers.manyfold.tls.domains[0].main"
+      value: "*.{{ manyfold_docker_host_domain }}"
+    - key: "traefik.http.services.manyfold.loadbalancer.server.port"
+      value: "{{ manyfold_docker_web_port | string }}"
+  loop_control:
+    loop_var: __manyfold_traefik_label
+  when: "manyfold_docker_available_externally"
+
+- name: "{{ manyfold_docker_role_label }} | Define user-supplied extra Docker labels"
+  ansible.builtin.set_fact:
+    _manyfold_docker_labels: "{{ _manyfold_docker_labels | default({}) |
+      combine({__manyfold_docker_extra_label.key: __manyfold_docker_extra_label.value}) }}"
+  loop: "{{ manyfold_docker_extra_labels | dict2items }}"
+  loop_control:
+    loop_var: __manyfold_docker_extra_label
+
+- name: "{{ manyfold_docker_role_label }} | Define common environment variables"
+  ansible.builtin.set_fact:
+    _manyfold_docker_env_vars: "{{ _manyfold_docker_env_vars | default({}) |
+      combine({__manyfold_docker_env.key: __manyfold_docker_env.value}) }}"
+  with_items:
+    - key: "PUID"
+      value: "{{ manyfold_docker_uid }}"
+    - key: "PGID"
+      value: "{{ manyfold_docker_gid }}"
+    - key: "TZ"
+      value: "{{ manyfold_docker_timezone }}"
+    - key: "DATABASE_URL"
+      value: "{{ _manyfold_docker_db_url }}"
+    - key: "REDIS_URL"
+      value: "{{ _manyfold_docker_redis_url }}"
+    - key: "SECRET_KEY_BASE"
+      value: "{{ manyfold_docker_secret_key | default(omit) }}"
+    - key: "MULTIUSER"
+      value: "enabled"
+  loop_control:
+    loop_var: __manyfold_docker_env
+  
+- name: "{{ manyfold_docker_role_label }} | SMTP support"
+  when: "manyfold_docker_smtp_enabled"
+  block:
+    - name: "{{ manyfold_docker_role_label }} | SMTP environment variables"
+      ansible.builtin.set_fact:
+        _manyfold_docker_env_vars: "{{ _manyfold_docker_env_vars | default({}) |
+          combine({__manyfold_docker_smtp.key: __manyfold_docker_smtp.value}) }}"
+      with_items:
+        - key: "SMTP_SERVER"
+          value: "{{ manyfold_docker_smtp_server }}"
+        - key: "SMTP_PORT"
+          value: "{{ manyfold_docker_smtp_port | string }}"
+        - key: "SMTP_AUTHENTICATION"
+          value: "{{ manyfold_docker_smtp_auth }}"
+        - key: "SMTP_OPENSSL_VERIFY_MODE"
+          value: "{{ manyfold_docker_smtp_ssl_verify_mode }}"
+        - key: "SMTP_OPEN_TIMEOUT"
+          value: "{{ manyfold_docker_smtp_open_timeout | string }}"
+        - key: "SMTP_READ_TIMEOUT"
+          value: "{{ manyfold_docker_smtp_read_timeout | string }}"
+        - key: "PUBLIC_HOSTNAME"
+          value: "{{ manyfold_docker_public_hostname }}"
+      loop_control:
+        loop_var: __manyfold_docker_smtp
+
+    - name: "{{ manyfold_docker_role_label }} | SMTP username/password"
+      ansible.builtin.set_fact:
+        _manyfold_docker_env_vars: "{{ _manyfold_docker_env_vars |
+          combine({__manyfold_docker_smtp_userpwd.key: __manyfold_docker_smtp_userpwd.value}) }}"
+      with_items:
+        - key: "SMTP_USERNAME"
+          value: "{{ manyfold_docker_smtp_username }}"
+        - key: "SMTP_PASSWORD"
+          value: "{{ manyfold_docker_smtp_password }}"
+      when: "manyfold_docker_smtp_username | default('', true) | trim | length > 0"
+      loop_control:
+        loop_var: __manyfold_docker_smtp_userpwd
+
+    - name: "{{ manyfold_docker_role_label }} | SMTP from address"
+      ansible.builtin.set_fact:
+        _manyfold_docker_env_vars: >-
+          {{ _manyfold_docker_env_vars | combine({"SMTP_FROM_ADDRESS": manyfold_docker_smtp_from_address}) }}
+      when: "manyfold_docker_smtp_from_address | default('', true) | trim | length > 0"
+
+    - name: "{{ manyfold_docker_role_label }} | SMTP domain"
+      ansible.builtin.set_fact:
+        _manyfold_docker_env_vars: >-
+          {{ _manyfold_docker_env_vars | combine({"SMTP_DOMAIN": manyfold_docker_smtp_domain}) }}
+      when: "manyfold_docker_smtp_domain | default('', true) | trim | length > 0"
+
+    - name: "{{ manyfold_docker_role_label }} | SMTP public server port"
+      ansible.builtin.set_fact:
+        _manyfold_docker_env_vars: >-
+          {{ _manyfold_docker_env_vars | combine({"PUBLIC_PORT": __manyfold_docker_public_port}) }}
+      vars:
+        __manyfold_docker_public_port: "{{ manyfold_docker_public_port | string }}"
+      when: "manyfold_docker_public_port | default('', true) | string | trim | length > 0"
+
+- name: "{{ manyfold_docker_role_label }} | Debug environment variables"
+  ansible.builtin.debug:
+    msg: "{{ _manyfold_docker_env_vars }}"
+
+- name: "{{ manyfold_docker_role_label }} | Create Docker Container"
+  community.docker.docker_container:
+    name: "{{ manyfold_docker_name }}"
+    image: "{{ manyfold_docker_image }}:{{ manyfold_docker_image_version }}"
+    pull: true
+    env: "{{ _manyfold_docker_env_vars }}"
+    mounts: "{{ _manyfold_docker_mount_list }}"
+    network_mode: "{{ manyfold_docker_network }}"
+    networks: "{{ _manyfold_docker_all_networks }}"
+    restart_policy: unless-stopped
+    memory: "{{ manyfold_docker_memory }}"
+    cpus: "{{ manyfold_docker_cpus }}"
+    container_default_behavior: no_defaults
+    cap_drop:
+      - "ALL"
+    capabilities:
+      - "CHOWN"
+      - "DAC_OVERRIDE"
+      - "SETUID"
+      - "SETGID"
+    security_opts:
+      - "no-new-privileges:true"
+    auto_remove: no
+    detach: yes
+    init: false
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
+    labels: "{{ _manyfold_docker_labels }}"
