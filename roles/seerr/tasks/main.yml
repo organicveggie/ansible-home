@@ -1,82 +1,82 @@
 ---
-- name: "Create overseerr Docker config volume"
+- name: "Create Seerr Docker config volume"
   community.docker.docker_volume:
-    name: "{{ overseerr_docker_volume_config_name }}"
+    name: "{{ seerr_docker_volume_config_name }}"
 
 - name: "Set Docker mount list for volume mounts"
   ansible.builtin.set_fact:
-    _overseerr_docker_mount_list:
-      - source: "{{ overseerr_docker_volume_config_name }}"
+    _seerr_docker_mount_list:
+      - source: "{{ seerr_docker_volume_config_name }}"
         target: "/app/config"
         type: "volume"
 
 - name: "Build container FQDN"
   ansible.builtin.set_fact:
-    _overseerr_docker_fqdn: "{{ overseerr_docker_host_name }}.{{ overseerr_docker_host_domain }}"
+    _seerr_docker_fqdn: "{{ seerr_docker_host_name }}.{{ seerr_docker_host_domain }}"
 
 - name: "Create placeholder array for default network"
   ansible.builtin.set_fact:
-    _overseerr_docker_default_networks:
-      - name: "{{ overseerr_docker_network }}"
-        aliases: "{{ overseerr_docker_network_aliases | default(omit) }}"
+    _seerr_docker_default_networks:
+      - name: "{{ seerr_docker_network }}"
+        aliases: "{{ seerr_docker_network_aliases | default(omit) }}"
 
 - name: "Define all Docker networks for this container"
   ansible.builtin.set_fact:
-    _overseerr_docker_all_networks: >
-      {{ _overseerr_docker_default_networks + overseerr_docker_extra_networks }}
+    _seerr_docker_all_networks: >
+      {{ _seerr_docker_default_networks + seerr_docker_extra_networks }}
 
 - name: "Define Docker labels with Traefik disabled"
   ansible.builtin.set_fact:
-    _overseerr_docker_labels: "{{ _overseerr_docker_labels | default({}) |
+    _seerr_docker_labels: "{{ _seerr_docker_labels | default({}) |
       combine({item.key: item.value}) }}"
   with_items:
     - key: "traefik.enable"
-      value: "{{ overseerr_available_externally }}"
-  when: "not overseerr_docker_available_externally"
+      value: "{{ seerr_available_externally }}"
+  when: "not seerr_docker_available_externally"
 
 - name: "Define Docker labels with Traefik enabled"
   ansible.builtin.set_fact:
-    _overseerr_docker_labels: "{{ _overseerr_docker_labels | default({}) |
+    _seerr_docker_labels: "{{ _seerr_docker_labels | default({}) |
       combine({item.key: item.value}) }}"
   with_items:
     - key: "traefik.enable"
-      value: "{{ overseerr_docker_available_externally }}"
+      value: "{{ seerr_docker_available_externally }}"
     - key: "traefik.docker.network"
       value: "{{ servarr_docker_network }}"
-    - key: "traefik.http.routers.overseerr.rule"
-      value: "Host(`{{ _overseerr_docker_fqdn }}`)"
-    - key: "traefik.http.routers.overseerr.entrypoints"
+    - key: "traefik.http.routers.seerr.rule"
+      value: "Host(`{{ _seerr_docker_fqdn }}`)"
+    - key: "traefik.http.routers.seerr.entrypoints"
       value: "http,https"
-    - key: "traefik.http.routers.overseerr.tls.certresolver"
+    - key: "traefik.http.routers.seerr.tls.certresolver"
       value: "letsencrypt"
-    - key: "traefik.http.routers.overseerr.tls.domains[0].main"
-      value: "*.{{ overseerr_docker_host_domain }}"
-    - key: "traefik.http.services.overseerr.loadbalancer.server.port"
-      value: "{{ overseerr_docker_web_port }}"
-  when: "overseerr_docker_available_externally"
+    - key: "traefik.http.routers.seerr.tls.domains[0].main"
+      value: "*.{{ seerr_docker_host_domain }}"
+    - key: "traefik.http.services.seerr.loadbalancer.server.port"
+      value: "{{ seerr_docker_web_port }}"
+  when: "seerr_docker_available_externally"
 
 - name: "Define user-supplied extra Docker labels"
   ansible.builtin.set_fact:
-    _overseerr_docker_labels: "{{ _overseerr_docker_labels | default({}) |
+    _seerr_docker_labels: "{{ _seerr_docker_labels | default({}) |
       combine({item.key: item.value}) }}"
-  loop: "{{ overseerr_docker_extra_labels | dict2items }}"
+  loop: "{{ seerr_docker_extra_labels | dict2items }}"
 
-- name: "overseerr Docker Container"
+- name: "seerr Docker Container"
   community.docker.docker_container:
-    name: "{{ overseerr_docker_name }}"
-    image: "{{ overseerr_docker_image }}:{{ overseerr_docker_image_version }}"
+    name: "{{ seerr_docker_name }}"
+    image: "{{ seerr_docker_image }}:{{ seerr_docker_image_version }}"
     pull: true
     env:
-      "LOG_LEVEL": "{{ overseerr_docker_log_level }}"
-      "PORT": "{{ overseerr_docker_web_port }}"
-      "TZ": "{{ overseerr_docker_timezone }}"
-    mounts: "{{ _overseerr_docker_mount_list }}"
-    network_mode: "{{ overseerr_docker_network }}"
-    networks: "{{ _overseerr_docker_all_networks }}"
-    etc_hosts: "{{ overseerr_docker_extra_hosts | default(omit) }}"
+      "LOG_LEVEL": "{{ seerr_docker_log_level }}"
+      "PORT": "{{ seerr_docker_web_port }}"
+      "TZ": "{{ seerr_docker_timezone }}"
+    mounts: "{{ _seerr_docker_mount_list }}"
+    network_mode: "{{ seerr_docker_network }}"
+    networks: "{{ _seerr_docker_all_networks }}"
+    etc_hosts: "{{ seerr_docker_extra_hosts | default(omit) }}"
     restart_policy: unless-stopped
-    memory: "{{ overseerr_docker_memory }}"
-    cpus: "{{ overseerr_docker_cpus }}"
+    memory: "{{ seerr_docker_memory }}"
+    cpus: "{{ seerr_docker_cpus }}"
     container_default_behavior: no_defaults
     auto_remove: no
     detach: yes
@@ -86,4 +86,4 @@
     privileged: no
     read_only: no
     tty: no
-    labels: "{{ _overseerr_docker_labels }}"
+    labels: "{{ _seerr_docker_labels }}"

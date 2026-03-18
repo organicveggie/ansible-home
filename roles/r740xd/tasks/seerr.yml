@@ -1,24 +1,24 @@
 ---
-- name: "overseerr | Setup Docker network"
+- name: "r740xd | seerr | Setup Docker network"
   community.docker.docker_network:
-    name: "{{ docker_networks.overseerr.name }}"
+    name: "{{ docker_networks.seerr.name }}"
     driver: "bridge"
     enable_ipv6: "no"
     internal: "no"
     scope: "local"
     ipam_config:
-      - subnet: "{{ docker_networks.overseerr.subnet }}"
-        gateway: "{{ docker_networks.overseerr.gateway }}"
+      - subnet: "{{ docker_networks.seerr.subnet }}"
+        gateway: "{{ docker_networks.seerr.gateway }}"
   tags: ["setup", "network"]
 
-- name: "servarr | Setup Overseerr"
+- name: "r740xd | seerr | Setup Seerr"
   ansible.builtin.import_role:
-    name: "overseerr"
+    name: "seerr"
   vars:
-    overseerr_docker_extra_networks:
+    seerr_docker_extra_networks:
       - name: "{{ docker_networks.servarr.name }}"
       - name: "{{ docker_networks.tautulli.name }}"
-    overseerr_docker_host_domain: "{{ nas_overseerr_host_domain }}"
-    overseerr_docker_network: "{{ docker_networks.overseerr.name }}"
-    overseerr_docker_timezone: "{{ nas_timezone }}"
-  tags: ["overseerr"]
+    seerr_docker_host_domain: "{{ nas_seerr_host_domain }}"
+    seerr_docker_network: "{{ docker_networks.seerr.name }}"
+    seerr_docker_timezone: "{{ nas_timezone }}"
+  tags: ["seerr"]

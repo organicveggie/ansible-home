@@ -28,7 +28,7 @@
     - "{{ docker_networks.influxdb.name }}"
     - "{{ docker_networks.navidrome.name }}"
     - "{{ docker_networks.node_red.name }}"
-    - "{{ docker_networks.overseerr.name }}"
+    - "{{ docker_networks.seerr.name }}"
     - "{{ docker_networks.portainer.name }}"
     - "{{ docker_networks.tautulli.name }}"
     - "{{ docker_networks.manyfold.name }}"
