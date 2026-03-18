@@ -4,6 +4,7 @@
 !/galaxy_roles
 /galaxy_roles/*
 !/galaxy_roles/requirements.yml
+.ansible
 .python-version
 .vagrant
 py38
