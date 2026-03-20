@@ -5,7 +5,7 @@
 
 - binary_sensor:
   - name: "Is Commute Day"
-    state: "{{ bool(now().weekday() in [2,3]) }}"
+    state: "{{ bool(now().weekday() in [0,2]) }}"
   - name: "Is Weekend"
     state: "{{ bool(now().weekday() in [5,6]) }}"
   - name: "Is Weekday"
