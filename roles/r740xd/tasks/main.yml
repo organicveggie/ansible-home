@@ -122,9 +122,9 @@
   ansible.builtin.import_tasks: "node-red.yml"
   tags: ["node-red", "nodered"]
 
-- name: "Setup Overseer"
-  ansible.builtin.import_tasks: "overseerr.yml"
-  tags: ["overseerr"]
+- name: "Setup Seer"
+  ansible.builtin.import_tasks: "seerr.yml"
+  tags: ["seerr"]
 
 - name: "Setup Plex"
   ansible.builtin.import_tasks: "plex.yml"

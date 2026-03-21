@@ -160,11 +160,6 @@ nas_navidrome_spotify_client_id: null
 nas_navidrome_spotify_client_secret: null
 
 ###
-### Overseerr
-###
-nas_overseerr_host_domain: null
-
-###
 ### Plex
 ###
 nas_plex_container_name: "plex"
@@ -301,6 +296,11 @@ nas_samba_user_acounts: {}
 # Dictionary of user names to UIDs.
 # See documentation for samba_docker_uids
 nas_samba_user_ids: {}
+
+###
+### Seerr
+###
+nas_seerr_host_domain: null
 
 ###
 ### Servarr

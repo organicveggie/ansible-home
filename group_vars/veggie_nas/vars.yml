@@ -623,12 +623,6 @@ organicveggie_folders_create:
     mode: "755"
 
 ###
-### Overseerr
-###
-overseerr_docker_available_externally: "true"
-overseerr_docker_host_domain: "{{ veggie_nas_domain_name }}"
-
-###
 ### PgAdmin defaults
 ###
 pgadmin_docker_admin_email: "{{ primary_email_address }}"
@@ -799,6 +793,12 @@ samba_groups:
   - name: "photo_writer"
   - name: "rom_writer"
   - name: "source_writer"
+
+###
+### Seerr
+###
+seerr_docker_available_externally: "true"
+seerr_docker_host_domain: "{{ veggie_nas_domain_name }}"
 
 ###
 ### Servarr aka *arr

@@ -101,8 +101,6 @@
         nas_navidrome_spotify_client_secret: "{{ navidrome_spotify_client_secret }}" 
         # Node-RED
         nas_nodered_timezone: "{{ home_timezone }}"
-        # Overseerr
-        nas_overseerr_host_domain: "{{ veggie_base_domain_name }}"
         # Plex
         nas_plex_claim: "{{ vault_plex_docker_claim }}"
         nas_plex_network_ipv4: "{{ vault_plex_network_ipv4 }}"
@@ -127,6 +125,8 @@
         nas_samba_hosts_allow: "{{ vault_nas_samba_hosts_allow }}"
         nas_samba_network_ipv4: "{{ vault_nas_samba_network_ipv4 }}"
         nas_samba_user_acounts: "{{ vault_nas_samba_user_acounts }}"
+        # Seerr
+        nas_seerr_host_domain: "{{ veggie_base_domain_name }}"
         # Servarr
         nas_servarr_movie_source_path: "{{ vault_servarr_movie_path }}"
         nas_servarr_path: "{{ vault_servarr_path }}"

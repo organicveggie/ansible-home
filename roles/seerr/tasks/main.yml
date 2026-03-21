@@ -1,0 +1,89 @@
+---
+- name: "{{ seerr_docker_role_label }} | Create Seerr Docker config volume"
+  community.docker.docker_volume:
+    name: "{{ seerr_docker_volume_config_name }}"
+
+- name: "{{ seerr_docker_role_label }} | Set Docker mount list for volume mounts"
+  ansible.builtin.set_fact:
+    _seerr_docker_mount_list:
+      - source: "{{ seerr_docker_volume_config_name }}"
+        target: "/app/config"
+        type: "volume"
+
+- name: "{{ seerr_docker_role_label }} | Build container FQDN"
+  ansible.builtin.set_fact:
+    _seerr_docker_fqdn: "{{ seerr_docker_host_name }}.{{ seerr_docker_host_domain }}"
+
+- name: "{{ seerr_docker_role_label }} | Create placeholder array for default network"
+  ansible.builtin.set_fact:
+    _seerr_docker_default_networks:
+      - name: "{{ seerr_docker_network }}"
+        aliases: "{{ seerr_docker_network_aliases | default(omit) }}"
+
+- name: "{{ seerr_docker_role_label }} | Define all Docker networks for this container"
+  ansible.builtin.set_fact:
+    _seerr_docker_all_networks: >
+      {{ _seerr_docker_default_networks + seerr_docker_extra_networks }}
+
+- name: "{{ seerr_docker_role_label }} | Define Docker labels with Traefik disabled"
+  ansible.builtin.set_fact:
+    _seerr_docker_labels: "{{ _seerr_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  with_items:
+    - key: "traefik.enable"
+      value: "{{ seerr_available_externally }}"
+  when: "not seerr_docker_available_externally"
+
+- name: "{{ seerr_docker_role_label }} | Define Docker labels with Traefik enabled"
+  ansible.builtin.set_fact:
+    _seerr_docker_labels: "{{ _seerr_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  with_items:
+    - key: "traefik.enable"
+      value: "{{ seerr_docker_available_externally }}"
+    - key: "traefik.docker.network"
+      value: "{{ servarr_docker_network }}"
+    - key: "traefik.http.routers.seerr.rule"
+      value: "Host(`{{ _seerr_docker_fqdn }}`)"
+    - key: "traefik.http.routers.seerr.entrypoints"
+      value: "http,https"
+    - key: "traefik.http.routers.seerr.tls.certresolver"
+      value: "letsencrypt"
+    - key: "traefik.http.routers.seerr.tls.domains[0].main"
+      value: "*.{{ seerr_docker_host_domain }}"
+    - key: "traefik.http.services.seerr.loadbalancer.server.port"
+      value: "{{ seerr_docker_web_port }}"
+  when: "seerr_docker_available_externally"
+
+- name: "{{ seerr_docker_role_label }} | Define user-supplied extra Docker labels"
+  ansible.builtin.set_fact:
+    _seerr_docker_labels: "{{ _seerr_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  loop: "{{ seerr_docker_extra_labels | dict2items }}"
+
+- name: "{{ seerr_docker_role_label }} | Create Docker Container"
+  community.docker.docker_container:
+    name: "{{ seerr_docker_name }}"
+    image: "{{ seerr_docker_image }}:{{ seerr_docker_image_version }}"
+    pull: true
+    env:
+      "LOG_LEVEL": "{{ seerr_docker_log_level }}"
+      "PORT": "{{ seerr_docker_web_port }}"
+      "TZ": "{{ seerr_docker_timezone }}"
+    mounts: "{{ _seerr_docker_mount_list }}"
+    network_mode: "{{ seerr_docker_network }}"
+    networks: "{{ _seerr_docker_all_networks }}"
+    etc_hosts: "{{ seerr_docker_extra_hosts | default(omit) }}"
+    restart_policy: unless-stopped
+    memory: "{{ seerr_docker_memory }}"
+    cpus: "{{ seerr_docker_cpus }}"
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: yes
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
+    labels: "{{ _seerr_docker_labels }}"
