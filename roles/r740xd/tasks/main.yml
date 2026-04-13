@@ -152,16 +152,10 @@
   ansible.builtin.import_tasks: "watchtower.yml"
   tags: ["watchtower"]
 
-- name: "Setup Manyfold"
-  ansible.builtin.import_tasks: "manyfold.yml"
-  tags: ["manyfold"]
-
 # # - ansible.builtin.import_tasks: "influxdb.yml"
 # #   tags: ["influxdb"]
 
 # TODO: Grafana
-
-# TODO: Watchtower
 
 # Traefik needs to be last so all of the networks exist.
 - name: "Setup Traefik"
