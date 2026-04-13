@@ -20,6 +20,8 @@ kometa_docker_run_time: null
 #####
 # Config settings
 #####
+kometa_docker_global_save_report: false
+
 kometa_docker_libraries: |2
     Movies:
       metadata_path:
