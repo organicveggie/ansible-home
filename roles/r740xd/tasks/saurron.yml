@@ -1,0 +1,32 @@
+---
+- name: "r740xd | saurron | Setup Docker network"
+  community.docker.docker_network:
+    name: "{{ docker_networks.saurron.name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "no"
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ docker_networks.saurron.subnet }}"
+        gateway: "{{ docker_networks.saurron.gateway }}"
+  tags: ["setup", "network"]
+
+- name: "r740xd | saurron | Setup Saurron"
+  ansible.builtin.import_role:
+    name: "saurron"
+  vars:
+    saurron_docker_bind_docker_socket: "/var/run/docker.sock"
+    saurron_docker_extra_networks:
+      - name: "{{ docker_networks.servarr.name }}"
+      - name: "{{ docker_networks.tautulli.name }}"
+    saurron_docker_host_domain: "{{ nas_saurron_host_domain }}"
+    saurron_docker_http_api_metrics: true
+    saurron_docker_http_api_metrics_no_auth: true
+    saurron_docker_network: "{{ docker_networks.saurron.name }}"
+    saurron_docker_timezone: "{{ nas_timezone }}"
+    saurron_docker_monitor_only: true
+    saurron_docker_containers:
+      - "bazarr4k"
+      - "bazarr1080"
+      - "calibre"
+  tags: ["setup", "saurron"]

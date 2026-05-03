@@ -109,6 +109,10 @@ docker_networks:
     name: "manyfold"
     gateway: "172.30.19.1"
     subnet: "172.30.19.0/24"
+  saurron:
+    name: "saurron"
+    gateway: "172.30.20.1"
+    subnet: "172.30.20.0/24"
 
 ###
 ### Home Assistant

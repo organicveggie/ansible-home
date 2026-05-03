@@ -72,7 +72,7 @@ saurron_docker_log_format: "auto"
 
 # Append-only JSON audit log (optional; omit to disable)
 # saurron_docker_audit_log: "/var/log/saurron/audit.log"
-saurron_docker_audit_log: null
+saurron_docker_audit_log: ""
 
 # How often to check for updates, e.g. "5m", "1h", "3600"
 # Mutually exclusive with `saurron_docker_schedule` and `saurron_docker_run_once`.
@@ -80,8 +80,7 @@ saurron_docker_poll_interval: "24h"
 
 # Cron expression for update schedule, e.g. "0 3 * * *"
 # Mutually exclusive with `saurron_docker_poll_interval` and `saurron_docker_run_once`.
-# saurron_docker_schedule: ""
-saurron_docker_schedule: null
+saurron_docker_schedule: ""
 
 # Exit after a single update cycle instead of running continuously.
 saurron_docker_run_once: false
@@ -103,12 +102,12 @@ saurron_docker_host: "unix:///var/run/docker.sock"
 saurron_docker_tls_verify: false
 
 # TLS certificate paths (required when tls_verify = true)
-saurron_docker_tls_ca_cert: null
-saurron_docker_tls_cert: null
-saurron_docker_tls_key: null
+saurron_docker_tls_ca_cert: ""
+saurron_docker_tls_cert: ""
+saurron_docker_tls_key: ""
 
 # Override the negotiated Docker API version, e.g. "1.44"
-saurron_docker_api_version: null
+saurron_docker_api_version: ""
 
 # ── Container selection ─────────────────────────────────────────────────────
 
@@ -162,9 +161,9 @@ saurron_docker_http_api_update: false
 # Enable the GET /v1/metrics endpoint.
 saurron_docker_http_api_metrics: true
 # Bearer token required for authenticated endpoints (or path to a Docker secret file).
-saurron_docker_http_api_token: null
+saurron_docker_http_api_token: ""
 # Port the HTTP server listens on.
-saurron_docker_http_api_port: 8080
+saurron_docker_http_api_port: "8080"
 # Allow unauthenticated access to GET /v1/metrics.
 saurron_docker_http_api_metrics_no_auth: true
 
@@ -173,51 +172,51 @@ saurron_docker_http_api_metrics_no_auth: true
 # Delay between cycle completion and notification dispatch, e.g. "0s", "30s".
 saurron_docker_notification_delay: "0s"
 # Path to a custom MiniJinja notification template file (optional).
-saurron_docker_notification_template: null
+saurron_docker_notification_template: ""
 
 # ── Webhook Notifications ────────────────────────────────────────────────────────
 
 # HTTP endpoint to POST update reports to (enables webhook notifications).
-saurron_docker_notifications_webhook_url: null
+saurron_docker_notifications_webhook_url: ""
 # Extra request headers as comma-separated "Key: Value" pairs.
-saurron_docker_notifications_webhook_headers: null
+saurron_docker_notifications_webhook_headers: ""
 # Skip TLS certificate verification for the webhook endpoint.
 saurron_docker_notifications_webhook_tls_skip_verify: false
 
 # ── Email Notifications ────────────────────────────────────────────────────────
 
 # SMTP server hostname (required to enable email notifications).
-saurron_docker_notifications_email_server: null
+saurron_docker_notifications_email_server: ""
 # SMTP server port.
 saurron_docker_notifications_email_port: 587
 # Sender address (required).
-saurron_docker_notifications_email_from: null
+saurron_docker_notifications_email_from: ""
 # Recipient addresses (required; TOML array).
 saurron_docker_notifications_email_to: []
 # SMTP credentials (optional).
-saurron_docker_notifications_email_user: null
-saurron_docker_notifications_email_password: null
+saurron_docker_notifications_email_user: ""
+saurron_docker_notifications_email_password: ""
 # Skip TLS certificate verification for the SMTP connection.
 saurron_docker_notifications_email_tls_skip_verify: false
 
 # ── MQTT Notifications ────────────────────────────────────────────────────────
 
 # MQTT broker address, e.g. "tcp://broker.example.com:1883" (required to enable MQTT).
-saurron_docker_notifications_mqtt_broker: null
+saurron_docker_notifications_mqtt_broker: ""
 # Topic to publish update reports to (required).
-saurron_docker_notifications_mqtt_topic: null
+saurron_docker_notifications_mqtt_topic: ""
 # QoS level: 0 (at most once), 1 (at least once), 2 (exactly once).
 saurron_docker_notifications_mqtt_qos: 0
 # Client ID sent to the broker (auto-generated if omitted).
-saurron_docker_notifications_mqtt_client_id: null
+saurron_docker_notifications_mqtt_client_id: ""
 # Broker credentials (optional).
-saurron_docker_notifications_mqtt_username: null
-saurron_docker_notifications_mqtt_password: null
+saurron_docker_notifications_mqtt_username: ""
+saurron_docker_notifications_mqtt_password: ""
 
 # ── Pushover Notifications ────────────────────────────────────────────────────────
 
 # Pushover application token (required to enable Pushover notifications).
-saurron_docker_notifications_pushover_token: null
+saurron_docker_notifications_pushover_token: ""
 # Pushover user or group key (required).
-saurron_docker_notifications_pushover_user_key: null
+saurron_docker_notifications_pushover_user_key: ""
 

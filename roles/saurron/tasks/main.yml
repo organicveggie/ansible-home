@@ -13,8 +13,22 @@
       - "source": "{{ saurron_docker_volume_config_name }}"
         "target": "/etc/saurron"
         "type": 'volume'
+  
+- name: "{{ saurron_docker_role_label }} | Get info on config volume"
+  community.docker.docker_volume_info:
+    name: "{{ saurron_docker_volume_config_name }}"
+  register: "_saurron_docker_config_volume_info"
 
-- name: "{{ saurron_docker_role_label }} | Setup Saurron Docker logs volume if enabled"
+- name: "{{ saurron_docker_role_label }} | Create config file"
+  ansible.builtin.template:
+    src: "templates/saurron.toml.j2"
+    dest: "{{ _saurron_docker_config_volume_info.volume.Mountpoint }}/saurron.toml"
+    mode: "0640"
+    owner: "{{ saurron_docker_uid }}"
+    group: "{{ saurron_docker_gid }}"
+  notify: "Restart Saurron container"
+
+- name: "{{ saurron_docker_role_label }} | Setup Saurron Docker logs volume"
   block:
     - name: "{{ saurron_docker_role_label }} | Create Saurron Docker logs volume"
       community.docker.docker_volume:
@@ -26,11 +40,11 @@
           {{ _saurron_docker_mount_list + [{'source': saurron_docker_volume_logs_name, 'target': '/var/log/saurron', 'type': 'volume'}] }}
   when: "(saurron_docker_volume_logs_name is defined and saurron_docker_volume_logs_name | trim | length > 0) | ternary(true, false)"
 
-- name: "{{ saurron_docker_role_label }} | Bind Docker socket if enabled"
+- name: "{{ saurron_docker_role_label }} | Bind Docker socket"
   ansible.builtin.set_fact:
     _saurron_docker_mount_list: |
       {{ _saurron_docker_mount_list + [{'source': saurron_docker_bind_docker_socket, 'target': '/var/run/docker.sock', 'type': 'bind'}] }}
-  when: "saurron_docker_bind_docker_socket is defined and saurron_docker_bind_docker_socket | trim | length > 0 || ternary(true, false)"
+  when: "(saurron_docker_bind_docker_socket is defined and saurron_docker_bind_docker_socket | trim | length > 0) | ternary(true, false)"
 
 - name: "{{ saurron_docker_role_label }} | Build container FQDN"
   ansible.builtin.set_fact:
@@ -74,7 +88,7 @@
     - key: "traefik.http.routers.saurron.tls.domains[0].main"
       value: "*.{{ saurron_docker_host_domain }}"
     - key: "traefik.http.services.saurron.loadbalancer.server.port"
-      value: "{{ saurron_docker_web_port }}"
+      value: "{{ saurron_docker_http_api_port }}"
   when: "saurron_docker_available_externally"
 
 - name: "{{ saurron_docker_role_label }} | Define user-supplied extra Docker labels"
@@ -86,8 +100,10 @@
 - name: "{{ saurron_docker_role_label }} | Create Docker Container"
   community.docker.docker_container:
     name: "{{ saurron_docker_name }}"
-    image: "{{ saurron_docker_image }}:{{ saurron_docker_image_version }}"
+    image: "{{ saurron_docker_image_name }}:{{ saurron_docker_image_version }}"
     pull: true
+    env:
+      "SAURRON_CONFIG": "/etc/saurron/saurron.toml"
     mounts: "{{ _saurron_docker_mount_list }}"
     network_mode: "{{ saurron_docker_network }}"
     networks: "{{ _saurron_docker_all_networks }}"

@@ -125,6 +125,8 @@
         nas_samba_hosts_allow: "{{ vault_nas_samba_hosts_allow }}"
         nas_samba_network_ipv4: "{{ vault_nas_samba_network_ipv4 }}"
         nas_samba_user_acounts: "{{ vault_nas_samba_user_acounts }}"
+        # Saurron
+        nas_saurron_host_domain: "{{ vault_veggie_home_domain }}"
         # Seerr
         nas_seerr_host_domain: "{{ veggie_base_domain_name }}"
         # Servarr
