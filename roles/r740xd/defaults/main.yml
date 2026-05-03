@@ -349,7 +349,7 @@ nas_time_machine_zfs_dataset: null
 ###
 letsencrypt_ca_server_staging: "https://acme-staging-v02.api.letsencrypt.org/directory"
 letsencrypt_ca_server_prod: "https://acme-v02.api.letsencrypt.org/directory"
-nas_traefik_letsencrypt_ca_server: "{{ letsencrypt_ca_server_staging }}"
+nas_traefik_letsencrypt_ca_server: "{{ letsencrypt_ca_server_prod }}"
 nas_traefik_letsencrypt_email: null
 
 ###
