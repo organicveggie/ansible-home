@@ -110,14 +110,23 @@
       combine({item.key: item.value}) }}"
   loop: "{{ saurron_docker_extra_labels | dict2items }}"
 
+- name: "{{ saurron_docker_role_label }} | Define default Docker environment variables"
+  ansible.builtin.set_fact:
+    _saurron_docker_env_vars:
+      "SAURRON_CONFIG": "/etc/saurron/saurron.toml"
+
+- name: "{{ saurron_docker_role_label }} | Define user-supplied extra Docker environment variables"
+  ansible.builtin.set_fact:
+    _saurron_docker_env_vars: "{{ _saurron_docker_env_vars | default({}) |
+      combine({item.key: item.value}) }}"
+  loop: "{{ saurron_docker_extra_env | dict2items }}"
+
 - name: "{{ saurron_docker_role_label }} | Create Docker Container"
   community.docker.docker_container:
     name: "{{ saurron_docker_name }}"
     image: "{{ saurron_docker_image_name }}:{{ saurron_docker_image_version }}"
     pull: true
-    env:
-      "SAURRON_CONFIG": "/etc/saurron/saurron.toml"
-      "SAURRON_MONITOR_ONLY": "true"
+    env: "{{ _saurron_docker_env_vars }}"
     mounts: "{{ _saurron_docker_mount_list }}"
     network_mode: "{{ saurron_docker_network }}"
     networks: "{{ _saurron_docker_all_networks }}"

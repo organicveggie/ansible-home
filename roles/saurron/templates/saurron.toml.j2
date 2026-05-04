@@ -22,7 +22,15 @@ poll_interval = "{{ saurron_docker_poll_interval | default(omit) }}"
 # poll_interval = "4h"
 {% endif %}
 
-# Cron expression for update schedule, e.g. "0 3 * * *"
+#                                           |------------------------ Seconds (0-59)
+#                                           |   |-------------------- Minutes (0-59)
+#                                           |   |   |---------------- Hours (0-23)
+#                                           |   |   |   |------------ Day of the month (1-31)
+#                                           |   |   |   |   |-------- Month (1-12; or JAN to DEC)
+#                                           |   |   |   |   |   |---- Day of the week (0-6; or SUN to SAT; or 7 for Sunday)
+#                                           |   |   |   |   |   |  |- Year (e.g. 2024)
+#                                           *   *   *   *   *   *  *
+# Cron expression for update schedule e.g. "0   0   3   *   *   *  *" # 3:00am every day
 # Mutually exclusive with `poll_interval` and `run_once`.
 {% if saurron_docker_schedule is defined and saurron_docker_schedule | trim | length > 0 %}
 schedule = "{{ saurron_docker_schedule | default(omit) }}"

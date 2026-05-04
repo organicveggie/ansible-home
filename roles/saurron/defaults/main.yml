@@ -39,6 +39,9 @@ saurron_docker_gid: "988"
 # Dictionary of extra key value pairs to set as labels on the Docker container.
 saurron_docker_extra_labels: {}
 
+# Dictionary of extra key value pairs to set as environment variables on the Docker container.
+saurron_docker_extra_env: {}
+
 #####
 # Traefik
 #####
@@ -76,9 +79,17 @@ saurron_docker_audit_log: ""
 
 # How often to check for updates, e.g. "5m", "1h", "3600"
 # Mutually exclusive with `saurron_docker_schedule` and `saurron_docker_run_once`.
-saurron_docker_poll_interval: "24h"
+saurron_docker_poll_interval: ""
 
-# Cron expression for update schedule, e.g. "0 3 * * *"
+#                                           |------------------------ Seconds (0-59)
+#                                           |   |-------------------- Minutes (0-59)
+#                                           |   |   |---------------- Hours (0-23)
+#                                           |   |   |   |------------ Day of the month (1-31)
+#                                           |   |   |   |   |-------- Month (1-12; or JAN to DEC)
+#                                           |   |   |   |   |   |---- Day of the week (0-6; or SUN to SAT; or 7 for Sunday)
+#                                           |   |   |   |   |   |  |- Year (e.g. 2024)
+#                                           *   *   *   *   *   *  *
+# Cron expression for update schedule e.g. "0   0   3   *   *   *  *" # 3:00am every day
 # Mutually exclusive with `saurron_docker_poll_interval` and `saurron_docker_run_once`.
 saurron_docker_schedule: ""
 
