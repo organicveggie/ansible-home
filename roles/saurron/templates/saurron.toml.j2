@@ -51,34 +51,6 @@ registry_password = "{{ saurron_docker_registry_password | default(omit) }}"
 #   never  — always log at debug level
 head_warn_strategy = "{{ saurron_docker_head_warn_strategy | default("auto") }}"
 
-[docker]
-# Docker daemon socket or TCP address
-host = "{{ saurron_docker_host | default("unix:///var/run/docker.sock") }}"
-# Verify TLS certificates for TCP connections
-tls_verify = {{ saurron_docker_tls_verify | default(false) | string | lower }}
-# TLS certificate paths (required when tls_verify = true)
-{% if saurron_docker_tls_ca_cert is defined and saurron_docker_tls_ca_cert | trim | length > 0 %}
-tls_ca_cert = "{{ saurron_docker_tls_ca_cert | default(omit) }}"
-{% else %}
-# tls_ca_cert = "/path/to/ca.crt"
-{% endif %}
-{% if saurron_docker_tls_cert is defined and saurron_docker_tls_cert | trim | length > 0 %}
-tls_cert = "{{ saurron_docker_tls_cert | default(omit) }}"
-{% else %}
-# tls_cert = "/path/to/cert.pem"
-{% endif %}
-{% if saurron_docker_tls_key is defined and saurron_docker_tls_key | trim | length > 0 %}
-tls_key = "{{ saurron_docker_tls_key | default(omit) }}"
-{% else %}
-# tls_key = "/path/to/key.pem"
-{% endif %}
-# Override the negotiated Docker API version, e.g. "1.44"
-{% if saurron_docker_api_version is defined and saurron_docker_api_version | trim | length > 0 %}
-api_version = "{{ saurron_docker_api_version | default(omit) }}"
-{% else %}
-# api_version = "1.44"
-{% endif %}
-
 # ── Container selection ─────────────────────────────────────────────────────
 
 # Opt-in mode: only update containers with the saurron.enable=true label.
@@ -112,6 +84,34 @@ cleanup = {{ saurron_docker_cleanup | default(false) | string | lower }}
 
 # How long to wait for a container to stop gracefully before sending SIGKILL.
 stop_timeout = "{{ saurron_docker_stop_timeout | default("10s") }}"
+
+[docker]
+# Docker daemon socket or TCP address
+host = "{{ saurron_docker_host | default("unix:///var/run/docker.sock") }}"
+# Verify TLS certificates for TCP connections
+tls_verify = {{ saurron_docker_tls_verify | default(false) | string | lower }}
+# TLS certificate paths (required when tls_verify = true)
+{% if saurron_docker_tls_ca_cert is defined and saurron_docker_tls_ca_cert | trim | length > 0 %}
+tls_ca_cert = "{{ saurron_docker_tls_ca_cert | default(omit) }}"
+{% else %}
+# tls_ca_cert = "/path/to/ca.crt"
+{% endif %}
+{% if saurron_docker_tls_cert is defined and saurron_docker_tls_cert | trim | length > 0 %}
+tls_cert = "{{ saurron_docker_tls_cert | default(omit) }}"
+{% else %}
+# tls_cert = "/path/to/cert.pem"
+{% endif %}
+{% if saurron_docker_tls_key is defined and saurron_docker_tls_key | trim | length > 0 %}
+tls_key = "{{ saurron_docker_tls_key | default(omit) }}"
+{% else %}
+# tls_key = "/path/to/key.pem"
+{% endif %}
+# Override the negotiated Docker API version, e.g. "1.44"
+{% if saurron_docker_api_version is defined and saurron_docker_api_version | trim | length > 0 %}
+api_version = "{{ saurron_docker_api_version | default(omit) }}"
+{% else %}
+# api_version = "1.44"
+{% endif %}
 
 [rollback]
 # Roll back if the new container exits with a non-zero code.
