@@ -1,6 +1,0 @@
----
-- name: "Restart Saurron container"
-  community.docker.docker_container:
-    name: "{{ saurron_docker_name }}"
-    restart: true
-    state: "started"

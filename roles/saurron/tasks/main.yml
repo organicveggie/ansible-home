@@ -26,7 +26,7 @@
     mode: "0640"
     owner: "{{ saurron_docker_uid }}"
     group: "{{ saurron_docker_gid }}"
-  notify: "Restart Saurron container"
+  register: "_saurron_docker_config_file"
 
 - name: "{{ saurron_docker_role_label }} | Setup Saurron Docker logs volume"
   block:
@@ -132,6 +132,7 @@
     networks: "{{ _saurron_docker_all_networks }}"
     etc_hosts: "{{ saurron_docker_extra_hosts | default(omit) }}"
     restart_policy: unless-stopped
+    restart: "{{ _saurron_docker_config_file.changed | default(false) }}"
     memory: "{{ saurron_docker_memory }}"
     cpus: "{{ saurron_docker_cpus }}"
     container_default_behavior: no_defaults

@@ -9,7 +9,7 @@ log_format = "{{ saurron_docker_log_format | default("auto") }}"
 
 # Append-only JSON audit log (optional; omit to disable)
 {% if saurron_docker_audit_log is defined and saurron_docker_audit_log | trim | length > 0 %}
-audit_log = "{{ saurron_docker_audit_log | default(omit) }}"
+audit_log = "{{ saurron_docker_audit_log }}"
 {% else %}
 # audit_log = "/var/log/saurron/audit.log"
 {% endif %}
@@ -17,7 +17,7 @@ audit_log = "{{ saurron_docker_audit_log | default(omit) }}"
 # How often to check for updates, e.g. "5m", "1h", "3600"
 # Mutually exclusive with `schedule` and `run_once`.
 {% if saurron_docker_poll_interval is defined and saurron_docker_poll_interval | trim | length > 0 %}
-poll_interval = "{{ saurron_docker_poll_interval | default(omit) }}"
+poll_interval = "{{ saurron_docker_poll_interval }}"
 {% else %}
 # poll_interval = "4h"
 {% endif %}
@@ -33,7 +33,7 @@ poll_interval = "{{ saurron_docker_poll_interval | default(omit) }}"
 # Cron expression for update schedule e.g. "0   0   3   *   *   *  *" # 3:00am every day
 # Mutually exclusive with `poll_interval` and `run_once`.
 {% if saurron_docker_schedule is defined and saurron_docker_schedule | trim | length > 0 %}
-schedule = "{{ saurron_docker_schedule | default(omit) }}"
+schedule = "{{ saurron_docker_schedule }}"
 {% else %}
 # schedule = "0 15 */4 * *"
 {% endif %}
@@ -43,12 +43,12 @@ run_once = {{ saurron_docker_run_once | default(false) | string | lower }}
 
 # Registry credentials (or path to a Docker secret file)
 {% if saurron_docker_registry_username is defined and saurron_docker_registry_username | trim | length > 0 %}
-registry_username = "{{ saurron_docker_registry_username | default(omit) }}"
+registry_username = "{{ saurron_docker_registry_username }}"
 {% else %}
 # registry_username = "myuser"
 {% endif %}
 {% if saurron_docker_registry_password is defined and saurron_docker_registry_password | trim | length > 0 %}
-registry_password = "{{ saurron_docker_registry_password | default(omit) }}"
+registry_password = "{{ saurron_docker_registry_password }}"
 {% else %}
 # registry_password = "mypassword"
 {% endif %}
@@ -100,23 +100,23 @@ host = "{{ saurron_docker_host | default("unix:///var/run/docker.sock") }}"
 tls_verify = {{ saurron_docker_tls_verify | default(false) | string | lower }}
 # TLS certificate paths (required when tls_verify = true)
 {% if saurron_docker_tls_ca_cert is defined and saurron_docker_tls_ca_cert | trim | length > 0 %}
-tls_ca_cert = "{{ saurron_docker_tls_ca_cert | default(omit) }}"
+tls_ca_cert = "{{ saurron_docker_tls_ca_cert }}"
 {% else %}
 # tls_ca_cert = "/path/to/ca.crt"
 {% endif %}
 {% if saurron_docker_tls_cert is defined and saurron_docker_tls_cert | trim | length > 0 %}
-tls_cert = "{{ saurron_docker_tls_cert | default(omit) }}"
+tls_cert = "{{ saurron_docker_tls_cert }}"
 {% else %}
 # tls_cert = "/path/to/cert.pem"
 {% endif %}
 {% if saurron_docker_tls_key is defined and saurron_docker_tls_key | trim | length > 0 %}
-tls_key = "{{ saurron_docker_tls_key | default(omit) }}"
+tls_key = "{{ saurron_docker_tls_key }}"
 {% else %}
 # tls_key = "/path/to/key.pem"
 {% endif %}
 # Override the negotiated Docker API version, e.g. "1.44"
 {% if saurron_docker_api_version is defined and saurron_docker_api_version | trim | length > 0 %}
-api_version = "{{ saurron_docker_api_version | default(omit) }}"
+api_version = "{{ saurron_docker_api_version }}"
 {% else %}
 # api_version = "1.44"
 {% endif %}
@@ -138,7 +138,7 @@ update = {{ saurron_docker_http_api_update | default(false) | string | lower }}
 metrics = {{ saurron_docker_http_api_metrics | default(true) | string | lower }}
 # Bearer token required for authenticated endpoints (or path to a Docker secret file).
 {% if saurron_docker_http_api_token is defined and saurron_docker_http_api_token | trim | length > 0 %}
-token = {{ saurron_docker_http_api_token | default(omit) }}
+token = "{{ saurron_docker_http_api_token }}"
 {% else %}
 # token = "your-bearer-token"
 {% endif %}
@@ -146,6 +146,12 @@ token = {{ saurron_docker_http_api_token | default(omit) }}
 port = {{ saurron_docker_http_api_port | default(8080) }}
 # Allow unauthenticated access to GET /v1/metrics.
 metrics_no_auth = {{ saurron_docker_http_api_metrics_no_auth | default(true) | string | lower }}
+# Path to an append-only HTTP access log file.
+{% if saurron_docker_http_api_access_log is defined and saurron_docker_http_api_access_log | trim | length > 0 %}
+access_log = "{{ saurron_docker_http_api_access_log }}"
+{% else %}
+# access_log = "/var/log/saurron/http_api_access.log"
+{% endif %}
 
 [notifications]
 # Delay between cycle completion and notification dispatch, e.g. "0s", "30s".
@@ -160,13 +166,13 @@ template = "{{ saurron_docker_notifications_template | default("") }}"
 [notifications.webhook]
 # HTTP endpoint to POST update reports to (enables webhook notifications).
 {% if saurron_docker_notifications_webhook_url is defined and saurron_docker_notifications_webhook_url | trim | length > 0 %}
-url = "{{ saurron_docker_notifications_webhook_url | default(omit) }}"
+url = "{{ saurron_docker_notifications_webhook_url }}"
 {% else %}
 # url = "https://example.com/webhook"
 {% endif %}
 # Extra request headers as comma-separated "Key: Value" pairs.
 {% if saurron_docker_notifications_webhook_headers is defined and saurron_docker_notifications_webhook_headers | trim | length > 0 %}
-headers = "{{ saurron_docker_notifications_webhook_headers | default(omit) }}"
+headers = "{{ saurron_docker_notifications_webhook_headers }}"
 {% else %}
 # headers = "Key1: Value1, Key2: Value2"
 {% endif %}
@@ -176,19 +182,19 @@ tls_skip_verify = {{ saurron_docker_notifications_webhook_tls_skip_verify | defa
 [notifications.email]
 # SMTP server hostname (required to enable email notifications).
 {% if saurron_docker_notifications_email_server is defined and saurron_docker_notifications_email_server | trim | length > 0 %}
-server = "{{ saurron_docker_notifications_email_server | default(omit) }}"
+server = "{{ saurron_docker_notifications_email_server }}"
 {% else %}
 # server = "smtp.example.com"
 {% endif %}
 # SMTP server port.
 {% if saurron_docker_notifications_email_port is defined and saurron_docker_notifications_email_port | trim | length > 0 %}
-port = {{ saurron_docker_notifications_email_port | default(omit) }}
+port = {{ saurron_docker_notifications_email_port }}
 {% else %}
 # port = 587
 {% endif %}
 # Sender address (required).
 {% if saurron_docker_notifications_email_from is defined and saurron_docker_notifications_email_from | trim | length > 0 %}
-from = "{{ saurron_docker_notifications_email_from | default(omit) }}"
+from = "{{ saurron_docker_notifications_email_from }}"
 {% else %}
 # from = "sender@example.com"
 {% endif %}
@@ -196,8 +202,8 @@ from = "{{ saurron_docker_notifications_email_from | default(omit) }}"
 to = {{ saurron_docker_notifications_email_to | default([]) }}
 # SMTP credentials (optional).
 {% if saurron_docker_notifications_email_user is defined and saurron_docker_notifications_email_user | trim | length > 0 %}
-user = "{{ saurron_docker_notifications_email_user | default(omit) }}"
-password = "{{ saurron_docker_notifications_email_password | default(omit) }}"
+user = "{{ saurron_docker_notifications_email_user }}"
+password = "{{ saurron_docker_notifications_email_password }}"
 {% else %}
 # user = "username"
 # password = "password"
@@ -208,13 +214,13 @@ tls_skip_verify = {{ saurron_docker_notifications_email_tls_skip_verify | defaul
 [notifications.mqtt]
 # MQTT broker address, e.g. "tcp://broker.example.com:1883" (required to enable MQTT).
 {% if saurron_docker_notifications_mqtt_broker is defined and saurron_docker_notifications_mqtt_broker | trim | length > 0 %}
-broker = "{{ saurron_docker_notifications_mqtt_broker | default(omit) }}"
+broker = "{{ saurron_docker_notifications_mqtt_broker }}"
 {% else %}
 # broker = "tcp://broker.example.com:1883"
 {% endif %}
 # Topic to publish update reports to (required).
 {% if saurron_docker_notifications_mqtt_topic is defined and saurron_docker_notifications_mqtt_topic | trim | length > 0 %}
-topic = "{{ saurron_docker_notifications_mqtt_topic | default(omit) }}"
+topic = "{{ saurron_docker_notifications_mqtt_topic }}"
 {% else %}
 # topic = "saurron/updates"
 {% endif %}
@@ -222,14 +228,14 @@ topic = "{{ saurron_docker_notifications_mqtt_topic | default(omit) }}"
 qos = {{ saurron_docker_notifications_mqtt_qos | default(0) }}
 # Client ID sent to the broker (auto-generated if omitted).
 {% if saurron_docker_notifications_mqtt_client_id is defined and saurron_docker_notifications_mqtt_client_id | trim | length > 0 %}
-client_id = "{{ saurron_docker_notifications_mqtt_client_id | default(omit) }}"
+client_id = "{{ saurron_docker_notifications_mqtt_client_id }}"
 {% else %}
 # client_id = "saurron"
 {% endif %}
 # Broker credentials (optional).
 {% if saurron_docker_notifications_mqtt_username is defined and saurron_docker_notifications_mqtt_username | trim | length > 0 %}
-username = "{{ saurron_docker_notifications_mqtt_username | default(omit) }}"
-password = "{{ saurron_docker_notifications_mqtt_password | default(omit) }}"
+username = "{{ saurron_docker_notifications_mqtt_username }}"
+password = "{{ saurron_docker_notifications_mqtt_password }}"
 {% else %}
 # username = "username"
 # password = "password"
@@ -238,13 +244,13 @@ password = "{{ saurron_docker_notifications_mqtt_password | default(omit) }}"
 [notifications.pushover]
 # Pushover application token (required to enable Pushover notifications).
 {% if saurron_docker_notifications_pushover_token is defined and saurron_docker_notifications_pushover_token | trim | length > 0 %}
-token = "{{ saurron_docker_notifications_pushover_token | default(omit) }}"
+token = "{{ saurron_docker_notifications_pushover_token }}"
 {% else %}
 # token = "application_token"
 {% endif %}
 # Pushover user or group key (required).
 {% if saurron_docker_notifications_pushover_user_key is defined and saurron_docker_notifications_pushover_user_key | trim | length > 0 %}
-user_key = "{{ saurron_docker_notifications_pushover_user_key | default(omit) }}"
+user_key = "{{ saurron_docker_notifications_pushover_user_key }}"
 {% else %}
 # user_key = "user_or_group_key"
 {% endif %}

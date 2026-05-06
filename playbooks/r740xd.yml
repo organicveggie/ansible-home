@@ -127,6 +127,8 @@
         nas_samba_user_acounts: "{{ vault_nas_samba_user_acounts }}"
         # Saurron
         nas_saurron_host_domain: "{{ vault_veggie_home_domain }}"
+        nas_saurron_http_api_token: "{{ vault_saurron_http_api_token }}"
+        nas_saurron_timezone: "{{ home_timezone }}"
         # Seerr
         nas_seerr_host_domain: "{{ veggie_base_domain_name }}"
         # Servarr

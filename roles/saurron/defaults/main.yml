@@ -177,6 +177,8 @@ saurron_docker_http_api_token: ""
 saurron_docker_http_api_port: "8080"
 # Allow unauthenticated access to GET /v1/metrics.
 saurron_docker_http_api_metrics_no_auth: true
+# Path to an append-only HTTP access log file.
+saurron_docker_http_api_access_log: ""
 
 # ── Notifications ────────────────────────────────────────────────────────
 
