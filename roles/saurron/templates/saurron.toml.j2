@@ -199,7 +199,7 @@ from = "{{ saurron_docker_notifications_email_from }}"
 # from = "sender@example.com"
 {% endif %}
 # Recipient addresses (required; TOML array).
-to = {{ saurron_docker_notifications_email_to | default([]) }}
+to = [{{ saurron_docker_notifications_email_to | default([]) | map("to_json") | join(", ") }}]
 # SMTP credentials (optional).
 {% if saurron_docker_notifications_email_user is defined and saurron_docker_notifications_email_user | trim | length > 0 %}
 user = "{{ saurron_docker_notifications_email_user }}"
