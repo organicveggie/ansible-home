@@ -17,7 +17,7 @@
   vars:
     saurron_docker_audit_log: "/var/log/saurron/audit.log"
     saurron_docker_bind_docker_socket: "/var/run/docker.sock"
-    # saurron_docker_containers: 
+    # saurron_docker_containers: ["zwave-js-ui"]
     saurron_docker_extra_env:
       "TZ": "{{ nas_saurron_timezone }}"
     saurron_docker_host_domain: "{{ nas_saurron_host_domain }}"
@@ -27,7 +27,7 @@
     saurron_docker_http_api_token: "{{ nas_saurron_http_api_token }}"
     saurron_docker_http_api_update: true
     saurron_docker_log_level: "info"
-    saurron_docker_monitor_only: true
+    # saurron_docker_monitor_only: true
     saurron_docker_network: "{{ docker_networks.saurron.name }}"
     saurron_docker_notifications_email_from: "{{ nas_saurron_email_from}}"
     saurron_docker_notifications_email_port: "{{ nas_saurron_email_server_port }}"
@@ -43,6 +43,6 @@
     #                         |   |   |   |   |   |---- Day of the week (0-6; or SUN to SAT; or 7 for Sunday)
     #                         |   |   |   |   |   |  |- Year (e.g. 2024)
     #                         *   *   *   *   *   *  *
-    # saurron_docker_schedule: "*  15   3   *   *   *  *" # 3:15am every day
-    saurron_docker_poll_interval: "2h"
+    saurron_docker_schedule: "*  15   3   *   *   *  *" # 3:15am every day
+    # saurron_docker_poll_interval: "2h"
   tags: ["setup", "saurron"]
