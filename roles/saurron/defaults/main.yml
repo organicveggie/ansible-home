@@ -1,0 +1,235 @@
+---
+#####
+# Container
+#####
+
+# Name of the Docker container.
+saurron_docker_name: "saurron"
+
+# Base name of the Docker image to use for the container.
+saurron_docker_image_name: "ghcr.io/organicveggie/saurron"
+
+# Specific Docker image version to use for the container.
+saurron_docker_image_version: "latest"
+
+# Number of vCPUs to allocate to the container.
+saurron_docker_cpus: "1"
+
+# Amount of memory to allocate to the container.
+saurron_docker_memory: "512M"
+
+# Name of the primary network.
+saurron_docker_network_name: null
+
+# Container aliases on the default network.
+saurron_docker_network_aliases: null
+
+# List of additional networks to join.
+saurron_docker_extra_networks: []
+
+saurron_docker_volume_config_name: "saurron-config"
+saurron_docker_volume_logs_name: "saurron-logs"
+
+saurron_docker_bind_docker_socket: "/var/run/docker.sock"
+
+# User and group IDs to run the container as (optional).
+saurron_docker_uid: "1000"
+saurron_docker_gid: "988"
+
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+saurron_docker_extra_labels: {}
+
+# Dictionary of extra key value pairs to set as environment variables on the Docker container.
+saurron_docker_extra_env: {}
+
+#####
+# Traefik
+#####
+
+# Enable use of Traefik as a proxy.
+saurron_docker_available_externally: "true"
+
+# Host name to use for the Traefik endpoint. Combined with [saurron_docker_host_domain] to form the
+# FQDN for the endpoint.
+saurron_docker_host_name: "saurron"
+
+# Domain name to use for the Traefik endpoint. Combined with [saurron_docker_host_name] to form the
+# FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
+saurron_docker_host_domain: "example.com"
+
+#####
+# Ansible
+#####
+
+saurron_docker_role_label: "saurron"
+
+#####
+# Saurron configuration options
+#####
+
+# Log verbosity: trace, debug, info, warn, error
+saurron_docker_log_level: "info"
+
+# Log format: auto (detects TTY → pretty, pipe → logfmt), json, logfmt, pretty
+saurron_docker_log_format: "auto"
+
+# Append-only JSON audit log (optional; omit to disable)
+# saurron_docker_audit_log: "/var/log/saurron/audit.log"
+saurron_docker_audit_log: ""
+
+# How often to check for updates, e.g. "5m", "1h", "3600"
+# Mutually exclusive with `saurron_docker_schedule` and `saurron_docker_run_once`.
+saurron_docker_poll_interval: ""
+
+#                                           |------------------------ Seconds (0-59)
+#                                           |   |-------------------- Minutes (0-59)
+#                                           |   |   |---------------- Hours (0-23)
+#                                           |   |   |   |------------ Day of the month (1-31)
+#                                           |   |   |   |   |-------- Month (1-12; or JAN to DEC)
+#                                           |   |   |   |   |   |---- Day of the week (0-6; or SUN to SAT; or 7 for Sunday)
+#                                           |   |   |   |   |   |  |- Year (e.g. 2024)
+#                                           *   *   *   *   *   *  *
+# Cron expression for update schedule e.g. "0   0   3   *   *   *  *" # 3:00am every day
+# Mutually exclusive with `saurron_docker_poll_interval` and `saurron_docker_run_once`.
+saurron_docker_schedule: ""
+
+# Exit after a single update cycle instead of running continuously.
+saurron_docker_run_once: false
+
+# Registry credentials (or path to a Docker secret file)
+saurron_docker_registry_username: ""
+saurron_docker_registry_password: ""
+
+# How to handle a failed manifest HEAD request:
+#   auto   — warn on unexpected errors, silent on auth failures
+#   always — always warn
+#   never  — always log at debug level
+saurron_docker_head_warn_strategy: "auto"
+
+# Docker daemon socket or TCP address
+saurron_docker_host: "unix:///var/run/docker.sock"
+
+# Verify TLS certificates for TCP connections
+saurron_docker_tls_verify: false
+
+# TLS certificate paths (required when tls_verify = true)
+saurron_docker_tls_ca_cert: ""
+saurron_docker_tls_cert: ""
+saurron_docker_tls_key: ""
+
+# Override the negotiated Docker API version, e.g. "1.44"
+saurron_docker_api_version: ""
+
+# ── Container selection ─────────────────────────────────────────────────────
+
+# Opt-in mode: only update containers with the saurron.enable=true label.
+saurron_docker_label_enable: false
+
+# Containers to always exclude from updates (TOML array of names).
+saurron_docker_disable_containers: []
+
+# If non-empty, only update containers in this allow-list.
+saurron_docker_containers: []
+
+# Include containers in the "restarting" state.
+saurron_docker_include_restarting: false
+
+# When true, global settings take precedence over per-container saurron.* labels.
+saurron_docker_global_takes_precedence: false
+
+# Also start stopped (exited/created) containers when a newer image is found.
+saurron_docker_revive_stopped: false
+
+# ── Update behaviour ────────────────────────────────────────────────────────
+
+# Detect stale images but never restart containers.
+saurron_docker_monitor_only: false
+
+# Skip pulling the new image; use whatever is already cached locally.
+saurron_docker_no_pull: false
+
+# Remove the old image after a successful update.
+saurron_docker_cleanup: false
+
+# How long to wait for a container to stop gracefully before sending SIGKILL.
+saurron_docker_stop_timeout: "10s"
+
+# ── Rollback behaviour ────────────────────────────────────────────────────────
+
+# Roll back if the new container exits with a non-zero code.
+saurron_docker_rollback_on_exit_code: true
+# Roll back if the new container's Docker healthcheck reports unhealthy.
+saurron_docker_rollback_on_healthcheck: true
+# Roll back if the container does not reach the running state within startup_timeout.
+saurron_docker_rollback_on_timeout: true
+# How long to wait for the new container to become healthy before rolling back.
+saurron_docker_startup_timeout: "30s"
+
+# ── HTTP API ────────────────────────────────────────────────────────
+
+# Enable the POST /v1/update endpoint.
+saurron_docker_http_api_update: false
+# Enable the GET /v1/metrics endpoint.
+saurron_docker_http_api_metrics: true
+# Bearer token required for authenticated endpoints (or path to a Docker secret file).
+saurron_docker_http_api_token: ""
+# Port the HTTP server listens on.
+saurron_docker_http_api_port: "8080"
+# Allow unauthenticated access to GET /v1/metrics.
+saurron_docker_http_api_metrics_no_auth: true
+# Path to an append-only HTTP access log file.
+saurron_docker_http_api_access_log: ""
+
+# ── Notifications ────────────────────────────────────────────────────────
+
+# Delay between cycle completion and notification dispatch, e.g. "0s", "30s".
+saurron_docker_notification_delay: "0s"
+# Path to a custom MiniJinja notification template file (optional).
+saurron_docker_notification_template: ""
+
+# ── Webhook Notifications ────────────────────────────────────────────────────────
+
+# HTTP endpoint to POST update reports to (enables webhook notifications).
+saurron_docker_notifications_webhook_url: ""
+# Extra request headers as comma-separated "Key: Value" pairs.
+saurron_docker_notifications_webhook_headers: ""
+# Skip TLS certificate verification for the webhook endpoint.
+saurron_docker_notifications_webhook_tls_skip_verify: false
+
+# ── Email Notifications ────────────────────────────────────────────────────────
+
+# SMTP server hostname (required to enable email notifications).
+saurron_docker_notifications_email_server: ""
+# SMTP server port.
+saurron_docker_notifications_email_port: 587
+# Sender address (required).
+saurron_docker_notifications_email_from: ""
+# Recipient addresses (required; TOML array).
+saurron_docker_notifications_email_to: []
+# SMTP credentials (optional).
+saurron_docker_notifications_email_user: ""
+saurron_docker_notifications_email_password: ""
+# Skip TLS certificate verification for the SMTP connection.
+saurron_docker_notifications_email_tls_skip_verify: false
+
+# ── MQTT Notifications ────────────────────────────────────────────────────────
+
+# MQTT broker address, e.g. "tcp://broker.example.com:1883" (required to enable MQTT).
+saurron_docker_notifications_mqtt_broker: ""
+# Topic to publish update reports to (required).
+saurron_docker_notifications_mqtt_topic: ""
+# QoS level: 0 (at most once), 1 (at least once), 2 (exactly once).
+saurron_docker_notifications_mqtt_qos: 0
+# Client ID sent to the broker (auto-generated if omitted).
+saurron_docker_notifications_mqtt_client_id: ""
+# Broker credentials (optional).
+saurron_docker_notifications_mqtt_username: ""
+saurron_docker_notifications_mqtt_password: ""
+
+# ── Pushover Notifications ────────────────────────────────────────────────────────
+
+# Pushover application token (required to enable Pushover notifications).
+saurron_docker_notifications_pushover_token: ""
+# Pushover user or group key (required).
+saurron_docker_notifications_pushover_user_key: ""
+

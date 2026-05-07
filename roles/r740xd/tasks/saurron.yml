@@ -1,0 +1,48 @@
+---
+- name: "r740xd | saurron | Setup Docker network"
+  community.docker.docker_network:
+    name: "{{ docker_networks.saurron.name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "no"
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ docker_networks.saurron.subnet }}"
+        gateway: "{{ docker_networks.saurron.gateway }}"
+  tags: ["setup", "network"]
+
+- name: "r740xd | saurron | Setup Saurron"
+  ansible.builtin.import_role:
+    name: "saurron"
+  vars:
+    saurron_docker_audit_log: "/var/log/saurron/audit.log"
+    saurron_docker_bind_docker_socket: "/var/run/docker.sock"
+    # saurron_docker_containers: ["zwave-js-ui"]
+    saurron_docker_extra_env:
+      "TZ": "{{ nas_saurron_timezone }}"
+    saurron_docker_host_domain: "{{ nas_saurron_host_domain }}"
+    saurron_docker_http_api_access_log: "/var/log/saurron/access.log"
+    saurron_docker_http_api_metrics: true
+    saurron_docker_http_api_metrics_no_auth: true
+    saurron_docker_http_api_token: "{{ nas_saurron_http_api_token }}"
+    saurron_docker_http_api_update: true
+    saurron_docker_log_level: "info"
+    # saurron_docker_monitor_only: true
+    saurron_docker_network: "{{ docker_networks.saurron.name }}"
+    saurron_docker_notifications_email_from: "{{ nas_saurron_email_from}}"
+    saurron_docker_notifications_email_port: "{{ nas_saurron_email_server_port }}"
+    saurron_docker_notifications_email_server: "{{ nas_saurron_email_server }}"
+    saurron_docker_notifications_email_to: "{{ nas_saurron_email_to }}"
+    saurron_docker_notifications_email_user: "{{ nas_saurron_email_user }}"
+    saurron_docker_notifications_email_password: "{{ nas_saurron_email_password }}"
+    #                         |------------------------ Seconds (0-59)
+    #                         |   |-------------------- Minutes (0-59)
+    #                         |   |   |---------------- Hours (0-23)
+    #                         |   |   |   |------------ Day of the month (1-31)
+    #                         |   |   |   |   |-------- Month (1-12; or JAN to DEC)
+    #                         |   |   |   |   |   |---- Day of the week (0-6; or SUN to SAT; or 7 for Sunday)
+    #                         |   |   |   |   |   |  |- Year (e.g. 2024)
+    #                         *   *   *   *   *   *  *
+    saurron_docker_schedule: "*  15   3   *   *   *  *" # 3:15am every day
+    # saurron_docker_poll_interval: "2h"
+  tags: ["setup", "saurron"]

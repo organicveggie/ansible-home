@@ -1,0 +1,256 @@
+# Saurron configuration file
+# Generate a fresh copy with: saurron --generate-config [FILE]
+
+# Log verbosity: trace, debug, info, warn, error
+log_level = "{{ saurron_docker_log_level | default("info") }}"
+
+# Log format: auto (detects TTY → pretty, pipe → logfmt), json, logfmt, pretty
+log_format = "{{ saurron_docker_log_format | default("auto") }}"
+
+# Append-only JSON audit log (optional; omit to disable)
+{% if saurron_docker_audit_log is defined and saurron_docker_audit_log | trim | length > 0 %}
+audit_log = "{{ saurron_docker_audit_log }}"
+{% else %}
+# audit_log = "/var/log/saurron/audit.log"
+{% endif %}
+
+# How often to check for updates, e.g. "5m", "1h", "3600"
+# Mutually exclusive with `schedule` and `run_once`.
+{% if saurron_docker_poll_interval is defined and saurron_docker_poll_interval | trim | length > 0 %}
+poll_interval = "{{ saurron_docker_poll_interval }}"
+{% else %}
+# poll_interval = "4h"
+{% endif %}
+
+#                                           |------------------------ Seconds (0-59)
+#                                           |   |-------------------- Minutes (0-59)
+#                                           |   |   |---------------- Hours (0-23)
+#                                           |   |   |   |------------ Day of the month (1-31)
+#                                           |   |   |   |   |-------- Month (1-12; or JAN to DEC)
+#                                           |   |   |   |   |   |---- Day of the week (0-6; or SUN to SAT; or 7 for Sunday)
+#                                           |   |   |   |   |   |  |- Year (e.g. 2024)
+#                                           *   *   *   *   *   *  *
+# Cron expression for update schedule e.g. "0   0   3   *   *   *  *" # 3:00am every day
+# Mutually exclusive with `poll_interval` and `run_once`.
+{% if saurron_docker_schedule is defined and saurron_docker_schedule | trim | length > 0 %}
+schedule = "{{ saurron_docker_schedule }}"
+{% else %}
+# schedule = "0 15 */4 * *"
+{% endif %}
+
+# Exit after a single update cycle instead of running continuously.
+run_once = {{ saurron_docker_run_once | default(false) | string | lower }}
+
+# Registry credentials (or path to a Docker secret file)
+{% if saurron_docker_registry_username is defined and saurron_docker_registry_username | trim | length > 0 %}
+registry_username = "{{ saurron_docker_registry_username }}"
+{% else %}
+# registry_username = "myuser"
+{% endif %}
+{% if saurron_docker_registry_password is defined and saurron_docker_registry_password | trim | length > 0 %}
+registry_password = "{{ saurron_docker_registry_password }}"
+{% else %}
+# registry_password = "mypassword"
+{% endif %}
+
+# How to handle a failed manifest HEAD request:
+#   auto   — warn on unexpected errors, silent on auth failures
+#   always — always warn
+#   never  — always log at debug level
+head_warn_strategy = "{{ saurron_docker_head_warn_strategy | default("auto") }}"
+
+# ── Container selection ─────────────────────────────────────────────────────
+
+# Opt-in mode: only update containers with the saurron.enable=true label.
+label_enable = {{ saurron_docker_label_enable | default(false) | string | lower }}
+
+# Containers to always exclude from updates (TOML array of names).
+disable_containers = {{ saurron_docker_disable_containers | default([]) }}
+
+# If non-empty, only update containers in this allow-list.
+containers = {{ saurron_docker_containers | default([]) }}
+
+# Include containers in the "restarting" state.
+include_restarting = {{ saurron_docker_include_restarting | default(false) | string | lower }}
+
+# When true, global settings take precedence over per-container saurron.* labels.
+global_takes_precedence = {{ saurron_docker_global_takes_precedence | default(false) | string | lower }}
+
+# Also start stopped (exited/created) containers when a newer image is found.
+revive_stopped = {{ saurron_docker_revive_stopped | default(false) | string | lower }}
+
+# ── Update behaviour ────────────────────────────────────────────────────────
+
+# Detect stale images but never restart containers.
+monitor_only = {{ saurron_docker_monitor_only | default(false) | string | lower }}
+
+# Skip pulling the new image; use whatever is already cached locally.
+no_pull = {{ saurron_docker_no_pull | default(false) | string | lower }}
+
+# Remove the old image after a successful update.
+cleanup = {{ saurron_docker_cleanup | default(false) | string | lower }}
+
+# How long to wait for a container to stop gracefully before sending SIGKILL.
+stop_timeout = "{{ saurron_docker_stop_timeout | default("10s") }}"
+
+[docker]
+# Docker daemon socket or TCP address
+host = "{{ saurron_docker_host | default("unix:///var/run/docker.sock") }}"
+# Verify TLS certificates for TCP connections
+tls_verify = {{ saurron_docker_tls_verify | default(false) | string | lower }}
+# TLS certificate paths (required when tls_verify = true)
+{% if saurron_docker_tls_ca_cert is defined and saurron_docker_tls_ca_cert | trim | length > 0 %}
+tls_ca_cert = "{{ saurron_docker_tls_ca_cert }}"
+{% else %}
+# tls_ca_cert = "/path/to/ca.crt"
+{% endif %}
+{% if saurron_docker_tls_cert is defined and saurron_docker_tls_cert | trim | length > 0 %}
+tls_cert = "{{ saurron_docker_tls_cert }}"
+{% else %}
+# tls_cert = "/path/to/cert.pem"
+{% endif %}
+{% if saurron_docker_tls_key is defined and saurron_docker_tls_key | trim | length > 0 %}
+tls_key = "{{ saurron_docker_tls_key }}"
+{% else %}
+# tls_key = "/path/to/key.pem"
+{% endif %}
+# Override the negotiated Docker API version, e.g. "1.44"
+{% if saurron_docker_api_version is defined and saurron_docker_api_version | trim | length > 0 %}
+api_version = "{{ saurron_docker_api_version }}"
+{% else %}
+# api_version = "1.44"
+{% endif %}
+
+[rollback]
+# Roll back if the new container exits with a non-zero code.
+on_exit_code = {{ saurron_docker_rollback_on_exit_code | default(true) | string | lower }}
+# Roll back if the new container's Docker healthcheck reports unhealthy.
+on_healthcheck = {{ saurron_docker_rollback_on_healthcheck | default(true) | string | lower }}
+# Roll back if the container does not reach the running state within startup_timeout.
+on_timeout = {{ saurron_docker_rollback_on_timeout | default(true) | string | lower }}
+# How long to wait for the new container to become healthy before rolling back.
+startup_timeout = "{{ saurron_docker_startup_timeout | default("30s") }}"
+
+[http_api]
+# Enable the POST /v1/update endpoint.
+update = {{ saurron_docker_http_api_update | default(false) | string | lower }}
+# Enable the GET /v1/metrics endpoint.
+metrics = {{ saurron_docker_http_api_metrics | default(true) | string | lower }}
+# Bearer token required for authenticated endpoints (or path to a Docker secret file).
+{% if saurron_docker_http_api_token is defined and saurron_docker_http_api_token | trim | length > 0 %}
+token = "{{ saurron_docker_http_api_token }}"
+{% else %}
+# token = "your-bearer-token"
+{% endif %}
+# Port the HTTP server listens on.
+port = {{ saurron_docker_http_api_port | default(8080) }}
+# Allow unauthenticated access to GET /v1/metrics.
+metrics_no_auth = {{ saurron_docker_http_api_metrics_no_auth | default(true) | string | lower }}
+# Path to an append-only HTTP access log file.
+{% if saurron_docker_http_api_access_log is defined and saurron_docker_http_api_access_log | trim | length > 0 %}
+access_log = "{{ saurron_docker_http_api_access_log }}"
+{% else %}
+# access_log = "/var/log/saurron/http_api_access.log"
+{% endif %}
+
+[notifications]
+# Delay between cycle completion and notification dispatch, e.g. "0s", "30s".
+delay = "{{ saurron_docker_notifications_delay | default("0s") }}"
+# Path to a custom MiniJinja notification template file (optional)
+{% if saurron_docker_notifications_template is defined and saurron_docker_notifications_template | trim | length > 0 %}
+template = "{{ saurron_docker_notifications_template | default("") }}"
+{% else %}
+# template = "/path/to/template.mj2"
+{% endif %}
+
+[notifications.webhook]
+# HTTP endpoint to POST update reports to (enables webhook notifications).
+{% if saurron_docker_notifications_webhook_url is defined and saurron_docker_notifications_webhook_url | trim | length > 0 %}
+url = "{{ saurron_docker_notifications_webhook_url }}"
+{% else %}
+# url = "https://example.com/webhook"
+{% endif %}
+# Extra request headers as comma-separated "Key: Value" pairs.
+{% if saurron_docker_notifications_webhook_headers is defined and saurron_docker_notifications_webhook_headers | trim | length > 0 %}
+headers = "{{ saurron_docker_notifications_webhook_headers }}"
+{% else %}
+# headers = "Key1: Value1, Key2: Value2"
+{% endif %}
+# Skip TLS certificate verification for the webhook endpoint.
+tls_skip_verify = {{ saurron_docker_notifications_webhook_tls_skip_verify | default(false) | string | lower }}
+
+[notifications.email]
+# SMTP server hostname (required to enable email notifications).
+{% if saurron_docker_notifications_email_server is defined and saurron_docker_notifications_email_server | trim | length > 0 %}
+server = "{{ saurron_docker_notifications_email_server }}"
+{% else %}
+# server = "smtp.example.com"
+{% endif %}
+# SMTP server port.
+{% if saurron_docker_notifications_email_port is defined and saurron_docker_notifications_email_port | trim | length > 0 %}
+port = {{ saurron_docker_notifications_email_port }}
+{% else %}
+# port = 587
+{% endif %}
+# Sender address (required).
+{% if saurron_docker_notifications_email_from is defined and saurron_docker_notifications_email_from | trim | length > 0 %}
+from = "{{ saurron_docker_notifications_email_from }}"
+{% else %}
+# from = "sender@example.com"
+{% endif %}
+# Recipient addresses (required; TOML array).
+to = [{{ saurron_docker_notifications_email_to | default([]) | map("to_json") | join(", ") }}]
+# SMTP credentials (optional).
+{% if saurron_docker_notifications_email_user is defined and saurron_docker_notifications_email_user | trim | length > 0 %}
+user = "{{ saurron_docker_notifications_email_user }}"
+password = "{{ saurron_docker_notifications_email_password }}"
+{% else %}
+# user = "username"
+# password = "password"
+{% endif %}
+# Skip TLS certificate verification for the SMTP connection.
+tls_skip_verify = {{ saurron_docker_notifications_email_tls_skip_verify | default(false) | string | lower }}
+
+[notifications.mqtt]
+# MQTT broker address, e.g. "tcp://broker.example.com:1883" (required to enable MQTT).
+{% if saurron_docker_notifications_mqtt_broker is defined and saurron_docker_notifications_mqtt_broker | trim | length > 0 %}
+broker = "{{ saurron_docker_notifications_mqtt_broker }}"
+{% else %}
+# broker = "tcp://broker.example.com:1883"
+{% endif %}
+# Topic to publish update reports to (required).
+{% if saurron_docker_notifications_mqtt_topic is defined and saurron_docker_notifications_mqtt_topic | trim | length > 0 %}
+topic = "{{ saurron_docker_notifications_mqtt_topic }}"
+{% else %}
+# topic = "saurron/updates"
+{% endif %}
+# QoS level: 0 (at most once), 1 (at least once), 2 (exactly once).
+qos = {{ saurron_docker_notifications_mqtt_qos | default(0) }}
+# Client ID sent to the broker (auto-generated if omitted).
+{% if saurron_docker_notifications_mqtt_client_id is defined and saurron_docker_notifications_mqtt_client_id | trim | length > 0 %}
+client_id = "{{ saurron_docker_notifications_mqtt_client_id }}"
+{% else %}
+# client_id = "saurron"
+{% endif %}
+# Broker credentials (optional).
+{% if saurron_docker_notifications_mqtt_username is defined and saurron_docker_notifications_mqtt_username | trim | length > 0 %}
+username = "{{ saurron_docker_notifications_mqtt_username }}"
+password = "{{ saurron_docker_notifications_mqtt_password }}"
+{% else %}
+# username = "username"
+# password = "password"
+{% endif %}
+
+[notifications.pushover]
+# Pushover application token (required to enable Pushover notifications).
+{% if saurron_docker_notifications_pushover_token is defined and saurron_docker_notifications_pushover_token | trim | length > 0 %}
+token = "{{ saurron_docker_notifications_pushover_token }}"
+{% else %}
+# token = "application_token"
+{% endif %}
+# Pushover user or group key (required).
+{% if saurron_docker_notifications_pushover_user_key is defined and saurron_docker_notifications_pushover_user_key | trim | length > 0 %}
+user_key = "{{ saurron_docker_notifications_pushover_user_key }}"
+{% else %}
+# user_key = "user_or_group_key"
+{% endif %}

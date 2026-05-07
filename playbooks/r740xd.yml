@@ -125,6 +125,17 @@
         nas_samba_hosts_allow: "{{ vault_nas_samba_hosts_allow }}"
         nas_samba_network_ipv4: "{{ vault_nas_samba_network_ipv4 }}"
         nas_samba_user_acounts: "{{ vault_nas_samba_user_acounts }}"
+        # Saurron
+        nas_saurron_email_from: "{{ vault_saurron_email_from }}"
+        nas_saurron_email_server_port: "{{ vault_saurron_email_server_port }}"
+        nas_saurron_email_server: "{{ vault_saurron_email_server }}"
+        nas_saurron_email_to: 
+          - "{{ primary_email_address }}"
+        nas_saurron_email_user: "{{ vault_saurron_email_user }}"
+        nas_saurron_email_password: "{{ vault_saurron_email_password }}"
+        nas_saurron_host_domain: "{{ vault_veggie_home_domain }}"
+        nas_saurron_http_api_token: "{{ vault_saurron_http_api_token }}"
+        nas_saurron_timezone: "{{ home_timezone }}"
         # Seerr
         nas_seerr_host_domain: "{{ veggie_base_domain_name }}"
         # Servarr
