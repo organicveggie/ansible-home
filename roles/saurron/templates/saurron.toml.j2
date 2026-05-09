@@ -14,6 +14,12 @@ audit_log = "{{ saurron_docker_audit_log }}"
 # audit_log = "/var/log/saurron/audit.log"
 {% endif %}
 
+# By default, HTTP access log events (saurron::access) and audit log events
+# (saurron::audit) are excluded from stdout because they are already captured
+# in their dedicated log files. Set to true to also include them in stdout.
+log_access_to_stdout = {{ saurron_docker_log_access_to_stdout | default(false) | string | lower }}
+log_audit_to_stdout = {{ saurron_docker_log_audit_to_stdout | default(true) | string | lower }}
+
 # How often to check for updates, e.g. "5m", "1h", "3600"
 # Mutually exclusive with `schedule` and `run_once`.
 {% if saurron_docker_poll_interval is defined and saurron_docker_poll_interval | trim | length > 0 %}
@@ -52,6 +58,25 @@ registry_password = "{{ saurron_docker_registry_password }}"
 {% else %}
 # registry_password = "mypassword"
 {% endif %}
+
+# Per-registry credentials. Overrides the global credentials for the named
+# registry. An entry with no username/password forces anonymous access for that
+# registry even when global credentials are set. "docker.io" is accepted as an
+# alias for "registry-1.docker.io".
+#
+# [[registry_credentials]]
+# host = "ghcr.io"
+# username = "myuser"
+# password = "mytoken"
+#
+# [[registry_credentials]]
+# host = "docker.io"
+# username = "hubuser"
+# password = "hubpass"
+#
+# [[registry_credentials]]
+# host = "quay.io"
+# (no username/password = explicit anonymous, overrides global credentials)
 
 # How to handle a failed manifest HEAD request:
 #   auto   — warn on unexpected errors, silent on auth failures
@@ -240,6 +265,16 @@ password = "{{ saurron_docker_notifications_mqtt_password }}"
 # username = "username"
 # password = "password"
 {% endif %}
+# TLS settings (all optional; TLS is enabled when any TLS field is set or the
+# broker scheme is mqtts:// or ssl://).
+# Skip TLS certificate verification (insecure; useful for self-signed certs).
+# tls_skip_verify = false
+# Path to a PEM CA certificate for verifying the broker's certificate.
+# tls_ca_cert = ""
+# Path to a PEM client certificate for mutual TLS authentication.
+# tls_cert = ""
+# Path to a PEM client key for mutual TLS authentication.
+# tls_key = ""
 
 [notifications.pushover]
 # Pushover application token (required to enable Pushover notifications).

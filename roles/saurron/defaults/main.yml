@@ -77,6 +77,12 @@ saurron_docker_log_format: "auto"
 # saurron_docker_audit_log: "/var/log/saurron/audit.log"
 saurron_docker_audit_log: ""
 
+# By default, HTTP access log events (saurron::access) and audit log events
+# (saurron::audit) are excluded from stdout because they are already captured
+# in their dedicated log files. Set to true to also include them in stdout.
+saurron_docker_log_access_to_stdout: false
+saurron_docker_log_audit_to_stdout: true
+
 # How often to check for updates, e.g. "5m", "1h", "3600"
 # Mutually exclusive with `saurron_docker_schedule` and `saurron_docker_run_once`.
 saurron_docker_poll_interval: ""
