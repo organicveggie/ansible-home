@@ -35,7 +35,7 @@
   become: true
 
   vars:
-    saurron_docker_network: "saurron-test"
+    saurron_docker_network_name: "saurron-test"
     saurron_docker_available_externally: false
 
   pre_tasks:
