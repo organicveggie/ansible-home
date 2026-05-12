@@ -1,0 +1,36 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+
+  vars:
+    saurron_docker_volume_config_name: "saurron-config"
+    saurron_docker_volume_logs_name: "saurron-logs"
+
+  tasks:
+    - name: Get info on config volume
+      community.docker.docker_volume_info:
+        name: "{{ saurron_docker_volume_config_name }}"
+      register: config_vol_info
+
+    - name: Verify config volume exists
+      ansible.builtin.assert:
+        that: config_vol_info.exists
+
+    - name: Get info on logs volume
+      community.docker.docker_volume_info:
+        name: "{{ saurron_docker_volume_logs_name }}"
+      register: logs_vol_info
+
+    - name: Verify logs volume exists
+      ansible.builtin.assert:
+        that: logs_vol_info.exists
+
+    - name: Get info on Saurron container
+      community.docker.docker_container_info:
+        name: saurron
+      register: con_info
+
+    - name: Verify container exists
+      ansible.builtin.assert:
+        that: con_info.exists
