@@ -201,6 +201,8 @@ saurron_docker_notifications_webhook_url: ""
 saurron_docker_notifications_webhook_headers: ""
 # Skip TLS certificate verification for the webhook endpoint.
 saurron_docker_notifications_webhook_tls_skip_verify: false
+# Send notifications after every cycle, even if no updates were found.
+saurron_docker_notify_on_every_cycle: false
 
 # ── Email Notifications ────────────────────────────────────────────────────────
 

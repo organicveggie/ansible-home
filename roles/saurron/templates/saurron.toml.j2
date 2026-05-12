@@ -187,6 +187,8 @@ template = "{{ saurron_docker_notifications_template | default("") }}"
 {% else %}
 # template = "/path/to/template.mj2"
 {% endif %}
+# Send notifications after every cycle, even if no updates were found.
+notify_on_every_cycle = {{ saurron_docker_notify_on_every_cycle | default(false) | string | lower }}
 
 [notifications.webhook]
 # HTTP endpoint to POST update reports to (enables webhook notifications).
