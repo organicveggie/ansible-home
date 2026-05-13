@@ -586,7 +586,7 @@ traefik_confkey_providers:
     exposedByDefault: false
 traefik_le_ca_server: "https://acme-v02.api.letsencrypt.org/directory"
 # traefik_le_ca_server: "https://acme-staging-v02.api.letsencrypt.org/directory"
-traefik_confkey_certificatesResolvers:
+traefik_confkey_certificatesResolvers:  # noqa: var-naming
   letsencrypt:
     acme:
       caServer: "{{ traefik_le_ca_server }}"

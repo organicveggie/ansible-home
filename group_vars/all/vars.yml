@@ -218,4 +218,3 @@ veggie_kstar_password: "{{ vault_veggie_kstar_password }}"
 ### Veggie NAS
 ###
 veggie_nas_domain_name: "{{ vault_nas_domain_name }}"
-
