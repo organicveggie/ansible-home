@@ -1,7 +1,7 @@
 ---
 - name: "hass | Set fqdn"
   ansible.builtin.set_fact:
-    _nas_hass_fqdn: "{{ nas_hass_host_name }}.{{ nas_hass_host_domain }}"
+    _nas_hass_fqdn: "{{ r740xd_hass_host_name }}.{{ r740xd_hass_host_domain }}"
 
 - name: "hass | Set endpoint URL for Ecowitt"
   ansible.builtin.set_fact:
@@ -22,13 +22,13 @@
   ansible.builtin.import_role:
     name: "organicveggie.zwavejsui"
   vars:
-    zwavejsui_docker_device: "{{ nas_hass_zwave_device }}"
-    zwavejsui_docker_host_domain: "{{ nas_hass_host_domain }}"
+    zwavejsui_docker_device: "{{ r740xd_hass_zwave_device }}"
+    zwavejsui_docker_host_domain: "{{ r740xd_hass_host_domain }}"
     zwavejsui_docker_network: "{{ docker_networks.hass.name }}"
-    zwavejsui_docker_timezone: "{{ nas_hass_timezone }}"
+    zwavejsui_docker_timezone: "{{ r740xd_hass_timezone }}"
   when:
-    - "nas_hass_zwave_device is defined"
-    - "nas_hass_zwave_device not in (None, omit)"
+    - "r740xd_hass_zwave_device is defined"
+    - "r740xd_hass_zwave_device not in (None, omit)"
 
 - name: "hass | Setup Home Assistant container"
   ansible.builtin.import_role:
@@ -38,13 +38,13 @@
       - "{{ _nas_hass_fqdn }}"
     hass_docker_network_name: "{{ docker_networks.hass.name }}"
     hass_network_subnet: "{{ docker_networks.hass.subnet }}"
-    hass_home_latitude: "{{ nas_hass_latitude }}"
-    hass_home_longitude: "{{ nas_hass_longitude }}"
-    hass_host_domain: "{{ nas_hass_host_domain }}"
-    hass_host_name: "{{ nas_hass_host_name }}"
-    hass_home_timezone: "{{ nas_hass_timezone }}"
-    hass_zwave_device: "{{ nas_hass_zwave_device }}"
+    hass_home_latitude: "{{ r740xd_hass_latitude }}"
+    hass_home_longitude: "{{ r740xd_hass_longitude }}"
+    hass_host_domain: "{{ r740xd_hass_host_domain }}"
+    hass_host_name: "{{ r740xd_hass_host_name }}"
+    hass_home_timezone: "{{ r740xd_hass_timezone }}"
+    hass_zwave_device: "{{ r740xd_hass_zwave_device }}"
     hass_network_name: "{{ docker_networks.hass.name }}"
-    hass_ecowitt_hass_auth_token: "{{ nas_hass_ecowitt_hass_auth_token | default(omit) }}"
-    hass_ecowitt_hass_webhook_id: "{{ nas_hass_ecowitt_hass_webhook_id | default(omit) }}"
+    hass_ecowitt_hass_auth_token: "{{ r740xd_hass_ecowitt_hass_auth_token | default(omit) }}"
+    hass_ecowitt_hass_webhook_id: "{{ r740xd_hass_ecowitt_hass_webhook_id | default(omit) }}"
     hass_ecowitt_hass_url: "{{ _nas_hass_ecowitt_url }}"

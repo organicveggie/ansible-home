@@ -15,12 +15,14 @@
 
 - name: "Create subfolders"
   ansible.builtin.file:
-    name: "{{ _kometa_docker_volume_path }}/{{ item }}"
+    name: "{{ _kometa_docker_volume_path }}/{{ __item }}"
     state: "directory"
     mode: "0770"
   loop:
     - "assets"
     - "reports"
+  loop_control:
+    loop_var: __item
 
 - name: "Create config file"
   ansible.builtin.template:

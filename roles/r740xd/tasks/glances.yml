@@ -14,7 +14,7 @@
   ansible.builtin.import_role:
     name: "glances"
   vars:
-    glances_docker_host_domain: "{{ nas_domain_name }}"
+    glances_docker_host_domain: "{{ r740xd_domain_name }}"
     glances_docker_network_name: "{{ docker_networks.glances.name }}"
-    glances_docker_config: "{{ nas_glances_config_data }}"
-    glances_docker_extra_bind_mounts: "{{ nas_glances_extra_bind_mounts }}"
+    glances_docker_config: "{{ r740xd_glances_config_data }}"
+    glances_docker_extra_bind_mounts: "{{ r740xd_glances_extra_bind_mounts }}"

@@ -22,17 +22,19 @@
   ansible.builtin.set_fact:
     _fact_navidrome_docker_labels:
       "{{ _fact_navidrome_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   with_items:
     - key: "traefik.enable"
       value: "{{ navidrome_docker_available_externally }}"
+  loop_control:
+    loop_var: __item
   when: "not navidrome_docker_available_externally"
 
 - name: "Define Docker labels with Traefik enabled"
   ansible.builtin.set_fact:
     _fact_navidrome_docker_labels:
       "{{ _fact_navidrome_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   with_items:
     - key: "traefik.enable"
       value: "{{ navidrome_docker_available_externally }}"
@@ -46,6 +48,8 @@
       value: "*.{{ navidrome_docker_host_domain }}"
     - key: "traefik.http.services.navidrome.loadbalancer.server.port"
       value: "{{ navidrome_docker_web_port }}"
+  loop_control:
+    loop_var: __item
   when: "navidrome_docker_available_externally"
 
 - name: "Create Navidrome Docker container" # noqa: args[module]

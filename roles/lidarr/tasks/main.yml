@@ -15,9 +15,11 @@
 
 - name: "Define extra bind mounts"
   ansible.builtin.set_fact:
-    _lidarr_docker_mount_list: "{{ _lidarr_docker_mount_list | default([]) + 
-      [{'source': item.source, 'target': item.target, 'type': 'bind'}] }}"
+    _lidarr_docker_mount_list: "{{ _lidarr_docker_mount_list | default([]) +
+      [{'source': __item.source, 'target': __item.target, 'type': 'bind'}] }}"
   with_items: "{{ lidarr_docker_extra_bind_mounts }}"
+  loop_control:
+    loop_var: __item
 
 - name: "Build container FQDN"
   ansible.builtin.set_fact:
@@ -41,16 +43,18 @@
 - name: "Define Docker labels with Traefik disabled"
   ansible.builtin.set_fact:
     _lidarr_docker_labels: "{{ _lidarr_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   with_items:
     - key: "traefik.enable"
       value: "{{ lidarr_available_externally }}"
+  loop_control:
+    loop_var: __item
   when: "not lidarr_available_externally"
 
 - name: "Define Docker labels with Traefik enabled"
   ansible.builtin.set_fact:
     _lidarr_docker_labels: "{{ _lidarr_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   with_items:
     - key: "traefik.enable"
       value: "{{ lidarr_available_externally }}"
@@ -66,13 +70,17 @@
       value: "*.{{ lidarr_docker_host_domain }}"
     - key: "traefik.http.services.lidarr.loadbalancer.server.port"
       value: "{{ lidarr_docker_web_port }}"
+  loop_control:
+    loop_var: __item
   when: "lidarr_available_externally"
 
 - name: "Define user-supplied extra Docker labels"
   ansible.builtin.set_fact:
     _lidarr_docker_labels: "{{ _lidarr_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   loop: "{{ lidarr_docker_extra_labels | dict2items }}"
+  loop_control:
+    loop_var: __item
 
 - name: "Lidarr Docker Container"
   community.docker.docker_container:

@@ -1,7 +1,7 @@
 ---
 - name: Create speedtest input for Telegraf
   ansible.builtin.template:
-    src: ../templates/speedtest.conf.j2
+    src: speedtest.conf.j2
     dest: /etc/telegraf/telegraf.d/speedtest.conf
     owner: "telegraf"
     group: "telegraf"
@@ -24,7 +24,7 @@
 
 - name: Create Speedtest license agreement
   ansible.builtin.template:
-    src: ../templates/speedtest-cli.json.j2
+    src: speedtest-cli.json.j2
     dest: /etc/telegraf/.config/ookla/speedtest-cli.json
     owner: telegraf
     group: telegraf

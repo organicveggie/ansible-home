@@ -1,12 +1,12 @@
 ---
 - name: "samba | Build list of all user groups"
   ansible.builtin.set_fact:
-    _samba_all_user_groups: "{{ nas_samba_group_ids | dict2items | map(attribute='key') | join(',') }}"
+    _samba_all_user_groups: "{{ r740xd_samba_group_ids | dict2items | map(attribute='key') | join(',') }}"
 
 - name: "samba | Get list of extra admin user groups"
   ansible.builtin.set_fact:
     _samba_admin_extra_user_groups: >
-      {{ nas_samba_extra_user_groups[veggie_nas_admin_username] | default('') }}
+      {{ r740xd_samba_extra_user_groups[veggie_nas_admin_username] | default('') }}
 
 - name: "samba | Build list of all admin user groups"
   ansible.builtin.set_fact:
@@ -22,7 +22,7 @@
 - name: "samba | Build combined list of all extra user groups"
   ansible.builtin.set_fact:
     _samba_extra_user_groups: >
-      {{ nas_samba_extra_user_groups | default({}) | dict2items | 
+      {{ r740xd_samba_extra_user_groups | default({}) | dict2items | 
       rejectattr('key', veggie_nas_admin_username) | 
       combine({veggie_nas_admin_username: _samba_admin_user_groups}) }}
 
@@ -30,19 +30,19 @@
   ansible.builtin.import_role:
     name: "samba_docker"
   vars:
-    samba_docker_accounts: "{{ nas_samba_user_acounts }}"
+    samba_docker_accounts: "{{ r740xd_samba_user_acounts }}"
     samba_docker_avahi_name: "{{ veggie_hostname }}"
     samba_docker_extra_user_groups: "{{ _samba_extra_user_groups }}"
-    samba_docker_gids: "{{ nas_samba_group_ids }}"
+    samba_docker_gids: "{{ r740xd_samba_group_ids }}"
     samba_docker_global_key_values:
       "follow_SPACE_symlinks": "no"
-      "hosts_SPACE_allow": "{{ nas_samba_hosts_allow }}"
+      "hosts_SPACE_allow": "{{ r740xd_samba_hosts_allow }}"
       "restrict_SPACE_anonymous": "2"
       "wide_SPACE_links": "no"
     samba_docker_log_level: "1"
     samba_docker_server_string: "{{ veggie_hostname }} samba server"
-    samba_docker_network_ipv4: "{{ nas_samba_network_ipv4 }}"
-    samba_docker_network_name: "{{ nas_docker_macvlan_network_name }}"
-    samba_docker_timezone: "{{ nas_timezone }}"
-    samba_docker_share_mounts: "{{ nas_samba_share_mounts }}"
-    samba_docker_shares: "{{ nas_samba_shares }}"
+    samba_docker_network_ipv4: "{{ r740xd_samba_network_ipv4 }}"
+    samba_docker_network_name: "{{ r740xd_docker_macvlan_network_name }}"
+    samba_docker_timezone: "{{ r740xd_timezone }}"
+    samba_docker_share_mounts: "{{ r740xd_samba_share_mounts }}"
+    samba_docker_shares: "{{ r740xd_samba_shares }}"

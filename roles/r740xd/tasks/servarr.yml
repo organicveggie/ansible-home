@@ -1,7 +1,7 @@
 ---
 - name: "servarr | Set group id"
   ansible.builtin.set_fact:
-    _nas_servarr_gid: "{{ nas_servarr_gid | default(nas_servarr_uid) }}"
+    _nas_servarr_gid: "{{ r740xd_servarr_gid | default(r740xd_servarr_uid) }}"
   tags:
     - "setup"
     - "bazarr"
@@ -23,7 +23,7 @@
 
 - name: "servarr | Set group name"
   ansible.builtin.set_fact:
-    _nas_servarr_groupname: "{{ nas_servarr_groupname | default(nas_servarr_username) }}"
+    _nas_servarr_groupname: "{{ r740xd_servarr_groupname | default(r740xd_servarr_username) }}"
   tags:
     - "setup"
     - "cross-seed"
@@ -44,8 +44,8 @@
 
 - name: "servarr | Create user"
   ansible.builtin.user:
-    name: "{{ nas_servarr_username }}"
-    uid: "{{ nas_servarr_uid }}"
+    name: "{{ r740xd_servarr_username }}"
+    uid: "{{ r740xd_servarr_uid }}"
     create_home: "false"
     groups: "{{ _nas_servarr_groupname }}"
     password: "!"
@@ -53,45 +53,51 @@
 
 - name: "servarr | Create ZFS datasets"
   community.general.zfs:
-    name: "{{ item }}"
+    name: "{{ __item }}"
     state: present
   loop:
-    - "{{ nas_servarr_zfs_dataset }}"
-    - "{{ nas_servarr_zfs_dataset }}/downloads"
-    - "{{ nas_servarr_zfs_dataset }}/downloads/torrents"
-    - "{{ nas_servarr_zfs_dataset }}/downloads/usenet"
+    - "{{ r740xd_servarr_zfs_dataset }}"
+    - "{{ r740xd_servarr_zfs_dataset }}/downloads"
+    - "{{ r740xd_servarr_zfs_dataset }}/downloads/torrents"
+    - "{{ r740xd_servarr_zfs_dataset }}/downloads/usenet"
+  loop_control:
+    loop_var: __item
   tags: ["setup", "zfs"]
 
 - name: "servarr | Set owner/group for datasets"
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ __item }}"
     state: "directory"
-    owner: "{{ nas_servarr_username }}"
+    owner: "{{ r740xd_servarr_username }}"
     group: "{{ _nas_servarr_groupname }}"
     mode: "775"
   loop:
-    - "{{ nas_servarr_path }}"
-    - "{{ nas_servarr_path }}/downloads"
-    - "{{ nas_servarr_path }}/downloads/torrents"
-    - "{{ nas_servarr_path }}/downloads/usenet"
+    - "{{ r740xd_servarr_path }}"
+    - "{{ r740xd_servarr_path }}/downloads"
+    - "{{ r740xd_servarr_path }}/downloads/torrents"
+    - "{{ r740xd_servarr_path }}/downloads/usenet"
+  loop_control:
+    loop_var: __item
   tags: ["setup", "zfs"]
 
 - name: "servarr | Create folders for downloads"
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ __item }}"
     state: "directory"
-    owner: "{{ nas_servarr_username }}"
+    owner: "{{ r740xd_servarr_username }}"
     group: "{{ _nas_servarr_groupname }}"
     mode: "775"
   loop:
-    - "{{ nas_servarr_path }}/downloads/torrents/completed"
-    - "{{ nas_servarr_path }}/downloads/usenet/completed"
-    - "{{ nas_servarr_path }}/downloads/usenet/movies"
-    - "{{ nas_servarr_path }}/downloads/usenet/movies/1080p"
-    - "{{ nas_servarr_path }}/downloads/usenet/movies/2160p"
-    - "{{ nas_servarr_path }}/downloads/usenet/tv"
-    - "{{ nas_servarr_path }}/downloads/usenet/tv/1080p"
-    - "{{ nas_servarr_path }}/downloads/usenet/tv/2160p"
+    - "{{ r740xd_servarr_path }}/downloads/torrents/completed"
+    - "{{ r740xd_servarr_path }}/downloads/usenet/completed"
+    - "{{ r740xd_servarr_path }}/downloads/usenet/movies"
+    - "{{ r740xd_servarr_path }}/downloads/usenet/movies/1080p"
+    - "{{ r740xd_servarr_path }}/downloads/usenet/movies/2160p"
+    - "{{ r740xd_servarr_path }}/downloads/usenet/tv"
+    - "{{ r740xd_servarr_path }}/downloads/usenet/tv/1080p"
+    - "{{ r740xd_servarr_path }}/downloads/usenet/tv/2160p"
+  loop_control:
+    loop_var: __item
   tags: ["setup", "zfs"]
 
 - name: "servarr | Setup Docker network"
@@ -110,7 +116,7 @@
   ansible.builtin.import_tasks:
     file: "servarr_cross_seed.yml"
   vars:
-    cross_seed_script_owner: "{{ nas_servarr_uid }}"
+    cross_seed_script_owner: "{{ r740xd_servarr_uid }}"
     cross_seed_script_group: "{{ _nas_servarr_gid }}"
     cross_seed_xseed_torrent_clients: ["ultra-qbit-yukon"]
     cross_seed_xseed_usenet_clients: ["SABnzbd"]
@@ -121,10 +127,10 @@
     name: "calibre_docker"
   vars:
     calibre_docker_gid: "{{ _nas_servarr_gid }}"
-    calibre_docker_uid: "{{ nas_servarr_uid }}"
-    calibre_docker_timezone: "{{ nas_timezone }}"
+    calibre_docker_uid: "{{ r740xd_servarr_uid }}"
+    calibre_docker_timezone: "{{ r740xd_timezone }}"
     calibre_docker_network: "{{ docker_networks.servarr.name }}"
-    calibre_docker_data_source_path: "{{ nas_servarr_path }}"
+    calibre_docker_data_source_path: "{{ r740xd_servarr_path }}"
     calibre_docker_trusted_ips: "{{ docker_networks.servarr.subnet }}"
   tags: ["setup", "calibre"]
 
@@ -132,7 +138,7 @@
   ansible.builtin.import_role:
     name: "flaresolverr"
   vars:
-    flaresolverr_docker_timezone: "{{ nas_timezone }}"
+    flaresolverr_docker_timezone: "{{ r740xd_timezone }}"
     flaresolverr_docker_network: "{{ docker_networks.servarr.name }}"
   tags: ["flaresolverr"]
 
@@ -140,13 +146,13 @@
   ansible.builtin.import_role:
     name: "lidarr"
   vars:
-    lidarr_docker_cpus: "{{ nas_lidarr_cpus }}"
-    lidarr_docker_data_source_path: "{{ nas_servarr_path }}"
+    lidarr_docker_cpus: "{{ r740xd_lidarr_cpus }}"
+    lidarr_docker_data_source_path: "{{ r740xd_servarr_path }}"
     lidarr_docker_gid: "{{ _nas_servarr_gid }}"
-    lidarr_docker_host_domain: "{{ nas_lidarr_host_domain }}"
+    lidarr_docker_host_domain: "{{ r740xd_lidarr_host_domain }}"
     lidarr_docker_network: "{{ docker_networks.servarr.name }}"
-    lidarr_docker_timezone: "{{ nas_timezone }}"
-    lidarr_docker_uid: "{{ nas_servarr_uid }}"
+    lidarr_docker_timezone: "{{ r740xd_timezone }}"
+    lidarr_docker_uid: "{{ r740xd_servarr_uid }}"
     lidarr_docker_extra_bind_mounts:
       - source: "/nas-mirror/music"
         target: "/data/music"
@@ -157,10 +163,10 @@
     name: "prowlarr"
   vars:
     prowlarr_docker_gid: "{{ _nas_servarr_gid }}"
-    prowlarr_docker_host_domain: "{{ nas_prowlarr_host_domain }}"
+    prowlarr_docker_host_domain: "{{ r740xd_prowlarr_host_domain }}"
     prowlarr_docker_network: "{{ docker_networks.servarr.name }}"
-    prowlarr_docker_timezone: "{{ nas_timezone }}"
-    prowlarr_docker_uid: "{{ nas_servarr_uid }}"
+    prowlarr_docker_timezone: "{{ r740xd_timezone }}"
+    prowlarr_docker_uid: "{{ r740xd_servarr_uid }}"
   tags: ["prowlarr"]
 
 - name: "servarr | Setup Radarr 1080p"
@@ -169,23 +175,23 @@
   vars:
     radarr_docker_role_label: "radarr1080"
     radarr_docker_available_externally: "true"
-    radarr_docker_cpus: "{{ nas_radarr_cpus }}"
-    radarr_docker_data_source_path: "{{ nas_servarr_path }}"
+    radarr_docker_cpus: "{{ r740xd_radarr_cpus }}"
+    radarr_docker_data_source_path: "{{ r740xd_servarr_path }}"
     radarr_docker_extra_mounts:
       - source: "/opt/xseed"
         target: "/xseed"
         type: "bind"
     radarr_docker_gid: "{{ _nas_servarr_gid }}"
-    radarr_docker_host_domain: "{{ nas_radarr1080_host_domain }}"
-    radarr_docker_host_name: "{{ nas_radarr1080_host_name }}"
-    radarr_docker_movie_source_path: "{{ nas_servarr_movie_source_path }}"
-    radarr_docker_name: "{{ nas_radarr1080_container_name }}"
+    radarr_docker_host_domain: "{{ r740xd_radarr1080_host_domain }}"
+    radarr_docker_host_name: "{{ r740xd_radarr1080_host_name }}"
+    radarr_docker_movie_source_path: "{{ r740xd_servarr_movie_source_path }}"
+    radarr_docker_name: "{{ r740xd_radarr1080_container_name }}"
     radarr_docker_network: "{{ docker_networks.servarr.name }}"
-    radarr_docker_network_aliases: "{{ nas_radarr1080_network_aliases }}"
-    radarr_docker_timezone: "{{ nas_timezone }}"
-    radarr_docker_uid: "{{ nas_servarr_uid }}"
-    radarr_docker_volume_config_name: "{{ nas_radarr1080_config_volume_name }}"
-    radarr_docker_web_port: "{{ nas_radarr_web_port | default(omit) }}"
+    radarr_docker_network_aliases: "{{ r740xd_radarr1080_network_aliases }}"
+    radarr_docker_timezone: "{{ r740xd_timezone }}"
+    radarr_docker_uid: "{{ r740xd_servarr_uid }}"
+    radarr_docker_volume_config_name: "{{ r740xd_radarr1080_config_volume_name }}"
+    radarr_docker_web_port: "{{ r740xd_radarr_web_port | default(omit) }}"
   tags: ["radarr"]
 
 - name: "servarr | Setup Radarr 4K"
@@ -194,41 +200,41 @@
   vars:
     radarr_docker_role_label: "radarr4k"
     radarr_docker_available_externally: "true"
-    radarr_docker_cpus: "{{ nas_radarr_cpus }}"
-    radarr_docker_data_source_path: "{{ nas_servarr_path }}"
+    radarr_docker_cpus: "{{ r740xd_radarr_cpus }}"
+    radarr_docker_data_source_path: "{{ r740xd_servarr_path }}"
     radarr_docker_extra_mounts:
       - source: "/opt/xseed"
         target: "/xseed"
         type: "bind"
     radarr_docker_gid: "{{ _nas_servarr_gid }}"
-    radarr_docker_host_domain: "{{ nas_radarr4k_host_domain }}"
-    radarr_docker_host_name: "{{ nas_radarr4k_host_name }}"
-    radarr_docker_movie_source_path: "{{ nas_servarr_movie_source_path }}"
-    radarr_docker_name: "{{ nas_radarr4k_container_name }}"
+    radarr_docker_host_domain: "{{ r740xd_radarr4k_host_domain }}"
+    radarr_docker_host_name: "{{ r740xd_radarr4k_host_name }}"
+    radarr_docker_movie_source_path: "{{ r740xd_servarr_movie_source_path }}"
+    radarr_docker_name: "{{ r740xd_radarr4k_container_name }}"
     radarr_docker_network: "{{ docker_networks.servarr.name }}"
-    radarr_docker_network_aliases: "{{ nas_radarr4k_network_aliases }}"
-    radarr_docker_timezone: "{{ nas_timezone }}"
-    radarr_docker_uid: "{{ nas_servarr_uid }}"
-    radarr_docker_volume_config_name: "{{ nas_radarr4k_config_volume_name }}"
-    radarr_docker_web_port: "{{ nas_radarr_web_port | default(omit) }}"
+    radarr_docker_network_aliases: "{{ r740xd_radarr4k_network_aliases }}"
+    radarr_docker_timezone: "{{ r740xd_timezone }}"
+    radarr_docker_uid: "{{ r740xd_servarr_uid }}"
+    radarr_docker_volume_config_name: "{{ r740xd_radarr4k_config_volume_name }}"
+    radarr_docker_web_port: "{{ r740xd_radarr_web_port | default(omit) }}"
   tags: ["radarr"]
 
 - name: "servarr | Setup Readarr"
   ansible.builtin.import_role:
     name: "readarr"
   vars:
-    readarr_docker_data_source_path: "{{ nas_servarr_path }}"
+    readarr_docker_data_source_path: "{{ r740xd_servarr_path }}"
     readarr_docker_extra_mounts:
-      - source: "{{ nas_readarr_library_path }}"
+      - source: "{{ r740xd_readarr_library_path }}"
         target: "/data/books"
         type: "bind"
     readarr_docker_gid: "{{ _nas_servarr_gid }}"
-    readarr_docker_host_domain: "{{ nas_readarr_host_domain }}"
-    readarr_docker_host_name: "{{ nas_readarr_host_name }}"
+    readarr_docker_host_domain: "{{ r740xd_readarr_host_domain }}"
+    readarr_docker_host_name: "{{ r740xd_readarr_host_name }}"
     readarr_docker_network: "{{ docker_networks.servarr.name }}"
-    readarr_docker_timezone: "{{ nas_timezone }}"
-    readarr_docker_uid: "{{ nas_servarr_uid }}"
-    readarr_docker_web_port: "{{ nas_readarr_web_port }}"
+    readarr_docker_timezone: "{{ r740xd_timezone }}"
+    readarr_docker_uid: "{{ r740xd_servarr_uid }}"
+    readarr_docker_web_port: "{{ r740xd_readarr_web_port }}"
   tags: ["readarr"]
 
 # - role: "recyclarr"
@@ -250,12 +256,12 @@
   ansible.builtin.import_role:
     name: "sabnzbd"
   vars:
-    sabnzbd_docker_data_source_path: "{{ nas_servarr_path }}"
+    sabnzbd_docker_data_source_path: "{{ r740xd_servarr_path }}"
     sabnzbd_docker_gid: "{{ _nas_servarr_gid }}"
-    sabnzbd_docker_host_domain: "{{ nas_sabnzbd_host_domain }}"
+    sabnzbd_docker_host_domain: "{{ r740xd_sabnzbd_host_domain }}"
     sabnzbd_docker_network: "{{ docker_networks.servarr.name }}"
-    sabnzbd_docker_timezone: "{{ nas_timezone }}"
-    sabnzbd_docker_uid: "{{ nas_servarr_uid }}"
+    sabnzbd_docker_timezone: "{{ r740xd_timezone }}"
+    sabnzbd_docker_uid: "{{ r740xd_servarr_uid }}"
   tags: ["sabnzbd"]
 
 - name: "servarr | Setup Sonarr 1080p"
@@ -263,23 +269,23 @@
     name: "sonarr"
   vars:
     sonarr_docker_available_externally: "true"
-    sonarr_docker_cpus: "{{ nas_sonarr_cpus }}"
-    sonarr_docker_data_source_path: "{{ nas_servarr_path }}"
+    sonarr_docker_cpus: "{{ r740xd_sonarr_cpus }}"
+    sonarr_docker_data_source_path: "{{ r740xd_servarr_path }}"
     sonarr_docker_extra_mounts:
       - source: "/opt/xseed/xseed.sh"
         target: "/xseed/xseed.sh"
         type: "bind"
     sonarr_docker_gid: "{{ _nas_servarr_gid }}"
-    sonarr_docker_host_domain: "{{ nas_sonarr1080_host_domain }}"
-    sonarr_docker_host_name: "{{ nas_sonarr1080_host_name }}"
-    sonarr_docker_name: "{{ nas_sonarr1080_container_name }}"
+    sonarr_docker_host_domain: "{{ r740xd_sonarr1080_host_domain }}"
+    sonarr_docker_host_name: "{{ r740xd_sonarr1080_host_name }}"
+    sonarr_docker_name: "{{ r740xd_sonarr1080_container_name }}"
     sonarr_docker_network: "{{ docker_networks.servarr.name }}"
-    sonarr_docker_network_aliases: "{{ nas_sonarr1080_network_aliases }}"
-    sonarr_docker_timezone: "{{ nas_timezone }}"
-    sonarr_docker_tv_source_path: "{{ nas_servarr_tv_source_path }}"
-    sonarr_docker_uid: "{{ nas_servarr_uid }}"
-    sonarr_docker_volume_config_name: "{{ nas_sonarr1080_config_volume_name }}"
-    sonarr_docker_web_port: "{{ nas_sonarr_web_port | default(omit) }}"
+    sonarr_docker_network_aliases: "{{ r740xd_sonarr1080_network_aliases }}"
+    sonarr_docker_timezone: "{{ r740xd_timezone }}"
+    sonarr_docker_tv_source_path: "{{ r740xd_servarr_tv_source_path }}"
+    sonarr_docker_uid: "{{ r740xd_servarr_uid }}"
+    sonarr_docker_volume_config_name: "{{ r740xd_sonarr1080_config_volume_name }}"
+    sonarr_docker_web_port: "{{ r740xd_sonarr_web_port | default(omit) }}"
   tags: ["sonarr"]
 
 - name: "servarr | Setup Sonarr 4K"
@@ -287,23 +293,23 @@
     name: "sonarr"
   vars:
     sonarr_docker_available_externally: "true"
-    sonarr_docker_cpus: "{{ nas_sonarr_cpus }}"
-    sonarr_docker_data_source_path: "{{ nas_servarr_path }}"
+    sonarr_docker_cpus: "{{ r740xd_sonarr_cpus }}"
+    sonarr_docker_data_source_path: "{{ r740xd_servarr_path }}"
     sonarr_docker_extra_mounts:
       - source: "/opt/xseed/xseed.sh"
         target: "/xseed/xseed.sh"
         type: "bind"
     sonarr_docker_gid: "{{ _nas_servarr_gid }}"
-    sonarr_docker_host_domain: "{{ nas_sonarr4k_host_domain }}"
-    sonarr_docker_host_name: "{{ nas_sonarr4k_host_name }}"
-    sonarr_docker_name: "{{ nas_sonarr4k_container_name }}"
+    sonarr_docker_host_domain: "{{ r740xd_sonarr4k_host_domain }}"
+    sonarr_docker_host_name: "{{ r740xd_sonarr4k_host_name }}"
+    sonarr_docker_name: "{{ r740xd_sonarr4k_container_name }}"
     sonarr_docker_network: "{{ docker_networks.servarr.name }}"
-    sonarr_docker_network_aliases: "{{ nas_sonarr4k_network_aliases }}"
-    sonarr_docker_timezone: "{{ nas_timezone }}"
-    sonarr_docker_tv_source_path: "{{ nas_servarr_tv_source_path }}"
-    sonarr_docker_uid: "{{ nas_servarr_uid }}"
-    sonarr_docker_volume_config_name: "{{ nas_sonarr4k_config_volume_name }}"
-    sonarr_docker_web_port: "{{ nas_sonarr_web_port | default(omit) }}"
+    sonarr_docker_network_aliases: "{{ r740xd_sonarr4k_network_aliases }}"
+    sonarr_docker_timezone: "{{ r740xd_timezone }}"
+    sonarr_docker_tv_source_path: "{{ r740xd_servarr_tv_source_path }}"
+    sonarr_docker_uid: "{{ r740xd_servarr_uid }}"
+    sonarr_docker_volume_config_name: "{{ r740xd_sonarr4k_config_volume_name }}"
+    sonarr_docker_web_port: "{{ r740xd_sonarr_web_port | default(omit) }}"
   tags: ["sonarr"]
 
 - name: "servarr | Setup Syncthing"
@@ -311,12 +317,12 @@
     name: "syncthing"
   vars:
     syncthing_available_externally: "true"
-    syncthing_docker_data_source_path: "{{ nas_servarr_path }}"
-    syncthing_docker_host_domain: "{{ nas_syncthing_host_domain }}"
+    syncthing_docker_data_source_path: "{{ r740xd_servarr_path }}"
+    syncthing_docker_host_domain: "{{ r740xd_syncthing_host_domain }}"
     syncthing_docker_gid: "{{ _nas_servarr_gid }}"
     syncthing_docker_network: "{{ docker_networks.servarr.name }}"
-    syncthing_docker_timezone: "{{ nas_timezone }}"
-    syncthing_docker_uid: "{{ nas_servarr_uid }}"
+    syncthing_docker_timezone: "{{ r740xd_timezone }}"
+    syncthing_docker_uid: "{{ r740xd_servarr_uid }}"
   tags: ["syncthing"]
 
 - name: "servarr | Setup Unpackerr"
@@ -324,16 +330,16 @@
     name: "unpackerr"
   vars:
     unpackerr_docker_gid: "{{ _nas_servarr_gid }}"
-    unpackerr_docker_uid: "{{ nas_servarr_uid }}"
-    unpackerr_docker_timezone: "{{ nas_timezone }}"
+    unpackerr_docker_uid: "{{ r740xd_servarr_uid }}"
+    unpackerr_docker_timezone: "{{ r740xd_timezone }}"
     unpackerr_docker_network: "{{ docker_networks.servarr.name }}"
-    unpackerr_docker_data_source_path: "{{ nas_servarr_path }}"
+    unpackerr_docker_data_source_path: "{{ r740xd_servarr_path }}"
     unpackerr_docker_web_upstreams:
       - "{{ docker_networks.servarr.gateway }}"
       - "{{ docker_networks.servarr.subnet }}"
     unpackerr_docker_radarr:
-      - url: "http://{{ nas_radarr1080_host_name }}:{{ nas_radarr_web_port }}"
-        api_key: "{{ nas_radarr1080_api_key }}"
+      - url: "http://{{ r740xd_radarr1080_host_name }}:{{ r740xd_radarr_web_port }}"
+        api_key: "{{ r740xd_radarr1080_api_key }}"
         paths:
           - "/data/downloads"
         protocols: "torrent,usenet"
@@ -341,8 +347,8 @@
         delete_delay: "5m"
         delete_orig: false
         syncthing: true
-      - url: "http://{{ nas_radarr4k_host_name }}:{{ nas_radarr_web_port }}"
-        api_key: "{{ nas_radarr4k_api_key }}"
+      - url: "http://{{ r740xd_radarr4k_host_name }}:{{ r740xd_radarr_web_port }}"
+        api_key: "{{ r740xd_radarr4k_api_key }}"
         paths:
           - "/data/downloads"
         protocols: "torrent,usenet"
@@ -351,8 +357,8 @@
         delete_orig: false
         syncthing: true
     unpackerr_docker_readarr:
-      - url: "http://{{ nas_readarr_host_name }}:{{ nas_readarr_web_port }}"
-        api_key: "{{ nas_readarr_api_key }}"
+      - url: "http://{{ r740xd_readarr_host_name }}:{{ r740xd_readarr_web_port }}"
+        api_key: "{{ r740xd_readarr_api_key }}"
         paths:
           - "/data/downloads"
         protocols: "torrent,usenet"
@@ -361,8 +367,8 @@
         delete_orig: false
         syncthing: true
     unpackerr_docker_sonarr:
-      - url: "http://{{ nas_sonarr1080_host_name }}:{{ nas_sonarr_web_port }}"
-        api_key: "{{ nas_sonarr1080_api_key }}"
+      - url: "http://{{ r740xd_sonarr1080_host_name }}:{{ r740xd_sonarr_web_port }}"
+        api_key: "{{ r740xd_sonarr1080_api_key }}"
         paths:
           - "/data/downloads"
         protocols: "torrent,usenet"
@@ -370,8 +376,8 @@
         delete_delay: "5m"
         delete_orig: false
         syncthing: true
-      - url: "http://{{ nas_sonarr4k_host_name }}:{{ nas_sonarr_web_port }}"
-        api_key: "{{ nas_sonarr4k_api_key }}"
+      - url: "http://{{ r740xd_sonarr4k_host_name }}:{{ r740xd_sonarr_web_port }}"
+        api_key: "{{ r740xd_sonarr4k_api_key }}"
         paths:
           - "/data/downloads"
         protocols: "torrent,usenet"
@@ -385,69 +391,71 @@
   ansible.builtin.import_role:
     name: "cloudflared_docker"
   vars:
-    cloudflared_docker_name: "{{ nas_servarr_cloudflared_container_name }}"
-    cloudflared_docker_tunnel_token: "{{ nas_servarr_cloudflared_token }}"
+    cloudflared_docker_name: "{{ r740xd_servarr_cloudflared_container_name }}"
+    cloudflared_docker_tunnel_token: "{{ r740xd_servarr_cloudflared_token }}"
     cloudflared_docker_network: "{{ docker_networks.servarr.name }}"
   tags: ["cloudflare", "cloudflared"]
 
-- name: "bazarr | Setup Bazarr 1080p"
+- name: "Bazarr | Setup Bazarr 1080p"
   ansible.builtin.import_role:
     name: "bazarr"
   vars:
-    bazarr_docker_cpus: "{{ nas_bazarr_cpus }}"
+    bazarr_docker_cpus: "{{ r740xd_bazarr_cpus }}"
     bazarr_docker_gid: "{{ _nas_servarr_gid }}"
-    bazarr_docker_host_domain: "{{ nas_bazarr1080_host_domain }}"
-    bazarr_docker_host_name: "{{ nas_bazarr1080_host_name }}"
-    bazarr_docker_memory: "{{ nas_bazarr_memory }}"
-    bazarr_docker_movie_source_path: "{{ nas_servarr_movie_source_path }}/1080p"
-    bazarr_docker_name: "{{ nas_bazarr1080_container_name }}"
-    bazarr_docker_network_aliases: "{{ nas_bazarr1080_network_aliases }}"
+    bazarr_docker_host_domain: "{{ r740xd_bazarr1080_host_domain }}"
+    bazarr_docker_host_name: "{{ r740xd_bazarr1080_host_name }}"
+    bazarr_docker_memory: "{{ r740xd_bazarr_memory }}"
+    bazarr_docker_movie_source_path: "{{ r740xd_servarr_movie_source_path }}/1080p"
+    bazarr_docker_name: "{{ r740xd_bazarr1080_container_name }}"
+    bazarr_docker_network_aliases: "{{ r740xd_bazarr1080_network_aliases }}"
     bazarr_docker_role_label: "bazarr1080"
-    bazarr_docker_tv_source_path: "{{ nas_servarr_tv_source_path }}/1080p"
-    bazarr_docker_uid: "{{ nas_servarr_uid }}"
-    bazarr_docker_web_port: "{{ nas_bazarr_web_port }}"
+    bazarr_docker_tv_source_path: "{{ r740xd_servarr_tv_source_path }}/1080p"
+    bazarr_docker_uid: "{{ r740xd_servarr_uid }}"
+    bazarr_docker_web_port: "{{ r740xd_bazarr_web_port }}"
   tags: ["bazarr", "bazarr1080"]
 
-- name: "bazarr | Setup Bazarr 4K"
+- name: "Bazarr | Setup Bazarr 4K"
   ansible.builtin.import_role:
     name: "bazarr"
   vars:
-    bazarr_docker_cpus: "{{ nas_bazarr_cpus }}"
+    bazarr_docker_cpus: "{{ r740xd_bazarr_cpus }}"
     bazarr_docker_gid: "{{ _nas_servarr_gid }}"
-    bazarr_docker_host_domain: "{{ nas_bazarr4k_host_domain }}"
-    bazarr_docker_host_name: "{{ nas_bazarr4k_host_name }}"
-    bazarr_docker_memory: "{{ nas_bazarr_memory }}"
-    bazarr_docker_movie_source_path: "{{ nas_servarr_movie_source_path }}/2160p"
-    bazarr_docker_name: "{{ nas_bazarr4k_container_name }}"
-    bazarr_docker_network_aliases: "{{ nas_bazarr4k_network_aliases }}"
+    bazarr_docker_host_domain: "{{ r740xd_bazarr4k_host_domain }}"
+    bazarr_docker_host_name: "{{ r740xd_bazarr4k_host_name }}"
+    bazarr_docker_memory: "{{ r740xd_bazarr_memory }}"
+    bazarr_docker_movie_source_path: "{{ r740xd_servarr_movie_source_path }}/2160p"
+    bazarr_docker_name: "{{ r740xd_bazarr4k_container_name }}"
+    bazarr_docker_network_aliases: "{{ r740xd_bazarr4k_network_aliases }}"
     bazarr_docker_role_label: "bazarr4k"
-    bazarr_docker_tv_source_path: "{{ nas_servarr_tv_source_path }}/2160p"
-    bazarr_docker_uid: "{{ nas_servarr_uid }}"
-    bazarr_docker_web_port: "{{ nas_bazarr_web_port }}"
+    bazarr_docker_tv_source_path: "{{ r740xd_servarr_tv_source_path }}/2160p"
+    bazarr_docker_uid: "{{ r740xd_servarr_uid }}"
+    bazarr_docker_web_port: "{{ r740xd_bazarr_web_port }}"
   tags: ["bazarr", "bazarr4k"]
 
 - name: "servarr | Logrotate"
   ansible.builtin.include_tasks:
     file: "servarr_logrotate.yml"
   vars:
-    servarr_logrotate_name: "{{ item.name }}"
-    servarr_logrotate_volume_name: "{{ item.volume }}"
+    servarr_logrotate_name: "{{ __item.name }}"
+    servarr_logrotate_volume_name: "{{ __item.volume }}"
     servarr_logrotate_log_criteria: "*.txt"
-    servarr_logrotate_max_age: "{{ item.max_age | default('+8d') }}"
+    servarr_logrotate_max_age: "{{ __item.max_age | default('+8d') }}"
   loop:
     - name: "lidarr"
       volume: "{{ lidarr_docker_volume_config_name }}"
     - name: "radarr1080p"
-      volume: "{{ nas_radarr1080_config_volume_name }}"
+      volume: "{{ r740xd_radarr1080_config_volume_name }}"
     - name: "radarr4k"
-      volume: "{{ nas_radarr4k_config_volume_name }}"
+      volume: "{{ r740xd_radarr4k_config_volume_name }}"
     - name: "readarr"
       volume: "{{ readarr_docker_volume_config_name }}"
     - name: "sabnzbd"
       volume: "{{ sabnzbd_docker_volume_config_name }}"
       max_age: "+30d"
     - name: "sonarr1080p"
-      volume: "{{ nas_sonarr1080_config_volume_name }}"
+      volume: "{{ r740xd_sonarr1080_config_volume_name }}"
     - name: "sonarr4k"
-      volume: "{{ nas_sonarr4k_config_volume_name }}"
+      volume: "{{ r740xd_sonarr4k_config_volume_name }}"
+  loop_control:
+    loop_var: __item
   tags: ["logrotate"]

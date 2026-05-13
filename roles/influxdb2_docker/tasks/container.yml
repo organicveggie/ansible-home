@@ -19,25 +19,29 @@
 
 - name: "Define environment variables"
   ansible.builtin.set_fact:
-    _fact_influxdb_docker_env_vars: "{{ influxdb_docker_extra_env_vars | default({}) | 
-      combine({item.key: item.value})}}"
+    _fact_influxdb_docker_env_vars: "{{ influxdb_docker_extra_env_vars | default({}) |
+      combine({__item.key: __item.value})}}"
   with_items:
       - key: "INFLUXD_HTTP_BIND_ADDRESS"
         value: ":{{ influxdb_docker_web_port }}"
+  loop_control:
+    loop_var: __item
 
 - name: "Define Docker labels with Traefik disabled"
   ansible.builtin.set_fact:
     _influxdb_docker_labels: "{{ _influxdb_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   with_items:
     - key: "traefik.enable"
       value: "{{ influxdb_available_externally }}"
+  loop_control:
+    loop_var: __item
   when: "not influxdb_docker_available_externally"
 
 - name: "Define Docker labels with Traefik enabled"
   ansible.builtin.set_fact:
     _influxdb_docker_labels: "{{ _influxdb_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   with_items:
     - key: "traefik.enable"
       value: "true"
@@ -53,13 +57,17 @@
       value: "*.{{ influxdb_docker_host_domain }}"
     - key: "traefik.http.services.influxdb27.loadbalancer.server.port"
       value: "{{ influxdb_docker_web_port }}"
+  loop_control:
+    loop_var: __item
   when: "influxdb_docker_available_externally"
 
 - name: "Define user-supplied extra Docker labels"
   ansible.builtin.set_fact:
     _influxdb_docker_labels: "{{ _influxdb_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   loop: "{{ influxdb_docker_extra_labels | dict2items }}"
+  loop_control:
+    loop_var: __item
 
 - name: "Create InfluxDB Docker container" # noqa: args[module]
   community.docker.docker_container:

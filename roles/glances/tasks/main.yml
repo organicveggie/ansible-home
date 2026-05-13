@@ -19,8 +19,10 @@
 - name: "Define mount list for required mounts"
   ansible.builtin.set_fact:
     _glances_docker_mount_list: >
-      {{ _glances_docker_mount_list | default([]) + [{ 'source': item.key, 'target': item.value, 'type': 'bind', 'read_only': true }] }}
+      {{ _glances_docker_mount_list | default([]) + [{ 'source': __item.key, 'target': __item.value, 'type': 'bind', 'read_only': true }] }}
   loop: "{{ _glances_docker_required_mounts_map | dict2items }}"
+  loop_control:
+    loop_var: __item
   vars:
     _glances_docker_required_mounts_map:
       "/var/run/docker.sock": "/var/run/docker.sock"
@@ -31,8 +33,10 @@
 - name: "Build list of extra mount points"
   ansible.builtin.set_fact:
     _glances_docker_mount_list: >
-      {{ _glances_docker_mount_list | default([]) + [item] }}
+      {{ _glances_docker_mount_list | default([]) + [__item] }}
   loop: "{{ glances_docker_extra_bind_mounts | default([]) }}"
+  loop_control:
+    loop_var: __item
 
 # - ansible.builtin.debug:
 #     msg: "{{ _glances_docker_mount_list }}"

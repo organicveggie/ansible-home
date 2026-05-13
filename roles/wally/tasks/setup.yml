@@ -5,7 +5,7 @@
 
 - name: Copy udev rule file
   ansible.builtin.copy:
-    src: "../files/wally.rules"
+    src: "wally.rules"
     dest: "/etc/udev/rules.d/50-wally.rules"
     mode: "0644"
 
@@ -16,8 +16,10 @@
 
 - name: Add users to plugdev group
   ansible.builtin.user:
-    name: "{{ item }}"
+    name: "{{ __item }}"
     append: "yes"
     groups:
       - "plugdev"
   loop: "{{ wally_plugdev_users }}"
+  loop_control:
+    loop_var: __item

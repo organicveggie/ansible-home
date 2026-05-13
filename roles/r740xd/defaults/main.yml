@@ -4,222 +4,222 @@
 ###
 ### Admin
 ###
-nas_admin_passwd: null
-nas_admin_user: null
+r740xd_admin_passwd: null
+r740xd_admin_user: null
 
 ###
 ### AWS: Route53
 ###
-nas_aws_route53_access_key_id: null
-nas_aws_route53_hosted_zone_id: null
-nas_aws_route53_region: "us-east1"
-nas_aws_route53_secret_access_key: null
+r740xd_aws_route53_access_key_id: null
+r740xd_aws_route53_hosted_zone_id: null
+r740xd_aws_route53_region: "us-east1"
+r740xd_aws_route53_secret_access_key: null
 
 ###
 ### Bazarr
 ###
-nas_bazarr_cpus: "2"
-nas_bazarr_memory: "1GB"
-nas_bazarr_movie_source_path: null
-nas_bazarr_web_port: null # optional
-nas_bazarr1080_host_domain: null
-nas_bazarr4k_host_domain: null
+r740xd_bazarr_cpus: "2"
+r740xd_bazarr_memory: "1GB"
+r740xd_bazarr_movie_source_path: null
+r740xd_bazarr_web_port: null # optional
+r740xd_bazarr1080_host_domain: null
+r740xd_bazarr4k_host_domain: null
 
 ###
 ### Calibre Web
 ###
-nas_calibre_web_book_dir: null
-nas_calibre_web_gid: null
-nas_calibre_web_host_domain: null
-nas_calibre_web_hostname: "calibre-web"
-nas_calibre_web_uid: null
+r740xd_calibre_web_book_dir: null
+r740xd_calibre_web_gid: null
+r740xd_calibre_web_host_domain: null
+r740xd_calibre_web_hostname: "calibre-web"
+r740xd_calibre_web_uid: null
 
 ###
 ### Cross-Seed
 ###
-nas_cross_seed_api_key: null
-nas_cross_seed_match_mode: "strict"
-nas_cross_seed_prowlarr_api_key: null
-nas_cross_seed_prowlarr_indexer_ids: []
-nas_cross_seed_qbittorrrent_url: null
-nas_cross_seed_radarr1080_apikey: null
-nas_cross_seed_radarr4k_apikey: null
-nas_cross_seed_sonarr1080_apikey: null
-nas_cross_seed_sonarr4k_apikey: null
+r740xd_cross_seed_api_key: null
+r740xd_cross_seed_match_mode: "strict"
+r740xd_cross_seed_prowlarr_api_key: null
+r740xd_cross_seed_prowlarr_indexer_ids: []
+r740xd_cross_seed_qbittorrrent_url: null
+r740xd_cross_seed_radarr1080_apikey: null
+r740xd_cross_seed_radarr4k_apikey: null
+r740xd_cross_seed_sonarr1080_apikey: null
+r740xd_cross_seed_sonarr4k_apikey: null
 
 ###
 ### Diun
 ###
-nas_diun_config_dir: "/etc/diun"
-nas_diun_notify_mail_host: null
-nas_diun_notify_mail_port: null
-nas_diun_notify_mail_username: null
-nas_diun_notify_mail_password: null
-nas_diun_notify_mail_from: null
-nas_diun_notify_mail_to: null
+r740xd_diun_config_dir: "/etc/diun"
+r740xd_diun_notify_mail_host: null
+r740xd_diun_notify_mail_port: null
+r740xd_diun_notify_mail_username: null
+r740xd_diun_notify_mail_password: null
+r740xd_diun_notify_mail_from: null
+r740xd_diun_notify_mail_to: null
 
-nas_diun_regopts_dockerio_user: null
-nas_diun_regopts_dockerio_passwd: null
+r740xd_diun_regopts_dockerio_user: null
+r740xd_diun_regopts_dockerio_passwd: null
 
 ###
 ### Docker macvlan network
 ###
 
 # IPv4 gateway for the macvlan network.
-nas_docker_macvlan_gateway: null
+r740xd_docker_macvlan_gateway: null
 
 # IPv4 range set aside for the macvlan network in subnet format.
 # Example: "192.168.1.240/28"
-nas_docker_macvlan_iprange: null
+r740xd_docker_macvlan_iprange: null
 
 # Name of the macvlan network.
-nas_docker_macvlan_network_name: "nas_macvlan"
+r740xd_docker_macvlan_network_name: "r740xd_macvlan"
 
 # Name of the parent interface on the host for the macvlan network.
 # Examples: "eth0", "eno1"
-nas_docker_macvlan_network_parent: null
+r740xd_docker_macvlan_network_parent: null
 
 # IPv4 subnet for the macvlan network.
-nas_docker_macvlan_subnet: null
+r740xd_docker_macvlan_subnet: null
 
 # List of users who should be added to the docker group.
-nas_docker_users: []
+r740xd_docker_users: []
 
 ##########
 
 # Base domain name for machine and containers running on it.
-nas_domain_name: "host.subdomain.example.com"
+r740xd_domain_name: "host.subdomain.example.com"
 
 # Base domain the entire site / location.
-nas_site_domain: "subdomain.example.com"
+r740xd_site_domain: "subdomain.example.com"
 
 ###
 ### Glances
 ###
-nas_glances_config_data: null
+r740xd_glances_config_data: null
 
 # List of dictionaries of Linux groups to create. Each entry in the list should be a dictionary
 # in the form to match ansible.builtin.group.
 # Example:
-#   nas_groups:
+#   r740xd_groups:
 #     - name: "group1"
 #     - name: "group2"
 #       gid: 4200
 #     - name: "group3"
 #       system: true
-nas_groups: []
+r740xd_groups: []
 
 ###
 ### Home Assistant
 ###
-nas_hass_ecowitt_hass_auth_token: null
-nas_hass_ecowitt_hass_webhook_id: null
-nas_hass_host_domain: null
-nas_hass_host_name: "hass"
-nas_hass_latitude: null
-nas_hass_longitude: null
-nas_hass_timezone: null
-nas_hass_zwave_device: null
+r740xd_hass_ecowitt_hass_auth_token: null
+r740xd_hass_ecowitt_hass_webhook_id: null
+r740xd_hass_host_domain: null
+r740xd_hass_host_name: "hass"
+r740xd_hass_latitude: null
+r740xd_hass_longitude: null
+r740xd_hass_timezone: null
+r740xd_hass_zwave_device: null
 
 ###
 ### InfluxDB
 ###
-nas_influxdb_container_name: "influxdb27"
-nas_influxdb_host_domain: null
-nas_influxdb_host_name: "influxdb"
+r740xd_influxdb_container_name: "influxdb27"
+r740xd_influxdb_host_domain: null
+r740xd_influxdb_host_name: "influxdb"
 
 ###
 ### Kometa
 ###
-nas_kometa_cpus: "2"
-nas_kometa_memory: "2G"
-nas_kometa_libraries: null 
-nas_kometa_mdblist_apikey: null
-nas_kometa_plex_token: null
-nas_kometa_plex_url: null
-nas_kometa_run_once_only: false
-nas_kometa_tautulli_apikey: null
-nas_kometa_tmdb_apikey: null
-nas_kometa_trakt: null
+r740xd_kometa_cpus: "2"
+r740xd_kometa_memory: "2G"
+r740xd_kometa_libraries: null 
+r740xd_kometa_mdblist_apikey: null
+r740xd_kometa_plex_token: null
+r740xd_kometa_plex_url: null
+r740xd_kometa_run_once_only: false
+r740xd_kometa_tautulli_apikey: null
+r740xd_kometa_tmdb_apikey: null
+r740xd_kometa_trakt: null
 
 ###
 ### Lidarr
 ###
-nas_lidarr_cpus: "3"
-nas_lidarr_host_domain: null
+r740xd_lidarr_cpus: "3"
+r740xd_lidarr_host_domain: null
 
 ###
 ### Navidrome
 ###
-nas_navidrome_host_name: "navi"
-nas_navidrome_host_domain: null
-nas_navidrome_lastfm_apikey: null
-nas_navidrome_lastfm_secret: null
-nas_navidrome_music_folder: null
-nas_navidrome_spotify_client_id: null
-nas_navidrome_spotify_client_secret: null
+r740xd_navidrome_host_name: "navi"
+r740xd_navidrome_host_domain: null
+r740xd_navidrome_lastfm_apikey: null
+r740xd_navidrome_lastfm_secret: null
+r740xd_navidrome_music_folder: null
+r740xd_navidrome_spotify_client_id: null
+r740xd_navidrome_spotify_client_secret: null
 
 ###
 ### Plex
 ###
-nas_plex_container_name: "plex"
-nas_plex_claim: null
-nas_plex_cpus: 8
-nas_plex_memory: "4GB"
-nas_plex_network_name: null
-nas_plex_network_ipv4: null
-nas_plex_music_path: null
-nas_plex_old_music_path: null
-nas_plex_videos_path: null
+r740xd_plex_container_name: "plex"
+r740xd_plex_claim: null
+r740xd_plex_cpus: 8
+r740xd_plex_memory: "4GB"
+r740xd_plex_network_name: null
+r740xd_plex_network_ipv4: null
+r740xd_plex_music_path: null
+r740xd_plex_old_music_path: null
+r740xd_plex_videos_path: null
 
 ###
 ### Prowlarr
 ###
-nas_prowlarr_host_domain: null
+r740xd_prowlarr_host_domain: null
 
 ###
 ### Radarr
 ###
-nas_radarr_cpus: "3"
-nas_radarr_movie_source_path: null
-nas_radarr_web_port: null # optional
-nas_radarr1080_api_key: null
-nas_radarr1080_host_domain: null
-nas_radarr4k_api_key: null
-nas_radarr4k_host_domain: null
+r740xd_radarr_cpus: "3"
+r740xd_radarr_movie_source_path: null
+r740xd_radarr_web_port: null # optional
+r740xd_radarr1080_api_key: null
+r740xd_radarr1080_host_domain: null
+r740xd_radarr4k_api_key: null
+r740xd_radarr4k_host_domain: null
 
 ###
 ### Readarr
 ###
-nas_readarr_api_key: null
-nas_readarr_host_domain: null
-nas_readarr_library_path: null
+r740xd_readarr_api_key: null
+r740xd_readarr_host_domain: null
+r740xd_readarr_library_path: null
 
 ###
 ### Sabnzbd
 ###
-nas_sabnzbd_host_domain: null
+r740xd_sabnzbd_host_domain: null
 
 ###
 ### Samba
 ###
 # Dictionary of user names to comma separated lists of additional group names.
 # See documentation for samba_docker_extra_user_groups.
-nas_samba_extra_user_groups: {}
+r740xd_samba_extra_user_groups: {}
 
 # Dictionary of group names to GIDs.
 # See documentation for samba_docker_gids
-nas_samba_group_ids: {}
+r740xd_samba_group_ids: {}
 
 # Comma separated list of subnets to allow access to the Samba server.
-nas_samba_hosts_allow: null
+r740xd_samba_hosts_allow: null
 
 # IPv4 address of the Samba server.
-nas_samba_network_ipv4: null
+r740xd_samba_network_ipv4: null
 
 # Dictionary of unique share ids to Samba share details.
 # See documentation for samba_docker_shares
-nas_samba_shares:
+r740xd_samba_shares:
   "books": |
     [books]
     path = "/shares/books"
@@ -278,7 +278,7 @@ nas_samba_shares:
     write list = +media_writer
 
 # Dictionary mapping source folders on the host to mount points in the container.
-nas_samba_share_mounts:
+r740xd_samba_share_mounts:
   "/nas-mirror/books": "/shares/books"
   "/nas-mirror/documents": "/shares/documents"
   "/nas-mirror/music": "/shares/music"
@@ -291,88 +291,88 @@ nas_samba_share_mounts:
 
 # Dictionary of user names to create and the associated passwords.
 # See documentation for samba_docker_accounts
-nas_samba_user_acounts: {}
+r740xd_samba_user_acounts: {}
 
 # Dictionary of user names to UIDs.
 # See documentation for samba_docker_uids
-nas_samba_user_ids: {}
+r740xd_samba_user_ids: {}
 
 ###
 ### Saurron
 ###
-nas_saurron_host_domain: null
+r740xd_saurron_host_domain: null
 
 ###
 ### Seerr
 ###
-nas_seerr_host_domain: null
+r740xd_seerr_host_domain: null
 
 ###
 ### Servarr
 ###
-nas_servarr_cloudflared_token: null
-nas_servarr_path: null
-nas_servarr_tv_source_path: null
-nas_servarr_zfs_dataset: null
+r740xd_servarr_cloudflared_token: null
+r740xd_servarr_path: null
+r740xd_servarr_tv_source_path: null
+r740xd_servarr_zfs_dataset: null
 
 ###
 ### Sonarr
 ###
-nas_sonarr_cpus: "3"
-nas_sonarr_web_port: null # optional
-nas_sonarr1080_api_key: null
-nas_sonarr1080_host_domain: null
-nas_sonarr4k_api_key: null
-nas_sonarr4k_host_domain: null
+r740xd_sonarr_cpus: "3"
+r740xd_sonarr_web_port: null # optional
+r740xd_sonarr1080_api_key: null
+r740xd_sonarr1080_host_domain: null
+r740xd_sonarr4k_api_key: null
+r740xd_sonarr4k_host_domain: null
 
 ###
 ### SyncThing
 ###
-nas_syncthing_host_domain: null
+r740xd_syncthing_host_domain: null
 
 ###
 ### Tautulli
 ###
-mas_tautulli_container_name: "tautulli"
-nas_tautulli_hostname: "tautulli"
-mas_tautulli_host_domain: null
+r740xd_tautulli_container_name: "tautulli"
+r740xd_tautulli_hostname: "tautulli"
+r740xd_tautulli_host_domain: null
 
 ###
 ### TimeMachine
 ###
-nas_time_machine_data_directory: null
-nas_time_machine_hostname: "time-machine"
-nas_time_machine_groupname: "time-machine"
-nas_time_machine_gid: 1311
-nas_time_machine_password: null
-nas_time_machine_username: "time-machine"
-nas_time_machine_uid: 1311
-nas_time_machine_zfs_dataset: null
+r740xd_time_machine_data_directory: null
+r740xd_time_machine_hostname: "time-machine"
+r740xd_time_machine_groupname: "time-machine"
+r740xd_time_machine_gid: 1311
+r740xd_time_machine_password: null
+r740xd_time_machine_username: "time-machine"
+r740xd_time_machine_uid: 1311
+r740xd_time_machine_zfs_dataset: null
 
 ###
 ### Traefik
 ###
 letsencrypt_ca_server_staging: "https://acme-staging-v02.api.letsencrypt.org/directory"
 letsencrypt_ca_server_prod: "https://acme-v02.api.letsencrypt.org/directory"
-nas_traefik_letsencrypt_ca_server: "{{ letsencrypt_ca_server_prod }}"
-nas_traefik_letsencrypt_email: null
+r740xd_traefik_letsencrypt_ca_server: "{{ letsencrypt_ca_server_prod }}"
+r740xd_traefik_letsencrypt_email: null
 
 ###
 ### Traefik3 Controller
 ###
 
 # List of middleware names 
-nas_traefik3_dashboard_middleware_names: null
+r740xd_traefik3_dashboard_middleware_names: null
 
 # Map of label names to values
-nas_traefik3_dashboard_middleware_labels: {}
+r740xd_traefik3_dashboard_middleware_labels: {}
 
 # Include a global redirect to https
-nas_traefik3_redirect_http: true
+r740xd_traefik3_redirect_http: true
 
 # Dictionary of Provider options.
 # https://doc.traefik.io/traefik/reference/install-configuration/providers/overview/
-nas_traefik3_conf_providers: 
+r740xd_traefik3_conf_providers: 
   docker:
     defaultRule: "Host(`traefik.r740xd.home.bealetech`)"
     endpoint: "unix:///var/run/docker.sock"
@@ -381,7 +381,7 @@ nas_traefik3_conf_providers:
 
 # Dictionary of TLS certificate resolver options.
 # https://doc.traefik.io/traefik/reference/install-configuration/tls/certificate-resolvers/overview/
-nas_traefik3_conf_cert_resolvers:
+r740xd_traefik3_conf_cert_resolvers:
   letsencrypt:
     acme:
       caServer: "{{ letsencrypt_ca_server_prod }}"
@@ -394,16 +394,16 @@ nas_traefik3_conf_cert_resolvers:
 ###
 ### UniFi Controller
 ###
-nas_unific_cpus: "2"
-nas_unific_hostname: "unific"
-nas_unific_host_domain: null
-nas_unific_memory: "2G"
+r740xd_unific_cpus: "2"
+r740xd_unific_hostname: "unific"
+r740xd_unific_host_domain: null
+r740xd_unific_memory: "2G"
 
 
 ##########
 
-nas_timezone: "America/New_York"
+r740xd_timezone: "America/New_York"
 
 # List of dictionaries of Linux users to create. Each entry in the list should be a dictionary
 # in the form to match ansible.builtin.user.
-nas_users: []
+r740xd_users: []

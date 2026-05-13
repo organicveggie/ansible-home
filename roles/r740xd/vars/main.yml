@@ -1,6 +1,6 @@
 ---
 # vars file for r740xd
-nas_extra_packages:
+r740xd_extra_packages:
   - "smartmontools"
   - "htop"
   - "zfsutils-linux"
@@ -17,146 +17,146 @@ nas_extra_packages:
 ###
 ### Bazarr
 ### 1
-nas_bazarr1080_config_volume_name: "bazarr1080-config"
-nas_bazarr1080_container_name: "bazarr1080"
-nas_bazarr1080_host_name: "bazarr1080"
-nas_bazarr1080_network_aliases:
+r740xd_bazarr1080_config_volume_name: "bazarr1080-config"
+r740xd_bazarr1080_container_name: "bazarr1080"
+r740xd_bazarr1080_host_name: "bazarr1080"
+r740xd_bazarr1080_network_aliases:
   - "bazarr1080"
-nas_bazarr4k_config_volume_name: "bazarr4k-config"
-nas_bazarr4k_container_name: "bazarr4k"
-nas_bazarr4k_host_name: "bazarr4k"
-nas_bazarr4k_network_aliases:
+r740xd_bazarr4k_config_volume_name: "bazarr4k-config"
+r740xd_bazarr4k_container_name: "bazarr4k"
+r740xd_bazarr4k_host_name: "bazarr4k"
+r740xd_bazarr4k_network_aliases:
   - "bazarr4k"
 
 ###
 ### Calibre Web
 ###
-nas_calibre_web_username: "calibre"
-nas_calibre_web_groupname: "calibre"
+r740xd_calibre_web_username: "calibre"
+r740xd_calibre_web_groupname: "calibre"
 
 ###
 ### Diun
 ###
-nas_diun_group: "diun"
-nas_diun_uid: 2450
-nas_diun_user: "diun"
+r740xd_diun_group: "diun"
+r740xd_diun_uid: 2450
+r740xd_diun_user: "diun"
 
 ###
 ### Docker
 ###
-nas_docker_bridge_network_gateway: "172.17.0.1"
+r740xd_docker_bridge_network_gateway: "172.17.0.1"
 
 ###
 ### Home Assistant
 ###
-nas_hass_pgsql_image: "postgres:15-bullseye"
-nas_hass_pgsql_name: "hass-pgsql"
-nas_hass_pgsql_volume_conf_name: "hass-pgsql-conf"
-nas_hass_pgsql_volume_data_name: "hass-pgsql-data"
-nas_hass_pgsql_volume_init_name: "hass-pgsql-initscripts"
+r740xd_hass_pgsql_image: "postgres:15-bullseye"
+r740xd_hass_pgsql_name: "hass-pgsql"
+r740xd_hass_pgsql_volume_conf_name: "hass-pgsql-conf"
+r740xd_hass_pgsql_volume_data_name: "hass-pgsql-data"
+r740xd_hass_pgsql_volume_init_name: "hass-pgsql-initscripts"
 
 ###
 ### InfluxDB
 ###
-nas_influxdb_config_volume_name: "influxdb27-config"
-nas_influxdb_data_volume_name: "influxdb27-data"
+r740xd_influxdb_config_volume_name: "influxdb27-config"
+r740xd_influxdb_data_volume_name: "influxdb27-data"
 
 ###
 ### Kometa
 ###
-nas_kometa_mdblist_cache_expiration: "60"
-nas_kometa_plex_db_cache: "2048" # MB
-nas_kometa_run_time: "02:00"
-nas_kometa_tmdb_language: "en"
-nas_kometa_tmdb_region: "US"
+r740xd_kometa_mdblist_cache_expiration: "60"
+r740xd_kometa_plex_db_cache: "2048" # MB
+r740xd_kometa_run_time: "02:00"
+r740xd_kometa_tmdb_language: "en"
+r740xd_kometa_tmdb_region: "US"
 
 ###
 ### Navidrome
 ###
-nas_navidrome_image_cache_size: "500MB"
+r740xd_navidrome_image_cache_size: "500MB"
 
 ###
 ### Plex
 ###
-nas_plex_gid: 32400
-nas_plex_groupname: "plex"
-nas_plex_port: 32400
-nas_plex_uid: 32400
-nas_plex_username: "plex"
+r740xd_plex_gid: 32400
+r740xd_plex_groupname: "plex"
+r740xd_plex_port: 32400
+r740xd_plex_uid: 32400
+r740xd_plex_username: "plex"
 
 ###
 ### Radarr
 ###
-nas_radarr1080_config_volume_name: "radarr1080-config"
-nas_radarr1080_container_name: "radarr1080"
-nas_radarr1080_host_name: "radarr1080"
-nas_radarr1080_network_aliases:
+r740xd_radarr1080_config_volume_name: "radarr1080-config"
+r740xd_radarr1080_container_name: "radarr1080"
+r740xd_radarr1080_host_name: "radarr1080"
+r740xd_radarr1080_network_aliases:
   - "radarr1080"
-nas_radarr4k_config_volume_name: "radarr4k-config"
-nas_radarr4k_container_name: "radarr4k"
-nas_radarr4k_host_name: "radarr4k"
-nas_radarr4k_network_aliases:
+r740xd_radarr4k_config_volume_name: "radarr4k-config"
+r740xd_radarr4k_container_name: "radarr4k"
+r740xd_radarr4k_host_name: "radarr4k"
+r740xd_radarr4k_network_aliases:
   - "radarr4k"
 
 ###
 ### Readarr
 ###
-nas_readarr_host_name: "readarr"
-nas_readarr_web_port: "8787"
+r740xd_readarr_host_name: "readarr"
+r740xd_readarr_web_port: "8787"
   
 ###
 ### Servarr
 ###
-nas_servarr_cloudflared_container_name: "servarr-cloudflared"
-nas_servarr_gid: 4200
-nas_servarr_groupname: "servarr"
-nas_servarr_uid: 4200
-nas_servarr_username: "servarr" # TODO: fixme
+r740xd_servarr_cloudflared_container_name: "servarr-cloudflared"
+r740xd_servarr_gid: 4200
+r740xd_servarr_groupname: "servarr"
+r740xd_servarr_uid: 4200
+r740xd_servarr_username: "servarr" # TODO: fixme
 
 ###
 ### Sonarr
 ###
-nas_sonarr1080_config_volume_name: "sonarr1080-config"
-nas_sonarr1080_container_name: "sonarr1080"
-nas_sonarr1080_host_name: "sonarr1080"
-nas_sonarr1080_network_aliases:
+r740xd_sonarr1080_config_volume_name: "sonarr1080-config"
+r740xd_sonarr1080_container_name: "sonarr1080"
+r740xd_sonarr1080_host_name: "sonarr1080"
+r740xd_sonarr1080_network_aliases:
   - "sonarr1080"
-nas_sonarr4k_config_volume_name: "sonarr4k-config"
-nas_sonarr4k_container_name: "sonarr4k"
-nas_sonarr4k_host_name: "sonarr4k"
-nas_sonarr4k_network_aliases:
+r740xd_sonarr4k_config_volume_name: "sonarr4k-config"
+r740xd_sonarr4k_container_name: "sonarr4k"
+r740xd_sonarr4k_host_name: "sonarr4k"
+r740xd_sonarr4k_network_aliases:
   - "sonarr4k"
 
 ###
 ### Tautulli
 ###
-nas_tautulli_web_port: "8181"
+r740xd_tautulli_web_port: "8181"
 
 ###
 ### TimeMachine
 ###
-nas_time_machine_docker_name: "time-machine"
-nas_time_machine_workgroup: "TMWORKGROUP"
+r740xd_time_machine_docker_name: "time-machine"
+r740xd_time_machine_workgroup: "TMWORKGROUP"
 
 ###
 ### Traefik
 ###
-nas_traefik_http_ports:
+r740xd_traefik_http_ports:
   - '80:80'
   - '443:443'
-nas_traefik_zwavejsui_entrypoints:
+r740xd_traefik_zwavejsui_entrypoints:
   zwavejsui:
     address: ":3000"
-nas_traefik_zwavejsui_ports:
+r740xd_traefik_zwavejsui_ports:
   - "3000:3000"
-nas_traefik_syncthings_entrypoints:
+r740xd_traefik_syncthings_entrypoints:
   syncthing_tcp:
     address: ":22000"
   syncthing_udp:
     address: ":22000/udp"
-nas_traefik_syncthings_ports:
+r740xd_traefik_syncthings_ports:
   - "22000:22000"
-nas_traefik_unific_entrypoints:
+r740xd_traefik_unific_entrypoints:
   java_http:
     address: ":8080"
   unific_speed_test:
@@ -167,7 +167,7 @@ nas_traefik_unific_entrypoints:
     address: ":10001/udp"
   unific_controller_discovery:
     address: ":19000/udp"
-nas_traefik_unific_ports:
+r740xd_traefik_unific_ports:
   - "3478:3478"     # unific stun
   - "8080:8080"     # unific java http
   - "10001:10001"   # unific dev discovery

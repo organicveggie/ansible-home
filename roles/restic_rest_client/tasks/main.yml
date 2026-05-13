@@ -1,14 +1,14 @@
-- import_tasks: install.yml
+- ansible.builtin.import_tasks: install.yml
   tags:
     - restic_client
     - restic_client:install
 
-- import_tasks: setup.yml
+- ansible.builtin.import_tasks: setup.yml
   tags:
     - restic_client
     - restic_client:setup
 
-- import_tasks: timer.yml
+- ansible.builtin.import_tasks: timer.yml
   tags:
     - restic_client
     - restic_client:timer

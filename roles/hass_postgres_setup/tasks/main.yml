@@ -9,8 +9,10 @@
 
 - name: "Copy PostgreSQL init script templates for Home Assistant"
   ansible.builtin.template:
-    src: "templates/{{ item }}.j2"
-    dest: "{{ pgsql_init_tempates_dir }}/{{ item }}"
+    src: "templates/{{ __item }}.j2"
+    dest: "{{ pgsql_init_tempates_dir }}/{{ __item }}"
     mode: "0600"
   loop:
     - "01_create_role_db.sql"
+  loop_control:
+    loop_var: __item

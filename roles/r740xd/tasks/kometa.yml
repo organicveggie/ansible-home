@@ -1,7 +1,7 @@
 ---
 - name: "kometa | Build Tautulli URL"
   ansible.builtin.set_fact:
-    _kometa_tautulli_url: "http://{{ nas_tautulli_hostname }}:{{ nas_tautulli_web_port }}"
+    _kometa_tautulli_url: "http://{{ r740xd_tautulli_hostname }}:{{ r740xd_tautulli_web_port }}"
 
 - name: "kometa | Setup Kometa container"
   ansible.builtin.import_role:

@@ -1,8 +1,10 @@
 ---
 - name: Create groups
   ansible.builtin.group:
-    name: "{{ item.name }}"
-    gid: "{{ item.gid | default(omit) }}"
-    system: "{{ item.system | default(omit) }}"
-    state: "{{ item.state | default('present') }}"
+    name: "{{ __item.name }}"
+    gid: "{{ __item.gid | default(omit) }}"
+    system: "{{ __item.system | default(omit) }}"
+    state: "{{ __item.state | default('present') }}"
   loop: "{{ user_groups }}"
+  loop_control:
+    loop_var: __item

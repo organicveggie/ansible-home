@@ -27,10 +27,10 @@
 
 - name: "Define environment variables"
   ansible.builtin.set_fact:
-    _time_machine_docker_all_env_vars:  "{{ _time_machine_docker_all_env_vars | default({}) |
-      combine({item.key: item.value}) }}"
+    _time_machine_docker_all_env_vars: "{{ _time_machine_docker_all_env_vars | default({}) |
+      combine({__item.key: __item.value}) }}"
   no_log: true
-  when: item.value is defined and item.value != ''
+  when: __item.value is defined and __item.value != ''
   with_items:
     - key: "ADVERTISED_HOSTNAME"
       value: "{{ time_machine_docker_advertised_hostname | default(None) }}"
@@ -52,6 +52,8 @@
       value: "{{ time_machine_docker_size_limit }}"
     - key: "WORKGROUP"
       value: "{{ time_machine_docker_workgroup | default(None) }}"
+  loop_control:
+    loop_var: __item
 
 - name: "Time Machine Docker Container"
   community.docker.docker_container:

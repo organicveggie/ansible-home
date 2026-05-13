@@ -31,17 +31,19 @@
 - name: "Define Docker labels with Traefik disabled"
   ansible.builtin.set_fact:
     _syncthing_docker_labels: "{{ _syncthing_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   with_items:
     - key: "traefik.enable"
       value: "{{ syncthing_available_externally }}"
+  loop_control:
+    loop_var: __item
   when: "not syncthing_docker_available_externally"
 
 # yamllint disable rule:line-length
 - name: "Define Docker labels with Traefik enabled"
   ansible.builtin.set_fact:
     _syncthing_docker_labels: "{{ _syncthing_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   with_items:
     - key: "traefik.enable"
       value: "{{ syncthing_docker_available_externally }}"
@@ -56,22 +58,26 @@
     - { key: "traefik.tcp.routers.syncthing-tcp.entrypoints", value: "syncthing_tcp" }
     - { key: "traefik.tcp.routers.syncthing-tcp.rule", value: "HostSNI(`*`)" }
     - { key: "traefik.tcp.routers.syncthing-tcp.service", value: "syncthing-tcp" }
-    - { key: "traefik.tcp.services.syncthing-tcp.loadbalancer.server.port", value:  "{{ syncthing_docker_tcp_port }}" }
+    - { key: "traefik.tcp.services.syncthing-tcp.loadbalancer.server.port", value: "{{ syncthing_docker_tcp_port }}" }
     # UDP
     - { key: "traefik.udp.routers.syncthing-udp.entrypoints", value: "syncthing_udp" }
     # - { key: "traefik.udp.routers.syncthing-udp.rule", value: "HostSNI(`*`)" }
     - { key: "traefik.udp.routers.syncthing-udp.service", value: "syncthing-udp" }
-    - { key: "traefik.udp.services.syncthing-udp.loadbalancer.server.port", value:  "{{ syncthing_docker_udp_port }}" }
+    - { key: "traefik.udp.services.syncthing-udp.loadbalancer.server.port", value: "{{ syncthing_docker_udp_port }}" }
+  loop_control:
+    loop_var: __item
   when: "syncthing_docker_available_externally"
 # yamllint enable rule:line-length
 
 - name: "Define user-supplied extra Docker labels"
   ansible.builtin.set_fact:
     _syncthing_docker_labels: "{{ _syncthing_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   loop: "{{ syncthing_docker_extra_labels | dict2items }}"
+  loop_control:
+    loop_var: __item
 
-- name: "syncthing Docker Container"
+- name: "Syncthing Docker Container"
   community.docker.docker_container:
     name: "{{ syncthing_docker_name }}"
     image: "{{ syncthing_docker_image }}:{{ syncthing_docker_image_version }}"

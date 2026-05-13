@@ -1,7 +1,7 @@
 ---
 - name: "Create required letsencrypt directories"
   ansible.builtin.file:
-    path: "{{ letsencrypt_dir }}/{{ item }}"
+    path: "{{ letsencrypt_dir }}/{{ __item }}"
     state: directory
     owner: root
     group: root
@@ -11,6 +11,8 @@
     - certs
     - csrs
     - keys
+  loop_control:
+    loop_var: __item
 
 - name: Generate letsencrypt private account key
   community.crypto.openssl_privatekey:

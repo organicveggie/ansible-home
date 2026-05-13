@@ -55,7 +55,7 @@
 - name: "{{ bazarr_docker_role_label }} | Define Docker labels with Traefik enabled"
   ansible.builtin.set_fact:
     _bazarr_docker_labels: "{{ _bazarr_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   with_items:
     - key: "traefik.docker.network"
       value: "{{ servarr_docker_network }}"
@@ -69,13 +69,17 @@
       value: "*.{{ bazarr_docker_host_domain }}"
     - key: "traefik.http.services.{{ bazarr_docker_host_name }}.loadbalancer.server.port"
       value: "{{ bazarr_docker_web_port | default(bazarr_docker_web_port_default, true) }}"
+  loop_control:
+    loop_var: __item
   when: "bazarr_docker_available_externally"
 
 - name: "{{ bazarr_docker_role_label }} | Define user-supplied extra Docker labels"
   ansible.builtin.set_fact:
     _bazarr_docker_labels: "{{ _bazarr_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   loop: "{{ bazarr_docker_extra_labels | default({}, true) | dict2items }}"
+  loop_control:
+    loop_var: __item
 
 - name: "{{ bazarr_docker_role_label }} | bazarr Docker Container"
   community.docker.docker_container:

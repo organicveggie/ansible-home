@@ -1,7 +1,7 @@
 ---
 - name: Create msmtprc
   ansible.builtin.template:
-    src: "../templates/msmtprc"
+    src: "msmtprc"
     dest: "/etc/msmtprc"
     owner: "root"
     group: "root"

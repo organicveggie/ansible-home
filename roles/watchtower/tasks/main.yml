@@ -1,7 +1,7 @@
 ---
 # tasks file for watchtower
 
-- name: "watchtower | Check for poll interval or schedule"
+- name: "Watchtower | Check for poll interval or schedule"
   ansible.builtin.fail:
     msg: "You may specify watchtower_docker_poll_interval or watchtower_docker_schedule, but not both"
   when: >
@@ -10,23 +10,25 @@
     _poll_interval: "{{ watchtower_docker_poll_interval | default('') }}"
     _schedule: "{{ watchtower_docker_schedule | default('') }}"
 
-- name: "watchtower | Create placeholder array for default network"
+- name: "Watchtower | Create placeholder array for default network"
   ansible.builtin.set_fact:
     _watchtower_docker_default_networks:
       - name: "{{ watchtower_docker_network_name }}"
         aliases: "{{ watchtower_docker_network_aliases | default(omit) }}"
 
-- name: "watchtower | Define all networks for this container"
+- name: "Watchtower | Define all networks for this container"
   ansible.builtin.set_fact:
     _watchtower_docker_all_networks: >
       {{ watchtower_docker_extra_networks | default([]) + _watchtower_docker_default_networks }}
 
-- name: "watchtower | Define environment variables"
+- name: "Watchtower | Define environment variables"
   ansible.builtin.set_fact:
     _watchtower_docker_env_vars: >
-      {{ _watchtower_docker_env_vars | default({}) | combine({item.key: item.value | string }) }}
+      {{ _watchtower_docker_env_vars | default({}) | combine({__item.key: __item.value | string }) }}
   no_log: true
   loop: "{{ _watchtower_required_env_vars | dict2items }}"
+  loop_control:
+    loop_var: __item
   vars:
     _watchtower_required_env_vars:
       "NO_COLOR": "{{ watchtower_docker_logging_no_color | default(omit) }}"
@@ -44,7 +46,7 @@
       "WATCHTOWER_SCHEDULE": "{{ watchtower_docker_schedule | default(omit) }}"
       "WATCHTOWER_TIMEOUT": "{{ watchtower_docker_timeout | default(omit) }}"
 
-- name: "watchtower | Create container"
+- name: "Watchtower | Create container"
   community.docker.docker_container:
     name: "{{ watchtower_docker_name }}"
     image: "{{ watchtower_docker_image_name }}:{{ watchtower_docker_image_version }}"

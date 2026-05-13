@@ -1,21 +1,21 @@
 ---
 - name: "plex | Set group id"
   ansible.builtin.set_fact:
-    _nas_plex_gid: "{{ nas_plex_gid | default(nas_plex_uid) }}"
+    _nas_plex_gid: "{{ r740xd_plex_gid | default(r740xd_plex_uid) }}"
 
 - name: "plex | Set group name"
   ansible.builtin.set_fact:
-    _nas_plex_groupname: "{{ nas_plex_groupname | default(nas_plex_username) }}"
+    _nas_plex_groupname: "{{ r740xd_plex_groupname | default(r740xd_plex_username) }}"
 
 - name: "plex | Create groups"
   ansible.builtin.group:
     name: "{{ _nas_plex_groupname }}"
     gid: "{{ _nas_plex_gid }}"
 
-- name: "nas | Create users"
+- name: "Nas | Create users"
   ansible.builtin.user:
-    name: "{{ nas_plex_username }}"
-    uid: "{{ nas_plex_uid }}"
+    name: "{{ r740xd_plex_username }}"
+    uid: "{{ r740xd_plex_uid }}"
     create_home: "false"
     password: "!"
     groups:
@@ -27,33 +27,33 @@
   ansible.builtin.import_role:
     name: "plex_docker"
   vars:
-    plex_docker_claim: "{{ nas_plex_claim }}"
-    plex_docker_cpus: "{{ nas_plex_cpus }}"
+    plex_docker_claim: "{{ r740xd_plex_claim }}"
+    plex_docker_cpus: "{{ r740xd_plex_cpus }}"
     plex_docker_extra_networks:
       - name: "{{ docker_networks.kometa.name }}"
       - name: "{{ docker_networks.seerr.name }}"
       - name: "{{ docker_networks.tautulli.name }}"
-    plex_docker_fqdn: "plex.{{ nas_site_domain }}"
+    plex_docker_fqdn: "plex.{{ r740xd_site_domain }}"
     plex_docker_gid: "{{ _nas_plex_gid }}"
     plex_docker_groupname: "{{ _nas_plex_groupname }}"
-    plex_docker_memory: "{{ nas_plex_memory }}"
-    plex_docker_name: "{{ nas_plex_container_name }}"
-    plex_docker_network_name: "{{ nas_plex_network_name }}"
-    plex_docker_network_ipv4: "{{ nas_plex_network_ipv4 }}"
-    plex_docker_uid: "{{ nas_plex_uid }}"
-    plex_docker_username: "{{ nas_plex_username }}"
+    plex_docker_memory: "{{ r740xd_plex_memory }}"
+    plex_docker_name: "{{ r740xd_plex_container_name }}"
+    plex_docker_network_name: "{{ r740xd_plex_network_name }}"
+    plex_docker_network_ipv4: "{{ r740xd_plex_network_ipv4 }}"
+    plex_docker_uid: "{{ r740xd_plex_uid }}"
+    plex_docker_username: "{{ r740xd_plex_username }}"
     plex_docker_additional_bind_mounts:
-      - source: "{{ nas_plex_old_music_path }}"
+      - source: "{{ r740xd_plex_old_music_path }}"
         target: "/media/music"
-      - source: "{{ nas_plex_music_path }}/albums"
+      - source: "{{ r740xd_plex_music_path }}/albums"
         target: "/media/music-albums"
-      - source: "{{ nas_plex_music_path }}/live"
+      - source: "{{ r740xd_plex_music_path }}/live"
         target: "/media/music-live"
-      - source: "{{ nas_plex_videos_path }}/anime"
+      - source: "{{ r740xd_plex_videos_path }}/anime"
         target: "/media/anime"
-      - source: "{{ nas_plex_videos_path }}/exercise"
+      - source: "{{ r740xd_plex_videos_path }}/exercise"
         target: "/media/exercise"
-      - source: "{{ nas_plex_videos_path }}/movies"
+      - source: "{{ r740xd_plex_videos_path }}/movies"
         target: "/media/movies"
-      - source: "{{ nas_plex_videos_path }}/tv"
+      - source: "{{ r740xd_plex_videos_path }}/tv"
         target: "/media/tv"
