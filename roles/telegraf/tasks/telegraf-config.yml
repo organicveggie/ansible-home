@@ -23,7 +23,7 @@
     backup: yes
     owner: telegraf
     group: telegraf
-    mode: 0744
+    mode: "0744"
   notify:
     - Restart Telegraf
 
@@ -35,7 +35,7 @@
     backup: yes
     owner: telegraf
     group: telegraf
-    mode: 0744
+    mode: "0744"
   notify:
     - Restart Telegraf
 
@@ -47,7 +47,7 @@
     backup: yes
     owner: telegraf
     group: telegraf
-    mode: 0744
+    mode: "0744"
   notify:
     - Restart Telegraf
 

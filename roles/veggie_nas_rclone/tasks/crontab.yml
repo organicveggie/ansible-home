@@ -52,4 +52,3 @@
     # job: >
     #     rclone --config={{ veggie_rclone_config_path }} --log-file={{ veggie_rclone_logfile }}
     #     sync /mnt/nas/plex_system/ AWSS3Remote:{{ veggie_rclone_s3_bucket }}/plex/
-

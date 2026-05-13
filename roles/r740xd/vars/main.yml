@@ -16,7 +16,7 @@ nas_extra_packages:
 
 ###
 ### Bazarr
-###1
+### 1
 nas_bazarr1080_config_volume_name: "bazarr1080-config"
 nas_bazarr1080_container_name: "bazarr1080"
 nas_bazarr1080_host_name: "bazarr1080"

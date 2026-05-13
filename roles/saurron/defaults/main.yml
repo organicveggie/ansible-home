@@ -240,4 +240,3 @@ saurron_docker_notifications_mqtt_password: ""
 saurron_docker_notifications_pushover_token: ""
 # Pushover user or group key (required).
 saurron_docker_notifications_pushover_user_key: ""
-
