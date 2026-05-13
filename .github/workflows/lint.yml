@@ -1,0 +1,45 @@
+---
+name: Lint
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "galaxy_roles/**"
+      - "galaxy_collections/**"
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - "galaxy_roles/**"
+      - "galaxy_collections/**"
+  workflow_dispatch:
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the codebase
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install lint dependencies
+        run: pip install -r .github/workflows/requirements-lint.txt
+
+      - name: Install Ansible role requirements
+        run: ansible-galaxy role install -r galaxy_roles/requirements.yml
+
+      - name: Install Ansible collection requirements
+        run: ansible-galaxy collection install -r galaxy_collections/requirements.yml
+
+      - name: Run yamllint
+        run: yamllint -c .yamllint -f github -s .
+
+      - name: Run ansible-lint
+        run: ansible-lint
