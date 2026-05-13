@@ -13,18 +13,16 @@
     - telegraf
     - telegraf:plugins
     - telegraf:plugins:docker
-  when: telegraf_plugin_smartctl == true
-
+  when: telegraf_plugin_smartctl
 - ansible.builtin.import_tasks: plugin_smartctl.yml
   tags:
     - telegraf
     - telegraf:plugins
     - telegraf:plugins:smartctl
-  when: telegraf_plugin_smartctl == true
-
+  when: telegraf_plugin_smartctl
 - ansible.builtin.import_tasks: plugin_zfs_pool_sizes.yml
   tags:
     - telegraf
     - telegraf:plugins
     - telegraf:plugins:zfs_pool_sizes
-  when: telegraf_plugin_zfs_pool_sizes == true
+  when: telegraf_plugin_zfs_pool_sizes

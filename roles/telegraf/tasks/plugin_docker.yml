@@ -5,8 +5,7 @@
     append: true
     groups:
       - "docker"
-  when: telegraf_plugin_docker == true
-
+  when: telegraf_plugin_docker
 - name: Create Docker input config
   ansible.builtin.template:
     src: docker.conf.j2
@@ -14,5 +13,5 @@
     owner: telegraf
     group: telegraf
     mode: "0640"
-  when: telegraf_plugin_docker == true
+  when: telegraf_plugin_docker
   notify: Restart Telegraf
