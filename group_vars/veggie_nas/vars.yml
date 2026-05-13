@@ -214,10 +214,10 @@ navidrome_music_folder: "{{ vault_navidrome_music_folder }}"
 ### NFS
 ###
 nfs_exports:
-  - "/mnt/nas/data/books {{ veggie_virt_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
-  - "/mnt/nas/servarr/music {{ veggie_virt_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
-  - "/mnt/nas/data/videos {{ veggie_virt_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
-  # - "/mnt/nas/data/music {{ veggie_virt_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
+  - "/mnt/nas/data/books {{ veggie_nas_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
+  - "/mnt/nas/servarr/music {{ veggie_nas_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
+  - "/mnt/nas/data/videos {{ veggie_nas_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
+  # - "/mnt/nas/data/music {{ veggie_nas_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
 
 ###
 ### Node-RED
