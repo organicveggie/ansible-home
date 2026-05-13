@@ -1,5 +1,5 @@
 ---
-- name: "docker | Create Portainer Docker network"
+- name: "Docker | Create Portainer Docker network"
   community.docker.docker_network:
     name: "{{ docker_networks.portainer.name }}"
     driver: "bridge"
@@ -10,7 +10,7 @@
       - subnet: "{{ docker_networks.portainer.subnet }}"
         gateway: "{{ docker_networks.portainer.gateway }}"
 
-- name: "docker | Launch Portainer container"
+- name: "Docker | Launch Portainer container"
   ansible.builtin.import_role:
     name: "portainer"
   vars:

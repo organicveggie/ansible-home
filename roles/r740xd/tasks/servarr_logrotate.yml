@@ -1,17 +1,17 @@
 ---
-- name: "servarr | {{ servarr_logrotate_name }} logrotate"
+- name: "Servarr | {{ servarr_logrotate_name }} logrotate"
   block:
-    - name: "servarr | Get {{ servarr_logrotate_name }} container volume"
+    - name: "Servarr | Get {{ servarr_logrotate_name }} container volume"
       community.docker.docker_volume_info:
         name: "{{ servarr_logrotate_volume_name }}"
       register: "_servarr_logrotate_volume_info"
 
-    - name: "servarr | Get {{ servarr_logrotate_name }} container volume path"
+    - name: "Servarr | Get {{ servarr_logrotate_name }} container volume path"
       ansible.builtin.set_fact:
         _servarr_logrotate_log_path: "{{ _servarr_logrotate_volume_info['volume']['Mountpoint'] }}/logs"
       when: "_servarr_logrotate_volume_info.exists | default(false)"
 
-    - name: "servarr | Configure logrotate for {{ servarr_logrotate_name }}"
+    - name: "Servarr | Configure logrotate for {{ servarr_logrotate_name }}"
       ansible.builtin.import_role: 
         name: "nickhammond.logrotate"
       vars:

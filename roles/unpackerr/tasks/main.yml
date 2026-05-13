@@ -95,7 +95,7 @@
   loop_control:
     loop_var: __item
 
-- name: "unpackerr Docker Container"
+- name: "Unpackerr Docker Container"
   community.docker.docker_container:
     name: "{{ unpackerr_docker_name }}"
     image: "{{ unpackerr_docker_image }}:{{ unpackerr_docker_image_version }}"

@@ -56,7 +56,7 @@
   loop_control:
     loop_var: __item
 
-- name: "flaresolverr Docker Container"
+- name: "Flaresolverr Docker Container"
   community.docker.docker_container:
     name: "{{ flaresolverr_docker_name }}"
     image: "{{ flaresolverr_docker_image }}:{{ flaresolverr_docker_image_version }}"

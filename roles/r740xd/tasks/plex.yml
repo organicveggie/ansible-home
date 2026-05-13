@@ -12,7 +12,7 @@
     name: "{{ _nas_plex_groupname }}"
     gid: "{{ _nas_plex_gid }}"
 
-- name: "nas | Create users"
+- name: "Nas | Create users"
   ansible.builtin.user:
     name: "{{ nas_plex_username }}"
     uid: "{{ nas_plex_uid }}"

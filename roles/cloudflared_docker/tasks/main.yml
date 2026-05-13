@@ -28,7 +28,7 @@
   loop_control:
     loop_var: __item
 
-- name: "cloudflared Docker Container"
+- name: "Cloudflared Docker Container"
   community.docker.docker_container:
     name: "{{ cloudflared_docker_name }}"
     image: "{{ cloudflared_docker_image }}:{{ cloudflared_docker_image_version }}"

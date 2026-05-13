@@ -396,7 +396,7 @@
     cloudflared_docker_network: "{{ docker_networks.servarr.name }}"
   tags: ["cloudflare", "cloudflared"]
 
-- name: "bazarr | Setup Bazarr 1080p"
+- name: "Bazarr | Setup Bazarr 1080p"
   ansible.builtin.import_role:
     name: "bazarr"
   vars:
@@ -414,7 +414,7 @@
     bazarr_docker_web_port: "{{ nas_bazarr_web_port }}"
   tags: ["bazarr", "bazarr1080"]
 
-- name: "bazarr | Setup Bazarr 4K"
+- name: "Bazarr | Setup Bazarr 4K"
   ansible.builtin.import_role:
     name: "bazarr"
   vars:

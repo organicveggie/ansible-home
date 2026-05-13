@@ -1,5 +1,5 @@
 ---
-- name: "r740xd | saurron | Setup Docker network"
+- name: "R740xd | saurron | Setup Docker network"
   community.docker.docker_network:
     name: "{{ docker_networks.saurron.name }}"
     driver: "bridge"
@@ -11,7 +11,7 @@
         gateway: "{{ docker_networks.saurron.gateway }}"
   tags: ["setup", "network"]
 
-- name: "r740xd | saurron | Setup Saurron"
+- name: "R740xd | saurron | Setup Saurron"
   ansible.builtin.import_role:
     name: "saurron"
   vars:

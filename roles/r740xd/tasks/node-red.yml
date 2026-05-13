@@ -1,5 +1,5 @@
 ---
-- name: "node-red| Setup Docker network"
+- name: "Node-red| Setup Docker network"
   community.docker.docker_network:
     name: "{{ docker_networks.node_red.name }}"
     driver: "bridge"

@@ -1,7 +1,7 @@
 ---
 # tasks file for samba_docker
 
-- name: "samba | Set Docker bind mount list for Samba shares"
+- name: "Samba | Set Docker bind mount list for Samba shares"
   ansible.builtin.set_fact:
     _samba_docker_bind_mounts: >
       {{ _samba_docker_bind_mounts | default([]) + [{
@@ -12,24 +12,24 @@
   loop_control:
     loop_var: __item
 
-- name: "samba | Set Docker complete mount list"
+- name: "Samba | Set Docker complete mount list"
   ansible.builtin.set_fact:
     _samba_docker_all_mounts: >
       {{ _samba_docker_volume_mounts | default([]) + _samba_docker_bind_mounts | default([]) }}
 
-- name: "samba | Create placeholder array for default network"
+- name: "Samba | Create placeholder array for default network"
   ansible.builtin.set_fact:
     _samba_docker_default_networks:
       - name: "{{ samba_docker_network_name }}"
         aliases: "{{ samba_docker_network_aliases | default(omit) }}"
         ipv4_address: "{{ samba_docker_network_ipv4 | default(omit) }}"
 
-- name: "samba | Define all networks for this container"
+- name: "Samba | Define all networks for this container"
   ansible.builtin.set_fact:
     _samba_docker_all_networks: >
       {{ samba_docker_extra_networks | default([]) + _samba_docker_default_networks }}
 
-- name: "samba | Define standard environment variables"
+- name: "Samba | Define standard environment variables"
   ansible.builtin.set_fact:
     _samba_docker_base_env_vars: "{{ _samba_docker_base_env_vars | default({}) |
       combine({__item.key: __item.value}) }}"
@@ -50,7 +50,7 @@
       "WSDD2_DISABLE": "{{ samba_docker_wsdd2_disable | default(omit) }}"
       "WSDD2_PARAMETERS": "{{ samba_docker_wsdd2_params | default(omit) }}"
 
-- name: "samba | Define global config environment variables"
+- name: "Samba | Define global config environment variables"
   ansible.builtin.set_fact:
     _samba_docker_global_vars: "{{ _samba_docker_global_vars | default({}) |
       combine({'SAMBA_GLOBAL_CONFIG_' + __item.key: __item.value}) }}"
@@ -59,7 +59,7 @@
   loop_control:
     loop_var: __item
 
-- name: "samba | Define user accounts"
+- name: "Samba | Define user accounts"
   ansible.builtin.set_fact:
     _samba_docker_accounts: >
       {{ _samba_docker_accounts | default({}) | combine({'ACCOUNT_' + __item.key: __item.value}) }}
@@ -68,7 +68,7 @@
   loop_control:
     loop_var: __item
 
-- name: "samba | Define UIDs"
+- name: "Samba | Define UIDs"
   ansible.builtin.set_fact:
     _samba_docker_uids: >
       {{ _samba_docker_uids | default({}) | combine({'UID_' + __item.key: __item.value}) }}
@@ -77,7 +77,7 @@
   loop_control:
     loop_var: __item
 
-- name: "samba | Define GIDs"
+- name: "Samba | Define GIDs"
   ansible.builtin.set_fact:
     _samba_docker_gids: >
       {{ _samba_docker_gids | default({}) | combine({'GROUP_' + __item.key: __item.value}) }}
@@ -86,7 +86,7 @@
   loop_control:
     loop_var: __item
 
-- name: "samba | Define extra user groups"
+- name: "Samba | Define extra user groups"
   ansible.builtin.set_fact:
     _samba_docker_user_groups: >
       {{ _samba_docker_user_groups | default({}) | combine({'GROUPS_' + __item.key: __item.value}) }}
@@ -95,7 +95,7 @@
   loop_control:
     loop_var: __item
 
-- name: "samba | Define shares"
+- name: "Samba | Define shares"
   ansible.builtin.set_fact:
     _samba_docker_shares: >
       {{ _samba_docker_shares | default({}) |
@@ -105,7 +105,7 @@
   loop_control:
     loop_var: __item
 
-- name: "samba | Define complete set of environment variables"
+- name: "Samba | Define complete set of environment variables"
   ansible.builtin.set_fact:
     _samba_docker_all_env_vars: >
       {{ _samba_docker_all_env_vars | default({}) | combine(__item) }}
@@ -121,7 +121,7 @@
   loop_control:
     loop_var: __item
 
-- name: "samba | Create container"
+- name: "Samba | Create container"
   community.docker.docker_container:
     name: "{{ samba_docker_name }}"
     image: "{{ samba_docker_image_name }}:{{ samba_docker_image_version }}"

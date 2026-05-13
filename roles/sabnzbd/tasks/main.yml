@@ -70,7 +70,7 @@
   loop_control:
     loop_var: __item
 
-- name: "sabnzbd Docker Container"
+- name: "Sabnzbd Docker Container"
   community.docker.docker_container:
     name: "{{ sabnzbd_docker_name }}"
     image: "{{ sabnzbd_docker_image }}:{{ sabnzbd_docker_image_version }}"

@@ -1,5 +1,5 @@
 ---
-- name: "servarr | cross-seed | Build torznab urls"
+- name: "Servarr | cross-seed | Build torznab urls"
   ansible.builtin.set_fact:
     _nas_cross_seed_torznab_urls: >
       {{ _nas_cross_seed_torznab_urls | default([]) + ["http://prowlarr:9696/" + __item + "/api?apikey=" + nas_cross_seed_prowlarr_api_key] }}
@@ -7,7 +7,7 @@
   loop_control:
     loop_var: __item
 
-- name: "servarr | cross-seed | Setup"
+- name: "Servarr | cross-seed | Setup"
   ansible.builtin.import_role:
     name: "cross-seed"
   vars:

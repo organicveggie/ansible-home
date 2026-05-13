@@ -1,10 +1,10 @@
 ---
 # tasks file for traefik3
-- name: "traefik3 | Build container FQDN"
+- name: "Traefik3 | Build container FQDN"
   ansible.builtin.set_fact:
     _traefik3_docker_fqdn: "{{ traefik3_host_name }}.{{ traefik3_host_domain }}"
 
-- name: "traefik3 | Create container volumes"
+- name: "Traefik3 | Create container volumes"
   community.docker.docker_volume:
     name: "{{ __item }}"
   loop:
@@ -13,28 +13,28 @@
   loop_control:
     loop_var: __item
 
-- name: "traefik3 | Get info on config volume"
+- name: "Traefik3 | Get info on config volume"
   community.docker.docker_volume_info:
     name: "{{ traefik3_config_volume_name }}"
   register: "_traefik3_config_volume_info"
 
-- name: "traefik3 | Build target path to config volume"
+- name: "Traefik3 | Build target path to config volume"
   ansible.builtin.set_fact:
     _traefik3_config_volume_path:
       "{{ _traefik3_config_volume_info['volume']['Mountpoint'] }}"
 
-- name: "traefik3 | Dashboard"
+- name: "Traefik3 | Dashboard"
   when: "traefik3_dashboard_enabled"
   block:
-    - name: "traefik3 | Dashboard | FQDN length"
+    - name: "Traefik3 | Dashboard | FQDN length"
       ansible.builtin.set_fact:
         __dashboard_fqdn_empty: "{{ traefik3_dashboard_fqdn | default('', true) | string | length <= 0 }}"
 
-    - name: "traefik3 | Dashboard | Set FQDN"
+    - name: "Traefik3 | Dashboard | Set FQDN"
       ansible.builtin.set_fact:
         _traefik3_dashboard_fqdn: "{{ __dashboard_fqdn_empty | ternary(_traefik3_docker_fqdn, traefik3_dashboard_fqdn) }}"
     
-    - name: "traefik3 | Dashboard | insecure entrypoint"
+    - name: "Traefik3 | Dashboard | insecure entrypoint"
       ansible.builtin.set_fact:
         _traefik3_dashboard_insecure_entrypoint: "{ '{{ traefik3_entrypoint_insecure }}': {{ __insecure_fields }} }"
       vars:
@@ -51,7 +51,7 @@
                   permanent: "{{ traefik3_dashboard_entrypoint_permanent_redirect }}"
             observability: "{{ traefik3_dashboard_entrypoint_observability | default(omit) }}"
 
-    - name: "traefik3 | Dashboard | secure entrypoint"
+    - name: "Traefik3 | Dashboard | secure entrypoint"
       ansible.builtin.set_fact:
         _traefik3_dashboard_secure_entrypoint: "{ '{{ traefik3_entrypoint_secure }}': {{ __secure_fields }} }"
       vars:
@@ -63,11 +63,11 @@
             trustedIPs: "{{ traefik3_trusted_ips | default(omit) }}"
           observability: "{{ traefik3_dashboard_entrypoint_observability | default(omit) }}"
 
-    - name: "traefik3 | Dashboard | entrypoints"
+    - name: "Traefik3 | Dashboard | entrypoints"
       ansible.builtin.set_fact:
         _traefik3_dashboard_entrypoints: "{{ _traefik3_dashboard_insecure_entrypoint | combine(_traefik3_dashboard_secure_entrypoint) }}"
 
-    - name: "traefik3 | Dashboard | insecure api entrypoint"
+    - name: "Traefik3 | Dashboard | insecure api entrypoint"
       ansible.builtin.set_fact:
         _traefik3_dashboard_entrypoints: >
           {{ _traefik3_dashboard_entrypoints | default({}) | combine(_traefik3_api_insecure_entrypoint) }}
@@ -79,7 +79,7 @@
             observability: "{{ traefik3_dashboard_entrypoint_observability | default(omit) }}"
       when: "traefik3_dashboard_api_insecure"
 
-    - name: "traefik3 | Dashboard | middleware"
+    - name: "Traefik3 | Dashboard | middleware"
       ansible.builtin.set_fact:
         _traefik3_dashboard_labels: >
           {{ _traefik3_dashboard_labels | default({}, true) | combine({__key: __value}) }}
@@ -88,7 +88,7 @@
         __value: "{{ traefik3_dashboard_middleware_names }}"
       when: "traefik3_dashboard_middleware_names | default('', true) | string | length > 0"
 
-    - name: "traefik3 | Dashboard | router labels"
+    - name: "Traefik3 | Dashboard | router labels"
       ansible.builtin.set_fact:
         _traefik3_dashboard_labels: >
           {{ _traefik3_dashboard_labels | default({}, true) | combine({__item.key: __item.value}) }}
@@ -108,7 +108,7 @@
       loop_control:
         loop_var: __item
 
-- name: "traefik3 | Define container labels"
+- name: "Traefik3 | Define container labels"
   ansible.builtin.set_fact:
     _traefik3_all_labels: >
       {{ __labels_dashboard | combine(__labels_traefik_enable) }}
@@ -117,28 +117,28 @@
     __labels_traefik_enable:
       traefik.enable: "true"
 
-- name: "traefik3 | Access Log options"
+- name: "Traefik3 | Access Log options"
   when: "traefik3_conf_access_log_enabled"
   block:
-    - name: "traefik3 | access logs | filters"
+    - name: "Traefik3 | access logs | filters"
       ansible.builtin.set_fact:
         _traefik3_access_log_filters:
           filters: "{{ traefik3_conf_access_log_filters }}"
       when: "traefik3_conf_access_log_filters | dict2items | length > 0"
 
-    - name: "traefik3 | access logs | fields names"
+    - name: "Traefik3 | access logs | fields names"
       ansible.builtin.set_fact:
         _traefik3_access_log_fields_names:
           names: "{{ traefik3_conf_access_log_fields_names }}"
       when: "traefik3_conf_access_log_fields_names | dict2items | length > 0"
       
-    - name: "traefik3 | access logs | header names"
+    - name: "Traefik3 | access logs | header names"
       ansible.builtin.set_fact:
         _traefik3_access_log_header_names:
           names: "{{ traefik3_conf_access_log_headers_names }}"
       when: "traefik3_conf_access_log_headers_names | dict2items | length > 0"
 
-    - name: "traefik3 | access logs | headers"
+    - name: "Traefik3 | access logs | headers"
       ansible.builtin.set_fact:
         _traefik3_access_log_headers: >
           {{ __access_logs_headers_mode | combine(__access_logs_headers_names) | combine(__access_logs_headers_extras) }}
@@ -150,7 +150,7 @@
           defaultMode: "{{ traefik3_conf_access_log_headers_default_mode }}"
       when: "traefik3_conf_access_log_headers_names | dict2items | length > 0"
 
-    - name: "traefik3 | access logs | fields"
+    - name: "Traefik3 | access logs | fields"
       ansible.builtin.set_fact:
         _traefik3_access_log_fields: >
           {{ __access_logs_fields_mode | combine(__access_logs_names) | combine(__access_logs_extras) }}
@@ -160,7 +160,7 @@
         __access_logs_fields_mode:
           defaultMode: "{{ traefik3_conf_access_log_fields_default_mode }}"
 
-    - name: "traefik3 | access logs | main options"
+    - name: "Traefik3 | access logs | main options"
       ansible.builtin.set_fact:
         _traefik3_access_log_all_options:
           accessLog: >
@@ -177,14 +177,14 @@
             headers: "{{ _traefik3_access_log_headers | default(omit) }}"
             names: "{{ traefik3_conf_access_log_fields_names | default(omit)  }}"
 
-- name: "traefik3 | Trusted IPs"
+- name: "Traefik3 | Trusted IPs"
   ansible.builtin.set_fact:
     _traefik3_trusted_ips:
       forwardedHeaders:
         trustedIPs: "{{ traefik3_trusted_ips | default(omit) }}"
   when: "traefik3_trusted_ips | default('', true) | string | length > 0"
 
-- name: "traefik3 | Logging options"
+- name: "Traefik3 | Logging options"
   ansible.builtin.set_fact:
     _traefik3_logging_all_options:
       log: >
@@ -196,12 +196,12 @@
         format: "{{ traefik3_conf_logging_format }}"
         level: "{{ traefik3_conf_logging_level }}"
 
-- name: "traefik3 | Metrics options"
+- name: "Traefik3 | Metrics options"
   ansible.builtin.set_fact:
     _traefik3_metrics_all_options:
       metrics: "{{ traefik3_conf_metrics }}"
 
-- name: "traefik3 | Create config file"
+- name: "Traefik3 | Create config file"
   ansible.builtin.template:
     src: "templates/traefik.yml.j2"
     dest: "{{ _traefik3_config_volume_path }}/traefik.yml"
@@ -217,7 +217,7 @@
       tracing: "{{ traefik3_conf_tracing_options | default({}) }}"
   register: "_traefik3_config"
 
-- name: "traefik3 | Set Docker mount list for bind mounts"
+- name: "Traefik3 | Set Docker mount list for bind mounts"
   ansible.builtin.set_fact:
     _traefik3_bind_mount_list: "{{_traefik3_docker_bind_mount_list | default([]) +
       [ {'source': __item.key, 'target': __item.value, 'read_only': true, 'type': 'bind'} ] }}"
@@ -225,7 +225,7 @@
   loop_control:
     loop_var: __item
 
-- name: "traefik3 | Set combined Docker mount list"
+- name: "Traefik3 | Set combined Docker mount list"
   ansible.builtin.set_fact:
     _traefik3_complete_mount_list: "{{ _traefik3_bind_mount_list + _traefik3_volume_mounts }}"
   vars:
@@ -237,25 +237,25 @@
         target: "/var/log/traefik"
         type: "volume"
 
-- name: "traefik3 | Create placeholder array for default network"
+- name: "Traefik3 | Create placeholder array for default network"
   ansible.builtin.set_fact:
     _traefik3_docker_default_networks:
       - name: "{{ traefik3_network_name }}"
         aliases: "{{ traefik3_network_aliases | default(omit) }}"
 
-- name: "traefik3 | Define all Docker networks for this container"
+- name: "Traefik3 | Define all Docker networks for this container"
   ansible.builtin.set_fact:
     _traefik3_docker_all_networks: >
       {{ _traefik3_docker_default_networks + traefik3_extra_networks | default([]) }}
 
-- name: "traefik3 | Define Docker port map"
+- name: "Traefik3 | Define Docker port map"
   ansible.builtin.set_fact:
     _traefik3_docker_ports: "{{ _traefik3_docker_ports | default([]) + [__item] }}"
   loop: "{{ traefik3_port_map_list }}"
   loop_control:
     loop_var: __item
 
-- name: "traefik3 | Define common environment variables"
+- name: "Traefik3 | Define common environment variables"
   ansible.builtin.set_fact:
     _traefik3_all_env_vars: >
       {{ _traefik3_std_env_vars | combine(traefik3_extra_env_vars) }}
@@ -263,7 +263,7 @@
     _traefik3_std_env_vars:
       "TZ": "{{ traefik3_timezone }}"
 
-- name: "traefik3 | Define extra environment variables"
+- name: "Traefik3 | Define extra environment variables"
   ansible.builtin.set_fact:
     _traefik3_all_env_vars: "{{ _traefik3_all_env_vars | default({}) |
       combine({__item.key: __item.value}) }}"
@@ -272,16 +272,16 @@
     loop_var: __item
   no_log: True
 
-- name: "traefik3 | Debug | container labels"
+- name: "Traefik3 | Debug | container labels"
   ansible.builtin.debug:
     msg: "{{ _traefik3_all_labels }}"
 
-- name: "traefik3 | Debug | mount points"
+- name: "Traefik3 | Debug | mount points"
   ansible.builtin.debug:
     msg:
       - "{{ _traefik3_complete_mount_list }}"
 
-- name: "traefik3 | Create Traefik3 Docker container"  # noqa: args[module]
+- name: "Traefik3 | Create Traefik3 Docker container"  # noqa: args[module]
   community.docker.docker_container:
     name: "{{ traefik3_name }}"
     image: "{{ traefik3_image_name }}:{{ traefik3_image_version }}"

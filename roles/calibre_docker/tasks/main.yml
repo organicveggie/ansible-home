@@ -80,7 +80,7 @@
   loop_control:
     loop_var: __item
 
-- name: "calibre Docker Container"
+- name: "Calibre Docker Container"
   community.docker.docker_container:
     name: "{{ calibre_docker_name }}"
     image: "{{ calibre_docker_image }}:{{ calibre_docker_image_version }}"
