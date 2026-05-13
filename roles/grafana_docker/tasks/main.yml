@@ -1,11 +1,11 @@
-- import_tasks: setup.yml
+- ansible.builtin.import_tasks: setup.yml
   tags:
     - grafana
     - grafana:setup
     - grafana_docker
     - grafana_docker:setup
 
-- import_tasks: docker.yml
+- ansible.builtin.import_tasks: docker.yml
   tags:
     - grafana
     - grafana:docker

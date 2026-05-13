@@ -1,5 +1,5 @@
 ---
-- import_tasks: networks.yml
+- ansible.builtin.import_tasks: networks.yml
   tags:
     - docker
     - docker:networks

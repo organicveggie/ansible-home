@@ -33,7 +33,7 @@
         gateway: "{{ docker_networks.calibre_web.gateway }}"
 
 - name: "calibre-web | Create container"
-  import_role: 
+  ansible.builtin.import_role:
     name: "organicveggie.calibre_web_docker"
   vars:
     calibre_web_docker_network_create: false

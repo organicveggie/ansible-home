@@ -7,7 +7,7 @@
   ansible.builtin.set_fact:
     _hass_ecowitt_fqdn: "ecowitt.{{ hass_host_domain }}"
 
-- include_role:
+- ansible.builtin.include_role:
     name: "organicveggie.home_assistant_docker"
   tags: ["docker", "hass", "homeassistant", "service"]
   vars:

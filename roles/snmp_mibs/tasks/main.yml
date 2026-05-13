@@ -1,4 +1,4 @@
-- import_tasks: mibs-install.yml
+- ansible.builtin.import_tasks: mibs-install.yml
   tags:
     - snmp
     - snmp-mibs

@@ -1,4 +1,4 @@
-- import_tasks: docker.yml
+- ansible.builtin.import_tasks: docker.yml
   tags:
     - zwavejs2
     - zwavejs2mqtt

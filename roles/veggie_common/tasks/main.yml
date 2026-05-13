@@ -1,4 +1,4 @@
-- import_tasks: general.yml
+- ansible.builtin.import_tasks: general.yml
   tags:
     - veggie_common
     - veggie_common:general

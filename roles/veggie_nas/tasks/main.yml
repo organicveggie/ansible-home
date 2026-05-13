@@ -1,9 +1,9 @@
-- import_tasks: general.yml
+- ansible.builtin.import_tasks: general.yml
   tags:
     - veggie_nas
     - veggie_nas:general
 
-- import_tasks: samba.yml
+- ansible.builtin.import_tasks: samba.yml
   tags:
     - veggie_nas
     - veggie_nas:samba

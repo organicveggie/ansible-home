@@ -1,4 +1,4 @@
-- import_tasks: docker.yml
+- ansible.builtin.import_tasks: docker.yml
   tags:
     - veggie_docker
     - veggie_docker:docker
