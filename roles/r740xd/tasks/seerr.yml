@@ -18,7 +18,7 @@
     seerr_docker_extra_networks:
       - name: "{{ docker_networks.servarr.name }}"
       - name: "{{ docker_networks.tautulli.name }}"
-    seerr_docker_host_domain: "{{ nas_seerr_host_domain }}"
+    seerr_docker_host_domain: "{{ r740xd_seerr_host_domain }}"
     seerr_docker_network: "{{ docker_networks.seerr.name }}"
-    seerr_docker_timezone: "{{ nas_timezone }}"
+    seerr_docker_timezone: "{{ r740xd_timezone }}"
   tags: ["seerr"]

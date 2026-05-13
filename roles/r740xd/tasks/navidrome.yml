@@ -1,7 +1,7 @@
 ---
 - name: "navidrome | Set fqdn"
   ansible.builtin.set_fact:
-    _nas_navidrome_fqdn: "{{ nas_navidrome_host_name }}.{{ nas_navidrome_host_domain }}"
+    _nas_navidrome_fqdn: "{{ r740xd_navidrome_host_name }}.{{ r740xd_navidrome_host_domain }}"
 
 - name: "navidrome | Setup Docker network"
   community.docker.docker_network:
@@ -21,12 +21,12 @@
     navidrome_docker_base_url: "{{ navidrome_base_url }}"
     navidrome_docker_extra_networks:
       - name: "{{ docker_networks.navidrome.name }}"
-    navidrome_docker_host_domain: "{{ nas_navidrome_host_domain }}"
-    navidrome_docker_image_cache_size: "{{ nas_navidrome_image_cache_size }}"
+    navidrome_docker_host_domain: "{{ r740xd_navidrome_host_domain }}"
+    navidrome_docker_image_cache_size: "{{ r740xd_navidrome_image_cache_size }}"
     navidrome_docker_lastfm_enabled: "true"
-    navidrome_docker_lastfm_apikey: "{{ nas_navidrome_lastfm_apikey }}"
-    navidrome_docker_lastfm_secret: "{{ nas_navidrome_lastfm_secret }}"
-    navidrome_docker_music_folder: "{{ nas_navidrome_music_folder }}"
+    navidrome_docker_lastfm_apikey: "{{ r740xd_navidrome_lastfm_apikey }}"
+    navidrome_docker_lastfm_secret: "{{ r740xd_navidrome_lastfm_secret }}"
+    navidrome_docker_music_folder: "{{ r740xd_navidrome_music_folder }}"
     navidrome_docker_network: "{{ docker_networks.navidrome.name }}"
-    navidrome_docker_spotify_client_id: "{{ nas_navidrome_spotify_client_id }}"
-    navidrome_docker_spotify_client_secret: "{{ nas_navidrome_spotify_client_secret }}"
+    navidrome_docker_spotify_client_id: "{{ r740xd_navidrome_spotify_client_id }}"
+    navidrome_docker_spotify_client_secret: "{{ r740xd_navidrome_spotify_client_secret }}"

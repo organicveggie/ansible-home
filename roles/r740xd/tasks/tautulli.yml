@@ -18,10 +18,10 @@
     tautulli_docker_extra_networks:
       - name: "{{ docker_networks.tautulli.name }}"
     tautulli_docker_host_domain: "{{ mas_tautulli_host_domain }}"
-    tautulli_docker_hostname: "{{ nas_tautulli_hostname }}"
+    tautulli_docker_hostname: "{{ r740xd_tautulli_hostname }}"
     tautulli_docker_name: "{{ mas_tautulli_container_name }}"
     tautulli_docker_network: "{{ docker_networks.tautulli.name }}"
     tautulli_docker_network_create: false
-    tautulli_docker_timezone: "{{ nas_timezone }}"
-    tautulli_docker_web_port: "{{ nas_tautulli_web_port }}"
+    tautulli_docker_timezone: "{{ r740xd_timezone }}"
+    tautulli_docker_web_port: "{{ r740xd_tautulli_web_port }}"
     

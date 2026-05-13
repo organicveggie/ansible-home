@@ -51,11 +51,11 @@
 
         - name: "traefik | Enable SyncThings (Servarr) ports"
           ansible.builtin.set_fact:
-            _nas_traefik_extra_ports: "{{ _nas_traefik_extra_ports | default([]) + nas_traefik_syncthings_ports }}"
+            _nas_traefik_extra_ports: "{{ _nas_traefik_extra_ports | default([]) + r740xd_traefik_syncthings_ports }}"
         
         - name: "traefik | Enable SyncThings (Servarr) entrypoints"
           ansible.builtin.set_fact:
-            _nas_traefik_entrypoints: "{{ _nas_traefik_entrypoints | default({}) | combine(nas_traefik_syncthings_entrypoints) }}"
+            _nas_traefik_entrypoints: "{{ _nas_traefik_entrypoints | default({}) | combine(r740xd_traefik_syncthings_entrypoints) }}"
 
 - name: "traefik | Process UniFi Controller network"
   when: "docker_networks.unific.name | default('') | trim | length > 0"
@@ -74,11 +74,11 @@
 
         - name: "traefik | Enable UniFi Controlller ports"
           ansible.builtin.set_fact:
-            _nas_traefik_extra_ports: "{{ _nas_traefik_extra_ports | default([]) + nas_traefik_unific_ports }}"
+            _nas_traefik_extra_ports: "{{ _nas_traefik_extra_ports | default([]) + r740xd_traefik_unific_ports }}"
         
         - name: "traefik | Enable UniFi Controller entrypoints"
           ansible.builtin.set_fact:
-            _nas_traefik_entrypoints: "{{ _nas_traefik_entrypoints | default({}) | combine(nas_traefik_unific_entrypoints) }}"
+            _nas_traefik_entrypoints: "{{ _nas_traefik_entrypoints | default({}) | combine(r740xd_traefik_unific_entrypoints) }}"
 
 - name: "traefik | Process Home Assistant network"
   when: "docker_networks.hass.name | default('') | trim | length > 0"
@@ -97,15 +97,15 @@
 
         # - name: "traefik | Enable Z-Wave JS UI ports"
         #   ansible.builtin.set_fact:
-        #     _nas_traefik_extra_ports: "{{ _nas_traefik_extra_ports | default([]) + nas_traefik_zwavejsui_ports }}"
+        #     _nas_traefik_extra_ports: "{{ _nas_traefik_extra_ports | default([]) + r740xd_traefik_zwavejsui_ports }}"
 
         # - name: "traefik | Enable Z-Wave JS UI entrypoints"
         #   ansible.builtin.set_fact:
-        #     _nas_traefik_entrypoints: "{{ _nas_traefik_entrypoints | default({}) | combine(nas_traefik_zwavejsui_entrypoints) }}"
+        #     _nas_traefik_entrypoints: "{{ _nas_traefik_entrypoints | default({}) | combine(r740xd_traefik_zwavejsui_entrypoints) }}"
 
 - name: "traefik | Define all ports"
   ansible.builtin.set_fact:
-    _nas_traefik_all_ports: "{{ (_nas_traefik_extra_ports | default([]) + nas_traefik_http_ports) | sort }}"
+    _nas_traefik_all_ports: "{{ (_nas_traefik_extra_ports | default([]) + r740xd_traefik_http_ports) | sort }}"
 
 - name: "traefik | Debug entrypoints"
   ansible.builtin.debug:
@@ -120,17 +120,17 @@
   vars:
     traefik_image: "traefik:2.11"
     traefik_container_environment:
-      # AWS_HOSTED_ZONE_ID: "{{ nas_aws_route53_hosted_zone_id }}"
-      AWS_ACCESS_KEY_ID: "{{ nas_aws_route53_access_key_id }}"
-      AWS_SECRET_ACCESS_KEY: "{{ nas_aws_route53_secret_access_key }}"
-      AWS_REGION: "{{ nas_aws_route53_region }}"
+      # AWS_HOSTED_ZONE_ID: "{{ r740xd_aws_route53_hosted_zone_id }}"
+      AWS_ACCESS_KEY_ID: "{{ r740xd_aws_route53_access_key_id }}"
+      AWS_SECRET_ACCESS_KEY: "{{ r740xd_aws_route53_secret_access_key }}"
+      AWS_REGION: "{{ r740xd_aws_route53_region }}"
       AWS_POLLING_INTERVAL: "15"
       AWS_PROPAGATION_TIMEOUT: "900"
       AWS_TTL: "60"
     traefik_qs_https: "true"
     # traefik_qs_https_redirect: "true"
     traefik_qs_https_le: "true"
-    traefik_qs_https_le_mail: "{{ nas_traefik_letsencrypt_email }}"
+    traefik_qs_https_le_mail: "{{ r740xd_traefik_letsencrypt_email }}"
     traefik_qs_log_level: INFO
     traefik_ports: "{{ _nas_traefik_all_ports }}"
     traefik_hostname: "{{ _nas_traefik_fqdn }}"
@@ -140,8 +140,8 @@
       letsencrypt:
         acme:
           storage: "/etc/traefik/acme/acme.json"
-          email: "{{ nas_traefik_letsencrypt_email }}"
-          caServer: "{{ nas_traefik_letsencrypt_ca_server }}"
+          email: "{{ r740xd_traefik_letsencrypt_email }}"
+          caServer: "{{ r740xd_traefik_letsencrypt_ca_server }}"
           dnsChallenge:
             provider: route53
             delayBeforeCheck: "10s"

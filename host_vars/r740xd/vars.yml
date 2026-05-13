@@ -2,8 +2,8 @@
 ###
 ### Docker
 ###
-nas_docker_zfs_dataset: "data/docker"
-nas_docker_home: "/{{ nas_docker_zfs_dataset }}"
+r740xd_docker_zfs_dataset: "data/docker"
+r740xd_docker_home: "/{{ r740xd_docker_zfs_dataset }}"
 
 ###
 ### Glances
@@ -411,8 +411,8 @@ nodered_credential_secret: "{{ vault_nodered_credential_secret }}"
 ### Plex
 ###
 # See https://www.plex.tv/claim
-nas_plex_cpus: 16
-nas_plex_memory: "16GB"
+r740xd_plex_cpus: 16
+r740xd_plex_memory: "16GB"
 plex_docker_claim: "{{ vault_plex_docker_claim }}"
 
 ###
@@ -439,8 +439,8 @@ time_machine_data_directory: "{{ vault_time_machine_data_directory }}"
 time_machine_hostname: "{{ vault_time_machine_hostname }}"
 time_machine_network_parent: "{{ vault_time_machine_network_parent }}"
 time_machine_network_ipv4: "{{ vault_time_machine_network_ipv4 }}"
-nas_time_machine_data_directory: "{{ vault_time_machine_data_directory }}"
-nas_time_machine_hostname: "{{ vault_time_machine_hostname }}"
+r740xd_time_machine_data_directory: "{{ vault_time_machine_data_directory }}"
+r740xd_time_machine_hostname: "{{ vault_time_machine_hostname }}"
 
 ###
 ### Veggie Common

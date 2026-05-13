@@ -1,11 +1,11 @@
 ---
 - name: "diun | Set group id"
   ansible.builtin.set_fact:
-    _nas_diun_gid: "{{ nas_diun_gid | default(nas_diun_uid) }}"
+    _nas_diun_gid: "{{ r740xd_diun_gid | default(r740xd_diun_uid) }}"
 
 - name: "diun | Set group name"
   ansible.builtin.set_fact:
-    _nas_diun_groupname: "{{ nas_diun_group | default(nas_diun_user) }}"
+    _nas_diun_groupname: "{{ r740xd_diun_group | default(r740xd_diun_user) }}"
 
 - name: "diun | Create Diun group"
   ansible.builtin.group:
@@ -15,11 +15,11 @@
 
 - name: "diun | Create Diun user"
   ansible.builtin.user:
-    name: "{{ nas_diun_user }}"
+    name: "{{ r740xd_diun_user }}"
     password: "*"
     shell: "/bin/false"
     system: false
-    uid: "{{ nas_diun_uid }}"
+    uid: "{{ r740xd_diun_uid }}"
     group: "{{ _nas_diun_groupname }}"
     password_lock: true
 
@@ -27,11 +27,11 @@
   ansible.builtin.file:
     path: "{{ __item }}"
     state: directory
-    owner: "{{ nas_diun_user }}"
+    owner: "{{ r740xd_diun_user }}"
     group: "{{ _nas_diun_groupname }}"
     mode: "0770"
   with_items:
-    - "{{ nas_diun_config_dir }}"
+    - "{{ r740xd_diun_config_dir }}"
   loop_control:
     loop_var: __item
 
@@ -50,18 +50,18 @@
   ansible.builtin.import_role:
     name: "diun"
   vars:
-    nas_diun_user: "{{ nas_diun_user }}"
-    nas_diun_uid: "{{ nas_diun_uid }}"
-    nas_diun_group: "{{ _nas_diun_groupname }}"
-    nas_diun_docker_network_name: "{{ docker_networks.diun.name }}"
-    nas_diun_docker_timezone: "{{ nas_timezone }}"
-    nas_diun_notify_mail_host: "{{ nas_diun_notify_mail_host }}"
-    nas_diun_notify_mail_port: "{{ nas_diun_notify_mail_port }}"
-    nas_diun_notify_mail_ssl: true
-    nas_diun_notify_mail_insecure_skip_verify: false
-    nas_diun_notify_mail_username: "{{ nas_diun_notify_mail_username }}"
-    nas_diun_notify_mail_password: "{{ nas_diun_notify_mail_password }}"
-    nas_diun_notify_mail_from: "{{ nas_diun_notify_mail_from }}"
-    nas_diun_notify_mail_to: "{{ nas_diun_notify_mail_to }}"
-    nas_diun_regopts_dockerio_user: "{{ nas_diun_regopts_dockerio_user }}"
-    nas_diun_regopts_dockerio_passwd: "{{ nas_diun_regopts_dockerio_passwd }}"
+    r740xd_diun_user: "{{ r740xd_diun_user }}"
+    r740xd_diun_uid: "{{ r740xd_diun_uid }}"
+    r740xd_diun_group: "{{ _nas_diun_groupname }}"
+    r740xd_diun_docker_network_name: "{{ docker_networks.diun.name }}"
+    r740xd_diun_docker_timezone: "{{ r740xd_timezone }}"
+    r740xd_diun_notify_mail_host: "{{ r740xd_diun_notify_mail_host }}"
+    r740xd_diun_notify_mail_port: "{{ r740xd_diun_notify_mail_port }}"
+    r740xd_diun_notify_mail_ssl: true
+    r740xd_diun_notify_mail_insecure_skip_verify: false
+    r740xd_diun_notify_mail_username: "{{ r740xd_diun_notify_mail_username }}"
+    r740xd_diun_notify_mail_password: "{{ r740xd_diun_notify_mail_password }}"
+    r740xd_diun_notify_mail_from: "{{ r740xd_diun_notify_mail_from }}"
+    r740xd_diun_notify_mail_to: "{{ r740xd_diun_notify_mail_to }}"
+    r740xd_diun_regopts_dockerio_user: "{{ r740xd_diun_regopts_dockerio_user }}"
+    r740xd_diun_regopts_dockerio_passwd: "{{ r740xd_diun_regopts_dockerio_passwd }}"

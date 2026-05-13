@@ -14,5 +14,5 @@
   ansible.builtin.import_role:
     name: "portainer"
   vars:
-    portainer_docker_home: "{{ nas_docker_home }}"
+    portainer_docker_home: "{{ r740xd_docker_home }}"
     portainer_host_domain: "{{ veggie_nas_domain_name }}"

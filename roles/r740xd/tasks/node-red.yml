@@ -15,6 +15,6 @@
     name: "nodered"
   vars:
     nodered_docker_network_name: "{{ docker_networks.node_red.name }}"
-    nodered_docker_timezone: "{{ nas_nodered_timezone }}"
+    nodered_docker_timezone: "{{ r740xd_nodered_timezone }}"
     nodered_docker_extra_networks:
       - name: "{{ docker_networks.hass.name }}"

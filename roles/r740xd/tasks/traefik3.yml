@@ -58,12 +58,12 @@
         - name: "traefik3 | Enable SyncThings (Servarr) ports"
           ansible.builtin.set_fact:
             _nas_traefik3_extra_ports: >
-              {{ _nas_traefik3_extra_ports | default([]) + nas_traefik_syncthings_ports }}
+              {{ _nas_traefik3_extra_ports | default([]) + r740xd_traefik_syncthings_ports }}
         
         - name: "traefik3 | Enable SyncThings (Servarr) entrypoints"
           ansible.builtin.set_fact:
             _nas_traefik3_entrypoints: >
-              {{ _nas_traefik3_entrypoints | default({}) | combine(nas_traefik_syncthings_entrypoints) }}
+              {{ _nas_traefik3_entrypoints | default({}) | combine(r740xd_traefik_syncthings_entrypoints) }}
 
 - name: "traefik3 | Process UniFi Controller network"
   when: "docker_networks.unific.name | default('') | trim | length > 0"
@@ -87,12 +87,12 @@
         - name: "traefik3 | Enable UniFi Controlller ports"
           ansible.builtin.set_fact:
             _nas_traefik3_extra_ports: >
-              {{ _nas_traefik3_extra_ports | default([]) + nas_traefik_unific_ports }}
+              {{ _nas_traefik3_extra_ports | default([]) + r740xd_traefik_unific_ports }}
         
         - name: "traefik3 | Enable UniFi Controller entrypoints"
           ansible.builtin.set_fact:
             _nas_traefik3_entrypoints: >
-              {{ _nas_traefik3_entrypoints | default({}) | combine(nas_traefik_unific_entrypoints) }}
+              {{ _nas_traefik3_entrypoints | default({}) | combine(r740xd_traefik_unific_entrypoints) }}
 
 - name: "traefik3 | Define all ports"
   ansible.builtin.set_fact:
@@ -115,7 +115,7 @@
       letsencrypt:
         acme:
           caServer: "{{ letsencrypt_ca_server_staging }}"
-          email: "{{ nas_traefik_letsencrypt_email }}"
+          email: "{{ r740xd_traefik_letsencrypt_email }}"
           dnsChallenge:
             delayBeforeCheck: "10"
             provider: "route53"
@@ -126,20 +126,20 @@
               - "8.8.8.8:53" # Use external DNS to verify TXT record changes
     traefik3_conf_entrypoints: "{{ _nas_traefik3_entrypoints }}"
     traefik3_conf_logging_level: "DEBUG"
-    traefik3_conf_providers: "{{ nas_traefik3_conf_providers }}"
+    traefik3_conf_providers: "{{ r740xd_traefik3_conf_providers }}"
     traefik3_cpus: "2"
     traefik3_dashboard_api_insecure: "false"
     traefik3_dashboard_fqdn: "{{ _nas_traefik3_fqdn }}"
-    traefik3_dashboard_middleware_labels: "{{ nas_traefik3_dashboard_middleware_labels }}"
-    traefik3_dashboard_middleware_names: "{{ nas_traefik3_dashboard_middleware_names }}"
+    traefik3_dashboard_middleware_labels: "{{ r740xd_traefik3_dashboard_middleware_labels }}"
+    traefik3_dashboard_middleware_names: "{{ r740xd_traefik3_dashboard_middleware_names }}"
     traefik3_extra_env_vars:
-      AWS_ACCESS_KEY_ID: "{{ nas_aws_route53_access_key_id }}"
-      AWS_SECRET_ACCESS_KEY: "{{ nas_aws_route53_secret_access_key }}"
-      AWS_REGION: "{{ nas_aws_route53_region }}"
+      AWS_ACCESS_KEY_ID: "{{ r740xd_aws_route53_access_key_id }}"
+      AWS_SECRET_ACCESS_KEY: "{{ r740xd_aws_route53_secret_access_key }}"
+      AWS_REGION: "{{ r740xd_aws_route53_region }}"
       AWS_POLLING_INTERVAL: "15"
       AWS_PROPAGATION_TIMEOUT: "300"
       AWS_TTL: "60"
     traefik3_extra_networks: "{{ _nas_traefik_extra_networks }}"
-    traefik3_redirect_http: "{{ nas_traefik3_redirect_http }}"
+    traefik3_redirect_http: "{{ r740xd_traefik3_redirect_http }}"
     traefik3_memory: "1G"
-    traefik3_timezone: "{{ nas_timezone }}"
+    traefik3_timezone: "{{ r740xd_timezone }}"

@@ -15,11 +15,11 @@
     name: "organicveggie.unific"
   vars:
     unific_available_externally: "true"
-    unific_cpus: "{{ nas_unific_cpus }}"
+    unific_cpus: "{{ r740xd_unific_cpus }}"
     unific_docker_network_created: true
-    unific_hostname: "{{ nas_unific_hostname }}"
-    unific_host_domain: "{{ nas_unific_host_domain }}"
-    unific_memory: "{{ nas_unific_memory }}"
+    unific_hostname: "{{ r740xd_unific_hostname }}"
+    unific_host_domain: "{{ r740xd_unific_host_domain }}"
+    unific_memory: "{{ r740xd_unific_memory }}"
     unific_network_name: "{{ docker_networks.unific.name }}"
-    unific_timezone: "{{ nas_timezone }}"
-    unific_traefik_router_rule: "Host(`{{ nas_unific_hostname }}.{{ nas_unific_host_domain }}`)"
+    unific_timezone: "{{ r740xd_timezone }}"
+    unific_traefik_router_rule: "Host(`{{ r740xd_unific_hostname }}.{{ r740xd_unific_host_domain }}`)"

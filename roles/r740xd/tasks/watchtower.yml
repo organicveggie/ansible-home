@@ -37,5 +37,5 @@
     #                            |   |   |   |   |   |
     #                            *   *   *   *   *   *
     watchtower_docker_schedule: "0   0   4   *   *   *"
-    watchtower_docker_timezone: "{{ nas_timezone }}"
+    watchtower_docker_timezone: "{{ r740xd_timezone }}"
     # watchtower_docker_run_once: true
