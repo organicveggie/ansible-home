@@ -1,8 +1,0 @@
-[Unit]
-Description=Creates virtual serial ports
-
-[Service]
-ExecStart=/usr/bin/socat PTY,link=/dev/ttyVSP0,raw,echo=0 PTY,link=/dev/ttyVSP1,raw,echo=0
-
-[Install]
-WantedBy=multi-user.target
