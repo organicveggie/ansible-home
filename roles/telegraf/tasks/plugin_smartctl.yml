@@ -35,6 +35,6 @@
     dest: /etc/telegraf/telegraf.d/smartctl.conf
     owner: telegraf
     group: telegraf
-    mode: 0640
+    mode: "0640"
   when: telegraf_plugin_smartctl == true
   notify: Restart Telegraf

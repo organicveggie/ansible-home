@@ -13,6 +13,6 @@
     dest: /etc/telegraf/telegraf.d/docker.conf
     owner: telegraf
     group: telegraf
-    mode: 0640
+    mode: "0640"
   when: telegraf_plugin_docker == true
   notify: Restart Telegraf

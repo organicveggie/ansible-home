@@ -68,4 +68,3 @@ plex_docker_additional_bind_mounts: []
 #####
 
 plex_docker_claim: "ABCD1234"
-

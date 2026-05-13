@@ -14,6 +14,6 @@
     dest: /etc/telegraf/telegraf.d/zfs_pool_sizes.conf
     owner: telegraf
     group: telegraf
-    mode: 0640
+    mode: "0640"
   when: telegraf_plugin_zfs_pool_sizes == true
   notify: Restart Telegraf

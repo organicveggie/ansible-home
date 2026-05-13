@@ -9,7 +9,7 @@
     state: "directory"
     owner: "{{ restic_user }}"
     group: "{{ restic_group }}"
-    mode: 0770
+    mode: "0770"
 
 - name: Create repository location file
   ansible.builtin.copy:
@@ -17,7 +17,7 @@
     dest: "{{ restic_config_location_file }}"
     owner: "{{ restic_user }}"
     group: "{{ restic_group }}"
-    mode: 0640
+    mode: "0640"
 
 - name: Create restic environment shell script
   ansible.builtin.template:
@@ -25,7 +25,7 @@
     dest: "{{ restic_config_location_script_file }}"
     owner: "{{ restic_user }}"
     group: "{{ restic_group }}"
-    mode: 0640
+    mode: "0640"
 
 - name: Create repository password file
   ansible.builtin.copy:
@@ -33,7 +33,7 @@
     dest: "{{ restic_config_password_file }}"
     owner: "{{ restic_user }}"
     group: "{{ restic_group }}"
-    mode: 0640
+    mode: "0640"
 
 - name: Create backup includes file
   ansible.builtin.template:
@@ -41,7 +41,7 @@
     dest: "{{ restic_client_backup_includes_file }}"
     owner: "{{ restic_user }}"
     group: "{{ restic_group }}"
-    mode: 0640
+    mode: "0640"
   vars:
     restic_client_file_paths: "{{ restic_client_include_paths }}"
 
@@ -51,7 +51,7 @@
     dest: "{{ restic_client_backup_excludes_file }}"
     owner: "{{ restic_user }}"
     group: "{{ restic_group }}"
-    mode: 0640
+    mode: "0640"
   vars:
     restic_client_file_paths: "{{ restic_client_exclude_paths }}"
 
@@ -61,7 +61,7 @@
     dest: "{{ item.dest }}"
     owner: "{{ restic_user }}"
     group: "{{ restic_group }}"
-    mode: 0750
+    mode: "0750"
   loop:
     - src: "restic-backup.sh"
       dest: "{{ restic_client_backup_script }}"
