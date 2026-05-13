@@ -17,9 +17,9 @@
     tautulli_docker_available_externally: "true"
     tautulli_docker_extra_networks:
       - name: "{{ docker_networks.tautulli.name }}"
-    tautulli_docker_host_domain: "{{ mas_tautulli_host_domain }}"
+    tautulli_docker_host_domain: "{{ r740xd_tautulli_host_domain }}"
     tautulli_docker_hostname: "{{ r740xd_tautulli_hostname }}"
-    tautulli_docker_name: "{{ mas_tautulli_container_name }}"
+    tautulli_docker_name: "{{ r740xd_tautulli_container_name }}"
     tautulli_docker_network: "{{ docker_networks.tautulli.name }}"
     tautulli_docker_network_create: false
     tautulli_docker_timezone: "{{ r740xd_timezone }}"

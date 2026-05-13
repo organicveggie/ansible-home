@@ -333,9 +333,9 @@ r740xd_syncthing_host_domain: null
 ###
 ### Tautulli
 ###
-mas_tautulli_container_name: "tautulli"
+r740xd_tautulli_container_name: "tautulli"
 r740xd_tautulli_hostname: "tautulli"
-mas_tautulli_host_domain: null
+r740xd_tautulli_host_domain: null
 
 ###
 ### TimeMachine

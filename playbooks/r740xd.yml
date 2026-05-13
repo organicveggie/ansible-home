@@ -151,7 +151,7 @@
         # Syncthing
         r740xd_syncthing_host_domain: "{{ veggie_base_domain_name }}"
         # Tautulli
-        mas_tautulli_host_domain: "{{ veggie_base_domain_name }}"
+        r740xd_tautulli_host_domain: "{{ veggie_base_domain_name }}"
         # TimeMachine
         r740xd_time_machine_data_directory: "{{ vault_time_machine_data_directory }}"
         r740xd_time_machine_hostname: "{{ vault_time_machine_hostname }}"
