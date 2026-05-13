@@ -42,4 +42,4 @@ jobs:
         run: yamllint -c .yamllint -f github -s .
 
       - name: Run ansible-lint
-        run: ansible-lint
+        run: ansible-lint --exclude galaxy_roles/ --exclude galaxy_collections/ .
