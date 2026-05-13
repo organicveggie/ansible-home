@@ -172,43 +172,6 @@ lidarr_cpus: "2"
 #       - copytruncate
 
 ###
-### Manyfold
-###
-
-manyfold_container_name: "manyfold"
-manyfold_group_name: "manyfold"
-manyfold_group_id: 2500
-manyfold_user_name: "manyfold"
-manyfold_user_id: 2500
-
-manyfold_secret_key: null
-
-manyfold_pgsql_admin_user: "manyfold"
-manyfold_pgsql_admin_passwd: "manyfold-password"
-manyfold_pgsql_docker_image_version: 15
-manyfold_pgsql_name: "{{ manyfold_container_name }}-pgsql"
-
-manyfold_pgsql_volume_init_name: "{{ manyfold_pgsql_name }}-initscripts"
-manyfold_pgsql_volume_conf_name: "{{ manyfold_pgsql_name }}-conf"
-manyfold_pgsql_volume_data_name: "{{ manyfold_pgsql_name }}-data"
-
-manyfold_redis_name: "{{ manyfold_container_name }}-redis"
-manyfold_redis_config_loglevel: "warning"  # One of: debug, verbose, notice, warning, nothing
-manyfold_redis_docker_image_version: 7
-manyfold_redis_volume_conf_name: "{{ manyfold_redis_name }}-config"
-manyfold_redis_volume_data_name: "{{ manyfold_redis_name }}-data"
-
-manyfold_smtp_server: "{{ vault_manyfold_smtp_server }}"
-manyfold_smtp_port: "{{ vault_manyfold_smtp_port }}"
-manyfold_smtp_auth: "{{ vault_manyfold_smtp_auth }}"
-manyfold_smtp_username: "{{ vault_manyfold_smtp_username }}"
-manyfold_smtp_password: "{{ vault_manyfold_smtp_password }}"
-manyfold_smtp_public_hostname: "{{ vault_manyfold_smtp_public_hostname }}"
-
-manyfold_cloudflared_name: "{{ manyfold_container_name }}-cloudflared"
-manyfold_cloudflared_token: "{{ vault_manyfold_cloudflared_token }}"
-
-###
 ### NAS
 ###
 nas_path_books: "{{ vault_nas_path_books }}"

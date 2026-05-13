@@ -15,7 +15,6 @@
     file: "traefik3_network.yml"
   loop:
     - "{{ docker_networks.portainer.name }}"
-    - "{{ docker_networks.manyfold.name }}"
   loop_control:
     loop_var: __r720xd_traefik3_docker_network
 
