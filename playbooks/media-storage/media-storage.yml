@@ -21,19 +21,19 @@
     
   tasks:
     - name: "Create ZFS datasets for 1080p movies"
-      import_tasks: "zfs-alpha-datasets.yml"
+      ansible.builtin.import_tasks: "zfs-alpha-datasets.yml"
       vars:
         _zfs_dataset_desc: "1080p movies"
         _zfs_dataset_base: "nas/data/videos/movies/1080p"
 
     - name: "Create ZFS datasets for 2160p movies"
-      import_tasks: "zfs-alpha-datasets.yml"
+      ansible.builtin.import_tasks: "zfs-alpha-datasets.yml"
       vars:
         _zfs_dataset_desc: "2160p movies"
         _zfs_dataset_base: "nas/data/videos/movies/2160p"
 
     - name: "Create ZFS datasets for unmonitored movies"
-      import_tasks: "zfs-alpha-datasets.yml"
+      ansible.builtin.import_tasks: "zfs-alpha-datasets.yml"
       vars:
         _zfs_dataset_desc: "unmonitored movies"
         _zfs_dataset_base: "nas/data/videos/movies/unmonitored"

@@ -15,7 +15,7 @@
     register: vol_data
 
   - name: Verify volumes exists
-    assert:
+    ansible.builtin.assert:
       that:
         - vol_conf.exists
         - vol_data.exists
@@ -26,7 +26,7 @@
     register: cinfo
 
   - name: Verify container exists and is running
-    assert:
+    ansible.builtin.assert:
       that:
         - cinfo.exists
         - cinfo.container['State']['Running']
