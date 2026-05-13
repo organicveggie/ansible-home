@@ -105,10 +105,6 @@ docker_networks:
     name: "traefik3"
     gateway: "172.30.18.1"
     subnet: "172.30.18.0/24"
-  manyfold:
-    name: "manyfold"
-    gateway: "172.30.19.1"
-    subnet: "172.30.19.0/24"
   saurron:
     name: "saurron"
     gateway: "172.30.20.1"
@@ -223,7 +219,3 @@ veggie_kstar_password: "{{ vault_veggie_kstar_password }}"
 ###
 veggie_nas_domain_name: "{{ vault_nas_domain_name }}"
 
-###
-### Veggie Virt
-###
-veggie_virt_domain_name: "{{ vault_veggie_virt_domain_name }}"

@@ -60,12 +60,6 @@ organicveggie_docker_networks:
     scope: "local"
     subnet: "172.100.2.0/24"
     gateway: "172.100.2.1"
-  - name: "{{ photoprism_network_name }}"
-    enable_ipv6: "no"
-    internal: "no"
-    scope: "local"
-    subnet: "172.100.3.0/24"
-    gateway: "172.100.3.1"
   - name: "{{ unific_network_name }}"
     enable_ipv6: "no"
     internal: "no"
@@ -178,43 +172,6 @@ lidarr_cpus: "2"
 #       - copytruncate
 
 ###
-### Manyfold
-###
-
-manyfold_container_name: "manyfold"
-manyfold_group_name: "manyfold"
-manyfold_group_id: 2500
-manyfold_user_name: "manyfold"
-manyfold_user_id: 2500
-
-manyfold_secret_key: null
-
-manyfold_pgsql_admin_user: "manyfold"
-manyfold_pgsql_admin_passwd: "manyfold-password"
-manyfold_pgsql_docker_image_version: 15
-manyfold_pgsql_name: "{{ manyfold_container_name }}-pgsql"
-
-manyfold_pgsql_volume_init_name: "{{ manyfold_pgsql_name }}-initscripts"
-manyfold_pgsql_volume_conf_name: "{{ manyfold_pgsql_name }}-conf"
-manyfold_pgsql_volume_data_name: "{{ manyfold_pgsql_name }}-data"
-
-manyfold_redis_name: "{{ manyfold_container_name }}-redis"
-manyfold_redis_config_loglevel: "warning"  # One of: debug, verbose, notice, warning, nothing
-manyfold_redis_docker_image_version: 7
-manyfold_redis_volume_conf_name: "{{ manyfold_redis_name }}-config"
-manyfold_redis_volume_data_name: "{{ manyfold_redis_name }}-data"
-
-manyfold_smtp_server: "{{ vault_manyfold_smtp_server }}"
-manyfold_smtp_port: "{{ vault_manyfold_smtp_port }}"
-manyfold_smtp_auth: "{{ vault_manyfold_smtp_auth }}"
-manyfold_smtp_username: "{{ vault_manyfold_smtp_username }}"
-manyfold_smtp_password: "{{ vault_manyfold_smtp_password }}"
-manyfold_smtp_public_hostname: "{{ vault_manyfold_smtp_public_hostname }}"
-
-manyfold_cloudflared_name: "{{ manyfold_container_name }}-cloudflared"
-manyfold_cloudflared_token: "{{ vault_manyfold_cloudflared_token }}"
-
-###
 ### NAS
 ###
 nas_path_books: "{{ vault_nas_path_books }}"
@@ -257,10 +214,10 @@ navidrome_music_folder: "{{ vault_navidrome_music_folder }}"
 ### NFS
 ###
 nfs_exports:
-  - "/mnt/nas/data/books {{ veggie_virt_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
-  - "/mnt/nas/servarr/music {{ veggie_virt_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
-  - "/mnt/nas/data/videos {{ veggie_virt_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
-  # - "/mnt/nas/data/music {{ veggie_virt_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
+  - "/mnt/nas/data/books {{ veggie_nas_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
+  - "/mnt/nas/servarr/music {{ veggie_nas_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
+  - "/mnt/nas/data/videos {{ veggie_nas_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
+  # - "/mnt/nas/data/music {{ veggie_nas_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
 
 ###
 ### Node-RED
@@ -293,23 +250,6 @@ pgadmin_docker_email_use_ssl: "False"
 pgadmin_docker_email_user_tls: "True"
 pgadmin_docker_email_username: "{{ aws_ses_usw2_access_key }}"
 pgadmin_docker_email_password: "{{ aws_ses_usw2_secret_key }}"
-
-###
-### Photoprism
-###
-photoprism_admin_password: "{{ vault_photoprism_admin_password }}"
-photoprism_docker_host_domain: "{{ veggie_base_domain_name }}"
-photoprism_dir: "/mnt/nas/photoprism"
-photoprism_extra_groups: "photo_writer"
-photoprism_mariadb_dir: "/mnt/nas/photoprism-mariadb"
-photoprism_mariadb_root_password: "{{ vault_photoprism_mariadb_root_password }}"
-photoprism_mariadb_password: "{{ vault_photoprism_mariadb_password }}"
-photoprism_network_name: "photoprism"
-photoprism_zfs_filesystems:
-  - dataset: "nas/photoprism"
-    path: "/mnt/nas/photoprism"
-  - dataset: "nas/photoprism-mariadb"
-    path: "/mnt/nas/photoprism-mariadb"
 
 ###
 ### Plex
@@ -689,7 +629,6 @@ traefik_confkey_certificatesResolvers:
 #   - name: "{{ hass_network_name }}"
 #   - name: "{{ navidrome_network_name }}"
 #   - name: "{{ nodered_docker_network_name }}"
-#   - name: "{{ photoprism_network_name }}"
 #   - name: "{{ portainer_network_name }}"
 #   - name: "{{ resilio_docker_network }}"
 #   - name: "{{ restic_rest_server_network_name }}"
