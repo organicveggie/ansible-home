@@ -25,13 +25,15 @@
 
 - name: "diun | Create Diun directories"
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ __item }}"
     state: directory
     owner: "{{ nas_diun_user }}"
     group: "{{ _nas_diun_groupname }}"
     mode: "0770"
   with_items:
     - "{{ nas_diun_config_dir }}"
+  loop_control:
+    loop_var: __item
 
 - name: "diun | Setup Diun Docker network"
   community.docker.docker_network:

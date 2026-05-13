@@ -1,12 +1,14 @@
 ---
 - name: "Create Docker networks"
   community.docker.docker_network:
-    name: "{{ item.name }}"
-    driver: "{{ item.driver | default(omit) }}"
-    enable_ipv6: "{{ item.enable_ipv6 | default(omit) }}"
-    internal: "{{ item.internal | default(omit) }}"
-    scope: "{{ item.scope | default(omit) }}"
+    name: "{{ __item.name }}"
+    driver: "{{ __item.driver | default(omit) }}"
+    enable_ipv6: "{{ __item.enable_ipv6 | default(omit) }}"
+    internal: "{{ __item.internal | default(omit) }}"
+    scope: "{{ __item.scope | default(omit) }}"
     ipam_config:
-      - subnet: "{{ item.subnet }}"
-        gateway: "{{ item.gateway }}"
+      - subnet: "{{ __item.subnet }}"
+        gateway: "{{ __item.gateway }}"
   loop: "{{ organicveggie_docker_networks }}"
+  loop_control:
+    loop_var: __item

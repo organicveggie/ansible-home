@@ -24,9 +24,11 @@
 - name: "watchtower | Define environment variables"
   ansible.builtin.set_fact:
     _watchtower_docker_env_vars: >
-      {{ _watchtower_docker_env_vars | default({}) | combine({item.key: item.value | string }) }}
+      {{ _watchtower_docker_env_vars | default({}) | combine({__item.key: __item.value | string }) }}
   no_log: true
   loop: "{{ _watchtower_required_env_vars | dict2items }}"
+  loop_control:
+    loop_var: __item
   vars:
     _watchtower_required_env_vars:
       "NO_COLOR": "{{ watchtower_docker_logging_no_color | default(omit) }}"

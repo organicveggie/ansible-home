@@ -1,10 +1,12 @@
 ---
 - name: "Create Plex Docker Volumes"
   community.docker.docker_volume:
-    name: "{{ item }}"
+    name: "{{ __item }}"
   with_items:
-    - "{{ plex_docker_volume_name_home }}"  
+    - "{{ plex_docker_volume_name_home }}"
     - "{{ plex_docker_volume_name_transcode }}"
+  loop_control:
+    loop_var: __item
 
 - name: "Set Docker mount list for standard volume mounts"
   ansible.builtin.set_fact:
@@ -18,9 +20,11 @@
 
 - name: "Define list of extra bind mounts"
   ansible.builtin.set_fact:
-    _plex_docker_extra_bind_mounts: "{{ _plex_docker_extra_bind_mounts | default([]) + 
-      [{'source': item.source, 'target': item.target, 'type': 'bind'}] }}"
+    _plex_docker_extra_bind_mounts: "{{ _plex_docker_extra_bind_mounts | default([]) +
+      [{'source': __item.source, 'target': __item.target, 'type': 'bind'}] }}"
   with_items: "{{ plex_docker_additional_bind_mounts }}"
+  loop_control:
+    loop_var: __item
 
 - name: "Define complete list of mounts"
   ansible.builtin.set_fact:
@@ -41,8 +45,10 @@
 
 - name: "Include extra Docker networks"
   ansible.builtin.set_fact:
-    _plex_docker_networks: "{{ _plex_docker_networks | default([]) + [item] }}"
+    _plex_docker_networks: "{{ _plex_docker_networks | default([]) + [__item] }}"
   loop: "{{ plex_docker_extra_networks }}"
+  loop_control:
+    loop_var: __item
   when: "plex_docker_extra_networks | default([]) | length > 0"
 
 - name: "Debug Docker network"

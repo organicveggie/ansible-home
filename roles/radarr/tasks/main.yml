@@ -46,16 +46,18 @@
 - name: "{{ radarr_docker_role_label }} | Define Docker labels with Traefik disabled"
   ansible.builtin.set_fact:
     _radarr_docker_labels: "{{ _radarr_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   with_items:
     - key: "traefik.enable"
       value: "{{ radarr_available_externally }}"
+  loop_control:
+    loop_var: __item
   when: "not radarr_docker_available_externally"
 
 - name: "{{ radarr_docker_role_label }} | Define Docker labels with Traefik enabled"
   ansible.builtin.set_fact:
     _radarr_docker_labels: "{{ _radarr_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   with_items:
     - key: "traefik.enable"
       value: "{{ radarr_docker_available_externally }}"
@@ -71,13 +73,17 @@
       value: "*.{{ radarr_docker_host_domain }}"
     - key: "traefik.http.services.{{ radarr_docker_host_name }}.loadbalancer.server.port"
       value: "{{ radarr_docker_web_port }}"
+  loop_control:
+    loop_var: __item
   when: "radarr_docker_available_externally"
 
 - name: "{{ radarr_docker_role_label }} | Define user-supplied extra Docker labels"
   ansible.builtin.set_fact:
     _radarr_docker_labels: "{{ _radarr_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   loop: "{{ radarr_docker_extra_labels | dict2items }}"
+  loop_control:
+    loop_var: __item
 
 - name: "{{ radarr_docker_role_label }} | radarr Docker Container"
   community.docker.docker_container:

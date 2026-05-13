@@ -42,16 +42,18 @@
 - name: "Define Docker labels with Traefik disabled"
   ansible.builtin.set_fact:
     _nodered_docker_labels: "{{ _nodered_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   with_items:
     - key: "traefik.enable"
       value: "{{ nodered_available_externally }}"
+  loop_control:
+    loop_var: __item
   when: "not nodered_available_externally"
 
 - name: "Define Docker labels with Traefik enabled"
   ansible.builtin.set_fact:
     _nodered_docker_labels: "{{ _nodered_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   with_items:
     - key: "traefik.enable"
       value: "{{ nodered_available_externally }}"
@@ -67,13 +69,17 @@
       value: "*.{{ nodered_host_domain }}"
     - key: "traefik.http.services.nodered.loadbalancer.server.port"
       value: "{{ nodered_port }}"
+  loop_control:
+    loop_var: __item
   when: "nodered_available_externally"
 
 - name: "Define user-supplied extra Docker labels"
   ansible.builtin.set_fact:
     _nodered_docker_labels: "{{ _nodered_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   loop: "{{ nodered_docker_extra_labels | dict2items }}"
+  loop_control:
+    loop_var: __item
 
 - name: "Node-RED Docker Container"
   community.docker.docker_container:

@@ -8,11 +8,13 @@
 
 - name: "Create NAS groups"
   ansible.builtin.group:
-    name: "{{ item.name }}"
-    gid: "{{ item.gid | default(omit) }}"
-    system: "{{ item.system | default(omit) }}"
-    state: "{{ item.state | default('present') }}"
+    name: "{{ __item.name }}"
+    gid: "{{ __item.gid | default(omit) }}"
+    system: "{{ __item.system | default(omit) }}"
+    state: "{{ __item.state | default('present') }}"
   loop: "{{ nas_groups }}"
+  loop_control:
+    loop_var: __item
   tags: ["groups", "users", "usergroups"]
 
 - name: "Create NAS users"

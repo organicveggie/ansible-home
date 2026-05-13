@@ -31,6 +31,8 @@
     - "{{ docker_networks.seerr.name }}"
     - "{{ docker_networks.portainer.name }}"
     - "{{ docker_networks.tautulli.name }}"
+  loop_control:
+    loop_var: __item
   vars:
     "_traefik_role_name": "traefik3"
 

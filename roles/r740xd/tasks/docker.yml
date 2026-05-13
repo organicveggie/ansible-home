@@ -25,5 +25,7 @@
   ansible.builtin.user:
     append: true
     groups: ["docker"]
-    name: "{{ item }}"
+    name: "{{ __item }}"
   loop: "{{ nas_docker_users | default([]) }}"
+  loop_control:
+    loop_var: __item

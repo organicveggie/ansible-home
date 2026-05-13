@@ -1,10 +1,12 @@
 ---
 - name: "Telegraf Plugin: SMART | Install tooling"
   ansible.builtin.apt:
-    name: "{{ item }}"
+    name: "{{ __item }}"
   loop:
     - "smartmontools"
     - "nvme-cli"
+  loop_control:
+    loop_var: __item
   when: telegraf_plugin_smartctl == true
 
 - name: "Telegraf Plugin: SMART | Create smartctl group for sudo"

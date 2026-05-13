@@ -6,10 +6,12 @@
 
 - name: "traefik3 | Create container volumes"
   community.docker.docker_volume:
-    name: "{{ item }}"
+    name: "{{ __item }}"
   loop:
     - "{{ traefik3_config_volume_name }}"
     - "{{ traefik3_log_volume_name }}"
+  loop_control:
+    loop_var: __item
 
 - name: "traefik3 | Get info on config volume"
   community.docker.docker_volume_info:
@@ -89,7 +91,7 @@
     - name: "traefik3 | Dashboard | router labels"
       ansible.builtin.set_fact:
         _traefik3_dashboard_labels: >
-          {{ _traefik3_dashboard_labels | default({}, true) | combine({item.key: item.value}) }}
+          {{ _traefik3_dashboard_labels | default({}, true) | combine({__item.key: __item.value}) }}
       loop:
         - key: "traefik.http.routers.dashboard.rule"
           value: "Host(`{{ _traefik3_dashboard_fqdn }}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
@@ -103,6 +105,8 @@
           value: "letsencrypt"
         - key: "traefik.http.routers.dashboard.tls.domains[0].main"
           value: "{{ _traefik3_dashboard_fqdn }}"
+      loop_control:
+        loop_var: __item
 
 - name: "traefik3 | Define container labels"
   ansible.builtin.set_fact:
@@ -215,9 +219,11 @@
 
 - name: "traefik3 | Set Docker mount list for bind mounts"
   ansible.builtin.set_fact:
-    _traefik3_bind_mount_list: "{{_traefik3_docker_bind_mount_list | default([]) + 
-      [ {'source': item.key, 'target': item.value, 'read_only': true, 'type': 'bind'} ] }}"
+    _traefik3_bind_mount_list: "{{_traefik3_docker_bind_mount_list | default([]) +
+      [ {'source': __item.key, 'target': __item.value, 'read_only': true, 'type': 'bind'} ] }}"
   loop: "{{ traefik3_bind_mounts | dict2items }}"
+  loop_control:
+    loop_var: __item
 
 - name: "traefik3 | Set combined Docker mount list"
   ansible.builtin.set_fact:
@@ -244,8 +250,10 @@
 
 - name: "traefik3 | Define Docker port map"
   ansible.builtin.set_fact:
-    _traefik3_docker_ports: "{{ _traefik3_docker_ports | default([]) + [item] }}"
+    _traefik3_docker_ports: "{{ _traefik3_docker_ports | default([]) + [__item] }}"
   loop: "{{ traefik3_port_map_list }}"
+  loop_control:
+    loop_var: __item
 
 - name: "traefik3 | Define common environment variables"
   ansible.builtin.set_fact:
@@ -258,8 +266,10 @@
 - name: "traefik3 | Define extra environment variables"
   ansible.builtin.set_fact:
     _traefik3_all_env_vars: "{{ _traefik3_all_env_vars | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   loop: "{{ traefik3_extra_env_vars | dict2items }}"
+  loop_control:
+    loop_var: __item
   no_log: True
 
 - name: "traefik3 | Debug | container labels"

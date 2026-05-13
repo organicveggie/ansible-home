@@ -13,16 +13,20 @@
 - name: "Define Docker labels with Traefik disabled"
   ansible.builtin.set_fact:
     _cloudflared_docker_labels: "{{ _cloudflared_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   with_items:
     - key: "traefik.enable"
       value: "{{ cloudflared_available_externally }}"
+  loop_control:
+    loop_var: __item
 
 - name: "Define user-supplied extra Docker labels"
   ansible.builtin.set_fact:
     _cloudflared_docker_labels: "{{ _cloudflared_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   loop: "{{ cloudflared_docker_extra_labels | dict2items }}"
+  loop_control:
+    loop_var: __item
 
 - name: "cloudflared Docker Container"
   community.docker.docker_container:

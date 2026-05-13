@@ -16,16 +16,20 @@
 - name: "Assemble list of config file subdirectory names"
   ansible.builtin.set_fact:
     _fact_recyclarr_config_dirs:
-      "{{ _fact_recyclarr_config_dirs | default([]) | union([item | dirname])}}"
+      "{{ _fact_recyclarr_config_dirs | default([]) | union([__item | dirname])}}"
   loop: "{{ recyclarr_docker_config_includes }}"
+  loop_control:
+    loop_var: __item
 
 - name: "Create config file subdirectories"
   ansible.builtin.file:
     mode: "0640"
-    path: "{{ _fact_recyclarr_docker_conf_folder }}/{{ item }}"
+    path: "{{ _fact_recyclarr_docker_conf_folder }}/{{ __item }}"
     recurse: true
     state: "directory"
   loop: "{{ _fact_recyclarr_config_dirs }}"
+  loop_control:
+    loop_var: __item
 
 - name: "Create config file"
   ansible.builtin.template:

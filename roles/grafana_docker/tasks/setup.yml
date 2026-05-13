@@ -1,9 +1,11 @@
 ---
 - name: Create ZFS file systems
   community.general.zfs:
-    name: "{{ item }}"
+    name: "{{ __item }}"
     state: present
   loop: "{{ grafana_docker_zfs_filesystems }}"
+  loop_control:
+    loop_var: __item
 
 - name: Create Grafana user
   ansible.builtin.user:
@@ -14,21 +16,25 @@
 
 - name: Create Grafana directories
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ __item }}"
     owner: "{{ grafana_docker_username }}"
     group: "root"
     mode: "0770"
     state: "directory"
   loop:
     - "{{ grafana_docker_config_dir }}"
+  loop_control:
+    loop_var: __item
 
 - name: Set ZFS FS ownership
   ansible.builtin.file:
-    path: "/mnt/{{ item }}"
+    path: "/mnt/{{ __item }}"
     owner: "{{ grafana_docker_username }}"
     group: "root"
     mode: "0770"
   loop: "{{ grafana_docker_zfs_filesystems }}"
+  loop_control:
+    loop_var: __item
 
 - name: Create Grafana config
   ansible.builtin.template:

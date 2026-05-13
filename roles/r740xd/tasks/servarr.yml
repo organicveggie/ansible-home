@@ -53,18 +53,20 @@
 
 - name: "servarr | Create ZFS datasets"
   community.general.zfs:
-    name: "{{ item }}"
+    name: "{{ __item }}"
     state: present
   loop:
     - "{{ nas_servarr_zfs_dataset }}"
     - "{{ nas_servarr_zfs_dataset }}/downloads"
     - "{{ nas_servarr_zfs_dataset }}/downloads/torrents"
     - "{{ nas_servarr_zfs_dataset }}/downloads/usenet"
+  loop_control:
+    loop_var: __item
   tags: ["setup", "zfs"]
 
 - name: "servarr | Set owner/group for datasets"
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ __item }}"
     state: "directory"
     owner: "{{ nas_servarr_username }}"
     group: "{{ _nas_servarr_groupname }}"
@@ -74,11 +76,13 @@
     - "{{ nas_servarr_path }}/downloads"
     - "{{ nas_servarr_path }}/downloads/torrents"
     - "{{ nas_servarr_path }}/downloads/usenet"
+  loop_control:
+    loop_var: __item
   tags: ["setup", "zfs"]
 
 - name: "servarr | Create folders for downloads"
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ __item }}"
     state: "directory"
     owner: "{{ nas_servarr_username }}"
     group: "{{ _nas_servarr_groupname }}"
@@ -92,6 +96,8 @@
     - "{{ nas_servarr_path }}/downloads/usenet/tv"
     - "{{ nas_servarr_path }}/downloads/usenet/tv/1080p"
     - "{{ nas_servarr_path }}/downloads/usenet/tv/2160p"
+  loop_control:
+    loop_var: __item
   tags: ["setup", "zfs"]
 
 - name: "servarr | Setup Docker network"
@@ -430,10 +436,10 @@
   ansible.builtin.include_tasks:
     file: "servarr_logrotate.yml"
   vars:
-    servarr_logrotate_name: "{{ item.name }}"
-    servarr_logrotate_volume_name: "{{ item.volume }}"
+    servarr_logrotate_name: "{{ __item.name }}"
+    servarr_logrotate_volume_name: "{{ __item.volume }}"
     servarr_logrotate_log_criteria: "*.txt"
-    servarr_logrotate_max_age: "{{ item.max_age | default('+8d') }}"
+    servarr_logrotate_max_age: "{{ __item.max_age | default('+8d') }}"
   loop:
     - name: "lidarr"
       volume: "{{ lidarr_docker_volume_config_name }}"
@@ -450,4 +456,6 @@
       volume: "{{ nas_sonarr1080_config_volume_name }}"
     - name: "sonarr4k"
       volume: "{{ nas_sonarr4k_config_volume_name }}"
+  loop_control:
+    loop_var: __item
   tags: ["logrotate"]

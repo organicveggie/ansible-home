@@ -31,16 +31,18 @@
 - name: "Define Docker labels with Traefik disabled"
   ansible.builtin.set_fact:
     _calibre_docker_labels: "{{ _calibre_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   with_items:
     - key: "traefik.enable"
       value: "{{ calibre_available_externally }}"
+  loop_control:
+    loop_var: __item
   when: "not calibre_docker_available_externally"
 
 - name: "Define Docker labels with Traefik enabled"
   ansible.builtin.set_fact:
     _calibre_docker_labels: "{{ _calibre_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   with_items:
     - key: "traefik.enable"
       value: "{{ calibre_docker_available_externally }}"
@@ -66,13 +68,17 @@
       value: "same-origin"
     - key: "traefik.http.middlewares.kasmvnc.headers.customrequestheaders.Cross-Origin-Resource-Policy"
       value: "same-site"
+  loop_control:
+    loop_var: __item
   when: "calibre_docker_available_externally"
 
 - name: "Define user-supplied extra Docker labels"
   ansible.builtin.set_fact:
     _calibre_docker_labels: "{{ _calibre_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   loop: "{{ calibre_docker_extra_labels | dict2items }}"
+  loop_control:
+    loop_var: __item
 
 - name: "calibre Docker Container"
   community.docker.docker_container:

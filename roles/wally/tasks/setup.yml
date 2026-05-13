@@ -16,8 +16,10 @@
 
 - name: Add users to plugdev group
   ansible.builtin.user:
-    name: "{{ item }}"
+    name: "{{ __item }}"
     append: "yes"
     groups:
       - "plugdev"
   loop: "{{ wally_plugdev_users }}"
+  loop_control:
+    loop_var: __item

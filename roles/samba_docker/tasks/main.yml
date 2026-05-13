@@ -5,10 +5,12 @@
   ansible.builtin.set_fact:
     _samba_docker_bind_mounts: >
       {{ _samba_docker_bind_mounts | default([]) + [{
-        'source': item.key,
-        'target': item.value,
+        'source': __item.key,
+        'target': __item.value,
         'type': 'bind'}] }}
   loop: "{{ samba_docker_share_mounts | dict2items }}"
+  loop_control:
+    loop_var: __item
 
 - name: "samba | Set Docker complete mount list"
   ansible.builtin.set_fact:
@@ -29,11 +31,13 @@
 
 - name: "samba | Define standard environment variables"
   ansible.builtin.set_fact:
-    _samba_docker_base_env_vars:  "{{ _samba_docker_base_env_vars | default({}) |
-      combine({item.key: item.value}) }}"
+    _samba_docker_base_env_vars: "{{ _samba_docker_base_env_vars | default({}) |
+      combine({__item.key: __item.value}) }}"
   no_log: true
-  when: item.value is defined and item.value != ''
+  when: __item.value is defined and __item.value != ''
   loop: "{{ _samba_docker_env_var_data | dict2items }}"
+  loop_control:
+    loop_var: __item
   vars:
     _samba_docker_env_var_data:
       "AVAHI_DISABLE": "{{ samba_docker_avahi_disable | default(omit) }}"
@@ -48,51 +52,63 @@
 
 - name: "samba | Define global config environment variables"
   ansible.builtin.set_fact:
-    _samba_docker_global_vars:  "{{ _samba_docker_global_vars | default({}) |
-      combine({'SAMBA_GLOBAL_CONFIG_' + item.key: item.value}) }}"
+    _samba_docker_global_vars: "{{ _samba_docker_global_vars | default({}) |
+      combine({'SAMBA_GLOBAL_CONFIG_' + __item.key: __item.value}) }}"
   no_log: true
   loop: "{{ samba_docker_global_key_values | dict2items }}"
+  loop_control:
+    loop_var: __item
 
 - name: "samba | Define user accounts"
   ansible.builtin.set_fact:
     _samba_docker_accounts: >
-      {{ _samba_docker_accounts | default({}) | combine({'ACCOUNT_' + item.key: item.value}) }}
+      {{ _samba_docker_accounts | default({}) | combine({'ACCOUNT_' + __item.key: __item.value}) }}
   no_log: true
   loop: "{{ samba_docker_accounts | dict2items }}"
+  loop_control:
+    loop_var: __item
 
 - name: "samba | Define UIDs"
   ansible.builtin.set_fact:
     _samba_docker_uids: >
-      {{ _samba_docker_uids | default({}) | combine({'UID_' + item.key: item.value}) }}
+      {{ _samba_docker_uids | default({}) | combine({'UID_' + __item.key: __item.value}) }}
   no_log: true
   loop: "{{ samba_docker_uids | dict2items }}"
+  loop_control:
+    loop_var: __item
 
 - name: "samba | Define GIDs"
   ansible.builtin.set_fact:
     _samba_docker_gids: >
-      {{ _samba_docker_gids | default({}) | combine({'GROUP_' + item.key: item.value}) }}
+      {{ _samba_docker_gids | default({}) | combine({'GROUP_' + __item.key: __item.value}) }}
   no_log: true
   loop: "{{ samba_docker_gids | dict2items }}"
+  loop_control:
+    loop_var: __item
 
 - name: "samba | Define extra user groups"
   ansible.builtin.set_fact:
     _samba_docker_user_groups: >
-      {{ _samba_docker_user_groups | default({}) | combine({'GROUPS_' + item.key: item.value}) }}
+      {{ _samba_docker_user_groups | default({}) | combine({'GROUPS_' + __item.key: __item.value}) }}
   no_log: true
   loop: "{{ samba_docker_extra_user_groups | dict2items }}"
+  loop_control:
+    loop_var: __item
 
 - name: "samba | Define shares"
   ansible.builtin.set_fact:
     _samba_docker_shares: >
-      {{ _samba_docker_shares | default({}) | 
-      combine({'SAMBA_VOLUME_CONFIG_' + item.key: item.value}) }}
+      {{ _samba_docker_shares | default({}) |
+      combine({'SAMBA_VOLUME_CONFIG_' + __item.key: __item.value}) }}
   no_log: true
   loop: "{{ samba_docker_shares | dict2items }}"
+  loop_control:
+    loop_var: __item
 
 - name: "samba | Define complete set of environment variables"
   ansible.builtin.set_fact:
     _samba_docker_all_env_vars: >
-      {{ _samba_docker_all_env_vars | default({}) | combine(item) }}
+      {{ _samba_docker_all_env_vars | default({}) | combine(__item) }}
   no_log: true
   loop:
     - "{{ _samba_docker_base_env_vars | default({}) }}"
@@ -102,6 +118,8 @@
     - "{{ _samba_docker_gids | default({}) }}"
     - "{{ _samba_docker_user_groups | default({}) }}"
     - "{{ _samba_docker_shares | default({}) }}"
+  loop_control:
+    loop_var: __item
 
 - name: "samba | Create container"
   community.docker.docker_container:
