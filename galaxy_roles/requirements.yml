@@ -20,13 +20,13 @@
   version: "6.10.0"
 
 - src: "geerlingguy.docker"
-  version: "7.3.0"
+  version: "8.0.0"
 
 - src: "geerlingguy.nfs"
   version: "2.0.0"
 
 - src: "geerlingguy.pip"
-  version: "3.1.0"
+  version: "3.1.2"
 
 - src: "https://github.com/organicveggie/ansible.calibre_web_docker"
   name: "organicveggie.calibre_web_docker"
