@@ -17,7 +17,7 @@
 
 - name: Create Telegraf config
   ansible.builtin.template:
-    src: ../templates/telegraf.conf.j2
+    src: telegraf.conf.j2
     dest: /etc/telegraf/telegraf.conf
     force: yes
     backup: yes
@@ -29,7 +29,7 @@
 
 - name: Create SNMP input config for firewall
   ansible.builtin.template:
-    src: ../templates/inputs_snmp_firewall.conf.j2
+    src: inputs_snmp_firewall.conf.j2
     dest: /etc/telegraf/telegraf.d/snmp_firewall.conf
     force: yes
     backup: yes
@@ -41,7 +41,7 @@
 
 - name: Create SNMP input config for network devices
   ansible.builtin.template:
-    src: ../templates/inputs_snmp_net.conf.j2
+    src: inputs_snmp_net.conf.j2
     dest: /etc/telegraf/telegraf.d/snmp_net.conf
     force: yes
     backup: yes

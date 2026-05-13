@@ -23,7 +23,7 @@
 
 - name: "Telegraf Plugin: SMART | Copy the smartctl sudoer file"
   ansible.builtin.copy:
-    src: "../files/smartctl.sudo"
+    src: "smartctl.sudo"
     dest: "/etc/sudoers.d/smartctl"
     mode: "0440"
     owner: "root"
@@ -33,7 +33,7 @@
 
 - name: "Telegraf Plugin: SMART | Create SMART input config"
   ansible.builtin.template:
-    src: ../templates/smartctl.conf.j2
+    src: smartctl.conf.j2
     dest: /etc/telegraf/telegraf.d/smartctl.conf
     owner: telegraf
     group: telegraf

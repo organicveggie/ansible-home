@@ -1,7 +1,7 @@
 ---
 - name: Create systemd failure handling script
   ansible.builtin.copy:
-    src: "../files/systemd-unit-failure.sh"
+    src: "systemd-unit-failure.sh"
     dest: "/usr/local/sbin/systemd-unit-failure.sh"
     owner: "root"
     group: "root"
@@ -9,7 +9,7 @@
 
 - name: Create systemd services
   ansible.builtin.template:
-    src: "../templates/{{ __item }}"
+    src: "{{ __item }}"
     dest: "/etc/systemd/system/{{ __item }}"
     owner: "root"
     group: "root"
@@ -24,7 +24,7 @@
 
 - name: Create systemd timers
   ansible.builtin.template:
-    src: "../templates/{{ __item }}"
+    src: "{{ __item }}"
     dest: "/etc/systemd/system/{{ __item }}"
     owner: "root"
     group: "root"

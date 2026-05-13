@@ -21,7 +21,7 @@
 
 - name: Create restic environment shell script
   ansible.builtin.template:
-    src: "../templates/restic-env.sh.j2"
+    src: "restic-env.sh.j2"
     dest: "{{ restic_config_location_script_file }}"
     owner: "{{ restic_user }}"
     group: "{{ restic_group }}"
@@ -37,7 +37,7 @@
 
 - name: Create backup includes file
   ansible.builtin.template:
-    src: "../templates/include_exclude.j2"
+    src: "include_exclude.j2"
     dest: "{{ restic_client_backup_includes_file }}"
     owner: "{{ restic_user }}"
     group: "{{ restic_group }}"
@@ -47,7 +47,7 @@
 
 - name: Create backup excludes file
   ansible.builtin.template:
-    src: "../templates/include_exclude.j2"
+    src: "include_exclude.j2"
     dest: "{{ restic_client_backup_excludes_file }}"
     owner: "{{ restic_user }}"
     group: "{{ restic_group }}"
@@ -57,7 +57,7 @@
 
 - name: Create scripts
   ansible.builtin.template:
-    src: "../templates/{{ __item.src }}"
+    src: "{{ __item.src }}"
     dest: "{{ __item.dest }}"
     owner: "{{ restic_user }}"
     group: "{{ restic_group }}"

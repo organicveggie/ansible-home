@@ -1,7 +1,7 @@
 ---
 - name: "Install configuration yaml"
   ansible.builtin.template:
-    src: "../templates/diun.yml.j2"
+    src: "diun.yml.j2"
     dest: "{{ diun_config_file }}"
     owner: "{{ diun_user }}"
     group: "{{ diun_group }}"
@@ -9,7 +9,7 @@
 
 - name: "Install file provider yaml"
   ansible.builtin.template:
-    src: "../templates/provider.yml.j2"
+    src: "provider.yml.j2"
     dest: "{{ diun_provider_file_name }}"
     owner: "{{ diun_user }}"
     group: "{{ diun_group }}"

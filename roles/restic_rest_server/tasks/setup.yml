@@ -31,7 +31,7 @@
 
 - name: Create htpasswd file
   ansible.builtin.template:
-    src: "../templates/htpasswd.j2"
+    src: "htpasswd.j2"
     dest: "{{ restic_rest_server_backup_dir }}/.htpasswd"
     owner: "root"
     group: "root"

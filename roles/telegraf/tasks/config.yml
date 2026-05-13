@@ -1,7 +1,7 @@
 ---
 - name: Create Telegraf environment variables
   ansible.builtin.template:
-    src: ../templates/telegraf.default.j2
+    src: telegraf.default.j2
     dest: /etc/default/telegraf
     owner: root
     group: root
@@ -10,7 +10,7 @@
 
 - name: Create Telegraf config
   ansible.builtin.template:
-    src: ../templates/telegraf.conf.j2
+    src: telegraf.conf.j2
     dest: /etc/telegraf/telegraf.conf
     owner: telegraf
     group: telegraf

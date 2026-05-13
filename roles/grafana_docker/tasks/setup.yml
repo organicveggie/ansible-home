@@ -38,7 +38,7 @@
 
 - name: Create Grafana config
   ansible.builtin.template:
-    src: ../templates/grafana.ini.j2
+    src: grafana.ini.j2
     dest: "{{ grafana_docker_config_dir }}/grafana.ini"
   notify:
     - Restart Grafana

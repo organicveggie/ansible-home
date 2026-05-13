@@ -9,7 +9,7 @@
 
 - name: Create Docker input config
   ansible.builtin.template:
-    src: ../templates/docker.conf.j2
+    src: docker.conf.j2
     dest: /etc/telegraf/telegraf.d/docker.conf
     owner: telegraf
     group: telegraf

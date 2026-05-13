@@ -5,7 +5,7 @@
 
 - name: Copy udev rule file
   ansible.builtin.copy:
-    src: "../files/wally.rules"
+    src: "wally.rules"
     dest: "/etc/udev/rules.d/50-wally.rules"
     mode: "0644"
 
