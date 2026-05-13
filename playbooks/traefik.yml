@@ -189,7 +189,6 @@
     #       # - name: "{{ diun_docker_network_name }}"
     #       # - name: "{{ grafana_network_name }}"
     #       # - name: "{{ hass_network_name }}"
-    #       # - name: "{{ photoprism_network_name }}"
     #       # - name: "{{ resilio_docker_network }}"
     #       # - name: "{{ restic_rest_server_network_name }}"
     #       # - name: "{{ servarr_docker_network }}"

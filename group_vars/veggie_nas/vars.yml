@@ -60,12 +60,6 @@ organicveggie_docker_networks:
     scope: "local"
     subnet: "172.100.2.0/24"
     gateway: "172.100.2.1"
-  - name: "{{ photoprism_network_name }}"
-    enable_ipv6: "no"
-    internal: "no"
-    scope: "local"
-    subnet: "172.100.3.0/24"
-    gateway: "172.100.3.1"
   - name: "{{ unific_network_name }}"
     enable_ipv6: "no"
     internal: "no"
@@ -293,23 +287,6 @@ pgadmin_docker_email_use_ssl: "False"
 pgadmin_docker_email_user_tls: "True"
 pgadmin_docker_email_username: "{{ aws_ses_usw2_access_key }}"
 pgadmin_docker_email_password: "{{ aws_ses_usw2_secret_key }}"
-
-###
-### Photoprism
-###
-photoprism_admin_password: "{{ vault_photoprism_admin_password }}"
-photoprism_docker_host_domain: "{{ veggie_base_domain_name }}"
-photoprism_dir: "/mnt/nas/photoprism"
-photoprism_extra_groups: "photo_writer"
-photoprism_mariadb_dir: "/mnt/nas/photoprism-mariadb"
-photoprism_mariadb_root_password: "{{ vault_photoprism_mariadb_root_password }}"
-photoprism_mariadb_password: "{{ vault_photoprism_mariadb_password }}"
-photoprism_network_name: "photoprism"
-photoprism_zfs_filesystems:
-  - dataset: "nas/photoprism"
-    path: "/mnt/nas/photoprism"
-  - dataset: "nas/photoprism-mariadb"
-    path: "/mnt/nas/photoprism-mariadb"
 
 ###
 ### Plex
@@ -689,7 +666,6 @@ traefik_confkey_certificatesResolvers:
 #   - name: "{{ hass_network_name }}"
 #   - name: "{{ navidrome_network_name }}"
 #   - name: "{{ nodered_docker_network_name }}"
-#   - name: "{{ photoprism_network_name }}"
 #   - name: "{{ portainer_network_name }}"
 #   - name: "{{ resilio_docker_network }}"
 #   - name: "{{ restic_rest_server_network_name }}"
