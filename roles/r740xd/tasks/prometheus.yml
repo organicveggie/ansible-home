@@ -1,0 +1,21 @@
+---
+- name: "R740xd | Create Prometheus Docker network"
+  community.docker.docker_network:
+    name: "{{ docker_networks.prometheus.name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "no"
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ docker_networks.prometheus.subnet }}"
+        gateway: "{{ docker_networks.prometheus.gateway }}"
+
+- name: "R740xd | Launch Prometheus container"
+  ansible.builtin.import_role:
+    name: "prometheus_docker"
+  vars:
+    prometheus_docker_available_externally: true
+    prometheus_docker_cpus: "2"
+    prometheus_docker_host_domain: "{{ veggie_nas_domain_name }}"
+    prometheus_docker_memory: "1GB"
+    prometheus_docker_network_name: "{{ docker_networks.prometheus.name }}"

@@ -1,0 +1,63 @@
+---
+#####
+# Container
+#####
+
+# Name of the Docker container.
+prometheus_docker_name: "prometheus"
+
+# Base name of the Docker image to use for the container.
+prometheus_docker_image_name: "prom/prometheus"
+
+# Specific Docker image version to use for the container.
+prometheus_docker_image_version: "latest"
+
+# Number of vCPUs to allocate to the container.
+prometheus_docker_cpus: "1"
+
+# Amount of memory to allocate to the container.
+prometheus_docker_memory: "512M"
+
+# Name of the primary network.
+prometheus_docker_network_name: null
+
+# Container aliases on the default network.
+prometheus_docker_network_aliases: null
+
+# List of additional networks to join.
+prometheus_docker_extra_networks: []
+
+prometheus_docker_config_file_path: "/etc/prometheus/prometheus.yml"
+prometheus_docker_volume_name_data: "prometheus-data"
+
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+prometheus_docker_extra_labels: {}
+
+# Dictionary of extra key value pairs to set as environment variables on the Docker container.
+prometheus_docker_extra_env: {}
+
+#####
+# Traefik
+#####
+
+# Enable use of Traefik as a proxy.
+prometheus_docker_available_externally: false
+
+# Host name to use for the Traefik endpoint. Combined with [prometheus_docker_host_domain] to form the
+# FQDN for the endpoint.
+prometheus_docker_host_name: "prometheus"
+
+# Domain name to use for the Traefik endpoint. Combined with [prometheus_docker_host_name] to form the
+# FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
+prometheus_docker_host_domain: "example.com"
+
+#####
+# Ansible
+#####
+
+prometheus_docker_role_label: "prometheus"
+
+#####
+# Prometheus
+#####
+prometheus_docker_http_api_port: "9090"

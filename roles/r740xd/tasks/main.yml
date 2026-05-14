@@ -154,6 +154,10 @@
   ansible.builtin.import_tasks: "saurron.yml"
   tags: ["saurron"]
 
+- name: "Setup Prometheus"
+  ansible.builtin.import_tasks: "prometheus.yml"
+  tags: ["prometheus"]
+
 # # - ansible.builtin.import_tasks: "influxdb.yml"
 # #   tags: ["influxdb"]
 

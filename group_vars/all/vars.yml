@@ -109,6 +109,10 @@ docker_networks:
     name: "saurron"
     gateway: "172.30.20.1"
     subnet: "172.30.20.0/24"
+  promtheus:
+    name: "prometheus"
+    gateway: "172.30.21.1"
+    subnet: "172.30.21.0/24"
 
 ###
 ### Home Assistant
