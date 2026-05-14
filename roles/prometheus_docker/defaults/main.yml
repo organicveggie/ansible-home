@@ -36,6 +36,12 @@ prometheus_docker_extra_labels: {}
 # Dictionary of extra key value pairs to set as environment variables on the Docker container.
 prometheus_docker_extra_env: {}
 
+# Dict of host-to-IP mappings, where each host name is a key in the dictionary. Each host name will
+# be added to the container's /etc/hosts file.
+# Instead of an IP address, the special value host-gateway can also be used, which resolves to the
+# host's gateway IP and allows containers to connect to services running on the host.
+prometheus_docker_extra_hosts: {}
+
 #####
 # Traefik
 #####
@@ -61,3 +67,15 @@ prometheus_docker_role_label: "prometheus"
 # Prometheus
 #####
 prometheus_docker_http_api_port: "9090"
+
+# Default Prometheus configuration to use if no user-supplied configuration is provided. Should be
+# a dictionary that can be directly converted to YAML and used as a Prometheus configuration file. 
+prometheus_docker_config:
+  global:
+    scrape_interval: 1m
+
+  scrape_configs:
+    # Make Prometheus scrape itself for metrics.
+    - job_name: "prometheus"
+      static_configs:
+        - targets: ["localhost:9090"]

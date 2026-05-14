@@ -16,6 +16,22 @@
   vars:
     prometheus_docker_available_externally: true
     prometheus_docker_cpus: "2"
+    prometheus_docker_extra_hosts:
+      host.docker.internal: "host-gateway"
     prometheus_docker_host_domain: "{{ veggie_nas_domain_name }}"
     prometheus_docker_memory: "1GB"
     prometheus_docker_network_name: "{{ docker_networks.prometheus.name }}"
+    prometheus_docker_config: 
+      scrape_configs:
+        # Make Prometheus scrape itself for metrics.
+        - job_name: "prometheus"
+          static_configs:
+            - targets: ["localhost:9090"]
+
+        # Scrape Docker daemon metrics using the Docker support for Prometheus. See
+        # https://docs.docker.com/engine/daemon/prometheus/.
+        - job_name: docker
+          # metrics_path defaults to '/metrics'
+          # scheme defaults to 'http'.
+          static_configs:
+            - targets: ["host.docker.internal:9323"]

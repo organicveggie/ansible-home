@@ -105,6 +105,7 @@
     mounts: "{{ _prometheus_docker_mount_list }}"
     network_mode: "{{ prometheus_docker_network_name }}"
     networks: "{{ _prometheus_docker_all_networks }}"
+    etc_hosts: "{{ prometheus_docker_extra_hosts | default(omit) }}"
     restart_policy: unless-stopped
     restart: "{{ _prometheus_docker_config_file.changed | default(false) }}"
     memory: "{{ prometheus_docker_memory }}"
