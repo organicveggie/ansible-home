@@ -173,6 +173,11 @@ r740xd_plex_old_music_path: null
 r740xd_plex_videos_path: null
 
 ###
+### Prometheus
+###
+r740xd_prometheus_host_domain: null
+
+###
 ### Prowlarr
 ###
 r740xd_prowlarr_host_domain: null

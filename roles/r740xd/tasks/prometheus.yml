@@ -18,15 +18,20 @@
     prometheus_docker_cpus: "2"
     prometheus_docker_extra_hosts:
       host.docker.internal: "host-gateway"
-    prometheus_docker_host_domain: "{{ veggie_nas_domain_name }}"
+    prometheus_docker_host_domain: "{{ r740xd_prometheus_host_domain }}"
     prometheus_docker_memory: "1GB"
+    prometheus_docker_mount_docker_socket: true
     prometheus_docker_network_name: "{{ docker_networks.prometheus.name }}"
     prometheus_docker_config: 
+      global:
+        scrape_interval: "15s"
+        scrape_failure_log_file: "/prometheus/scrape-failures.log"
       scrape_configs:
         # Make Prometheus scrape itself for metrics.
         - job_name: "prometheus"
           static_configs:
-            - targets: ["localhost:9090"]
+            - targets:
+              - "localhost:9090"
 
         # Scrape Docker daemon metrics using the Docker support for Prometheus. See
         # https://docs.docker.com/engine/daemon/prometheus/.
@@ -34,4 +39,21 @@
           # metrics_path defaults to '/metrics'
           # scheme defaults to 'http'.
           static_configs:
-            - targets: ["host.docker.internal:9323"]
+            - targets:
+              - "host.docker.internal:9323"
+        
+        # Create a job for scraping metrics from other Docker containers using Docker service
+        # discovery. This requires mounting the Docker socket into the container.
+        - job_name: "docker-containers"
+          docker_sd_configs:
+            - host: "unix:///var/run/docker.sock"
+          relabel_configs:
+            # Only keep containers that have a `prometheus-job` label.
+            - source_labels:
+              - "__meta_docker_container_label_prometheus_job"
+              regex: ".+"
+              action: "keep"
+            # Use the task labels that are prefixed by `prometheus-`.
+            - regex: "__meta_docker_container_label_prometheus_(.+)"
+              action: "labelmap"
+              replacement: "$1"

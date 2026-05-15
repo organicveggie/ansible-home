@@ -17,6 +17,7 @@
     docker_daemon_options:
       storage-driver: "zfs"
       data-root: "{{ r740xd_docker_home }}/data"
+      "metrics-addr": "0.0.0.0:9323"
     docker_install_compose_plugin: true
     docker_compose_package: "docker-compose-plugin"
     docker_compose_package_state: present

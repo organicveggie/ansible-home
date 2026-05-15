@@ -30,6 +30,11 @@ prometheus_docker_extra_networks: []
 prometheus_docker_config_file_path: "/etc/prometheus/prometheus.yml"
 prometheus_docker_volume_name_data: "prometheus-data"
 
+# Whether to mount the Docker socket into the container, which is required to use Docker for
+# service discovery of Docker containers. Only enable if you need this functionality, as it is a
+# potential security risk.
+prometheus_docker_mount_docker_socket: false
+
 # Dictionary of extra key value pairs to set as labels on the Docker container.
 prometheus_docker_extra_labels: {}
 
@@ -41,6 +46,10 @@ prometheus_docker_extra_env: {}
 # Instead of an IP address, the special value host-gateway can also be used, which resolves to the
 # host's gateway IP and allows containers to connect to services running on the host.
 prometheus_docker_extra_hosts: {}
+
+# User and group IDs to run the container as.
+prometheus_docker_uid: "1000"
+prometheus_docker_gid: "988"
 
 #####
 # Traefik

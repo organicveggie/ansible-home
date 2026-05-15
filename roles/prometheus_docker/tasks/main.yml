@@ -3,17 +3,34 @@
   community.docker.docker_volume:
     name: "{{ prometheus_docker_volume_name_data }}"
 
+- name: "{{ prometheus_docker_role_label }} | Get info on data volume"
+  community.docker.docker_volume_info:
+    name: "{{ prometheus_docker_volume_name_data }}"
+  register: "_prometheus_docker_data_volume_info"
+
+- name: "{{ prometheus_docker_role_label }} | Set permissions on data volume mount point"
+  ansible.builtin.file:
+    path: "{{ _prometheus_docker_data_volume_info.volume.Mountpoint }}"
+    state: "directory"
+    mode: "0750"
+    owner: "{{ prometheus_docker_uid }}"
+    group: "{{ prometheus_docker_gid }}"
+
 - name: "{{ prometheus_docker_role_label }} | Create folder for config file and set permissions"
   ansible.builtin.file:
     path: "{{ prometheus_docker_config_file_path | dirname }}"
     state: "directory"
     mode: "0755"
+    owner: "{{ prometheus_docker_uid }}"
+    group: "{{ prometheus_docker_gid }}"
 
 - name: "{{ prometheus_docker_role_label }} | Create Prometheus config file from template"
   ansible.builtin.template:
     src: "prometheus.yml.j2"
     dest: "{{ prometheus_docker_config_file_path }}"
     mode: "0640"
+    owner: "{{ prometheus_docker_uid }}"
+    group: "{{ prometheus_docker_gid }}"
   register: "_prometheus_docker_config_file"
 
 - name: "{{ prometheus_docker_role_label }} | Set Docker mount list"
@@ -26,6 +43,11 @@
         "target": "/etc/prometheus/prometheus.yml"
         "type": 'bind'
         "read_only": true
+
+- name: "{{ prometheus_docker_role_label }} | Mount Docker socket if enabled"
+  ansible.builtin.set_fact:
+    _prometheus_docker_mount_list: "{{ _prometheus_docker_mount_list + [ { 'source': '/var/run/docker.sock', 'target': '/var/run/docker.sock', 'type': 'bind' } ] }}"
+  when: "prometheus_docker_mount_docker_socket"
 
 - name: "{{ prometheus_docker_role_label }} | Build container FQDN"
   ansible.builtin.set_fact:
@@ -59,7 +81,7 @@
       combine({__item.key: __item.value}) }}"
   with_items:
     - key: "traefik.enable"
-      value: "{{ prometheus_docker_available_externally }}"
+      value: "{{ prometheus_docker_available_externally | string | lower }}"
     - key: "traefik.docker.network"
       value: "{{ prometheus_docker_network_name }}"
     - key: "traefik.http.routers.prometheus.rule"
@@ -118,5 +140,6 @@
     paused: no
     privileged: no
     read_only: no
+    user: "{{ prometheus_docker_uid }}:{{ prometheus_docker_gid }}"
     tty: no
     labels: "{{ _prometheus_docker_labels }}"
