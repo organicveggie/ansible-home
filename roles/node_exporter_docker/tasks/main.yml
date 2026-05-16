@@ -6,7 +6,7 @@
         "target": "/host"
         "type": "bind"
         "read_only": true
-        "propagation": "{{rslave | default(omit) }}"
+        "propagation": "{{ rslave | default(omit) }}"
 
 - name: "{{ node_exporter_docker_role_label }} | Define default Docker labels"
   ansible.builtin.set_fact:

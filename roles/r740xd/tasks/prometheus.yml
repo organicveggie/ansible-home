@@ -80,6 +80,3 @@
 - name: "R740xd | Install Prometheus node exporter"
   ansible.builtin.import_role:
     name: "node_exporter_docker"
-  # vars:
-  #   node_exporter_docker_extra_networks:
-  #     - name: "{{ docker_networks.prometheus.name }}"
