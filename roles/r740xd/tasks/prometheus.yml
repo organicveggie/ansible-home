@@ -48,6 +48,12 @@
             target_label: __name__
             replacement: 'docker_${1}'
         
+        # Scrape node-exporter metrics from the node exporter container running on the host.
+        - job_name: host-node-exporter
+          static_configs:
+            - targets:
+              - "host.docker.internal:9100"
+        
         # Create a job for scraping metrics from other Docker containers using Docker service
         # discovery. This requires mounting the Docker socket into the container.
         - job_name: "docker-containers"
@@ -70,3 +76,10 @@
           static_configs:
             - targets:
               - "{{ r740xd_saurron_docker_name }}:{{ r740xd_saurron_http_api_port }}"
+
+- name: "R740xd | Install Prometheus node exporter"
+  ansible.builtin.import_role:
+    name: "node_exporter_docker"
+  # vars:
+  #   node_exporter_docker_extra_networks:
+  #     - name: "{{ docker_networks.prometheus.name }}"

@@ -1,0 +1,68 @@
+---
+- name: "{{ node_exporter_docker_role_label }} | Set Docker mount list"
+  ansible.builtin.set_fact:
+    _node_exporter_docker_mount_list:
+      - "source": "/"
+        "target": "/host"
+        "type": "bind"
+        "read_only": true
+        "propagation": "{{rslave | default(omit) }}"
+
+- name: "{{ node_exporter_docker_role_label }} | Define default Docker labels"
+  ansible.builtin.set_fact:
+    _node_exporter_docker_labels: {}
+
+- name: "{{ node_exporter_docker_role_label }} | Define user-supplied extra Docker labels"
+  ansible.builtin.set_fact:
+    _node_exporter_docker_labels: "{{ _node_exporter_docker_labels | default({}) |
+      combine({__item.key: __item.value}) }}"
+  loop: "{{ node_exporter_docker_extra_labels | dict2items }}"
+  loop_control:
+    loop_var: __item
+
+- name: "{{ node_exporter_docker_role_label }} | Define default Docker environment variables"
+  ansible.builtin.set_fact:
+    _node_exporter_docker_env_vars: {}
+
+- name: "{{ node_exporter_docker_role_label }} | Define user-supplied extra Docker environment variables"
+  ansible.builtin.set_fact:
+    _node_exporter_docker_env_vars: "{{ _node_exporter_docker_env_vars | default({}) |
+      combine({__item.key: __item.value}) }}"
+  loop: "{{ node_exporter_docker_extra_env | dict2items }}"
+  loop_control:
+    loop_var: __item
+
+- name: "{{ node_exporter_docker_role_label }} | Define default container arguments"
+  ansible.builtin.set_fact:
+    _node_exporter_docker_args:
+      - "--path.rootfs=/host"
+
+- name: "{{ node_exporter_docker_role_label }} | Define user-supplied extra container arguments"
+  ansible.builtin.set_fact:
+    _node_exporter_docker_args: "{{ _node_exporter_docker_args | default([]) + node_exporter_docker_extra_args }}"
+
+- name: "{{ node_exporter_docker_role_label }} | Create Docker Container"
+  community.docker.docker_container:
+    name: "{{ node_exporter_docker_name }}"
+    image: "{{ node_exporter_docker_image_name }}:{{ node_exporter_docker_image_version }}"
+    pull: true
+    env: "{{ _node_exporter_docker_env_vars }}"
+    mounts: "{{ _node_exporter_docker_mount_list }}"
+    network_mode: "host"
+    networks: "{{ node_exporter_docker_extra_networks }}"
+    etc_hosts: "{{ node_exporter_docker_extra_hosts | default(omit) }}"
+    restart_policy: unless-stopped
+    memory: "{{ node_exporter_docker_memory }}"
+    cpus: "{{ node_exporter_docker_cpus }}"
+    container_default_behavior: no_defaults
+    auto_remove: no
+    command: "{{ _node_exporter_docker_args }}"
+    detach: yes
+    init: yes
+    interactive: no
+    paused: no
+    pid_mode: "host"
+    privileged: no
+    read_only: no
+    tty: no
+    labels: "{{ _node_exporter_docker_labels }}"
