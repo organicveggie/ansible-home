@@ -1,0 +1,90 @@
+---
+#####
+# Container
+#####
+
+# Name of the Docker container.
+prometheus_docker_name: "prometheus"
+
+# Base name of the Docker image to use for the container.
+prometheus_docker_image_name: "prom/prometheus"
+
+# Specific Docker image version to use for the container.
+prometheus_docker_image_version: "latest"
+
+# Number of vCPUs to allocate to the container.
+prometheus_docker_cpus: "1"
+
+# Amount of memory to allocate to the container.
+prometheus_docker_memory: "512M"
+
+# Name of the primary network.
+prometheus_docker_network_name: null
+
+# Container aliases on the default network.
+prometheus_docker_network_aliases: null
+
+# List of additional networks to join.
+prometheus_docker_extra_networks: []
+
+prometheus_docker_config_file_path: "/etc/prometheus/prometheus.yml"
+prometheus_docker_volume_name_data: "prometheus-data"
+
+# Whether to mount the Docker socket into the container, which is required to use Docker for
+# service discovery of Docker containers. Only enable if you need this functionality, as it is a
+# potential security risk.
+prometheus_docker_mount_docker_socket: false
+
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+prometheus_docker_extra_labels: {}
+
+# Dictionary of extra key value pairs to set as environment variables on the Docker container.
+prometheus_docker_extra_env: {}
+
+# Dict of host-to-IP mappings, where each host name is a key in the dictionary. Each host name will
+# be added to the container's /etc/hosts file.
+# Instead of an IP address, the special value host-gateway can also be used, which resolves to the
+# host's gateway IP and allows containers to connect to services running on the host.
+prometheus_docker_extra_hosts: {}
+
+# User and group IDs to run the container as.
+prometheus_docker_uid: "1000"
+prometheus_docker_gid: "988"
+
+#####
+# Traefik
+#####
+
+# Enable use of Traefik as a proxy.
+prometheus_docker_available_externally: false
+
+# Host name to use for the Traefik endpoint. Combined with [prometheus_docker_host_domain] to form the
+# FQDN for the endpoint.
+prometheus_docker_host_name: "prometheus"
+
+# Domain name to use for the Traefik endpoint. Combined with [prometheus_docker_host_name] to form the
+# FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
+prometheus_docker_host_domain: "example.com"
+
+#####
+# Ansible
+#####
+
+prometheus_docker_role_label: "prometheus"
+
+#####
+# Prometheus
+#####
+prometheus_docker_http_api_port: "9090"
+
+# Default Prometheus configuration to use if no user-supplied configuration is provided. Should be
+# a dictionary that can be directly converted to YAML and used as a Prometheus configuration file. 
+prometheus_docker_config:
+  global:
+    scrape_interval: 1m
+
+  scrape_configs:
+    # Make Prometheus scrape itself for metrics.
+    - job_name: "prometheus"
+      static_configs:
+        - targets: ["localhost:9090"]

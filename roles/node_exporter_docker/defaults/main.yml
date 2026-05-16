@@ -1,0 +1,47 @@
+---
+#####
+# Container
+#####
+
+# Name of the Docker container.
+node_exporter_docker_name: "node-exporter"
+
+# Base name of the Docker image to use for the container.
+node_exporter_docker_image_name: "quay.io/prometheus/node-exporter"
+
+# Specific Docker image version to use for the container.
+node_exporter_docker_image_version: "latest"
+
+# Number of vCPUs to allocate to the container.
+node_exporter_docker_cpus: "1"
+
+# Amount of memory to allocate to the container.
+node_exporter_docker_memory: "512M"
+
+# List of additional networks to join.
+node_exporter_docker_extra_networks: []
+
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+node_exporter_docker_extra_labels: {}
+
+# Dictionary of extra key value pairs to set as environment variables on the Docker container.
+node_exporter_docker_extra_env: {}
+
+# Dict of host-to-IP mappings, where each host name is a key in the dictionary. Each host name will
+# be added to the container's /etc/hosts file.
+# Instead of an IP address, the special value host-gateway can also be used, which resolves to the
+# host's gateway IP and allows containers to connect to services running on the host.
+node_exporter_docker_extra_hosts: {}
+
+# Extra argumnents to pass to the container at runtime.
+node_exporter_docker_extra_args: []
+
+# Only change this value on systems like macOS where Docker Desktop is used, and the default root
+# propagation mode of "rslave" causes issues when mounting the root filesystem.
+node_exporter_docker_bind_root_propagation: "rslave"
+
+#####
+# Ansible
+#####
+
+node_exporter_docker_role_label: "node-exporter"

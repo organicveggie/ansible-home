@@ -1,0 +1,14 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Get info on node-exporter container
+      community.docker.docker_container_info:
+        name: node-exporter
+      register: _node_exporter_docker_con_info
+
+    - name: Verify container exists
+      ansible.builtin.assert:
+        that: _node_exporter_docker_con_info.exists

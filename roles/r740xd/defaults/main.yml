@@ -173,6 +173,11 @@ r740xd_plex_old_music_path: null
 r740xd_plex_videos_path: null
 
 ###
+### Prometheus
+###
+r740xd_prometheus_host_domain: null
+
+###
 ### Prowlarr
 ###
 r740xd_prowlarr_host_domain: null
@@ -300,7 +305,9 @@ r740xd_samba_user_ids: {}
 ###
 ### Saurron
 ###
+r740xd_saurron_docker_name: "saurron"
 r740xd_saurron_host_domain: null
+r740xd_saurron_http_api_port: "8080"
 
 ###
 ### Seerr

@@ -31,6 +31,7 @@
     - "{{ docker_networks.seerr.name }}"
     - "{{ docker_networks.portainer.name }}"
     - "{{ docker_networks.tautulli.name }}"
+    - "{{ docker_networks.prometheus.name }}"
   loop_control:
     loop_var: __item
 
