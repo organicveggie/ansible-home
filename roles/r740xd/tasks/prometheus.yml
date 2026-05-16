@@ -38,11 +38,15 @@
         # Scrape Docker daemon metrics using the Docker support for Prometheus. See
         # https://docs.docker.com/engine/daemon/prometheus/.
         - job_name: docker
-          # metrics_path defaults to '/metrics'
-          # scheme defaults to 'http'.
           static_configs:
             - targets:
               - "host.docker.internal:9323"
+          # Relabel Docker metrics to have a `docker_` prefix to avoid conflicts with other metrics.
+          metric_relabel_configs:
+          - source_labels: [__name__]
+            regex: '(.*)'
+            target_label: __name__
+            replacement: 'docker_${1}'
         
         # Create a job for scraping metrics from other Docker containers using Docker service
         # discovery. This requires mounting the Docker socket into the container.
