@@ -30,13 +30,14 @@
     saurron_docker_http_api_update: true
     saurron_docker_log_level: "info"
     # saurron_docker_monitor_only: true
-    saurron_docker_network: "{{ docker_networks.saurron.name }}"
+    saurron_docker_network_name: "{{ docker_networks.saurron.name }}"
     saurron_docker_notifications_email_from: "{{ r740xd_saurron_email_from}}"
     saurron_docker_notifications_email_port: "{{ r740xd_saurron_email_server_port }}"
     saurron_docker_notifications_email_server: "{{ r740xd_saurron_email_server }}"
     saurron_docker_notifications_email_to: "{{ r740xd_saurron_email_to }}"
     saurron_docker_notifications_email_user: "{{ r740xd_saurron_email_user }}"
     saurron_docker_notifications_email_password: "{{ r740xd_saurron_email_password }}"
+    # Schedule is in UTC.
     #                         |------------------------ Seconds (0-59)
     #                         |   |-------------------- Minutes (0-59)
     #                         |   |   |---------------- Hours (0-23)
@@ -45,6 +46,6 @@
     #                         |   |   |   |   |   |---- Day of the week (0-6; or SUN to SAT; or 7 for Sunday)
     #                         |   |   |   |   |   |  |- Year (e.g. 2024)
     #                         *   *   *   *   *   *  *
-    saurron_docker_schedule: "*  15   3   *   *   *  *" # 3:15am every day
+    saurron_docker_schedule: "*  15   11  *   *   *  *" # 3:15am (UTC-8) every day
     # saurron_docker_poll_interval: "2h"
   tags: ["setup", "saurron"]
