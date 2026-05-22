@@ -163,6 +163,10 @@
 
 # TODO: Grafana
 
+- name: "Setup Tailscale"
+  ansible.builtin.import_tasks: "tailscale.yml"
+  tags: ["tailscale"]
+
 # Traefik needs to be last so all of the networks exist.
 - name: "Setup Traefik"
   ansible.builtin.import_tasks: "traefik.yml"
