@@ -1,0 +1,106 @@
+---
+- name: "{{ tailscale_docker_role_label }} | Create Tailscale state volume"
+  community.docker.docker_volume:
+    name: "{{ tailscale_docker_state_volume_name }}"
+
+- name: "{{ tailscale_docker_role_label }} | Create Tailscale SSH keys folder"
+  ansible.builtin.file:
+    path: "{{ tailscale_docker_ssh_keys_folder }}"
+    state: "directory"
+    owner: "root"
+    group: "root"
+    mode: "0700"
+
+- name: "{{ tailscale_docker_role_label }} | Create Tailscale authorized_keys file"
+  ansible.builtin.template:
+    src: "templates/authorized_keys.j2"
+    dest: "{{ tailscale_docker_ssh_keys_file }}"
+    owner: "root"
+    group: "root"
+    mode: "0600"
+
+- name: "{{ tailscale_docker_role_label }} | Define container mounts"
+  ansible.builtin.set_fact:
+    _tailscale_docker_mounts:
+      - type: "volume"
+        source: "{{ tailscale_docker_state_volume_name }}"
+        target: "/var/lib/tailscale"
+      - type: "bind"
+        source: "/dev/net/tun"
+        target: "/dev/net/tun"
+
+- name: "{{ tailscale_docker_role_label }} | Define Tailscale environment variables"
+  ansible.builtin.set_fact:
+    _tailscale_docker_env: |
+      {{ tailscale_docker_extra_env | default({}) | combine({
+        "TS_AUTHKEY": "{{ tailscale_docker_authkey }}",
+        "TS_STATE_DIR": "/var/lib/tailscale",
+      }) }}
+
+- name: "{{ tailscale_docker_role_label }} | Define Tailscale advertise_routes }}"
+  ansible.builtin.set_fact:
+    _tailscale_docker_env: |
+      {{ _tailscale_docker_env | default({}) | combine({
+        "TS_EXTRA_ARGS": (tailscale_docker_advertised_routes is defined and tailscale_docker_advertised_routes | length > 0) | ternary("--advertise-routes=" ~ (tailscale_docker_advertised_routes | join(",")), "")
+      }) }}
+
+- name: "{{ tailscale_docker_role_label }} | Create Tailscale Container"
+  community.docker.docker_container:
+    name: "{{ tailscale_docker_name }}"
+    image: "{{ tailscale_docker_image_name }}:{{ tailscale_docker_image_version }}"
+    pull: true
+    hostname: "{{ tailscale_docker_hostname }}"
+    env: "{{ _tailscale_docker_env }}"
+    mounts: "{{ _tailscale_docker_mounts }}"
+    restart_policy: unless-stopped
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: yes
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
+    capabilities:
+      - "NET_ADMIN"
+      - "NET_RAW"
+    sysctls:
+      "net.ipv4.ip_forward": 1
+      "net.ipv6.conf.all.forwarding": 1
+
+- name: "Tailscale | Configure iptables rules for Tailscale SSH access"
+  ansible.builtin.iptables:
+    table: "nat"
+    chain: "POSTROUTING"
+    out_interface: "bond0"
+    jump: "MASQUERADE"
+
+- name: "Tailscale | Create SSH endpoint Container"
+  community.docker.docker_container:
+    name: "{{ tailscale_docker_ssh_name }}"
+    image: "{{ tailscale_docker_ssh_image_name }}:{{ tailscale_docker_ssh_image_version }}"
+    pull: true
+    mounts:
+      - type: "bind"
+        source: "{{ tailscale_docker_ssh_keys_file }}"
+        target: "/root/.ssh/authorized_keys"
+        read_only: true
+    network_mode: "container:tailscale"
+    restart_policy: unless-stopped
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: yes
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
+    command: >
+      bash -c "apt-get update 
+      && apt-get install --no-install-recommends -y openssh-server 
+      && echo 'root:{{ tailscale_docker_root_password }}' | chpasswd
+      && sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+      && echo 'Launching sshd...'
+      && /usr/sbin/sshd -D"

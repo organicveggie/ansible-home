@@ -1,0 +1,9 @@
+---
+- name: "R740xd | Tailscale | Setup Tailscale"
+  ansible.builtin.import_role:
+    name: "tailscale_docker"
+  vars:
+    tailscale_docker_authkey: "{{ vault_tailscale_docker_authkey }}"
+    tailscale_docker_advertised_routes: "{{ vault_tailscale_docker_advertised_routes }}"
+    tailscale_docker_authorized_keys: "{{ vault_tailscale_docker_authorized_keys }}"
+    tailscale_docker_root_password: "{{ vault_tailscale_docker_root_password }}"

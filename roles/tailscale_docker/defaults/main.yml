@@ -1,0 +1,49 @@
+---
+#####
+# Container
+#####
+
+# Name of the Docker container.
+tailscale_docker_name: "tailscale"
+tailscale_docker_ssh_name: "tailscale-ssh"
+
+# Base name of the Docker image to use for the container.
+tailscale_docker_image_name: "tailscale/tailscale"
+tailscale_docker_ssh_image_name: "debian"
+
+# Specific Docker image version to use for the container.
+tailscale_docker_image_version: "latest"
+tailscale_docker_ssh_image_version: "trixie-slim"
+
+# Number of vCPUs to allocate to the container.
+tailscale_docker_cpus: "1"
+
+# Amount of memory to allocate to the container.
+tailscale_docker_memory: "512M"
+
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+tailscale_docker_extra_labels: {}
+
+# Dictionary of extra key value pairs to set as environment variables on the Docker container.
+tailscale_docker_extra_env: {}
+
+tailscale_docker_state_volume_name: "tailscale-state"
+
+#####
+# Ansible
+#####
+
+tailscale_docker_role_label: "tailscale"
+
+#####
+# Tailscale
+#####
+
+tailscale_docker_authkey: null
+tailscale_docker_advertised_routes: []
+tailscale_docker_hostname: "tailscale-host"
+
+tailscale_docker_authorized_keys: []
+tailscale_docker_ssh_keys_folder: "/etc/tailscale-ssh"
+tailscale_docker_ssh_keys_file: "{{ tailscale_docker_ssh_keys_folder }}/authorized_keys"
+tailscale_docker_root_password: null
