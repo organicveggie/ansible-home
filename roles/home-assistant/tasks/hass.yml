@@ -1,0 +1,176 @@
+---
+- name: "{{ hass_docker_role_label }} | Create Home Assistant config volume"
+  community.docker.docker_volume:
+    name: "{{ hass_docker_volume_config_name }}"
+
+- name: "{{ hass_docker_role_label }} | Get info on config volume"
+  community.docker.docker_volume_info:
+    name: "{{ hass_docker_volume_config_name }}"
+  register: "_hass_docker_config_volume_info"
+
+- name: "{{ hass_docker_role_label }} |  Create Home Assistant config folders - Part 1"
+  ansible.builtin.file:
+    path: "{{ _hass_docker_config_volume_info.volume.Mountpoint }}/{{ __item.path }}"
+    state: "directory"
+    mode: "{{ __item.mode }}"
+  with_community.general.filetree: "../templates/hass/"
+  loop_control:
+    loop_var: __item
+  when: "__item.state == 'directory'"
+
+- name: "{{ hass_docker_role_label }} |  Create Home Assistant config folders - Part 2"
+  ansible.builtin.file:
+    path: "{{ _hass_docker_config_volume_info.volume.Mountpoint }}/{{ __item.path }}"
+    state: "directory"
+    mode: "{{ __item.mode }}"
+  with_community.general.filetree: "../files/"
+  loop_control:
+    loop_var: __item
+  when: "__item.state == 'directory'"
+
+- name: "{{ hass_docker_role_label }} |  Copy Home Assistant templated config files"
+  ansible.builtin.template:
+    src: "{{ __item.src }}"
+    dest: "{{ _hass_docker_config_volume_info.volume.Mountpoint }}/{{ __item.path | splitext | first }}"
+    mode: "0600"
+    owner: "root"
+    group: "root"
+  with_community.general.filetree: "../templates/hass/"
+  loop_control:
+    loop_var: __item
+  when: "__item.state == 'file'"
+  register: "_hass_docker_templated_config_files"
+
+- name: "{{ hass_docker_role_label }} |  Copy Home Assistant raw config files"
+  ansible.builtin.copy:
+    src: "{{ __item.src }}"
+    dest: "{{ _hass_docker_config_volume_info.volume.Mountpoint }}/{{ __item.path }}"
+    mode: "0600"
+    owner: "root"
+    group: "root"
+  with_community.general.filetree: "../files/"
+  loop_control:
+    loop_var: __item
+  when: "__item.state == 'file'"
+  register: "_hass_docker_raw_config_files"
+
+- name: "{{ hass_docker_role_label }} |  Create Home Assistant placeholder config files"
+  # ansible.builtin.file:
+  #   path: "{{ _hass_docker_config_volume_info.volume.Mountpoint }}/{{ __item }}"
+  #   mode: "0664"
+  #   owner: "root"
+  #   group: "root"
+  #   state: "touch"
+  ansible.builtin.copy:
+    content: ""
+    dest: "{{ _hass_docker_config_volume_info.volume.Mountpoint }}/{{ __item }}"
+    mode: "0664"
+    owner: "root"
+    group: "root"
+  loop:
+    - "automations.yaml"
+    - "scenes.yaml"
+    - "scripts.yaml"
+  loop_control:
+    loop_var: __item
+
+- name: "{{ hass_docker_role_label }} | Set Docker mount list"
+  ansible.builtin.set_fact:
+    _hass_docker_mount_list:
+      - "source": "{{ hass_docker_volume_config_name }}"
+        "target": "/config"
+        "type": "volume"
+
+- name: "{{ hass_docker_role_label }} | Create placeholder array for default network"
+  ansible.builtin.set_fact:
+    _hass_docker_default_networks:
+      - name: "{{ hass_docker_network_name }}"
+        aliases: "{{ hass_docker_network_aliases | default(omit) }}"
+
+- name: "{{ hass_docker_role_label }} | Define all Docker networks for this container"
+  ansible.builtin.set_fact:
+    _hass_docker_all_networks: >
+      {{ _hass_docker_default_networks + hass_docker_extra_networks }}
+
+- name: "{{ hass_docker_role_label }} | Define common Docker labels"
+  ansible.builtin.set_fact:
+    _hass_docker_labels: "{{ _hass_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  with_items:
+    - key: "traefik.enable"
+      value: "{{ hass_docker_available_externally | default(false, true) | string | lower | ternary('true', 'false') }}"
+
+- name: "{{ hass_docker_role_label }} | Define Docker labels with Traefik enabled"
+  ansible.builtin.set_fact:
+    _hass_docker_labels: "{{ _hass_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  with_items:
+    - key: "traefik.http.routers.hass.rule"
+      value: "Host(`{{ _hass_docker_fqdn }}`)"
+    - key: "traefik.http.routers.hass.entrypoints"
+      value: "http,https"
+    - key: "traefik.http.routers.hass.tls.certresolver"
+      value: "letsencrypt"
+    - key: "traefik.http.routers.hass.tls.domains[0].main"
+      value: "*.{{ hass_docker_host_domain }}"
+    - key: "traefik.http.services.hass.loadbalancer.server.port"
+      value: "{{ hass_docker_web_port }}"
+  when: "hass_docker_available_externally | default(false, true)"
+
+- name: "{{ hass_docker_role_label }} | Define user-supplied extra Docker labels"
+  ansible.builtin.set_fact:
+    _hass_docker_labels: "{{ _hass_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
+  loop: "{{ hass_docker_extra_labels | dict2items }}"
+
+- name: "{{ hass_docker_role_label }} | Attach Matter/Thread device"
+  ansible.builtin.set_fact:
+    _hass_docker_all_devices: "{{ _hass_docker_all_devices | default([]) + [__device] }}"
+  vars:
+    __device: "{{ hass_docker_matter_device }}:/dev/matter:rw"
+  when: "hass_docker_matter_device | default('', true) != ''"
+
+- name: "{{ hass_docker_role_label }} | Attach Zigbee device"
+  ansible.builtin.set_fact:
+    _hass_docker_all_devices: "{{ _hass_docker_all_devices | default([]) + [__device] }}"
+  vars:
+    __device: "{{ hass_docker_zigbee_device }}:/dev/zigbee:rw"
+  when: "hass_docker_zigbee_device | default('', true) != ''"
+
+- name: "{{ hass_docker_role_label }} | Define default Docker environment variables"
+  ansible.builtin.set_fact:
+    _hass_docker_env_vars:
+      "TZ": "{{ hass_home_timezone }}"
+
+- name: "{{ hass_docker_role_label }} | Define user-supplied extra Docker environment variables"
+  ansible.builtin.set_fact:
+    _hass_docker_env_vars: "{{ _hass_docker_env_vars | default({}) |
+      combine({__item.key: __item.value}) }}"
+  loop: "{{ hass_docker_extra_env | dict2items }}"
+  loop_control:
+    loop_var: __item
+
+- name: "Create Home Assistant Docker container" # noqa: args[module]
+  community.docker.docker_container:
+    name: "{{ hass_docker_name }}"
+    image: "{{ hass_docker_image_name }}:{{ hass_docker_image_version }}"
+    pull: true
+    mounts: "{{ _hass_docker_mount_list }}"
+    env: "{{ _hass_docker_env_vars }}"
+    network_mode: "{{ hass_docker_network_name }}"
+    networks: "{{ _hass_docker_all_networks }}"
+    restart_policy: unless-stopped
+    restart: "{{ _hass_docker_templated_config_files.changed or _hass_docker_raw_config_files.changed | default(false) }}"
+    memory: "{{ hass_docker_memory }}"
+    cpus: "{{ hass_docker_cpus }}"
+    devices: "{{ _hass_docker_all_devices | default(omit, true) }}"
+    container_default_behavior: "no_defaults"
+    auto_remove: false
+    detach: true
+    init: false
+    interactive: false
+    paused: false
+    privileged: false
+    read_only: false
+    tty: false
+    labels: "{{ _hass_docker_labels }}"

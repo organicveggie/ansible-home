@@ -1,6 +1,6 @@
 ---
 - name: "Enable Universe repository"
-  ansible.builtin.apt_repository:
+  ansible.builtin.deb822_repository:
     repo: "deb http://archive.ubuntu.com/ubuntu {{ veggie_common_release_name }} universe"
     state: present
     update_cache: true
