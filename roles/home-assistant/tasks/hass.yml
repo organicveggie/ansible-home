@@ -127,14 +127,14 @@
   ansible.builtin.set_fact:
     _hass_docker_all_devices: "{{ _hass_docker_all_devices | default([]) + [__device] }}"
   vars:
-    __device: "{{ hass_docker_matter_device }}:/dev/matter:rw"
+    __device: "{{ hass_docker_matter_device }}:/dev/ttyACM1:rw"
   when: "hass_docker_matter_device | default('', true) != ''"
 
 - name: "{{ hass_docker_role_label }} | Attach Zigbee device"
   ansible.builtin.set_fact:
     _hass_docker_all_devices: "{{ _hass_docker_all_devices | default([]) + [__device] }}"
   vars:
-    __device: "{{ hass_docker_zigbee_device }}:/dev/zigbee:rw"
+    __device: "{{ hass_docker_zigbee_device }}:/dev/ttyACM2:rw"
   when: "hass_docker_zigbee_device | default('', true) != ''"
 
 - name: "{{ hass_docker_role_label }} | Define default Docker environment variables"
