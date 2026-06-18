@@ -45,9 +45,6 @@ hass_docker_network_aliases: null
 # List of additional networks to join.
 hass_docker_extra_networks: []
 
-# Matter/Thread USB stick device path. Example: "/dev/serial/by-id/usb-1234_5678-if00"
-hass_docker_matter_device: null
-
 # Zigbee USB stick device path. Example: "/dev/serial/by-id/usb-1234_5678-if00"
 hass_docker_zigbee_device: null
 

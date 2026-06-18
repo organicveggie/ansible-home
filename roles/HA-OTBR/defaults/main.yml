@@ -49,6 +49,21 @@ hass_otbr_extra_networks: []
 hass_otbr_volume_data_name: "hass-otbr-data"
 
 #####
+# Traefik
+#####
+
+# Enable use of Traefik as a proxy.
+hass_otbr_available_externally: true
+
+# Host name to use for the Traefik endpoint. Combined with [hass_otbr_host_domain] to form the
+# FQDN for the endpoint.
+hass_otbr_host_domain: "example.com"
+
+# Domain name to use for the Traefik endpoint. Combined with [hass_otbr_host_name] to form the
+# FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
+hass_otbr_host_name: "otbr"
+
+#####
 # OpenThread Border Router (OTBR) settings
 #####
 
