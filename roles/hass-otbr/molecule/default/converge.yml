@@ -44,4 +44,4 @@
         state: present
 
   roles:
-    - role: HA-OTBR
+    - role: hass-otbr

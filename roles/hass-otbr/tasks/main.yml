@@ -26,15 +26,17 @@
 - name: "{{ hass_otbr_role_label }} | Define common Docker labels"
   ansible.builtin.set_fact:
     _hass_otbr_labels: "{{ _hass_otbr_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   with_items:
     - key: "traefik.enable"
       value: "{{ hass_otbr_available_externally | default(false, true) | string | lower | ternary('true', 'false') }}"
+  loop_control:
+    loop_var: __item
 
 - name: "{{ hass_otbr_role_label }} | Define Docker labels with Traefik enabled"
   ansible.builtin.set_fact:
     _hass_otbr_labels: "{{ _hass_otbr_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   with_items:
     - key: "traefik.http.routers.hass-otbr.rule"
       value: "Host(`{{ _hass_otbr_fqdn }}`)"
@@ -46,13 +48,17 @@
       value: "*.{{ hass_otbr_host_domain }}"
     - key: "traefik.http.services.hass-otbr.loadbalancer.server.port"
       value: "{{ hass_otbr_web_port }}"
+  loop_control:
+    loop_var: __item
   when: "hass_otbr_available_externally | default(false, true)"
 
 - name: "{{ hass_otbr_role_label }} | Define user-supplied extra Docker labels"
   ansible.builtin.set_fact:
     _hass_otbr_labels: "{{ _hass_otbr_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   loop: "{{ hass_otbr_extra_labels | dict2items }}"
+  loop_control:
+    loop_var: __item
 
 - name: "{{ hass_otbr_role_label }} | Define default Docker environment variables"
   ansible.builtin.set_fact:
@@ -95,8 +101,10 @@
 - name: "{{ hass_otbr_role_label }} | Define user-supplied extra Docker labels"
   ansible.builtin.set_fact:
     _hass_otbr_labels: "{{ _hass_otbr_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   loop: "{{ hass_otbr_extra_labels | dict2items }}"
+  loop_control:
+    loop_var: __item
 
 - name: "{{ hass_otbr_role_label }} | Create Home Assistant OpenThread Border Router container"
   community.docker.docker_container:
@@ -111,7 +119,7 @@
     memory: "{{ hass_otbr_memory }}"
     cpus: "{{ hass_otbr_cpus }}"
     devices:
-      - "{{ hass_otbr_device }}:/dev/ttyACM1:rw"
+      - "{{ hass_otbr_device }}:/dev/ttyUSB0:rw"
     container_default_behavior: "no_defaults"
     auto_remove: false
     detach: true
