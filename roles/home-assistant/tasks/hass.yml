@@ -55,12 +55,6 @@
   register: "_hass_docker_raw_config_files"
 
 - name: "{{ hass_docker_role_label }} |  Create Home Assistant placeholder config files"
-  # ansible.builtin.file:
-  #   path: "{{ _hass_docker_config_volume_info.volume.Mountpoint }}/{{ __item }}"
-  #   mode: "0664"
-  #   owner: "root"
-  #   group: "root"
-  #   state: "touch"
   ansible.builtin.copy:
     content: ""
     dest: "{{ _hass_docker_config_volume_info.volume.Mountpoint }}/{{ __item }}"

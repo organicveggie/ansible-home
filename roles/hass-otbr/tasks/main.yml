@@ -1,8 +1,4 @@
 ---
-- name: "{{ hass_otbr_role_label }} | Build container FQDN"
-  ansible.builtin.set_fact:
-    _hass_otbr_fqdn: "{{ hass_otbr_host_name }}.{{ hass_otbr_host_domain }}"
-
 - name: "{{ hass_otbr_role_label }} | Create OpenThread Border Router data volume"
   community.docker.docker_volume:
     name: "{{ hass_otbr_volume_data_name }}"
@@ -13,44 +9,6 @@
       - "source": "{{ hass_otbr_volume_data_name }}"
         "target": "/config"
         "type": "volume"
-
-- name: "{{ hass_otbr_role_label }} | Define all Docker networks for this container"
-  ansible.builtin.set_fact:
-    _hass_otbr_all_networks: >
-      {{ _hass_otbr_default_networks + hass_otbr_extra_networks }}
-  vars:
-    _hass_otbr_default_networks:
-      - name: "{{ hass_otbr_network_name }}"
-        aliases: "{{ hass_otbr_network_aliases | default(omit, true) }}"
-
-- name: "{{ hass_otbr_role_label }} | Define common Docker labels"
-  ansible.builtin.set_fact:
-    _hass_otbr_labels: "{{ _hass_otbr_labels | default({}) |
-      combine({__item.key: __item.value}) }}"
-  with_items:
-    - key: "traefik.enable"
-      value: "{{ hass_otbr_available_externally | default(false, true) | string | lower | ternary('true', 'false') }}"
-  loop_control:
-    loop_var: __item
-
-- name: "{{ hass_otbr_role_label }} | Define Docker labels with Traefik enabled"
-  ansible.builtin.set_fact:
-    _hass_otbr_labels: "{{ _hass_otbr_labels | default({}) |
-      combine({__item.key: __item.value}) }}"
-  with_items:
-    - key: "traefik.http.routers.hass-otbr.rule"
-      value: "Host(`{{ _hass_otbr_fqdn }}`)"
-    - key: "traefik.http.routers.hass-otbr.entrypoints"
-      value: "http,https"
-    - key: "traefik.http.routers.hass-otbr.tls.certresolver"
-      value: "letsencrypt"
-    - key: "traefik.http.routers.hass-otbr.tls.domains[0].main"
-      value: "*.{{ hass_otbr_host_domain }}"
-    - key: "traefik.http.services.hass-otbr.loadbalancer.server.port"
-      value: "{{ hass_otbr_web_port }}"
-  loop_control:
-    loop_var: __item
-  when: "hass_otbr_available_externally | default(false, true)"
 
 - name: "{{ hass_otbr_role_label }} | Define user-supplied extra Docker labels"
   ansible.builtin.set_fact:
@@ -71,7 +29,7 @@
       "FLOW_CONTROL": "{{ hass_otbr_device_flow_control | default('none', true) | int | string }}"
       "NAT64": "{{ hass_otbr_enable_nat64 | default(false, true) | int | string }}"
       "OTBR_LOG_LEVEL": "{{ hass_otbr_log_level | default('info', true) }}"
-      "OTBR_REST_PORT": "{{ hass_otbr_rest_port |string }}"
+      "OTBR_REST_PORT": "{{ hass_otbr_rest_port | string }}"
       "OTBR_WEB": "{{ hass_otbr_enable_webui | default(false, true) | int | string }}"
       "THREAD_1_4": "{{ hass_otbr_enable_thread_1_4 | default(false, true) | int | string }}"
 
@@ -113,8 +71,7 @@
     pull: true
     mounts: "{{ _hass_otbr_mount_list }}"
     env: "{{ _hass_otbr_env_vars }}"
-    network_mode: "{{ hass_otbr_network_name }}"
-    networks: "{{ _hass_otbr_all_networks }}"
+    network_mode: "host"
     restart_policy: unless-stopped
     memory: "{{ hass_otbr_memory }}"
     cpus: "{{ hass_otbr_cpus }}"

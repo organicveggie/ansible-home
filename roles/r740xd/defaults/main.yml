@@ -119,6 +119,7 @@ r740xd_hass_host_name: "hass"
 r740xd_hass_latitude: null
 r740xd_hass_longitude: null
 r740xd_hass_matter_device: null
+r740xd_hass_otbr_iface: "eth0"
 r740xd_hass_zigbee_device: null
 r740xd_hass_timezone: null
 r740xd_hass_zwave_device: null
