@@ -1,0 +1,6 @@
+---
+- name: "{{ traefik_role_label }} | generate config"
+  include_tasks: "0_config.yml"
+
+- name: "{{ traefik_role_label }} | setup traefik"
+  include_tasks: "1_setup.yml"
