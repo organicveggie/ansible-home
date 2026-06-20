@@ -4,19 +4,19 @@ traefik_int_conf_global:
 
 traefik_int_conf_entryPoints:
     http:
-        address: :80
+        address: ":80"
 
 traefik_int_conf_entryPoints_https:
     https:
-        address: :443
+        address: ":443"
 
 traefik_int_conf_entryPoints_https_redirect:
     http:
         http:
             redirections:
                 entryPoint:
-                    to: https
-                    scheme: https
+                    to: "https"
+                    scheme: "https"
 
 traefik_int_conf_providers:
     docker: {}
@@ -24,29 +24,21 @@ traefik_int_conf_providers:
 traefik_int_conf_log:
     level: "{{ traefik_qs_log_level }}"
 
-
 traefik_int_conf_certificatesResolvers_le:
     letsencrypt:
         acme:
             email: "{{ traefik_qs_https_le_mail }}"
             tlsChallenge: {}
-            storage: /letsencrypt/acme.json
+            storage: "/letsencrypt/acme.json"
 
-
-traefik_conf_global: "{{
-  traefik_int_conf_global | combine(traefik_confkey_global | default({}))
-}}"
-traefik_conf_entryPoints: "{{
-  traefik_int_conf_entryPoints
-  | combine(traefik_confkey_entryPoints
-  | default({}))
-}}"
-traefik_conf_providers: "{{
-  traefik_int_conf_providers | combine(traefik_confkey_providers | default({}))
-}}"
-traefik_conf_log: "{{
-  traefik_int_conf_log | combine(traefik_confkey_log | default({}))
-}}"
+traefik_conf_global: "{{ traefik_int_conf_global
+    | combine(traefik_confkey_global | default({})) }}"
+traefik_conf_entryPoints: "{{ traefik_int_conf_entryPoints
+    | combine(traefik_confkey_entryPoints
+    | default({})) }}"
+traefik_conf_providers: "{{ traefik_int_conf_providers
+    | combine(traefik_confkey_providers | default({})) }}"
+traefik_conf_log: "{{ traefik_int_conf_log | combine(traefik_confkey_log | default({})) }}"
 # traefik_conf_certificatesResolvers: "{{
 #   traefik_int_conf_certificatesResolvers
 #   | combine(traefik_confkey_certificatesResolvers
@@ -54,10 +46,15 @@ traefik_conf_log: "{{
 #   )
 # }}"
 
-
 traefik_volumes:
-    - /etc/localtime:/etc/localtime:ro
+    - "/etc/localtime:/etc/localtime:ro"
     - "/var/run/docker.sock:/var/run/docker.sock:ro"
     - "{{ traefik_dir }}/traefik.yml:/etc/traefik/traefik.yml"
     - "{{ traefik_dir }}/letsencrypt/:/letsencrypt/:rw"
-    - traefik-data:/etc/traefik
+    - "traefik-data:/etc/traefik"
+
+#####
+# Ansible
+#####
+
+traefik_role_label: "traefik2"
