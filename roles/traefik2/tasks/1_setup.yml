@@ -27,6 +27,17 @@
         gateway: "{{ traefik_network_ipam_gateway }}"
         iprange: "{{ traefik_network_ipam_iprange }}"
 
+- name: "{{ traefik_role_label }} | Create placeholder array for default network"
+  ansible.builtin.set_fact:
+    _traefik_default_networks:
+      - name: "{{ traefik_network_name }}"
+        aliases: "{{ traefik_network_aliases | default(omit) }}"
+
+- name: "{{ traefik_role_label }} | Define all Docker networks for this container"
+  ansible.builtin.set_fact:
+    _traefik_all_networks: >
+      {{ _traefik_default_networks + traefik_extra_networks }}
+
 - name: "{{ traefik_role_label }} | setup | start traefik container"
   community.docker.docker_container:
     name: "{{ traefik_container_name }}"
@@ -38,8 +49,8 @@
     env: "{{ traefik_container_environment }}"
     command:
       - "--configFile=/etc/traefik/traefik.yml"
-    networks:
-      - name: "{{ traefik_network_name }}"
+    network_mode: "{{ traefik_network_name }}"
+    networks: "{{ _traefik_all_networks }}"
     networks_cli_compatible: true
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    etc_hosts:
+      host.docker.internal: "host-gateway"
