@@ -10,6 +10,36 @@
         "target": "/config"
         "type": "volume"
 
+- name: "{{ hass_otbr_role_label }} | Build container FQDN"
+  ansible.builtin.set_fact:
+    _hass_otbr_fqdn: "{{ hass_otbr_traefik_host_name }}.{{ hass_otbr_traefik_host_domain }}"
+
+- name: "{{ hass_otbr_role_label }} | Define common Docker labels"
+  ansible.builtin.set_fact:
+    _hass_otbr_labels:
+      "traefik.enable": "{{ hass_otbr_traefik_available_externally | ternary('true', 'false') }}"
+
+- name: "{{ hass_otbr_role_label }} | Define Docker labels with Traefik enabled"
+  ansible.builtin.set_fact:
+    _hass_otbr_labels: "{{ _hass_otbr_labels | default({}) |
+      combine({__item.key: __item.value}) }}"
+  with_items:
+    - key: "traefik.docker.network"
+      value: "host"
+    - key: "traefik.http.routers.otbr.rule"
+      value: "Host(`{{ _hass_otbr_fqdn }}`)"
+    - key: "traefik.http.routers.otbr.entrypoints"
+      value: "http,https"
+    - key: "traefik.http.routers.otbr.tls.certresolver"
+      value: "letsencrypt"
+    - key: "traefik.http.routers.otbr.tls.domains[0].main"
+      value: "*.{{ hass_otbr_traefik_host_domain }}"
+    - key: "traefik.http.services.otbr.loadbalancer.server.port"
+      value: "{{ hass_otbr_web_port }}"
+  loop_control:
+    loop_var: __item
+  when: "hass_otbr_traefik_available_externally | default(false, true)"
+
 - name: "{{ hass_otbr_role_label }} | Define user-supplied extra Docker labels"
   ansible.builtin.set_fact:
     _hass_otbr_labels: "{{ _hass_otbr_labels | default({}) |
@@ -24,7 +54,7 @@
       "AUTOFLASH_FIRMWARE": "{{ hass_otbr_device_autoflash_firmware | default('none', true) | int | string }}"
       "BACKBONE_IF": "{{ hass_otbr_host_backbone_if }}"
       "BAUDRATE": "{{ hass_otbr_device_baudrate | string }}"
-      "DEVICE": "/dev/ttyACM1"
+      "DEVICE": "/dev/ttyUSB0"
       "FIREWALL": "{{ hass_otbr_enable_firewall | default(false, true) | int | string }}"
       "FLOW_CONTROL": "{{ hass_otbr_device_flow_control | default('none', true) | int | string }}"
       "NAT64": "{{ hass_otbr_enable_nat64 | default(false, true) | int | string }}"
@@ -52,18 +82,6 @@
   loop_control:
     loop_var: __item
 
-- name: "{{ hass_otbr_role_label }} | Define common Docker labels"
-  ansible.builtin.set_fact:
-    _hass_otbr_labels: {}
-
-- name: "{{ hass_otbr_role_label }} | Define user-supplied extra Docker labels"
-  ansible.builtin.set_fact:
-    _hass_otbr_labels: "{{ _hass_otbr_labels | default({}) |
-      combine({__item.key: __item.value}) }}"
-  loop: "{{ hass_otbr_extra_labels | dict2items }}"
-  loop_control:
-    loop_var: __item
-
 - name: "{{ hass_otbr_role_label }} | Create Home Assistant OpenThread Border Router container"
   community.docker.docker_container:
     name: "{{ hass_otbr_name }}"
@@ -76,7 +94,8 @@
     memory: "{{ hass_otbr_memory }}"
     cpus: "{{ hass_otbr_cpus }}"
     devices:
-      - "{{ hass_otbr_device }}:/dev/ttyUSB0:rw"
+      - "{{ hass_otbr_device }}:/dev/ttyUSB0"
+      - "/dev/tun:/dev/tun"
     container_default_behavior: "no_defaults"
     auto_remove: false
     detach: true

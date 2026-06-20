@@ -119,7 +119,15 @@ r740xd_hass_host_name: "hass"
 r740xd_hass_latitude: null
 r740xd_hass_longitude: null
 r740xd_hass_matter_device: null
+r740xd_hass_otbr_auto_update_firmware: false
+r740xd_hass_otbr_device_baudrate: "460800"
+r740xd_hass_otbr_device_flow_control: false
+r740xd_hass_otbr_enable_firewall: true
+r740xd_hass_otbr_enable_nat64: true
+r740xd_hass_otbr_enable_thread_1_4: false
+r740xd_hass_otbr_enable_webui: true
 r740xd_hass_otbr_iface: "eth0"
+r740xd_hass_otbr_log_level: "info"
 r740xd_hass_zigbee_device: null
 r740xd_hass_timezone: null
 r740xd_hass_zwave_device: null
