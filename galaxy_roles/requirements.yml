@@ -1,8 +1,4 @@
 ---
-- src: "https://github.com/organicveggie/ansible.traefik"
-  name: "organicveggie.ansible-traefik"
-  version: "2.0.0"
-
 - src: "https://github.com/organicveggie/ansible-role-certbot-route53"
   name: "organicveggie.certbot-route53"
   version: "1.0.0"
