@@ -1,7 +1,71 @@
 ---
-###
-### Home Assistant
-###
+#####
+# Container settings
+#####
+
+# Name of the Docker container.
+hass_docker_name: "hass"
+
+# Base name of the Docker image to use for the container.
+hass_docker_image_name: "homeassistant/home-assistant"
+
+# Specific Docker image version to use for the container.
+hass_docker_image_version: "stable"
+
+# Number of vCPUs to allocate to the container.
+hass_docker_cpus: "2"
+
+# Amount of memory to allocate to the container.
+hass_docker_memory: "2GB"
+
+# TCP port number to expose to handle HTTP traffic.
+hass_docker_web_port: "8123"
+
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+hass_docker_extra_labels: {}
+
+# Dictionary of extra key value pairs to set as environment variables on the Docker container.
+hass_docker_extra_env: {}
+
+# Dict of host-to-IP mappings, where each host name is a key in the dictionary. Each host name will
+# be added to the container's /etc/hosts file.
+# Instead of an IP address, the special value host-gateway can also be used, which resolves to the
+# host's gateway IP and allows containers to connect to services running on the host.
+hass_docker_extra_hosts: {}
+
+# Name of the Docker volume to create to store config files. 
+hass_docker_volume_config_name: "hass-config"
+
+# Name of the primary network.
+hass_docker_network_name: null
+
+# Container aliases on the default network.
+hass_docker_network_aliases: null
+
+# List of additional networks to join.
+hass_docker_extra_networks: []
+
+# Zigbee USB stick device path. Example: "/dev/serial/by-id/usb-1234_5678-if00"
+hass_docker_zigbee_device: null
+
+#####
+# Traefik
+#####
+
+# Enable use of Traefik as a proxy.
+hass_docker_available_externally: true
+
+# Host name to use for the Traefik endpoint. Combined with [hass_docker_host_domain] to form the
+# FQDN for the endpoint.
+hass_docker_host_domain: "example.com"
+
+# Domain name to use for the Traefik endpoint. Combined with [hass_docker_host_name] to form the
+# FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
+hass_docker_host_name: "hass"
+
+#####
+# Home Assistant
+#####
 
 # Latitude of the location where Home Assistant is running.
 hass_home_latitude: "38.8977"
@@ -15,33 +79,16 @@ hass_home_name: "home"
 # Default system of units in the location where Home Assistant is running.
 hass_home_units: "us_customary"
 
-hass_host_domain: "example.com"
-hass_host_name: "hass"
-
 # Timeone of the location where Home Assistant is running.
 hass_home_timezone: "America/New_York"
 
-# Name of the Docker volume to create to store config files.
-hass_volume_config_name: "hass-config"
+# Subnet of the Docker network that Home Assistant is connected to, used for setting trusted proxies
+# in Home Assistant's configuration.
+hass_network_subnet: "192.168.1.0/24"
 
-# ZWave USB stick
-hass_zwave_device: "/dev/serial/by-id/usb-1234_5678-if00"
-
-# Use Docker volumes
-hass_use_volumes: "true"
-
-# TCP port number to expose to handle HTTP traffic.
-hass_web_port: "8123"
-
-### Network
-hass_network_internal: "false"
-hass_network_name: "hass"
-hass_network_subnet: "172.1.2.0/24"
-hass_network_gateway: "172.1.2.1"
-
-###
-### Ecowit
-###
+#####
+# Ecowit
+#####
 hass_ecowitt_name: "ecowitt-proxy"
 hass_ecowitt_docker_port: "8181"
 hass_ecowitt_docker_image_name: "ghcr.io/organicveggie/home-assistant-ecowitt-proxy"
@@ -52,17 +99,23 @@ hass_ecowitt_docker_cpus: "1"
 hass_ecowitt_hass_auth_token: "ABCD"
 hass_ecowitt_hass_webhook_id: "1234"
 
-###
-### Devices / Entities
-###
+#####
+# Devices / Entities
+#####
 hass_espresso_machine_device_id: "d94e677d5e0eadbce78ceb5b66116f66"
 hass_espresso_machine_entity_id: "switch.plug_in_appliance_module"
 
-###
-### HVAC
-###
+#####
+# HVAC
+#####
 hass_hvac_thermostat_device_id: "2261a489df17ce2f6c6bf1b58cb582f4"
 hass_hvac_disable_temp_heat: "55"
 hass_hvac_disable_temp_cool: "85"
 hass_hvac_enable_temp_heat: "68"
 hass_hvac_enable_temp_cool: "75"
+
+#####
+# Ansible
+#####
+
+hass_docker_role_label: "hass"

@@ -30,21 +30,46 @@
     - "r740xd_hass_zwave_device is defined"
     - "r740xd_hass_zwave_device not in (None, omit)"
 
+- name: "hass | Get info on data volume"
+  community.docker.docker_volume_info:
+    name: "{{ r740xd_traefik_data_volume_name }}"
+  register: "_traefik_data_volume_info"
+
+- name: "hass | Setup OpenThread Border Router container"
+  ansible.builtin.import_role:
+    name: "hass-otbr"
+  vars:
+    hass_otbr_auto_update_firmware: "{{ r740xd_hass_otbr_auto_update_firmware }}"
+    hass_otbr_device: "{{ r740xd_hass_matter_device }}"
+    hass_otbr_device_baudrate: "{{ r740xd_hass_otbr_device_baudrate }}"
+    hass_otbr_device_flow_control: "{{ r740xd_hass_otbr_device_flow_control }}"
+    hass_otbr_enable_firewall: "{{ r740xd_hass_otbr_enable_firewall }}"
+    hass_otbr_enable_nat64: "{{ r740xd_hass_otbr_enable_nat64 }}"
+    hass_otbr_enable_thread_1_4: "{{ r740xd_hass_otbr_enable_thread_1_4 }}"
+    hass_otbr_enable_webui: "{{ r740xd_hass_otbr_enable_webui }}"
+    hass_otbr_host_backbone_if: "{{ r740xd_hass_otbr_iface }}"
+    hass_otbr_log_level: "{{ r740xd_hass_otbr_log_level }}"
+    hass_otbr_traefik_available_externally: false
+    hass_otbr_traefik_host_domain: "{{ r740xd_hass_host_domain }}"
+    hass_otbr_traefik_dynamic_folder: "{{ _traefik_data_volume_info.volume.Mountpoint }}/dynamic"
+  when:
+    - "r740xd_hass_matter_device is defined"
+    - "r740xd_hass_matter_device not in (None, omit)"
+
 - name: "hass | Setup Home Assistant container"
   ansible.builtin.import_role:
     name: "home-assistant"
   vars:
-    hass_network_aliases:
+    hass_docker_host_domain: "{{ r740xd_hass_host_domain }}"
+    hass_docker_host_name: "{{ r740xd_hass_host_name }}"
+    hass_docker_zigbee_device: "{{ r740xd_hass_zigbee_device }}"
+    hass_docker_network_aliases:
       - "{{ _nas_hass_fqdn }}"
     hass_docker_network_name: "{{ docker_networks.hass.name }}"
-    hass_network_subnet: "{{ docker_networks.hass.subnet }}"
     hass_home_latitude: "{{ r740xd_hass_latitude }}"
     hass_home_longitude: "{{ r740xd_hass_longitude }}"
-    hass_host_domain: "{{ r740xd_hass_host_domain }}"
-    hass_host_name: "{{ r740xd_hass_host_name }}"
     hass_home_timezone: "{{ r740xd_hass_timezone }}"
-    hass_zwave_device: "{{ r740xd_hass_zwave_device }}"
-    hass_network_name: "{{ docker_networks.hass.name }}"
+    hass_network_subnet: "{{ docker_networks.hass.subnet }}"
     hass_ecowitt_hass_auth_token: "{{ r740xd_hass_ecowitt_hass_auth_token | default(omit) }}"
     hass_ecowitt_hass_webhook_id: "{{ r740xd_hass_ecowitt_hass_webhook_id | default(omit) }}"
     hass_ecowitt_hass_url: "{{ _nas_hass_ecowitt_url }}"

@@ -1,0 +1,27 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+
+  vars:
+    hass_otbr_name: "hass-otbr-test"
+    hass_otbr_volume_data_name: "hass-otbr-data-test"
+
+  tasks:
+    - name: Get info on data volume
+      community.docker.docker_volume_info:
+        name: "{{ hass_otbr_volume_data_name }}"
+      register: data_vol_info
+
+    - name: Verify data volume exists
+      ansible.builtin.assert:
+        that: data_vol_info.exists
+
+    - name: Get info on Home Assistant container
+      community.docker.docker_container_info:
+        name: "{{ hass_otbr_name }}"
+      register: container_info
+
+    - name: Verify container exists
+      ansible.builtin.assert:
+        that: container_info.exists

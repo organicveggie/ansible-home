@@ -1,0 +1,49 @@
+---
+- name: "{{ hass_docker_role_label }} |  Define Hass Ecowitt Proxy fqdn"
+  ansible.builtin.set_fact:
+    _hass_ecowitt_fqdn: "ecowitt.{{ hass_docker_host_domain }}"
+
+- name: "{{ hass_docker_role_label }} |  Create Ecowitt to Home Assistant Proxy Docker container" # noqa: args[module]
+  community.docker.docker_container:
+    name: "{{ hass_ecowitt_name }}"
+    image: "{{ hass_ecowitt_docker_image_name }}:{{ hass_ecowitt_docker_image_version }}"
+    pull: true
+    env:
+      "HASS_URL": "{{ _hass_docker_url }}"
+      "HASS_AUTH_TOKEN": "{{ hass_ecowitt_hass_auth_token }}"
+      "HASS_WEBHOOK_ID": "{{ hass_ecowitt_hass_webhook_id }}"
+      "ECOWITT_PROXY_LOGLEVEL": "INFO"
+      "SERVER_PORT": "{{ hass_ecowitt_docker_port }}"
+      "TZ": "{{ hass_home_timezone }}"
+    network_mode: "{{ hass_docker_network_name }}"
+    restart_policy: unless-stopped
+    memory: "{{ hass_ecowitt_docker_memory }}"
+    cpus: "{{ hass_ecowitt_docker_cpus }}"
+    container_default_behavior: "no_defaults"
+    auto_remove: false
+    detach: true
+    init: false
+    interactive: false
+    paused: false
+    privileged: false
+    read_only: false
+    tty: false
+    labels:
+      "traefik.enable": "true"
+      "traefik.docker.network": "{{ hass_docker_network_name }}"
+      # HTTP router
+      "traefik.http.routers.hass_ecowitt.rule": "Host(`{{ _hass_ecowitt_fqdn }}`)"
+      "traefik.http.routers.hass_ecowitt.entrypoints": "http"
+      "traefik.http.routers.hass_ecowitt.priority": "1000"
+      # HTTPS router
+      "traefik.http.routers.hass_ecowitt_secure.rule": "Host(`{{ _hass_ecowitt_fqdn }}`)"
+      "traefik.http.routers.hass_ecowitt_secure.entrypoints": "https"
+      "traefik.http.routers.hass_ecowitt_secure.priority": "1000"
+      "traefik.http.routers.hass_ecowitt_secure.service": "hass_ecowitt"
+      "traefik.http.routers.hass_ecowitt_secure.tls.certresolver": "letsencrypt"
+      "traefik.http.routers.hass_ecowitt_secure.tls.domains[0].main": "*.{{ hass_docker_host_domain }}"
+      # Service
+      "traefik.http.services.hass_ecowitt.loadbalancer.server.port": "{{ hass_ecowitt_docker_port }}"
+      # "traefik.http.services.hass_ecowitt.loadbalancer.healthcheck.path": "/health"
+      # "traefik.http.services.hass_ecowitt.loadbalancer.healthcheck.scheme": "http"
+      # "traefik.http.services.hass_ecowitt.loadbalancer.healthcheck.interval": "10s"

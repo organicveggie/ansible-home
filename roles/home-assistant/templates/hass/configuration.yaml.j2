@@ -8,7 +8,7 @@ homeassistant:
   time_zone: !secret home_time_zone
   allowlist_external_dirs:
     - "/config"
-  internal_url: "{{ _hass_url }}"
+  internal_url: "{{ _hass_docker_url }}"
   packages: !include_dir_named packages
 
 http:

@@ -115,6 +115,21 @@
       - "Extra networks: {{ _nas_traefik_extra_networks | default([]) }}"
       - "All ports: {{ _nas_traefik_all_ports | default([]) }}"
 
+- name: "traefik | Create Traefik data volume"
+  community.docker.docker_volume:
+    name: "{{ r740xd_traefik_data_volume_name }}"
+
+- name: "traefik | Get info on data volume"
+  community.docker.docker_volume_info:
+    name: "{{ r740xd_traefik_data_volume_name }}"
+  register: "_traefik_data_volume_info"
+
+- name: "traefik | Create dynamic configuration directory"
+  ansible.builtin.file:
+    path: "{{ _traefik_data_volume_info.volume.Mountpoint }}/dynamic"
+    state: "directory"
+    mode: "0755"
+
 - name: "traefik | Setup Traefik"
   ansible.builtin.import_role:
     name: "traefik2"
@@ -150,6 +165,13 @@
             resolvers:
               - "1.1.1.1:53" # Use external DNS to verify TXT record changes
               - "8.8.8.8:53" # Use external DNS to verify TXT record changes
+    traefik_confkey_providers:
+      docker:
+        defaultRule: "Host(`{{ _nas_traefik_fqdn }}`)"
+        exposedByDefault: false
+      file:
+        directory: "/etc/traefik/dynamic"
+        watch: true
     traefik_labels:
       traefik.enable: "true"
       # Dashboard
