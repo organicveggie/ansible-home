@@ -374,6 +374,7 @@ letsencrypt_ca_server_staging: "https://acme-staging-v02.api.letsencrypt.org/dir
 letsencrypt_ca_server_prod: "https://acme-v02.api.letsencrypt.org/directory"
 r740xd_traefik_letsencrypt_ca_server: "{{ letsencrypt_ca_server_prod }}"
 r740xd_traefik_letsencrypt_email: null
+r740xd_traefik_data_volume_name: "traefik-data"
 
 ###
 ### Traefik3 Controller

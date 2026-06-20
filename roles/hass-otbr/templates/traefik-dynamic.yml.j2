@@ -1,0 +1,19 @@
+---
+http:
+  routers:
+    hass-otbr-router:
+      rule: "Host(`{{ _hass_otbr_fqdn}}`)"
+      entryPoints:
+        - https
+        - http
+      service: hass-otbr-service
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: "*.{{ hass_otbr_traefik_host_domain}}"
+
+  services:
+    hass-otbr-service:
+      loadBalancer:
+        servers:
+          - url: "http://host.docker.internal:{{ hass_otbr_web_port}}"

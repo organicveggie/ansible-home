@@ -14,6 +14,12 @@
   ansible.builtin.set_fact:
     _hass_otbr_fqdn: "{{ hass_otbr_traefik_host_name }}.{{ hass_otbr_traefik_host_domain }}"
 
+- name: "{{ hass_otbr_role_label }} | Create Traefik dynamic configuration"
+  ansible.builtin.template:
+    src: "templates/traefik-dynamic.yml.j2"
+    dest: "{{ hass_otbr_traefik_dynamic_folder }}/hass-otbr.yml"
+    mode: "0644"
+
 - name: "{{ hass_otbr_role_label }} | Define common Docker labels"
   ansible.builtin.set_fact:
     _hass_otbr_labels:
@@ -36,6 +42,9 @@
       value: "*.{{ hass_otbr_traefik_host_domain }}"
     - key: "traefik.http.services.otbr.loadbalancer.server.port"
       value: "{{ hass_otbr_web_port }}"
+    # Explicitly override the server URL array to bypass Traefik v2's broken IP auto-discovery.
+    - key: "traefik.http.services.hass_otbr.loadbalancer.servers[0].url"
+      value: "http://host.docker.internal:{{ hass_otbr_web_port }}"
   loop_control:
     loop_var: __item
   when: "hass_otbr_traefik_available_externally | default(false, true)"

@@ -54,6 +54,8 @@ hass_otbr_traefik_host_name: "otbr"
 # FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
 hass_otbr_traefik_host_domain: "example.com"
 
+hass_otbr_traefik_dynamic_folder: null
+
 #####
 # OpenThread Border Router (OTBR) settings
 #####

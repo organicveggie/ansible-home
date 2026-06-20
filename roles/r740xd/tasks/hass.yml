@@ -30,6 +30,11 @@
     - "r740xd_hass_zwave_device is defined"
     - "r740xd_hass_zwave_device not in (None, omit)"
 
+- name: "hass | Get info on data volume"
+  community.docker.docker_volume_info:
+    name: "{{ r740xd_traefik_data_volume_name }}"
+  register: "_traefik_data_volume_info"
+
 - name: "hass | Setup OpenThread Border Router container"
   ansible.builtin.import_role:
     name: "hass-otbr"
@@ -44,8 +49,9 @@
     hass_otbr_enable_webui: "{{ r740xd_hass_otbr_enable_webui }}"
     hass_otbr_host_backbone_if: "{{ r740xd_hass_otbr_iface }}"
     hass_otbr_log_level: "{{ r740xd_hass_otbr_log_level }}"
-    hass_otbr_traefik_available_externally: true
+    hass_otbr_traefik_available_externally: false
     hass_otbr_traefik_host_domain: "{{ r740xd_hass_host_domain }}"
+    hass_otbr_traefik_dynamic_folder: "{{ _traefik_data_volume_info.volume.Mountpoint }}/dynamic"
   when:
     - "r740xd_hass_matter_device is defined"
     - "r740xd_hass_matter_device not in (None, omit)"
