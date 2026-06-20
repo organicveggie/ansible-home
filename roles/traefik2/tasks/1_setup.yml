@@ -45,3 +45,5 @@
     networks:
       - name: '{{ traefik_network_name }}'
     networks_cli_compatible: true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
