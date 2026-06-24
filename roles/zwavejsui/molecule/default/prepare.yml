@@ -1,0 +1,18 @@
+---
+- name: Prepare test environment
+  hosts: all
+
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 600
+      when: ansible_facts["os_family"] == 'Debian'
+
+    - name: Create a fake ttyUSB0 serial device
+      ansible.builtin.shell: |
+        apt-get update && apt-get install -y socat
+        # Runs socat in the background creating a symlink to a pseudo-terminal
+        nohup socat PTY,link=/dev/ttyUSB0 PTY,link=/dev/ttyUSB99 > /dev/null 2>&1 &
+      async: 10
+      poll: 0

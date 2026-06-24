@@ -1,0 +1,39 @@
+---
+dependency:
+  name: galaxy
+  options:
+    requirements-file: molecule/default/requirements.yml
+    role-file: molecule/default/requirements.yml
+
+driver:
+  name: docker
+
+platforms:
+  - name: instance
+    image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2404}-ansible:latest"
+    # image: "ghcr.io/organicveggie/docker-ansible:0.2-py3.12-trixie"
+    # image: "ghcr.io/organicveggie/docker-ansible:py3.12-noble-latest"
+    # image: "sha256:78de79285b80f95a8c55d7db84d60aa7e64895c590e2ca35c37127b3d9a5c698"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns: host
+    privileged: true
+    pre_build_image: true
+    # FORCE CORRECT ENVIRONMENT FOR NON-INTERACTIVE PYTHON
+    env:
+      LANG: en_US.UTF-8
+      LC_ALL: en_US.UTF-8
+
+provisioner:
+  name: ansible
+  log: true
+  env:
+    ANSIBLE_ROLES_PATH: "$MOLECULE_EPHEMERAL_DIRECTORY/roles:${HOME}/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:$MOLECULE_PROJECT_DIRECTORY/.."
+  config_options:
+    defaults:
+      pipelining: false            # Disables dangerous STDIN streaming
+      remote_tmp: /tmp/.ansible    # Moves the execution directory out of /root
+
+verifier:
+  name: ansible

@@ -81,6 +81,7 @@
         r740xd_hass_pgsql_init_tempates_dir: "{{ homeassistant_pgsql_init_tempates_dir }}"
         r740xd_hass_timezone: "{{ home_timezone }}"
         r740xd_hass_zigbee_device: "{{ vault_homeassistant_zigbee_device }}"
+        r740xd_hass_zwave_device: "{{ vault_homeassistant_zwave_device }}"
         # InfluxDB
         r740xd_influxdb_host_domain: "{{ veggie_nas_domain_name }}"
         # Kometa

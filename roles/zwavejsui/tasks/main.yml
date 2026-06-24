@@ -1,0 +1,101 @@
+---
+- name: "{{ zwavejsui_role_name }} |  Create Docker volume"
+  community.docker.docker_volume:
+    name: "{{ zwavejsui_volume_name }}"
+
+- name: "{{ zwavejsui_role_name }} | Set Docker mount list for volume mounts"
+  ansible.builtin.set_fact:
+    _zwavejsui_mount_list:
+      - source: "{{ zwavejsui_volume_name }}"
+        target: "/usr/src/app/store"
+        type: "volume"
+
+- name: "{{ zwavejsui_role_name }} | Create placeholder array for default network"
+  ansible.builtin.set_fact:
+    _zwavejsui_default_networks:
+      - name: "{{ zwavejsui_network }}"
+        aliases: "{{ zwavejsui_network_aliases | default(omit) }}"
+
+- name: "{{ zwavejsui_role_name }} | Define all Docker networks for this container"
+  ansible.builtin.set_fact:
+    _zwavejsui_all_networks: >
+      {{ _zwavejsui_default_networks + zwavejsui_extra_networks }}
+
+- name: "{{ zwavejsui_role_name }} | Build container FQDN"
+  ansible.builtin.set_fact:
+    _zwavejsui_fqdn: "{{ zwavejsui_host_name }}.{{ zwavejsui_host_domain }}"
+
+- name: "{{ zwavejsui_role_name }} | Define common Docker labels"
+  ansible.builtin.set_fact:
+    _zwavejsui_labels:
+      "traefik.enable": "{{ zwavejsui_traefik_available_externally | ternary('true', 'false') }}"
+
+- name: "{{ zwavejsui_role_name }} | Define Docker labels with Traefik enabled"
+  ansible.builtin.set_fact:
+    _zwavejsui_labels: "{{ _zwavejsui_labels | default({}) |
+      combine({__item.key: __item.value}) }}"
+  with_items:
+    - key: "traefik.docker.network"
+      value: "host"
+    - key: "traefik.http.routers.zwavejsui.rule"
+      value: "Host(`{{ _zwavejsui_fqdn }}`)"
+    - key: "traefik.http.routers.zwavejsui.entrypoints"
+      value: "http,https"
+    - key: "traefik.http.routers.zwavejsui.tls.certresolver"
+      value: "letsencrypt"
+    - key: "traefik.http.routers.zwavejsui.tls.domains[0].main"
+      value: "*.{{ zwavejsui_host_domain }}"
+    - key: "traefik.http.services.zwavejsui.loadbalancer.server.port"
+      value: "{{ zwavejsui_web_port }}"
+    - key: "traefik.tcp.routers.zwavejsui.entrypoints"
+      value: "zwavejsui"
+    - key: "traefik.tcp.routers.zwavejsui.rule"
+      value: "HostSNI(`*`)"
+    - key: "traefik.tcp.routers.zwavejsui.service"
+      value: "zwavejsui"
+    - key: "traefik.tcp.services.zwavejsui.loadbalancer.server.port"
+      value: "{{ zwavejsui_ws_port }}"
+  loop_control:
+    loop_var: __item
+  when: "zwavejsui_traefik_available_externally | default(false, true)"
+
+- name: "Print ZWave device"
+  ansible.builtin.debug:
+    msg: "ZWave device: {{ zwavejsui_zwave_device }}"
+
+- name: "Create zwave-js-ui Docker container"
+  community.docker.docker_container:
+    name: "{{ zwavejsui_name }}"
+    image: "{{ zwavejsui_image_name }}:{{ zwavejsui_image_version }}"
+    pull: true
+    mounts: "{{ _zwavejsui_mount_list }}"
+    env:
+      TZ: "{{ zwavejsui_timezone }}"
+    network_mode: "{{ zwavejsui_network }}"
+    networks: "{{ _zwavejsui_all_networks }}"
+    restart_policy: unless-stopped
+    memory: "{{ zwavejsui_memory }}"
+    cpus: "{{ zwavejsui_cpus }}"
+    devices:
+      - "{{ zwavejsui_zwave_device }}:/dev/zwave"
+    healthcheck:
+      interval: "{{ zwavejsui_healthcheck_interval }}"
+      timeout: "{{ zwavejsui_healthcheck_timeout }}"
+      start_period: "{{ zwavejsui_healthcheck_start_period }}"
+      retries: "{{ zwavejsui_healthcheck_retries }}"
+      test: >
+        wget --no-verbose --spider --no-check-certificate --header "Accept: text/plain"
+        http://localhost:{{ zwavejsui_web_port }}/health || exit 1
+    ports:
+      - "{{ zwavejsui_web_port }}:8091"
+      - "{{ zwavejsui_ws_port }}:3000"
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: yes
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
+    labels: "{{ zwavejsui_labels }}"

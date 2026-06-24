@@ -96,13 +96,13 @@
           ansible.builtin.set_fact:
             _nas_traefik_extra_networks: "{{ _nas_traefik_extra_networks | default([]) + [{'name': docker_networks.hass.name}] }}"
 
-        # - name: "traefik | Enable Z-Wave JS UI ports"
-        #   ansible.builtin.set_fact:
-        #     _nas_traefik_extra_ports: "{{ _nas_traefik_extra_ports | default([]) + r740xd_traefik_zwavejsui_ports }}"
+        - name: "traefik | Enable Z-Wave JS UI ports"
+          ansible.builtin.set_fact:
+            _nas_traefik_extra_ports: "{{ _nas_traefik_extra_ports | default([]) + r740xd_traefik_zwavejsui_ports }}"
 
-        # - name: "traefik | Enable Z-Wave JS UI entrypoints"
-        #   ansible.builtin.set_fact:
-        #     _nas_traefik_entrypoints: "{{ _nas_traefik_entrypoints | default({}) | combine(r740xd_traefik_zwavejsui_entrypoints) }}"
+        - name: "traefik | Enable Z-Wave JS UI entrypoints"
+          ansible.builtin.set_fact:
+            _nas_traefik_entrypoints: "{{ _nas_traefik_entrypoints | default({}) | combine(r740xd_traefik_zwavejsui_entrypoints) }}"
 
 - name: "traefik | Define all ports"
   ansible.builtin.set_fact:
