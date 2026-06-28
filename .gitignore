@@ -10,3 +10,6 @@
 py38
 temp.log
 vault-passwd
+.devcontainer/devcontainer-lock.json
+.devcontainer/devcontainer.json
+.devcontainer/post-create.sh
