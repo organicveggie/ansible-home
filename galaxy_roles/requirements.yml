@@ -47,14 +47,11 @@
   version: "1.0.2"
 
 - src: "https://github.com/organicveggie/ansible.tautulli_docker"
+  name: "organicveggie.tautulli_docker"
   version: "1.1.0"
 
 - src: "organicveggie.vagrant"
   version: "1.0.0"
-
-- src: "https://github.com/organicveggie/ansible.zwavejsui"
-  name: "organicveggie.zwavejsui"
-  version: "1.0.1"
 
 - src: "stefangweichinger.ansible_rclone"
 
