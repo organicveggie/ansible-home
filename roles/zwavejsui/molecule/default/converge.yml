@@ -41,7 +41,7 @@
 
     - name: Create Docker network
       community.docker.docker_network:
-        name: "zwavejsui-container-test"
+        name: "zwavejsui-network-test"
         state: present
 
   roles:

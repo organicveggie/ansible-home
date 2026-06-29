@@ -86,7 +86,7 @@ zwavejsui_network_ipv6: null
 #####
 
 # Enable use of Traefik as a proxy.
-zwavejsui_traefik_available_externally: "true"
+zwavejsui_traefik_available_externally: true
 
 # Host name to use for the Traefik endpoint. Combined with [zwavejsui_host_domain] to form
 # the FQDN for the endpoint.

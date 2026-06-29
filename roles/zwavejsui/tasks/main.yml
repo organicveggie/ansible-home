@@ -23,7 +23,7 @@
 
 - name: "{{ zwavejsui_role_name }} | Build container FQDN"
   ansible.builtin.set_fact:
-    _zwavejsui_fqdn: "{{ zwavejsui_host_name }}.{{ zwavejsui_host_domain }}"
+    _zwavejsui_fqdn: "{{ zwavejsui_hostname }}.{{ zwavejsui_host_domain }}"
 
 - name: "{{ zwavejsui_role_name }} | Define common Docker labels"
   ansible.builtin.set_fact:
@@ -98,4 +98,4 @@
     privileged: no
     read_only: no
     tty: no
-    labels: "{{ zwavejsui_labels }}"
+    labels: "{{ _zwavejsui_labels }}"
