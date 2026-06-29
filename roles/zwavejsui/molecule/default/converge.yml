@@ -35,9 +35,6 @@
     - name: Install Docker
       ansible.builtin.include_role:
         name: geerlingguy.docker
-      vars:
-        # Empty out the old package list so the broken apt loop never fires
-        docker_old_packages: []
 
     - name: Create Docker network
       community.docker.docker_network:
