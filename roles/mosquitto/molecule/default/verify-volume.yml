@@ -7,4 +7,3 @@
 - name: "Verify {{ __mosquitto_volume_name }} volume exists"
   ansible.builtin.assert:
     that: _mosquitto_volume_info.exists
-

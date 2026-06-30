@@ -20,4 +20,3 @@
     mosquitto_docker_listen_port: "{{ r740xd_mosquitto_http_port }}"
     mosquitto_docker_ws_listen_port: "{{ r740xd_mosquitto_ws_port }}"
   tags: ["setup", "mosquitto"]
-
