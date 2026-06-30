@@ -160,6 +160,14 @@ r740xd_lidarr_cpus: "3"
 r740xd_lidarr_host_domain: null
 
 ###
+### Mosquitto
+###
+r740xd_mosquitto_docker_name: "mosquitto"
+r740xd_mosquitto_host_domain: null
+r740xd_mosquitto_http_port: "1883"
+r740xd_mosquitto_ws_port: "9001"
+
+###
 ### Navidrome
 ###
 r740xd_navidrome_host_name: "navi"

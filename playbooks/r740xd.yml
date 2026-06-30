@@ -95,6 +95,8 @@
         r740xd_kometa_trakt: "{{ kometa_trakt }}"
         # Lidarr
         r740xd_lidarr_host_domain: "{{ veggie_base_domain_name }}"
+        # Mosquitto
+        r740xd_mosquitto_host_domain: "{{ vault_veggie_home_domain }}"
         # Navidrome
         r740xd_navidrome_host_domain: "{{ veggie_base_domain_name }}"
         r740xd_navidrome_lastfm_apikey: "{{ navidrome_lastfm_apikey }}"

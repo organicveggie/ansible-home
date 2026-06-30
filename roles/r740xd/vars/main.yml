@@ -149,6 +149,14 @@ r740xd_traefik_zwavejsui_entrypoints:
     address: ":3000"
 r740xd_traefik_zwavejsui_ports:
   - "3000:3000"
+r740xd_traefik_mosquitto_ports:
+  - "1883:1883"
+  - "9001:9001"
+r740xd_traefik_mosquitto_entrypoints:
+  mosquitto:
+    address: ":1883"
+  mosquitto_ws:
+    address: ":9001"
 r740xd_traefik_syncthings_entrypoints:
   syncthing_tcp:
     address: ":22000"
