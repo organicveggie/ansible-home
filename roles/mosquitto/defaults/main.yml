@@ -1,0 +1,91 @@
+---
+#####
+# Container
+#####
+
+# Name of the Docker container.
+mosquitto_docker_name: "mosquitto"
+
+# Base name of the Docker image to use for the container.
+mosquitto_docker_image_name: "eclipse-mosquitto"
+
+# Specific Docker image version to use for the container.
+mosquitto_docker_image_version: "openssl"
+
+# Number of vCPUs to allocate to the container.
+mosquitto_docker_cpus: "1"
+
+# Amount of memory to allocate to the container.
+mosquitto_docker_memory: "512M"
+
+# Name of the primary network.
+mosquitto_docker_network_name: null
+
+# Container aliases on the default network.
+mosquitto_docker_network_aliases: null
+
+# List of additional networks to join.
+mosquitto_docker_extra_networks: []
+
+mosquitto_docker_volume_config_name: "mosquitto-config"
+mosquitto_docker_volume_data_name: "mosquitto-data"
+mosquitto_docker_volume_logs_name: "mosquitto-logs"
+
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+mosquitto_docker_extra_labels: {}
+
+# Dictionary of extra key value pairs to set as environment variables on the Docker container.
+mosquitto_docker_extra_env: {}
+
+#####
+# Traefik
+#####
+
+# Enable use of Traefik as a proxy.
+mosquitto_docker_available_externally: false
+
+# Host name to use for the Traefik endpoint. Combined with [mosquitto_docker_host_domain] to form the
+# FQDN for the endpoint.
+mosquitto_docker_host_name: "mosquitto"
+
+# Domain name to use for the Traefik endpoint. Combined with [mosquitto_docker_host_name] to form the
+# FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
+mosquitto_docker_host_domain: "example.com"
+
+#####
+# Ansible
+#####
+
+mosquitto_docker_role_label: "mosquitto"
+
+#####
+# Mosquitto configuration options
+#####
+
+# Listen on all interfaces by default.
+mosquitto_docker_listen_address: "0.0.0.0"
+
+# TCP port on which to listen for MQTT messages.
+mosquitto_docker_listen_port: 1883
+
+# MQTT over WebSockets
+mosquitto_docker_ws_listen_address: "0.0.0.0"
+
+# TCP port on which to listen for MQTT over WebSockets.
+mosquitto_docker_ws_listen_port: 9001
+
+mosquitto_docker_persistence: true
+mosquitto_docker_persistence_location: "/mosquitto/data/"
+
+mosquitto_docker_log_dest:
+  - "file /mosquitto/logs/mosquitto.log"
+  - "stdout"
+
+mosquitto_docker_log_types:
+  - "error"
+  - "information"
+  - "notice"
+  - "subscribe"
+  - "unsubscribe"
+  - "warning"
+  - "websockets"

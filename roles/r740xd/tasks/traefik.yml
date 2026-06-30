@@ -3,17 +3,6 @@
   ansible.builtin.set_fact:
     _nas_traefik_fqdn: "traefik.{{ veggie_nas_domain_name }}"
 
-# - name: "traefik`1` | Setup Docker network"
-#   community.docker.docker_network:
-#     name: "{{ docker_networks.traefik.name }}"
-#     driver: "bridge"
-#     enable_ipv6: "no"
-#     internal: "no"
-#     scope: "local"
-#     ipam_config:
-#       - subnet: "{{ docker_networks.traefik.subnet }}"
-#         gateway: "{{ docker_networks.traefik.gateway }}"
-
 ###
 ### Configure additional networks, ports, and entrypoints
 ###
@@ -32,6 +21,7 @@
     - "{{ docker_networks.portainer.name }}"
     - "{{ docker_networks.tautulli.name }}"
     - "{{ docker_networks.prometheus.name }}"
+    - "{{ docker_networks.mosquitto.name }}"
   loop_control:
     loop_var: __item
 
@@ -103,6 +93,29 @@
         - name: "traefik | Enable Z-Wave JS UI entrypoints"
           ansible.builtin.set_fact:
             _nas_traefik_entrypoints: "{{ _nas_traefik_entrypoints | default({}) | combine(r740xd_traefik_zwavejsui_entrypoints) }}"
+
+- name: "traefik | Process Mosquitto network"
+  when: "docker_networks.mosquitto.name | default('', true) | trim | length > 0"
+  block:
+    - name: "traefik | Check if Mosquitto network exists"
+      community.docker.docker_network_info:
+        name: "{{ docker_networks.mosquitto.name }}"
+      register: "_r740xd_traefik_mosquitto_network_info"
+
+    - name: "traefik | Configure Traefik for Mosquitto"
+      when: "_r740xd_traefik_mosquitto_network_info.exists"
+      block:
+        - name: "traefik | Enable Mosquitto extra network"
+          ansible.builtin.set_fact:
+            _nas_traefik_extra_networks: "{{ _nas_traefik_extra_networks | default([]) + [{'name': docker_networks.mosquitto.name}] }}"
+
+        - name: "traefik | Enable Mosquitto ports"
+          ansible.builtin.set_fact:
+            _nas_traefik_extra_ports: "{{ _nas_traefik_extra_ports | default([]) + r740xd_traefik_mosquitto_ports }}"
+
+        - name: "traefik | Enable Mosquitto entrypoints"
+          ansible.builtin.set_fact:
+            _nas_traefik_entrypoints: "{{ _nas_traefik_entrypoints | default({}) | combine(r740xd_traefik_mosquitto_entrypoints) }}"
 
 - name: "traefik | Define all ports"
   ansible.builtin.set_fact:

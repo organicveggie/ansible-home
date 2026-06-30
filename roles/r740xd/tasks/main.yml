@@ -108,6 +108,10 @@
   ansible.builtin.import_tasks: "glances.yml"
   tags: ["glances"]
 
+- name: "Setup Mosquitto"
+  ansible.builtin.import_tasks: "mosquitto.yml"
+  tags: ["mosquitto"]
+
 - name: "Setup Home Assistant"
   ansible.builtin.import_tasks: "hass.yml"
   tags: ["hass", "home-assistant", "homeassistant"]
