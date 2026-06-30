@@ -3,11 +3,11 @@
   when: "__item | default('') | trim | length > 0"
   block:
     - name: "{{ _traefik_role_name | default('traefik') }} | network | Check if {{ __item }} network exists"
-      community.docker.docker_network_info:
+      community.docker.docker_r740xd_traefik_network_info:
         name: "{{ __item }}"
-      register: "_network_info"
+      register: "_r740xd_traefik_network_info"
 
     - name: "{{ _traefik_role_name | default('traefik') }} | network | Enable {{ __item }} extra network"
       ansible.builtin.set_fact:
-        _nas_traefik_extra_networks: "{{ _nas_traefik_extra_networks | default([]) + [{'name': __item}] }}"
-      when: "_network_info.exists"
+        _r740xd_traefik_extra_networks: "{{ _r740xd_traefik_extra_networks | default([]) + [{'name': __item}] }}"
+      when: "_r740xd_traefik_network_info.exists"
