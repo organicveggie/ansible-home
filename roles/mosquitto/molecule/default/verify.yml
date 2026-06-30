@@ -1,0 +1,31 @@
+---
+- name: "Verify"
+  hosts: all
+  gather_facts: false
+
+  vars:
+    mosquitto_docker_volume_config_name: "mosquitto-config"
+    mosquitto_docker_volume_data_name: "mosquitto-data"
+    mosquitto_docker_volume_logs_name: "mosquitto-logs"
+
+  tasks:
+    - name: "Verify volumes"
+      ansible.builtin.include_tasks:
+        file: "verify-volume.yml"
+      with_items:
+        - "{{ mosquitto_docker_volume_config_name }}"
+        - "{{ mosquitto_docker_volume_data_name }}"
+        - "{{ mosquitto_docker_volume_logs_name }}"
+      loop_control:
+        loop_var: "__mosquitto_volume_name"
+
+    - name: Get info on container
+      community.docker.docker_container_info:
+        name: "mosquitto-molecule"
+      register: _mosquitto_container
+
+    - name: Verify container state
+      ansible.builtin.assert:
+        that:
+          - _mosquitto_container.exists
+          - _mosquitto_container["container"]["State"]["Status"] == "running"
