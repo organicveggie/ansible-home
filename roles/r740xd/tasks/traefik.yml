@@ -11,7 +11,6 @@
     file: "traefik_network.yml"
   loop:
     # - "{{ docker_networks.traefik.name }}"
-    - "{{ docker_networks.calibre_web.name }}"
     - "{{ docker_networks.glances.name }}"
     - "{{ docker_networks.influxdb.name }}"
     - "{{ docker_networks.navidrome.name }}"
@@ -86,10 +85,6 @@
           ansible.builtin.set_fact:
             _r740xd_traefik_extra_networks: "{{ _r740xd_traefik_extra_networks | default([]) + [{'name': docker_networks.hass.name}] }}"
 
-        - name: "traefik | Enable Z-Wave JS UI ports"
-          ansible.builtin.set_fact:
-            _r740xd_traefik_extra_ports: "{{ _r740xd_traefik_extra_ports | default([]) + r740xd_traefik_zwavejsui_ports }}"
-
         - name: "traefik | Enable Z-Wave JS UI entrypoints"
           ansible.builtin.set_fact:
             _r740xd_traefik_entrypoints: "{{ _r740xd_traefik_entrypoints | default({}) | combine(r740xd_traefik_zwavejsui_entrypoints) }}"
@@ -108,10 +103,6 @@
         - name: "traefik | Enable Mosquitto extra network"
           ansible.builtin.set_fact:
             _r740xd_traefik_extra_networks: "{{ _r740xd_traefik_extra_networks | default([]) + [{'name': docker_networks.mosquitto.name}] }}"
-
-        - name: "traefik | Enable Mosquitto ports"
-          ansible.builtin.set_fact:
-            _r740xd_traefik_extra_ports: "{{ _r740xd_traefik_extra_ports | default([]) + r740xd_traefik_mosquitto_ports }}"
 
         - name: "traefik | Enable Mosquitto entrypoints"
           ansible.builtin.set_fact:

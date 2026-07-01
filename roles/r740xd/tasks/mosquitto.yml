@@ -18,5 +18,6 @@
     mosquitto_docker_name: "{{ r740xd_mosquitto_docker_name }}"
     mosquitto_docker_host_domain: "{{ r740xd_mosquitto_host_domain }}"
     mosquitto_docker_listen_port: "{{ r740xd_mosquitto_http_port }}"
+    mosquitto_docker_network_name: "{{ docker_networks.mosquitto.name }}"
     mosquitto_docker_ws_listen_port: "{{ r740xd_mosquitto_ws_port }}"
   tags: ["setup", "mosquitto"]
