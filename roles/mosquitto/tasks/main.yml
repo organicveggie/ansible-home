@@ -19,7 +19,7 @@
         "target": "/mosquitto/data"
         "type": 'volume'
       - "source": "{{ mosquitto_docker_volume_logs_name }}"
-        "target": "/mosquitto/logs"
+        "target": "/mosquitto/log"
         "type": 'volume'
   
 - name: "{{ mosquitto_docker_role_label }} | Get info on config volume"

@@ -36,7 +36,7 @@
       combine({__item.key: __item.value}) }}"
   with_items:
     - key: "traefik.docker.network"
-      value: "host"
+      value: "{{ zwavejsui_network }}"
     - key: "traefik.http.routers.zwavejsui.rule"
       value: "Host(`{{ _zwavejsui_fqdn }}`)"
     - key: "traefik.http.routers.zwavejsui.entrypoints"
