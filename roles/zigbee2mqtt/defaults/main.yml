@@ -1,0 +1,85 @@
+---
+#####
+# Zigbee2MQTT configuration options
+#####
+
+# Enable or disable the creation of the Zigbee2MQTT configuration file. If set to false, the
+# configuration file will not be created and the web UI will automatically create it on first run.
+zigbee2mqtt_docker_create_config: false
+
+# HTTP port for the web interface.
+zigbee2mqtt_docker_http_port: 8080
+
+# Timezone code for the container. Timezone codes can be found at:
+# https://en.wikipedia.org/wiki/List_of_tz_database_time_zones.
+zigbee2mqtt_docker_timezone: "America/New_York"
+
+# Zigbee serial device to attach to the Docker container. Note: Do not use /dev/ttyUSBX serial
+# devices, as those mappings can change over time. Instead, use the /dev/serial/by-id/X serial
+# device for your Zigbee stick.
+#
+# Example:
+#
+#   $ ls -al /dev/serial/by-id/
+#   lrwxrwxrwx 1 root root 13 Sep  6 18:57 usb-1234_5678-ge11 -> ../../ttyACM0
+#
+# zigbee2mqtt_docker_device: "/dev/serial/by-id/usb-1234_5678-ge11"
+#
+zigbee2mqtt_docker_device: null
+
+#####
+# Container
+#####
+
+# Name of the Docker container.
+zigbee2mqtt_docker_name: "zigbee2mqtt"
+
+# Base name of the Docker image to use for the container.
+zigbee2mqtt_docker_image_name: "ghcr.io/koenkk/zigbee2mqtt"
+
+# Specific Docker image version to use for the container.
+zigbee2mqtt_docker_image_version: "latest"
+
+# Number of vCPUs to allocate to the container.
+zigbee2mqtt_docker_cpus: "1"
+
+# Amount of memory to allocate to the container.
+zigbee2mqtt_docker_memory: "512M"
+
+# Name of the primary network.
+zigbee2mqtt_docker_network_name: null
+
+# Container aliases on the default network.
+zigbee2mqtt_docker_network_aliases: null
+
+# List of additional networks to join.
+zigbee2mqtt_docker_extra_networks: []
+
+zigbee2mqtt_docker_volume_data_name: "zigbee2mqtt-data"
+
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+zigbee2mqtt_docker_extra_labels: {}
+
+# Dictionary of extra key value pairs to set as environment variables on the Docker container.
+zigbee2mqtt_docker_extra_env: {}
+
+#####
+# Traefik
+#####
+
+# Enable use of Traefik as a proxy.
+zigbee2mqtt_docker_available_externally: true
+
+# Host name to use for the Traefik endpoint. Combined with [zigbee2mqtt_docker_host_domain] to form the
+# FQDN for the endpoint.
+zigbee2mqtt_docker_host_name: "zigbee2mqtt"
+
+# Domain name to use for the Traefik endpoint. Combined with [zigbee2mqtt_docker_host_name] to form the
+# FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
+zigbee2mqtt_docker_host_domain: "example.com"
+
+#####
+# Ansible
+#####
+
+zigbee2mqtt_docker_role_label: "zigbee2mqtt"
