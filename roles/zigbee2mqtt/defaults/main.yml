@@ -27,6 +27,10 @@ zigbee2mqtt_docker_timezone: "America/New_York"
 #
 zigbee2mqtt_docker_device: null
 
+# Path to the udev socket on the host system. This is used to allow the Zigbee2MQTT container to
+# access udev events on the host system.
+zigbee2mqtt_docker_udev_host_path: "/run/udev"
+
 #####
 # Container
 #####

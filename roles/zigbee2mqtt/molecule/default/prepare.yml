@@ -18,3 +18,10 @@
         nohup socat PTY,link=/dev/ttyUSB0 PTY,link=/dev/ttyUSB99 > /dev/null 2>&1 &
       async: 10
       poll: 0
+    
+    - name: Create fake udev directory for testing
+      ansible.builtin.file:
+        path: "/tmp/molecule_fake_udev/data"
+        state: "directory"
+        recurse: true
+        mode: "0755"

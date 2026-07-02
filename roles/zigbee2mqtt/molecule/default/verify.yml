@@ -4,22 +4,22 @@
   gather_facts: false
 
   vars:
-    zwavejsui_name: "zwavejsui-container-test"
-    zwavejsui_volume_name: "zwavejsui-volume-test"
+    zigbee2mqtt_docker_name: "zigbee2mqtt-container-test"
+    zigbee2mqtt_docker_volume_data_name: "zigbee2mqtt-data-volume-test"
 
   tasks:
     - name: Get info on data volume
       community.docker.docker_volume_info:
-        name: "{{ zwavejsui_volume_name }}"
+        name: "{{ zigbee2mqtt_docker_volume_data_name }}"
       register: data_vol_info
 
     - name: Verify data volume exists
       ansible.builtin.assert:
         that: data_vol_info.exists
 
-    - name: Get info on ZwaveJSUI container
+    - name: Get info on Zigbee2MQTT container
       community.docker.docker_container_info:
-        name: "{{ zwavejsui_name }}"
+        name: "{{ zigbee2mqtt_docker_name }}"
       register: container_info
 
     - name: Verify container exists

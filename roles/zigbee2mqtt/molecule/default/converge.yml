@@ -26,10 +26,11 @@
   become: true
 
   vars:
-    zwavejsui_name: "zigbee2mqtt-container-test"
-    zwavejsui_network: "zigbee2mqtt-network-test"
-    zwavejsui_volume_name: "zigbee2mqtt-data-volume-test"
-    zwavejsui_zwave_device: "/dev/ttyUSB0"
+    zigbee2mqtt_docker_name: "zigbee2mqtt-container-test"
+    zigbee2mqtt_docker_network_name: "zigbee2mqtt-network-test"
+    zigbee2mqtt_docker_volume_data_name: "zigbee2mqtt-data-volume-test"
+    zigbee2mqtt_docker_device: "/dev/ttyUSB0"
+    zigbee2mqtt_docker_udev_host_path: "/tmp/molecule_fake_udev"
 
   pre_tasks:
     - name: Install Docker

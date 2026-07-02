@@ -1,5 +1,5 @@
 ---
-- name: "{{ zigbee2mqtt_docker_role_label }} | Create Mosquitto Docker volumes"
+- name: "{{ zigbee2mqtt_docker_role_label }} | Create Docker volumes"
   community.docker.docker_volume:
     name: "{{ __item }}"
   with_items:
@@ -10,21 +10,20 @@
 - name: "{{ zigbee2mqtt_docker_role_label }} | Set Docker mount list for bind mounts"
   ansible.builtin.set_fact:
     _zigbee2mqtt_docker_mount_list:
-      - "source": "/run/udev"
+      - "source": "{{ zigbee2mqtt_docker_udev_host_path }}"
         "target": "/run/udev"
         "type": 'bind'
         "read_only": true
 
 - name: "{{ zigbee2mqtt_docker_role_label }} | Set Docker mount list for volume mounts"
   ansible.builtin.set_fact:
-    _zigbee2mqtt_docker_mount_list: |
-      {{ _zigbee2mqtt_docker_mount_list | default([]) + [
-        {
-          "source": "{{ zigbee2mqtt_docker_volume_data_name }}",
-          "target": "/app/data",
-          "type": 'volume'
-        }
-      ] }}
+    _zigbee2mqtt_docker_mount_list: "{{ _zigbee2mqtt_docker_mount_list | default([]) + [__item] }}"
+  with_items:
+    - "source": "{{ zigbee2mqtt_docker_volume_data_name }}"
+      "target": "/app/data"
+      "type": "volume"
+  loop_control:
+    loop_var: __item
   
 - name: "{{ zigbee2mqtt_docker_role_label }} | Get info on data volume"
   community.docker.docker_volume_info:
@@ -57,7 +56,7 @@
 - name: "{{ zigbee2mqtt_docker_role_label }} | Define common Docker labels"
   ansible.builtin.set_fact:
     _zigbee2mqtt_docker_labels:
-      "traefik.enable": "{{ zigbee2mqtt_docker_traefik_available_externally | ternary('true', 'false') }}"
+      "traefik.enable": "{{ zigbee2mqtt_docker_available_externally | ternary('true', 'false') }}"
 
 - name: "{{ zigbee2mqtt_docker_role_label }} | Define Docker labels with Traefik enabled"
   ansible.builtin.set_fact:
@@ -85,6 +84,12 @@
   loop: "{{ zigbee2mqtt_docker_extra_labels | dict2items }}"
   loop_control:
     loop_var: __item
+
+- name: "Debugger"
+  ansible.builtin.debug:
+    msg:
+      - "zigbee2mqtt_docker_volume_data_name: {{ zigbee2mqtt_docker_volume_data_name }}"
+      - "_zigbee2mqtt_docker_mount_list: {{ _zigbee2mqtt_docker_mount_list }}"
 
 - name: "{{ zigbee2mqtt_docker_role_label }} | Create Docker Container"
   community.docker.docker_container:
