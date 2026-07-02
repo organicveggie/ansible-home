@@ -1,0 +1,46 @@
+---
+- name: Install dependencies
+  hosts: all
+
+  vars:
+    pip_install_packages:
+      - name: docker
+    docker_daemon_options:
+      storage-driver: "vfs"
+
+  pre_tasks:
+    - name: Wait for systemd to complete initialization
+      ansible.builtin.command: systemctl is-system-running
+      register: systemctl_status
+      until: >
+        'running' in systemctl_status.stdout or
+        'degraded' in systemctl_status.stdout
+      retries: 30
+      delay: 5
+      when: ansible_facts["service_mgr"] == 'systemd'
+      changed_when: false
+      failed_when: systemctl_status.rc > 1
+
+- name: Converge
+  hosts: all
+  become: true
+
+  vars:
+    zigbee2mqtt_docker_name: "zigbee2mqtt-container-test"
+    zigbee2mqtt_docker_network_name: "zigbee2mqtt-network-test"
+    zigbee2mqtt_docker_volume_data_name: "zigbee2mqtt-data-volume-test"
+    zigbee2mqtt_docker_device: "/dev/ttyUSB0"
+    zigbee2mqtt_docker_udev_host_path: "/tmp/molecule_fake_udev"
+
+  pre_tasks:
+    - name: Install Docker
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+
+    - name: Create Docker network
+      community.docker.docker_network:
+        name: "zigbee2mqtt-network-test"
+        state: present
+
+  roles:
+    - role: zigbee2mqtt

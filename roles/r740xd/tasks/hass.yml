@@ -1,11 +1,11 @@
 ---
 - name: "hass | Set fqdn"
   ansible.builtin.set_fact:
-    _nas_hass_fqdn: "{{ r740xd_hass_host_name }}.{{ r740xd_hass_host_domain }}"
+    _r740xd_hass_fqdn: "{{ r740xd_hass_host_name }}.{{ r740xd_hass_host_domain }}"
 
 - name: "hass | Set endpoint URL for Ecowitt"
   ansible.builtin.set_fact:
-    _nas_hass_ecowitt_url: "http://{{ _nas_hass_fqdn }}:8123"
+    _r740xd_hass_ecowitt_url: "http://{{ _r740xd_hass_fqdn }}:8123"
 
 - name: "hass | Setup Docker network"
   community.docker.docker_network:
@@ -17,6 +17,22 @@
     ipam_config:
       - subnet: "{{ docker_networks.hass.subnet }}"
         gateway: "{{ docker_networks.hass.gateway }}"
+
+- name: "hass | Setup Zigbee2MQTT container"
+  ansible.builtin.import_role:
+    name: "zigbee2mqtt"
+  vars:
+    zigbee2mqtt_docker_device: "{{ r740xd_hass_zigbee_device }}"
+    zigbee2mqtt_docker_extra_networks:
+      - name: "{{ docker_networks.mosquitto.name }}"
+        aliases:
+          - "zigbee2mqtt"
+    zigbee2mqtt_docker_host_domain: "{{ r740xd_hass_host_domain }}"
+    zigbee2mqtt_docker_network_name: "{{ docker_networks.hass.name }}"
+    zigbee2mqtt_docker_timezone: "{{ r740xd_hass_timezone }}"
+  when:
+    - "r740xd_hass_zigbee_device is defined"
+    - "r740xd_hass_zigbee_device not in (None, omit)"
 
 - name: "hass | Setup Z-Wave JS UI container"
   ansible.builtin.import_role:
@@ -33,7 +49,7 @@
 - name: "hass | Get info on data volume"
   community.docker.docker_volume_info:
     name: "{{ r740xd_traefik_data_volume_name }}"
-  register: "_traefik_data_volume_info"
+  register: "_r740xd_hass_traefik_data_volume_info"
 
 - name: "hass | Setup OpenThread Border Router container"
   ansible.builtin.import_role:
@@ -51,7 +67,7 @@
     hass_otbr_log_level: "{{ r740xd_hass_otbr_log_level }}"
     hass_otbr_traefik_available_externally: false
     hass_otbr_traefik_host_domain: "{{ r740xd_hass_host_domain }}"
-    hass_otbr_traefik_dynamic_folder: "{{ _traefik_data_volume_info.volume.Mountpoint }}/dynamic"
+    hass_otbr_traefik_dynamic_folder: "{{ _r740xd_hass_traefik_data_volume_info.volume.Mountpoint }}/dynamic"
   when:
     - "r740xd_hass_matter_device is defined"
     - "r740xd_hass_matter_device not in (None, omit)"
@@ -64,7 +80,7 @@
     hass_docker_host_name: "{{ r740xd_hass_host_name }}"
     hass_docker_zigbee_device: "{{ r740xd_hass_zigbee_device }}"
     hass_docker_network_aliases:
-      - "{{ _nas_hass_fqdn }}"
+      - "{{ _r740xd_hass_fqdn }}"
     hass_docker_network_name: "{{ docker_networks.hass.name }}"
     hass_home_latitude: "{{ r740xd_hass_latitude }}"
     hass_home_longitude: "{{ r740xd_hass_longitude }}"
@@ -72,4 +88,4 @@
     hass_network_subnet: "{{ docker_networks.hass.subnet }}"
     hass_ecowitt_hass_auth_token: "{{ r740xd_hass_ecowitt_hass_auth_token | default(omit) }}"
     hass_ecowitt_hass_webhook_id: "{{ r740xd_hass_ecowitt_hass_webhook_id | default(omit) }}"
-    hass_ecowitt_hass_url: "{{ _nas_hass_ecowitt_url }}"
+    hass_ecowitt_hass_url: "{{ _r740xd_hass_ecowitt_url }}"
