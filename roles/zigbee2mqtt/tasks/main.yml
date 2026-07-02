@@ -63,6 +63,8 @@
     _zigbee2mqtt_docker_labels: "{{ _zigbee2mqtt_docker_labels | default({}) |
       combine({__item.key: __item.value}) }}"
   with_items:
+    - key: "traefik.docker.network"
+      value: "{{ zigbee2mqtt_docker_network_name }}"
     - key: "traefik.http.routers.zigbee2mqtt.rule"
       value: "Host(`{{ _zigbee2mqtt_docker_fqdn }}`)"
     - key: "traefik.http.routers.zigbee2mqtt.entrypoints"
