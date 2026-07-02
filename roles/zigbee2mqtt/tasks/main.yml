@@ -85,12 +85,6 @@
   loop_control:
     loop_var: __item
 
-- name: "Debugger"
-  ansible.builtin.debug:
-    msg:
-      - "zigbee2mqtt_docker_volume_data_name: {{ zigbee2mqtt_docker_volume_data_name }}"
-      - "_zigbee2mqtt_docker_mount_list: {{ _zigbee2mqtt_docker_mount_list }}"
-
 - name: "{{ zigbee2mqtt_docker_role_label }} | Create Docker Container"
   community.docker.docker_container:
     name: "{{ zigbee2mqtt_docker_name }}"
