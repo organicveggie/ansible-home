@@ -18,3 +18,12 @@ log_type {{ logtype }}
 {% for logdest in mosquitto_docker_log_dest %}
 log_dest {{ logdest }}
 {% endfor %}
+
+per_listener_settings false
+plugin /usr/lib/mosquitto_dynamic_security.so
+plugin_opt_password_init_file /mosquitto/config/dynsec-init.txt
+plugin_opt_config_file {{ mosquitto_docker_dynamic_security_config }}
+
+{% for key, value in mosquitto_docker_config_options.items() %}
+{{ key }} {{ value | string | lower }}
+{% endfor %} 

@@ -62,6 +62,12 @@ mosquitto_docker_role_label: "mosquitto"
 # Mosquitto configuration options
 #####
 
+mosquitto_docker_uid: "1883"
+mosquitto_docker_user: "mosquitto"
+mosquitto_docker_gid: "1883"
+mosquitto_docker_group: "mosquitto"
+mosquitto_docker_user_add: true
+
 # Listen on all interfaces by default.
 mosquitto_docker_listen_address: "0.0.0.0"
 
@@ -78,7 +84,7 @@ mosquitto_docker_persistence: true
 mosquitto_docker_persistence_location: "/mosquitto/data/"
 
 mosquitto_docker_log_dest:
-  - "file /mosquitto/logs/mosquitto.log"
+  - "file /mosquitto/log/mosquitto.log"
   - "stdout"
 
 mosquitto_docker_log_types:
@@ -89,3 +95,26 @@ mosquitto_docker_log_types:
   - "unsubscribe"
   - "warning"
   - "websockets"
+
+# Unencrypted password for the dynamic security admin user.
+mosquitto_docker_dynamic_security_admin_passwd: null
+
+mosquitto_docker_config_options: {}
+
+mosquitto_docker_shell: "/bin/sh"
+mosquitto_docker_ctrl_bin: "/usr/bin/mosquitto_ctrl"
+
+# Expects a list of dictionaries with the following keys:
+#   - username: The username for the user.
+#   - password: The unencrypted password for the user.
+#   - roles: A list of role names to assign to the user (optional).
+mosquitto_docker_users: []
+
+# Expects a list of dictionaries with the following keys:
+#   - name: The name of the role.
+#   - permissions: A list ACL dictionaries, each with the following keys:
+#       - acltype: publishClientSend, publishClientReceive, subscribeLiteral, subscribePattern, unsubscribeLiteral, or unsubscribePattern
+#       - topic_filter: The topic filter for the ACL e.g. "zigbee2mqtt/#"
+#       - allow: true or false (optional, defaults to true)
+#       - priority: The priority of the ACL (optional, defaults to 0)
+mosquitto_docker_roles: []

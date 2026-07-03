@@ -20,4 +20,26 @@
     mosquitto_docker_listen_port: "{{ r740xd_mosquitto_http_port }}"
     mosquitto_docker_network_name: "{{ docker_networks.mosquitto.name }}"
     mosquitto_docker_ws_listen_port: "{{ r740xd_mosquitto_ws_port }}"
+    mosquitto_docker_roles:
+      - name: "zigbee2mqtt-publisher"
+        permissions:
+          - acltype: "publishClientSend"
+            topic_filter: "zigbee2mqtt/#"
+          - acltype: "publishClientReceive"
+            topic_filter: "zigbee2mqtt/#"
+      - name: "zigbee2mqtt-subscriber"
+        permissions:
+          - acltype: "subscribe"
+            topic_filter: "zigbee2mqtt/#"
+          - acltype: "unsubscribe"
+            topic_filter: "zigbee2mqtt/#"
+    mosquitto_docker_users:
+      - username: "zigbee2mqtt"
+        password: "zigbee2mqtt"
+        roles:
+          - "zigbee2mqtt-publisher"
+          - "zigbee2mqtt-subscriber"
+    mosquitto_docker_config_options:
+      allow_anonymous: "false"
+    mosquitto_docker_dynamic_security_admin_passwd: "password"
   tags: ["setup", "mosquitto"]
