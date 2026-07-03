@@ -185,18 +185,16 @@
       admin {{ mosquitto_docker_dynamic_security_admin_passwd }}"
   when: _mosquitto_docker_dynsec_cfg_file.stat.exists is defined and not _mosquitto_docker_dynsec_cfg_file.stat.exists
 
-- name: "{{ mosquitto_docker_role_label }} | Ensure Dynamic Security users exist"
-  community.docker.docker_container_exec:
-    container: "{{ mosquitto_docker_name }}"
-    command: >
-      {{ mosquitto_docker_shell }} -c "echo -e '{{ __item.password }}\n{{ __item.password }}' | 
-      {{ mosquitto_docker_ctrl_bin }} -u admin -P '{{ mosquitto_docker_dynamic_security_admin_passwd }}' 
-      dynsec createClient {{ __item.username }}"
+- name: "{{ mosquitto_docker_role_label }} | Setup dynsec roles"
+  ansible.builtin.include_tasks:
+    file: "add_role.yml"
+  loop: "{{ mosquitto_docker_roles | default([]) }}"
+  loop_control:
+    loop_var: __item
+
+- name: "{{ mosquitto_docker_role_label }} | Setup dynsec clients"
+  ansible.builtin.include_tasks:
+    file: "add_client.yml"
   loop: "{{ mosquitto_docker_users | default([]) }}"
   loop_control:
     loop_var: __item
-  register: _mosquitto_docker_user_creation
-  failed_when:
-    - _mosquitto_docker_user_creation.rc != 0
-    - "'already exists' not in _mosquitto_docker_user_creation.stderr"
-    - "'AlreadyExists' not in _mosquitto_docker_user_creation.stdout"

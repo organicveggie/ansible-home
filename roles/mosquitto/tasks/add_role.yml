@@ -1,0 +1,56 @@
+---
+- name: "{{ mosquitto_docker_role_label }} | DEBUG Add role {{ __item.name }}"
+  ansible.builtin.debug:
+    msg: >
+      {{ mosquitto_docker_shell }} -c "{{ mosquitto_docker_ctrl_bin }} 
+      -u admin -P '{{ mosquitto_docker_dynamic_security_admin_passwd }}' 
+      dynsec createRole {{ __item.name }}"
+
+- name: "{{ mosquitto_docker_role_label }} | Add role {{ __item.name }}"
+  community.docker.docker_container_exec:
+    container: "{{ mosquitto_docker_name }}"
+    command: >
+      {{ mosquitto_docker_shell }} -c "{{ mosquitto_docker_ctrl_bin }} 
+      -u admin -P '{{ mosquitto_docker_dynamic_security_admin_passwd }}' 
+      dynsec createRole {{ __item.name }}"
+  register: __mosquitto_docker_role
+  failed_when:
+    - __mosquitto_docker_role.rc != 0
+    - "'already exists' not in __mosquitto_docker_role.stderr"
+    - "'AlreadyExists' not in __mosquitto_docker_role.stdout"
+
+- name: "{{ mosquitto_docker_role_label }} | DEBUG Add ACLs to role {{ __item.name }}"
+  ansible.builtin.debug:
+    msg: >
+      {{ mosquitto_docker_shell }} -c "{{ mosquitto_docker_ctrl_bin }} 
+      -u admin -P '{{ mosquitto_docker_dynamic_security_admin_passwd }}' 
+      dynsec addRoleACL
+      {{ __item.name }} 
+      {{ __acl.acltype }} 
+      '{{ __acl.topic_filter }}' 
+      {{ __acl.allow | default(true, true) | ternary('allow', 'deny') }} 
+      {{ __acl.priority | default(omit) }}"
+  loop: "{{ __item.permissions | default([]) }}"
+  loop_control:
+    loop_var: __acl
+
+- name: "{{ mosquitto_docker_role_label }} | Add ACLs to role {{ __item.name }}"
+  community.docker.docker_container_exec:
+    container: "{{ mosquitto_docker_name }}"
+    command: >
+      {{ mosquitto_docker_shell }} -c "{{ mosquitto_docker_ctrl_bin }} 
+      -u admin -P '{{ mosquitto_docker_dynamic_security_admin_passwd }}' 
+      dynsec addRoleACL
+      {{ __item.name }} 
+      {{ __acl.acltype }} 
+      '{{ __acl.topic_filter }}' 
+      {{ __acl.allow | default(true, true) | ternary('allow', 'deny') }} 
+      {{ __acl.priority | default(omit) }}"
+  loop: "{{ __item.permissions | default([]) }}"
+  loop_control:
+    loop_var: __acl
+  register: __mosquitto_docker_role_acl
+  failed_when:
+    - __mosquitto_docker_role_acl.rc != 0
+    - "'already exists' not in __mosquitto_docker_role_acl.stderr"
+    - "'AlreadyExists' not in __mosquitto_docker_role_acl.stdout"
