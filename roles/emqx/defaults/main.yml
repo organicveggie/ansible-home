@@ -42,7 +42,7 @@ emqx_docker_extra_env: {}
 #####
 
 # Enable use of Traefik as a proxy.
-emqx_docker_available_externally: false
+emqx_docker_available_externally: true
 
 # Host name to use for the Traefik endpoint. Combined with [emqx_docker_host_domain] to form the
 # FQDN for the endpoint.
