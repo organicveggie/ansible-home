@@ -28,7 +28,6 @@
 
   vars:
     emqx_docker_name: "emqx-molecule"
-    emqx_docker_user_add: true
     emqx_docker_network_name: "emqx-test"
     emqx_docker_available_externally: true
     emqx_docker_users:

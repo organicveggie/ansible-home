@@ -105,3 +105,12 @@ emqx_docker_listener_ws_port: 8083
 
 # Maximum number of concurrent connections allowed by the WebSocket listener; default value: infinity.
 emqx_docker_ws_max_connections: null
+
+#####
+# EMQX dashboard
+#####
+
+# Only used if [emqx_docker_available_externally] is true.
+
+emqx_docker_dashboard_port: 18083
+emqx_docker_dashboard_max_connections: null

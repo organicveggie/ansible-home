@@ -1,15 +1,18 @@
 ---
-- name: "{{ emqx_docker_role_label }} | Create group for EMQX container"
-  ansible.builtin.group:
-    name: "{{ emqx_docker_group }}"
-    gid: "{{ emqx_docker_gid }}"
+- name: "{{ emqx_docker_role_label }} | Create user/group for EMQX container"
+  when: "emqx_docker_user_add | default(false, true) | bool"
+  block:
+    - name: "{{ emqx_docker_role_label }} | Create group for EMQX container"
+      ansible.builtin.group:
+        name: "{{ emqx_docker_group }}"
+        gid: "{{ emqx_docker_gid }}"
 
-- name: "{{ emqx_docker_role_label }} | Create user for EMQX container"
-  ansible.builtin.user:
-    name: "{{ emqx_docker_user }}"
-    uid: "{{ emqx_docker_uid }}"
-    group: "{{ emqx_docker_group }}"
-    createhome: false
+    - name: "{{ emqx_docker_role_label }} | Create user for EMQX container"
+      ansible.builtin.user:
+        name: "{{ emqx_docker_user }}"
+        uid: "{{ emqx_docker_uid }}"
+        group: "{{ emqx_docker_group }}"
+        createhome: false
 
 - name: "{{ emqx_docker_role_label }} | Create EMQX Docker volumes"
   community.docker.docker_volume:
@@ -54,8 +57,8 @@
     src: "templates/base.hocon.j2"
     dest: "{{ _emqx_docker_config_volume_info.volume.Mountpoint }}/base.hocon"
     mode: "0660"
-    owner: "{{ emqx_docker_user }}"
-    group: "{{ emqx_docker_group }}"
+    owner: "{{ emqx_docker_uid }}"
+    group: "{{ emqx_docker_gid }}"
   register: "_emqx_docker_modify_config"
 
 - name: "{{ emqx_docker_role_label }} | Create initial authentication file"
@@ -63,18 +66,16 @@
     src: "templates/auth-bootstrap.csv.j2"
     dest: "{{ _emqx_docker_config_volume_info.volume.Mountpoint }}/auth-bootstrap.csv"
     mode: "0660"
-    owner: "{{ emqx_docker_user }}"
-    group: "{{ emqx_docker_group }}"
-  register: "_emqx_docker_modify_auth"
+    owner: "{{ emqx_docker_uid }}"
+    group: "{{ emqx_docker_gid }}"
 
 - name: "{{ emqx_docker_role_label }} | Create initial ACL file"
   ansible.builtin.template:
     src: "templates/acl.conf.j2"
     dest: "{{ _emqx_docker_config_volume_info.volume.Mountpoint }}/acl.conf"
     mode: "0660"
-    owner: "{{ emqx_docker_user }}"
-    group: "{{ emqx_docker_group }}"
-  register: "_emqx_docker_modify_acl"
+    owner: "{{ emqx_docker_uid }}"
+    group: "{{ emqx_docker_gid }}"
   when: "emqx_docker_acls | length > 0"
 
 - name: "{{ emqx_docker_role_label }} | Build container FQDN"
@@ -122,8 +123,6 @@
     _emqx_docker_labels: "{{ _emqx_docker_labels | default({}) |
       combine({__item.key: __item.value}) }}"
   with_items:
-    - key: "traefik.enable"
-      value: "{{ emqx_docker_available_externally }}"
     - key: "traefik.docker.network"
       value: "{{ emqx_docker_network_name }}"
     - key: "traefik.http.routers.emqx.rule"
@@ -135,10 +134,46 @@
     - key: "traefik.http.routers.emqx.tls.domains[0].main"
       value: "*.{{ emqx_docker_host_domain }}"
     - key: "traefik.http.services.emqx.loadbalancer.server.port"
-      value: "{{ emqx_docker_http_port }}"
+      value: "{{ emqx_docker_dashboard_port }}"
   loop_control:
     loop_var: __item
   when: "emqx_docker_available_externally"
+
+- name: "{{ emqx_docker_role_label }} | Define Docker Traefik labels for TCP listener"
+  ansible.builtin.set_fact:
+    _emqx_docker_labels: "{{ _emqx_docker_labels | default({}) |
+      combine({__item.key: __item.value}) }}"
+  with_items:
+    - key: "traefik.tcp.routers.emqx.rule"
+      value: "HostSNI(`{{ _emqx_docker_fqdn }}`)"
+    - key: "traefik.tcp.routers.emqx.entrypoints"
+      value: "tcp"
+    - key: "traefik.tcp.services.emqx.loadbalancer.server.port"
+      value: "{{ emqx_docker_listener_tcp_port }}"
+  loop_control:
+    loop_var: __item
+  when:
+    - emqx_docker_available_externally
+    - emqx_docker_listener_tcp_port is defined
+    - emqx_docker_listener_tcp_port is not none
+
+- name: "{{ emqx_docker_role_label }} | Define Docker Traefik labels for WebSocket listener"
+  ansible.builtin.set_fact:
+    _emqx_docker_labels: "{{ _emqx_docker_labels | default({}) |
+      combine({__item.key: __item.value}) }}"
+  with_items:
+    - key: "traefik.tcp.routers.emqx_ws.rule"
+      value: "HostSNI(`{{ _emqx_docker_fqdn }}`)"
+    - key: "traefik.tcp.routers.emqx_ws.entrypoints"
+      value: "tcp"
+    - key: "traefik.tcp.services.emqx_ws.loadbalancer.server.port"
+      value: "{{ emqx_docker_listener_ws_port }}"
+  loop_control:
+    loop_var: __item
+  when:
+    - emqx_docker_available_externally
+    - emqx_docker_listener_ws_port is defined
+    - emqx_docker_listener_ws_port is not none
 
 - name: "{{ emqx_docker_role_label }} | Define user-supplied extra Docker labels"
   ansible.builtin.set_fact:
@@ -160,8 +195,7 @@
     etc_hosts: "{{ emqx_docker_extra_hosts | default(omit) }}"
     restart_policy: unless-stopped
     restart: |
-      {{ _emqx_docker_modify_config.changed | default(false) or 
-      _emqx_docker_modify_auth.changed | default(false) }}
+      {{ _emqx_docker_modify_config.changed | default(false) }}
     memory: "{{ emqx_docker_memory }}"
     cpus: "{{ emqx_docker_cpus }}"
     container_default_behavior: no_defaults
