@@ -114,7 +114,7 @@
       combine({__item.key: __item.value}) }}"
   with_items:
     - key: "traefik.enable"
-      value: "{{ emqx_docker_available_externally | lower | ternary('false', 'true') }}"
+      value: "{{ emqx_docker_available_externally | lower | ternary('true', 'false') }}"
   loop_control:
     loop_var: __item
 
@@ -145,9 +145,11 @@
       combine({__item.key: __item.value}) }}"
   with_items:
     - key: "traefik.tcp.routers.emqx.rule"
-      value: "HostSNI(`{{ _emqx_docker_fqdn }}`)"
+      value: "HostSNI(`*`)"
     - key: "traefik.tcp.routers.emqx.entrypoints"
-      value: "tcp"
+      value: "emqx"
+    - key: "traefik.tcp.routers.emqx.service"
+      value: "emqx"
     - key: "traefik.tcp.services.emqx.loadbalancer.server.port"
       value: "{{ emqx_docker_listener_tcp_port }}"
   loop_control:
@@ -163,9 +165,11 @@
       combine({__item.key: __item.value}) }}"
   with_items:
     - key: "traefik.tcp.routers.emqx_ws.rule"
-      value: "HostSNI(`{{ _emqx_docker_fqdn }}`)"
+      value: "HostSNI(`*`)"
     - key: "traefik.tcp.routers.emqx_ws.entrypoints"
-      value: "tcp"
+      value: "emqx_ws"
+    - key: "traefik.tcp.routers.emqx_ws.service"
+      value: "emqx_ws"
     - key: "traefik.tcp.services.emqx_ws.loadbalancer.server.port"
       value: "{{ emqx_docker_listener_ws_port }}"
   loop_control:

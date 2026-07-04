@@ -27,18 +27,6 @@ log {
 {% endif -%}
 }
 
-
-## Dashboard listener defaults.
-## Placed here (rather than in `emqx.conf`) so that overrides written by the
-## dashboard, the REST API, or plugins such as `emqx_acme` -- which land in
-## `cluster.hocon` -- take effect across restarts. Pin a value in `emqx.conf`
-## only when you want to prevent runtime overrides.
-dashboard {
-    listeners {
-        http.bind = 18083
-    }
-}
-
 authentication = [
     {
         backend = "built_in_database"
@@ -67,6 +55,24 @@ authorization {
 }
 {% endif -%}
 
+{% if emqx_docker_available_externally | default(false, true) | bool -%}
+dashboard {
+  listeners {
+    http {
+        bind = "0.0.0.0:{{ emqx_docker_dashboard_port }}"
+{% if emqx_docker_dashboard_max_connections is defined and emqx_docker_dashboard_max_connections is not none -%}
+        max_connections = {{ emqx_docker_dashboard_max_connections }}
+{% endif %}
+    }
+  }
+  cors = false
+  swagger_support = true
+  unsuccessful_login_max_attempts = 5
+  unsuccessful_login_lock_duration = 10m
+  unsuccessful_login_interval = 5m
+}
+{% endif -%}
+
 {% if emqx_docker_listener_tcp_port is defined and emqx_docker_listener_tcp_port is not none %}
 listeners.tcp.{{ emqx_docker_listener_tcp_name | default('default', true) }} {
   bind = "0.0.0.0:{{ emqx_docker_listener_tcp_port }}"
@@ -82,23 +88,5 @@ listeners.ws.{{ emqx_docker_listener_ws_name | default('default', true) }} {
 {% if emqx_docker_ws_max_connections is defined and emqx_docker_ws_max_connections is not none %}
   max_connections = {{ emqx_docker_ws_max_connections }}
 {% endif -%}
-}
-{% endif -%}
-
-{% if emqx_docker_available_externally | default(false, true) | bool -%}
-dashboard {
-  listeners {
-    http {
-        bind = "0.0.0.0:{{ emqx_docker_dashboard_port }}"
-{% if emqx_docker_dashboard_max_connections is defined and emqx_docker_dashboard_max_connections is not none %}
-        max_connections = {{ emqx_docker_dashboard_max_connections }}
-{% endif -%}
-    }
-  }
-  cors = false
-  swagger_support = true
-  unsuccessful_login_max_attempts = 5
-  unsuccessful_login_lock_duration = 10m
-  unsuccessful_login_interval = 5m
 }
 {% endif -%}

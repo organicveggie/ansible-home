@@ -112,6 +112,10 @@
   ansible.builtin.import_tasks: "mosquitto.yml"
   tags: ["mosquitto"]
 
+- name: "Setup EMQX"
+  ansible.builtin.import_tasks: "emqx.yml"
+  tags: ["emqx"]
+
 - name: "Setup Home Assistant"
   ansible.builtin.import_tasks: "hass.yml"
   tags: ["hass", "home-assistant", "homeassistant"]
