@@ -1,0 +1,57 @@
+---
+- name: Install dependencies
+  hosts: all
+  become: true
+
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 600
+      when: ansible_facts["os_family"] == 'Debian'
+
+    - name: Wait for systemd to complete initialization
+      ansible.builtin.command: systemctl is-system-running
+      register: systemctl_status
+      until: >
+        'running' in systemctl_status.stdout or
+        'degraded' in systemctl_status.stdout
+      retries: 30
+      delay: 5
+      when: ansible_facts["service_mgr"] == 'systemd'
+      changed_when: false
+      failed_when: systemctl_status.rc > 1
+
+- name: Converge  # noqa: command-instead-of-module var-naming[no-role-prefix]
+  hosts: all
+  become: true
+
+  vars:
+    emqx_docker_name: "emqx-molecule"
+    emqx_docker_user_add: true
+    emqx_docker_network_name: "emqx-test"
+    emqx_docker_available_externally: true
+    emqx_docker_users:
+      - username: "admin"
+        password: "admin"
+        is_superuser: true
+      - username: "testuser1"
+        password: "testpassword1"
+    emqx_docker_acls:
+      - permission: "allow"
+        clients: "{user, \"testuser1\"}"
+        access: "all"
+        topic: "\"testtopic1/#\""
+
+  pre_tasks:
+    - name: Install Docker
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+
+    - name: Create emqx-test Docker network
+      community.docker.docker_network:
+        name: "{{ emqx_docker_network_name }}"
+        state: present
+
+  roles:
+    - role: emqx

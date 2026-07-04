@@ -1,0 +1,107 @@
+---
+#####
+# Container
+#####
+
+# Name of the Docker container.
+emqx_docker_name: "emqx"
+
+# Base name of the Docker image to use for the container.
+emqx_docker_image_name: "emqx/emqx-enterprise"
+
+# Specific Docker image version to use for the container.
+emqx_docker_image_version: "latest"
+
+# Number of vCPUs to allocate to the container.
+emqx_docker_cpus: "2"
+
+# Amount of memory to allocate to the container.
+emqx_docker_memory: "512M"
+
+# Name of the primary network.
+emqx_docker_network_name: null
+
+# Container aliases on the default network.
+emqx_docker_network_aliases: null
+
+# List of additional networks to join.
+emqx_docker_extra_networks: []
+
+emqx_docker_volume_config_name: "emqx-config"
+emqx_docker_volume_data_name: "emqx-data"
+emqx_docker_volume_logs_name: "emqx-logs"
+
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+emqx_docker_extra_labels: {}
+
+# Dictionary of extra key value pairs to set as environment variables on the Docker container.
+emqx_docker_extra_env: {}
+
+#####
+# Traefik
+#####
+
+# Enable use of Traefik as a proxy.
+emqx_docker_available_externally: false
+
+# Host name to use for the Traefik endpoint. Combined with [emqx_docker_host_domain] to form the
+# FQDN for the endpoint.
+emqx_docker_host_name: "emqx"
+
+# Domain name to use for the Traefik endpoint. Combined with [emqx_docker_host_name] to form the
+# FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
+emqx_docker_host_domain: "example.com"
+
+#####
+# Ansible
+#####
+
+emqx_docker_role_label: "emqx"
+
+#####
+# EMQX configuration options
+#####
+
+# True if the role should create a user and group for EMQX, false if the user and group already exist.
+emqx_docker_user_add: false
+
+emqx_docker_log_file: true
+emqx_docker_log_console: true
+emqx_docker_log_level_file: "info"
+emqx_docker_log_level_console: "info"
+
+# Expects a list of dictionaries with the following keys:
+#   - username: The username for the user.
+#   - password: The unencrypted password for the user.
+#   - is_superuser: Whether the user is a superuser (true/false). Optional
+emqx_docker_users: []
+
+# Expects a list of dictionaries, each representing an ACL rule. Each dictionary should have the following keys:
+#   - permission: The permission type (e.g., "allow" or "deny").
+#   - clients: A string representing a tuple of client descriptors.
+#   - operation: The operation type (e.g., "publish", "subscribe").
+#   - topic: The topic string for the ACL rule.
+# See https://docs.emqx.com/en/emqx/latest/access-control/authz/file.html#acl-file-format.
+emqx_docker_acls: []
+
+#####
+# EMQX listeners
+#####
+
+# Name of the EMQX TCP listener. Defaults to "default" if not defined.
+emqx_docker_listener_tcp_name: "default"
+
+# Port number for the EMQX TCP listener. If not defined, the listener will not be created.
+emqx_docker_listener_tcp_port: 1883
+
+# Maximum number of concurrent connections allowed by the TCP listener; default value: infinity.
+emqx_docker_tcp_max_connections: null
+
+# Name of the EMQX WebSocket listener. Defaults to "default" if not defined.
+emqx_docker_listener_ws_name: "default"
+
+# Port number for the EMQX WebSocket listener. If not defined, the listener will not be created.
+emqx_docker_listener_ws_port: 8083
+
+# Maximum number of concurrent connections allowed by the WebSocket listener; default value: infinity.
+emqx_docker_ws_max_connections: null

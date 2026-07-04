@@ -1,0 +1,31 @@
+---
+- name: "Verify"
+  hosts: all
+  gather_facts: false
+
+  vars:
+    emqx_docker_volume_config_name: "emqx-config"
+    emqx_docker_volume_data_name: "emqx-data"
+    emqx_docker_volume_logs_name: "emqx-logs"
+
+  tasks:
+    - name: "Verify volumes"
+      ansible.builtin.include_tasks:
+        file: "verify-volume.yml"
+      with_items:
+        - "{{ emqx_docker_volume_config_name }}"
+        - "{{ emqx_docker_volume_data_name }}"
+        - "{{ emqx_docker_volume_logs_name }}"
+      loop_control:
+        loop_var: "__emqx_volume_name"
+
+    - name: Get info on container
+      community.docker.docker_container_info:
+        name: "emqx-molecule"
+      register: _emqx_container
+
+    - name: Verify container state
+      ansible.builtin.assert:
+        that:
+          - _emqx_container.exists
+          - _emqx_container["container"]["State"]["Status"] == "running"

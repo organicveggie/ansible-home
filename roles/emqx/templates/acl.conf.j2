@@ -1,0 +1,3 @@
+{% for acl in emqx_docker_acls %}
+{ {{ acl.permission }}, {{ acl.clients }}, {{ acl.access }}, [ {{ acl.topic }} ] },
+{% endfor %}

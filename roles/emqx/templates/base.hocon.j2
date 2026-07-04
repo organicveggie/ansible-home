@@ -1,0 +1,86 @@
+## Define configurations that can later be overridden through UI/API/CLI.
+##
+## Config precedence order:
+##   etc/base.hocon < cluster.hocon < emqx.conf < environment variables
+
+## Logging configs
+## EMQX provides support for two primary log handlers: `file` and `console`,
+## with an additional `audit` handler specifically designed to always direct logs to files.
+## The system's default log handling behavior can be configured via the environment
+## variable `EMQX_DEFAULT_LOG_HANDLER`, which accepts the following settings:
+##  - `file`: Directs log output exclusively to files.
+##  - `console`: Channels log output solely to the console.
+## It's noteworthy that `EMQX_DEFAULT_LOG_HANDLER` is set to `file`
+## when EMQX is initiated via systemd `emqx.service` file.
+## In scenarios outside systemd initiation, `console` serves as the default log handler.
+## Read more about configs here: https://docs.emqx.com/en/enterprise/latest/configuration/logs.html
+log {
+{% if emqx_docker_log_file %}
+    file {
+        level = {{ emqx_docker_log_level_file }}
+    }
+{% endif -%}
+{% if emqx_docker_log_console %}
+    console {
+        level = {{ emqx_docker_log_level_console }}
+    }
+{% endif -%}
+}
+
+
+## Dashboard listener defaults.
+## Placed here (rather than in `emqx.conf`) so that overrides written by the
+## dashboard, the REST API, or plugins such as `emqx_acme` -- which land in
+## `cluster.hocon` -- take effect across restarts. Pin a value in `emqx.conf`
+## only when you want to prevent runtime overrides.
+dashboard {
+    listeners {
+        http.bind = 18083
+    }
+}
+
+authentication = [
+    {
+        backend = "built_in_database"
+        mechanism = "password_based"
+        password_hash_algorithm {
+            name = "sha256",
+            salt_position = "suffix"
+        }
+        user_id_type = "username"
+        bootstrap_file = "${EMQX_ETC_DIR}/auth-bootstrap.csv"
+        bootstrap_type = "plain"
+    }
+]
+
+{% if emqx_docker_acls | length > 0 -%}
+authorization {
+  deny_action = ignore
+  no_match = deny
+  sources = [
+    {
+      type = file
+      enable = true
+      path = "etc/acl.conf"
+    }
+  ]
+}
+{% endif -%}
+
+{% if emqx_docker_listener_tcp_port is defined and emqx_docker_listener_tcp_port is not none %}
+listeners.tcp.{{ emqx_docker_listener_tcp_name | default('default', true) }} {
+  bind = "0.0.0.0:{{ emqx_docker_listener_tcp_port }}"
+{% if emqx_docker_tcp_max_connections is defined and emqx_docker_tcp_max_connections is not none %}
+  max_connections = {{ emqx_docker_tcp_max_connections }}
+{% endif -%}
+}
+{% endif -%}
+
+{% if emqx_docker_listener_ws_port is defined and emqx_docker_listener_ws_port is not none %}
+listeners.ws.{{ emqx_docker_listener_ws_name | default('default', true) }} {
+  bind = "0.0.0.0:{{ emqx_docker_listener_ws_port }}"
+{% if emqx_docker_ws_max_connections is defined and emqx_docker_ws_max_connections is not none %}
+  max_connections = {{ emqx_docker_ws_max_connections }}
+{% endif -%}
+}
+{% endif -%}

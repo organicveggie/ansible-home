@@ -1,0 +1,5 @@
+---
+emqx_docker_uid: "1000"
+emqx_docker_user: "emqx"
+emqx_docker_gid: "1000"
+emqx_docker_group: "emqx"

@@ -1,0 +1,44 @@
+---
+- name: "{{ emqx_docker_role_label }} | Get info on volume {{ __volume_name }}"
+  community.docker.docker_volume_info:
+    name: "{{ __volume_name }}"
+  register: "__emqx_docker_volume_info"
+
+- name: "{{ emqx_docker_role_label }} | BEFORE get stats for volume {{ __volume_name }}"
+  ansible.builtin.stat:
+    path: "{{ __emqx_docker_volume_info.volume.Mountpoint }}"
+  register: "__emqx_docker_volume_stats"
+
+- name: "{{ emqx_docker_role_label }} | BEFORE volume info for {{ __volume_name }}"
+  ansible.builtin.debug:
+    msg:
+      - "Volume: {{ __volume_name }}"
+      - "Mountpoint: {{ __emqx_docker_volume_info.volume.Mountpoint }}"
+      - "Gid: {{ __emqx_docker_volume_stats.stat.gid }}"
+      - "Uid: {{ __emqx_docker_volume_stats.stat.uid }}"
+      - "IsDir: {{ __emqx_docker_volume_stats.stat.isdir }}"
+      - "Mode: {{ __emqx_docker_volume_stats.stat.mode }}"
+
+- name: "{{ emqx_docker_role_label }} | Set ownership for {{ __volume_name }}"
+  ansible.builtin.file:
+    path: "{{ __emqx_docker_volume_info.volume.Mountpoint }}"
+    owner: "{{ emqx_docker_user }}"
+    group: "{{ emqx_docker_group }}"
+    recurse: false
+    state: "directory"
+    mode: "0770"
+
+- name: "{{ emqx_docker_role_label }} | AFTER get stats for volume {{ __volume_name }}"
+  ansible.builtin.stat:
+    path: "{{ __emqx_docker_volume_info.volume.Mountpoint }}"
+  register: "__emqx_docker_volume_stats"
+
+- name: "{{ emqx_docker_role_label }} | AFTER volume info for {{ __volume_name }}"
+  ansible.builtin.debug:
+    msg: |
+      - "Volume: {{ __volume_name }}"
+      - "Mountpoint: {{ __emqx_docker_volume_info.volume.Mountpoint }}"
+      - "Gid: {{ __emqx_docker_volume_stats.stat.gid }}"
+      - "Uid: {{ __emqx_docker_volume_stats.stat.uid }}"
+      - "IsDir: {{ __emqx_docker_volume_stats.stat.isdir }}"
+      - "Mode: {{ __emqx_docker_volume_stats.stat.mode }}"
