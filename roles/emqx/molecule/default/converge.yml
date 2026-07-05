@@ -36,11 +36,27 @@
         is_superuser: true
       - username: "testuser1"
         password: "testpassword1"
+      - username: "testuser2"
+        password: "testpassword2"
     emqx_docker_acls:
       - permission: "allow"
-        clients: "{user, \"testuser1\"}"
-        access: "all"
-        topic: "\"testtopic1/#\""
+        client:
+          type: "user"
+          value: "testuser1"
+        operation: "all"
+        topics:
+          - "testtopic1/#"
+          - "testtopic2/#"
+          - "testtopic3/subtopic/#"
+      - permission: "allow"
+        client:
+          type: "user"
+          value: "testuser2"
+        operation: "all"
+        topics:
+          - "testtopic3/subtopic/#"
+      - permission: "deny"
+        client: "all"
     emqx_docker_host_config_path: "/opt/emqx/etc"
 
   pre_tasks:
