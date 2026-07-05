@@ -100,7 +100,11 @@ r740xd_emqx_admin_username: null
 r740xd_emqx_admin_password: null
 r740xd_emqx_docker_name: "emqx"
 r740xd_emqx_host_domain: null
-r740xd_emqx_http_port: "1883"
+r740xd_emqx_http_port: "18083"
+r740xd_emqx_prometheus_username: null
+r740xd_emqx_prometheus_password: null
+r740xd_emqx_tcp_port: "1883"
+r740xd_emqx_ws_port: "9001"
 r740xd_emqx_zigbee2mqtt_password: null
 
 ###

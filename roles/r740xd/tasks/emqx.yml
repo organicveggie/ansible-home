@@ -34,5 +34,7 @@
     emqx_docker_host_domain: "{{ r740xd_emqx_host_domain }}"
     emqx_docker_network_name: "{{ docker_networks.emqx.name }}"
     emqx_docker_name: "{{ r740xd_emqx_docker_name }}"
-    emqx_docker_listener_ws_port: "9001"
+    emqx_docker_dashboard_port: "{{ r740xd_emqx_http_port }}"
+    emqx_docker_listener_tcp_port: "{{ r740xd_emqx_tcp_port }}"
+    emqx_docker_listener_ws_port: "{{ r740xd_emqx_ws_port }}"
   tags: ["setup", "emqx"]

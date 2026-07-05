@@ -19,6 +19,7 @@
     prometheus_docker_extra_hosts:
       host.docker.internal: "host-gateway"
     prometheus_docker_extra_networks:
+      - name: "{{ docker_networks.emqx.name }}"
       - name: "{{ docker_networks.saurron.name }}"
     prometheus_docker_host_domain: "{{ r740xd_prometheus_host_domain }}"
     prometheus_docker_memory: "1GB"
@@ -76,6 +77,16 @@
           static_configs:
             - targets:
               - "{{ r740xd_saurron_docker_name }}:{{ r740xd_saurron_http_api_port }}"
+
+        - job_name: "emqx"
+          metrics_path: "/api/v5/prometheus/stats"
+          scrape_interval: "15s"
+          basic_auth:
+            username: "{{ r740xd_emqx_prometheus_username }}"
+            password: "{{ r740xd_emqx_prometheus_password }}"
+          static_configs:
+            - targets:
+              - "{{ r740xd_emqx_docker_name }}:{{ r740xd_emqx_http_port }}"
 
 - name: "R740xd | Install Prometheus node exporter"
   ansible.builtin.import_role:
