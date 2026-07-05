@@ -1,9 +1,0 @@
----
-- name: "Get info on {{ __mosquitto_volume_name }} volume"
-  community.docker.docker_volume_info:
-    name: "{{ __mosquitto_volume_name }}"
-  register: _mosquitto_volume_info
-
-- name: "Verify {{ __mosquitto_volume_name }} volume exists"
-  ansible.builtin.assert:
-    that: _mosquitto_volume_info.exists

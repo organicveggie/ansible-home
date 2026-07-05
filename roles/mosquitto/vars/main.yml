@@ -1,2 +1,0 @@
----
-mosquitto_docker_dynamic_security_config: "/mosquitto/config/dynamic-security.json"
