@@ -69,6 +69,8 @@
         r740xd_emqx_admin_username: "{{ vault_emqx_admin_username }}"
         r740xd_emqx_admin_password: "{{ vault_emqx_admin_password }}"
         r740xd_emqx_host_domain: "{{ vault_veggie_home_domain }}"
+        r740xd_emqx_prometheus_username: "{{ vault_emqx_prometheus_username }}"
+        r740xd_emqx_prometheus_password: "{{ vault_emqx_prometheus_password }}"
         r740xd_emqx_zigbee2mqtt_password: "{{ vault_emqx_zigbee2mqtt_password }}"
         # Glances
         r740xd_glances_config_data: "{{ _glances_config_data }}"
