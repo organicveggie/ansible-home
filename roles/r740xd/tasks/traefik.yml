@@ -88,20 +88,20 @@
           ansible.builtin.set_fact:
             _r740xd_traefik_entrypoints: "{{ _r740xd_traefik_entrypoints | default({}) | combine(r740xd_traefik_zwavejsui_entrypoints) }}"
 
-- name: "traefik | Process EMQX network"
-  when: "docker_networks.emqx.name | default('', true) | trim | length > 0"
+- name: "traefik | Process Zigbee network"
+  when: "docker_networks.zigbee.name | default('', true) | trim | length > 0"
   block:
-    - name: "traefik | Check if EMQX network exists"
+    - name: "traefik | Check if Zigbee network exists"
       community.docker.docker_network_info:
-        name: "{{ docker_networks.emqx.name }}"
-      register: "_r740xd_traefik_emqx_network_info"
+        name: "{{ docker_networks.zigbee.name }}"
+      register: "_r740xd_traefik_zigbee_network_info"
 
-    - name: "traefik | Configure Traefik for EMQX"
-      when: "_r740xd_traefik_emqx_network_info.exists"
+    - name: "traefik | Configure Traefik for Zigbee"
+      when: "_r740xd_traefik_zigbee_network_info.exists"
       block:
-        - name: "traefik | Enable EMQX extra network"
+        - name: "traefik | Enable Zigbee extra network"
           ansible.builtin.set_fact:
-            _r740xd_traefik_extra_networks: "{{ _r740xd_traefik_extra_networks | default([]) + [{'name': docker_networks.emqx.name}] }}"
+            _r740xd_traefik_extra_networks: "{{ _r740xd_traefik_extra_networks | default([]) + [{'name': docker_networks.zigbee.name}] }}"
 
         - name: "traefik | Enable EMQX entrypoints"
           ansible.builtin.set_fact:

@@ -23,12 +23,8 @@
     name: "zigbee2mqtt"
   vars:
     zigbee2mqtt_docker_device: "{{ r740xd_hass_zigbee_device }}"
-    zigbee2mqtt_docker_extra_networks:
-      - name: "{{ docker_networks.emqx.name }}"
-        aliases:
-          - "zigbee2mqtt"
     zigbee2mqtt_docker_host_domain: "{{ r740xd_hass_host_domain }}"
-    zigbee2mqtt_docker_network_name: "{{ docker_networks.hass.name }}"
+    zigbee2mqtt_docker_network_name: "{{ docker_networks.zigbee.name }}"
     zigbee2mqtt_docker_timezone: "{{ r740xd_hass_timezone }}"
   when:
     - "r740xd_hass_zigbee_device is defined"
