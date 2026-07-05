@@ -20,7 +20,6 @@
     - "{{ docker_networks.portainer.name }}"
     - "{{ docker_networks.tautulli.name }}"
     - "{{ docker_networks.prometheus.name }}"
-    - "{{ docker_networks.mosquitto.name }}"
   loop_control:
     loop_var: __item
 
@@ -89,24 +88,24 @@
           ansible.builtin.set_fact:
             _r740xd_traefik_entrypoints: "{{ _r740xd_traefik_entrypoints | default({}) | combine(r740xd_traefik_zwavejsui_entrypoints) }}"
 
-- name: "traefik | Process Mosquitto network"
-  when: "docker_networks.mosquitto.name | default('', true) | trim | length > 0"
+- name: "traefik | Process EMQX network"
+  when: "docker_networks.emqx.name | default('', true) | trim | length > 0"
   block:
-    - name: "traefik | Check if Mosquitto network exists"
+    - name: "traefik | Check if EMQX network exists"
       community.docker.docker_network_info:
-        name: "{{ docker_networks.mosquitto.name }}"
-      register: "_r740xd_traefik_mosquitto_network_info"
+        name: "{{ docker_networks.emqx.name }}"
+      register: "_r740xd_traefik_emqx_network_info"
 
-    - name: "traefik | Configure Traefik for Mosquitto"
-      when: "_r740xd_traefik_mosquitto_network_info.exists"
+    - name: "traefik | Configure Traefik for EMQX"
+      when: "_r740xd_traefik_emqx_network_info.exists"
       block:
-        - name: "traefik | Enable Mosquitto extra network"
+        - name: "traefik | Enable EMQX extra network"
           ansible.builtin.set_fact:
-            _r740xd_traefik_extra_networks: "{{ _r740xd_traefik_extra_networks | default([]) + [{'name': docker_networks.mosquitto.name}] }}"
+            _r740xd_traefik_extra_networks: "{{ _r740xd_traefik_extra_networks | default([]) + [{'name': docker_networks.emqx.name}] }}"
 
-        - name: "traefik | Enable Mosquitto entrypoints"
+        - name: "traefik | Enable EMQX entrypoints"
           ansible.builtin.set_fact:
-            _r740xd_traefik_entrypoints: "{{ _r740xd_traefik_entrypoints | default({}) | combine(r740xd_traefik_mosquitto_entrypoints) }}"
+            _r740xd_traefik_entrypoints: "{{ _r740xd_traefik_entrypoints | default({}) | combine(r740xd_traefik_emqx_entrypoints) }}"
 
 - name: "traefik | Define all ports"
   ansible.builtin.set_fact:

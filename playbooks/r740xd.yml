@@ -65,6 +65,11 @@
         # Domain name
         r740xd_site_domain: "{{ veggie_base_domain_name }}"
         r740xd_domain_name: "{{ veggie_nas_domain_name }}"
+        # EMQX
+        r740xd_emqx_admin_username: "{{ vault_emqx_admin_username }}"
+        r740xd_emqx_admin_password: "{{ vault_emqx_admin_password }}"
+        r740xd_emqx_host_domain: "{{ vault_veggie_home_domain }}"
+        r740xd_emqx_zigbee2mqtt_password: "{{ vault_emqx_zigbee2mqtt_password }}"
         # Glances
         r740xd_glances_config_data: "{{ _glances_config_data }}"
         # Groups
@@ -95,8 +100,6 @@
         r740xd_kometa_trakt: "{{ kometa_trakt }}"
         # Lidarr
         r740xd_lidarr_host_domain: "{{ veggie_base_domain_name }}"
-        # Mosquitto
-        r740xd_mosquitto_host_domain: "{{ vault_veggie_home_domain }}"
         # Navidrome
         r740xd_navidrome_host_domain: "{{ veggie_base_domain_name }}"
         r740xd_navidrome_lastfm_apikey: "{{ navidrome_lastfm_apikey }}"

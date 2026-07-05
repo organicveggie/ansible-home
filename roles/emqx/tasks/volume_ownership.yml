@@ -1,0 +1,14 @@
+---
+- name: "{{ emqx_docker_role_label }} | Get info on volume {{ __volume_name }}"
+  community.docker.docker_volume_info:
+    name: "{{ __volume_name }}"
+  register: "__emqx_docker_volume_info"
+
+- name: "{{ emqx_docker_role_label }} | Set ownership for {{ __volume_name }}"
+  ansible.builtin.file:
+    path: "{{ __emqx_docker_volume_info.volume.Mountpoint }}"
+    owner: "{{ emqx_docker_uid }}"
+    group: "{{ emqx_docker_gid }}"
+    recurse: false
+    state: "directory"
+    mode: "0770"

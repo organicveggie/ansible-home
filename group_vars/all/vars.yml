@@ -113,8 +113,8 @@ docker_networks:
     name: "prometheus"
     gateway: "172.30.21.1"
     subnet: "172.30.21.0/24"
-  mosquitto:
-    name: "mosquitto"
+  emqx:
+    name: "emqx"
     gateway: "172.30.22.1"
     subnet: "172.30.22.0/24"
 

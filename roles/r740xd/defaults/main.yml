@@ -94,6 +94,16 @@ r740xd_domain_name: "host.subdomain.example.com"
 r740xd_site_domain: "subdomain.example.com"
 
 ###
+### EMQX
+###
+r740xd_emqx_admin_username: null
+r740xd_emqx_admin_password: null
+r740xd_emqx_docker_name: "emqx"
+r740xd_emqx_host_domain: null
+r740xd_emqx_http_port: "1883"
+r740xd_emqx_zigbee2mqtt_password: null
+
+###
 ### Glances
 ###
 r740xd_glances_config_data: null
@@ -158,14 +168,6 @@ r740xd_kometa_trakt: null
 ###
 r740xd_lidarr_cpus: "3"
 r740xd_lidarr_host_domain: null
-
-###
-### Mosquitto
-###
-r740xd_mosquitto_docker_name: "mosquitto"
-r740xd_mosquitto_host_domain: null
-r740xd_mosquitto_http_port: "1883"
-r740xd_mosquitto_ws_port: "9001"
 
 ###
 ### Navidrome

@@ -27,20 +27,31 @@
   become: true
 
   vars:
-    mosquitto_docker_network_name: "mosquitto-test"
-    mosquitto_docker_available_externally: false
+    emqx_docker_name: "emqx-molecule"
+    emqx_docker_network_name: "emqx-test"
+    emqx_docker_available_externally: true
+    emqx_docker_users:
+      - username: "admin"
+        password: "admin"
+        is_superuser: true
+      - username: "testuser1"
+        password: "testpassword1"
+    emqx_docker_acls:
+      - permission: "allow"
+        clients: "{user, \"testuser1\"}"
+        access: "all"
+        topic: "\"testtopic1/#\""
+    emqx_docker_host_config_path: "/opt/emqx/etc"
 
   pre_tasks:
     - name: Install Docker
       ansible.builtin.include_role:
         name: geerlingguy.docker
 
-    - name: Create mosquitto-test Docker network
+    - name: Create emqx-test Docker network
       community.docker.docker_network:
-        name: mosquitto-test
+        name: "{{ emqx_docker_network_name }}"
         state: present
 
   roles:
-    - role: mosquitto
-      vars:
-        mosquitto_docker_name: "mosquitto-molecule"
+    - role: emqx

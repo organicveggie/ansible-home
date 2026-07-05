@@ -1,0 +1,38 @@
+- name: "R740xd | EMQX | Setup Docker network"
+  community.docker.docker_network:
+    name: "{{ docker_networks.emqx.name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "no"
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ docker_networks.emqx.subnet }}"
+        gateway: "{{ docker_networks.emqx.gateway }}"
+  tags: ["setup", "network"]
+
+- name: "R740xd | EMQX | Setup EMQX container"
+  ansible.builtin.import_role:
+    name: "emqx"
+  vars:
+    emqx_docker_users:
+      - user_id: "{{ r740xd_emqx_admin_username }}"
+        password: "{{ r740xd_emqx_admin_password }}"
+        is_superuser: true
+      - user_id: "zigbee2mqtt"
+        password: "{{ r740xd_emqx_zigbee2mqtt_password }}"
+    emqx_docker_acls:
+      - permission: "allow"
+        clients: "{user, \"admin\"}"
+        access: "all"
+        topic: "\"#\""
+      - permission: "allow"
+        clients: "{user, \"zigbee2mqtt\"}"
+        access: "all"
+        topic: "\"zigbee2mqtt/#\""
+      - permission: "deny"
+        clients: "all"
+    emqx_docker_host_domain: "{{ r740xd_emqx_host_domain }}"
+    emqx_docker_network_name: "{{ docker_networks.emqx.name }}"
+    emqx_docker_name: "{{ r740xd_emqx_docker_name }}"
+    emqx_docker_listener_ws_port: "9001"
+  tags: ["setup", "emqx"]

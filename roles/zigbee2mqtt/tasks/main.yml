@@ -32,7 +32,7 @@
 
 - name: "{{ zigbee2mqtt_docker_role_label }} | Create config file"
   ansible.builtin.template:
-    src: "templates/mosquitto.conf.j2"
+    src: "templates/configuration.yaml.j2"
     dest: "{{ _zigbee2mqtt_docker_data_volume_info.volume.Mountpoint }}/configuration.yaml"
     mode: "0640"
   register: "_zigbee2mqtt_docker_config_file"

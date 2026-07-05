@@ -1,0 +1,92 @@
+## Define configurations that can later be overridden through UI/API/CLI.
+##
+## Config precedence order:
+##   etc/base.hocon < cluster.hocon < emqx.conf < environment variables
+
+## Logging configs
+## EMQX provides support for two primary log handlers: `file` and `console`,
+## with an additional `audit` handler specifically designed to always direct logs to files.
+## The system's default log handling behavior can be configured via the environment
+## variable `EMQX_DEFAULT_LOG_HANDLER`, which accepts the following settings:
+##  - `file`: Directs log output exclusively to files.
+##  - `console`: Channels log output solely to the console.
+## It's noteworthy that `EMQX_DEFAULT_LOG_HANDLER` is set to `file`
+## when EMQX is initiated via systemd `emqx.service` file.
+## In scenarios outside systemd initiation, `console` serves as the default log handler.
+## Read more about configs here: https://docs.emqx.com/en/enterprise/latest/configuration/logs.html
+log {
+{% if emqx_docker_log_file %}
+    file {
+        level = {{ emqx_docker_log_level_file }}
+    }
+{% endif -%}
+{% if emqx_docker_log_console %}
+    console {
+        level = {{ emqx_docker_log_level_console }}
+    }
+{% endif -%}
+}
+
+authentication = [
+    {
+        backend = "built_in_database"
+        mechanism = "password_based"
+        password_hash_algorithm {
+            name = "sha256",
+            salt_position = "suffix"
+        }
+        user_id_type = "username"
+        bootstrap_file = "${EMQX_ETC_DIR}/{{ emqx_docker_bootstrap_auth_file }}"
+        bootstrap_type = "plain"
+    }
+]
+
+{% if emqx_docker_acls | length > 0 -%}
+authorization {
+  deny_action = ignore
+  no_match = deny
+  sources = [
+    {
+      type = file
+      enable = true
+      path = "etc/{{ emqx_docker_bootstrap_acl_file }}"
+    }
+  ]
+}
+{% endif -%}
+
+{% if emqx_docker_available_externally | default(false, true) | bool -%}
+dashboard {
+  listeners {
+    http {
+        bind = "0.0.0.0:{{ emqx_docker_dashboard_port }}"
+{% if emqx_docker_dashboard_max_connections is defined and emqx_docker_dashboard_max_connections is not none -%}
+        max_connections = {{ emqx_docker_dashboard_max_connections }}
+{% endif %}
+    }
+  }
+  cors = false
+  swagger_support = true
+  unsuccessful_login_max_attempts = 5
+  unsuccessful_login_lock_duration = 10m
+  unsuccessful_login_interval = 5m
+}
+{% endif -%}
+
+{% if emqx_docker_listener_tcp_port is defined and emqx_docker_listener_tcp_port is not none %}
+listeners.tcp.{{ emqx_docker_listener_tcp_name | default('default', true) }} {
+  bind = "0.0.0.0:{{ emqx_docker_listener_tcp_port }}"
+{% if emqx_docker_tcp_max_connections is defined and emqx_docker_tcp_max_connections is not none %}
+  max_connections = {{ emqx_docker_tcp_max_connections }}
+{% endif -%}
+}
+{% endif -%}
+
+{% if emqx_docker_listener_ws_port is defined and emqx_docker_listener_ws_port is not none %}
+listeners.ws.{{ emqx_docker_listener_ws_name | default('default', true) }} {
+  bind = "0.0.0.0:{{ emqx_docker_listener_ws_port }}"
+{% if emqx_docker_ws_max_connections is defined and emqx_docker_ws_max_connections is not none %}
+  max_connections = {{ emqx_docker_ws_max_connections }}
+{% endif -%}
+}
+{% endif -%}
