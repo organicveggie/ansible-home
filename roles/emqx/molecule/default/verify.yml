@@ -4,7 +4,7 @@
   gather_facts: false
 
   vars:
-    emqx_docker_volume_config_name: "emqx-config"
+    emqx_docker_host_config_path: "/opt/emqx/etc"
     emqx_docker_volume_data_name: "emqx-data"
     emqx_docker_volume_logs_name: "emqx-logs"
 
@@ -13,11 +13,21 @@
       ansible.builtin.include_tasks:
         file: "verify-volume.yml"
       with_items:
-        - "{{ emqx_docker_volume_config_name }}"
         - "{{ emqx_docker_volume_data_name }}"
         - "{{ emqx_docker_volume_logs_name }}"
       loop_control:
         loop_var: "__emqx_volume_name"
+
+    - name: "Check config folder"
+      ansible.builtin.stat:
+        path: "{{ emqx_docker_host_config_path }}"
+      register: "_emqx_config_folder"
+
+    - name: "Verify config folder exists"
+      ansible.builtin.assert:
+        that:
+          - _emqx_config_folder.stat.exists
+          - _emqx_config_folder.stat.isdir
 
     - name: Get info on container
       community.docker.docker_container_info:

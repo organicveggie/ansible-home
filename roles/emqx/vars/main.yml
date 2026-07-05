@@ -3,3 +3,6 @@ emqx_docker_uid: "1000"
 emqx_docker_user: "emqx"
 emqx_docker_gid: "1000"
 emqx_docker_group: "emqx"
+
+emqx_docker_bootstrap_acl_file: "acl.conf"
+emqx_docker_bootstrap_auth_file: "auth-bootstrap.json"

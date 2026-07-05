@@ -96,9 +96,12 @@ r740xd_site_domain: "subdomain.example.com"
 ###
 ### EMQX
 ###
+r740xd_emqx_admin_username: null
+r740xd_emqx_admin_password: null
 r740xd_emqx_docker_name: "emqx"
 r740xd_emqx_host_domain: null
 r740xd_emqx_http_port: "1883"
+r740xd_emqx_zigbee2mqtt_password: null
 
 ###
 ### Glances

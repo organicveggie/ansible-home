@@ -1,3 +1,7 @@
 {% for acl in emqx_docker_acls %}
-{ {{ acl.permission }}, {{ acl.clients }}, {{ acl.access }}, [ {{ acl.topic }} ] },
+{% if acl.access is defined and acl.access is not none %}
+{ {{ acl.permission }}, {{ acl.clients }}, {{ acl.access }}, [{{ acl.topic }}] }.
+{% else %}
+{ {{ acl.permission }}, {{ acl.clients }} }.
+{% endif %}
 {% endfor %}

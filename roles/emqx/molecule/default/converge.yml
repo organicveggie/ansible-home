@@ -41,6 +41,7 @@
         clients: "{user, \"testuser1\"}"
         access: "all"
         topic: "\"testtopic1/#\""
+    emqx_docker_host_config_path: "/opt/emqx/etc"
 
   pre_tasks:
     - name: Install Docker

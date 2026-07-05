@@ -18,7 +18,6 @@
   community.docker.docker_volume:
     name: "{{ __item }}"
   with_items:
-    - "{{ emqx_docker_volume_config_name }}"
     - "{{ emqx_docker_volume_data_name }}"
     - "{{ emqx_docker_volume_logs_name }}"
   loop_control:
@@ -27,9 +26,6 @@
 - name: "{{ emqx_docker_role_label }} | Set Docker mount list for volume mounts"
   ansible.builtin.set_fact:
     _emqx_docker_mount_list:
-      - "source": "{{ emqx_docker_volume_config_name }}"
-        "target": "/opt/emqx/custom_config"
-        "type": 'volume'
       - "source": "{{ emqx_docker_volume_data_name }}"
         "target": "/opt/emqx/data"
         "type": 'volume'
@@ -41,21 +37,24 @@
   ansible.builtin.include_tasks:
     file: "volume_ownership.yml"
   with_items:
-    - "{{ emqx_docker_volume_config_name }}"
     - "{{ emqx_docker_volume_data_name }}"
     - "{{ emqx_docker_volume_logs_name }}"
   loop_control:
     loop_var: __volume_name
 
-- name: "{{ emqx_docker_role_label }} | Get info on config volume"
-  community.docker.docker_volume_info:
-    name: "{{ emqx_docker_volume_config_name }}"
-  register: "_emqx_docker_config_volume_info"
+- name: "{{ emqx_docker_role_label }} | Create config folder on host"
+  ansible.builtin.file:
+    path: "{{ emqx_docker_host_config_path }}"
+    state: "directory"
+    mode: "0770"
+    recurse: true
+    owner: "{{ emqx_docker_uid }}"
+    group: "{{ emqx_docker_gid }}"
 
 - name: "{{ emqx_docker_role_label }} | Create config file"
   ansible.builtin.template:
     src: "templates/base.hocon.j2"
-    dest: "{{ _emqx_docker_config_volume_info.volume.Mountpoint }}/base.hocon"
+    dest: "{{ emqx_docker_host_config_path }}/base.hocon"
     mode: "0660"
     owner: "{{ emqx_docker_uid }}"
     group: "{{ emqx_docker_gid }}"
@@ -63,8 +62,8 @@
 
 - name: "{{ emqx_docker_role_label }} | Create initial authentication file"
   ansible.builtin.template:
-    src: "templates/auth-bootstrap.csv.j2"
-    dest: "{{ _emqx_docker_config_volume_info.volume.Mountpoint }}/auth-bootstrap.csv"
+    src: "templates/auth-bootstrap.json.j2"
+    dest: "{{ emqx_docker_host_config_path }}/{{ emqx_docker_bootstrap_auth_file }}"
     mode: "0660"
     owner: "{{ emqx_docker_uid }}"
     group: "{{ emqx_docker_gid }}"
@@ -72,11 +71,26 @@
 - name: "{{ emqx_docker_role_label }} | Create initial ACL file"
   ansible.builtin.template:
     src: "templates/acl.conf.j2"
-    dest: "{{ _emqx_docker_config_volume_info.volume.Mountpoint }}/acl.conf"
+    dest: "{{ emqx_docker_host_config_path }}/{{ emqx_docker_bootstrap_acl_file }}"
     mode: "0660"
     owner: "{{ emqx_docker_uid }}"
     group: "{{ emqx_docker_gid }}"
-  when: "emqx_docker_acls | length > 0"
+
+- name: "{{ emqx_docker_role_label }} | Add Docker mount list for config bind mounts"
+  ansible.builtin.set_fact:
+    _emqx_docker_mount_list: > 
+      {{ _emqx_docker_mount_list | default([], true) + [
+        {"source": __item.source, "target": __item.target, "type": "bind" }
+      ] }}
+  with_items:
+    - "source": "{{ emqx_docker_host_config_path }}/base.hocon"
+      "target": "/opt/emqx/etc/base.hocon"
+    - "source": "{{ emqx_docker_host_config_path }}/{{ emqx_docker_bootstrap_auth_file }}"
+      "target": "/opt/emqx/etc/{{ emqx_docker_bootstrap_auth_file }}"
+    - "source": "{{ emqx_docker_host_config_path }}/{{ emqx_docker_bootstrap_acl_file }}"
+      "target": "/opt/emqx/etc/{{ emqx_docker_bootstrap_acl_file }}"
+  loop_control:
+    loop_var: "__item"
 
 - name: "{{ emqx_docker_role_label }} | Build container FQDN"
   ansible.builtin.set_fact:
@@ -95,13 +109,7 @@
 
 - name: "{{ emqx_docker_role_label }} | Define environment variables for this container"
   ansible.builtin.set_fact:
-    _emqx_docker_env: >
-      {{ _emqx_docker_env | default({}, true) | combine({__item.key | string: __item.value | string}) }}
-  with_items:
-    - key: "EMQX_ETC_DIR"
-      value: "/opt/emqx/custom_config"
-  loop_control:
-    loop_var: __item
+    _emqx_docker_env: []
 
 - name: "{{ emqx_docker_role_label }} | Add user specified environment variables"
   ansible.builtin.set_fact:

@@ -36,7 +36,7 @@ authentication = [
             salt_position = "suffix"
         }
         user_id_type = "username"
-        bootstrap_file = "${EMQX_ETC_DIR}/auth-bootstrap.csv"
+        bootstrap_file = "${EMQX_ETC_DIR}/{{ emqx_docker_bootstrap_auth_file }}"
         bootstrap_type = "plain"
     }
 ]
@@ -49,7 +49,7 @@ authorization {
     {
       type = file
       enable = true
-      path = "etc/acl.conf"
+      path = "etc/{{ emqx_docker_bootstrap_acl_file }}"
     }
   ]
 }

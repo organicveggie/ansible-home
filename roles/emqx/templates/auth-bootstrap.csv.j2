@@ -1,3 +1,0 @@
-{% for user in emqx_docker_users %}
-{{ user.username }},{{ user.password }},{{ user.is_superuser|default(false)|bool |ternary('true', 'false') }}
-{% endfor %}
