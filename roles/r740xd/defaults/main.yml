@@ -99,6 +99,7 @@ r740xd_site_domain: "subdomain.example.com"
 r740xd_emqx_admin_username: null
 r740xd_emqx_admin_password: null
 r740xd_emqx_docker_name: "emqx"
+r740xd_emqx_hass_password: null
 r740xd_emqx_host_domain: null
 r740xd_emqx_http_port: "18083"
 r740xd_emqx_prometheus_username: null

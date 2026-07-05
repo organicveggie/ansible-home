@@ -18,19 +18,44 @@
       - user_id: "{{ r740xd_emqx_admin_username }}"
         password: "{{ r740xd_emqx_admin_password }}"
         is_superuser: true
+      - user_id: "hass"
+        password: "{{ r740xd_emqx_hass_password }}"
       - user_id: "zigbee2mqtt"
         password: "{{ r740xd_emqx_zigbee2mqtt_password }}"
     emqx_docker_acls:
       - permission: "allow"
-        clients: "{user, \"admin\"}"
-        access: "all"
-        topic: "\"#\""
+        client:
+          type: "user"
+          value: "admin"
+        operation: "all"
+        topics:
+          - "#"
       - permission: "allow"
-        clients: "{user, \"zigbee2mqtt\"}"
-        access: "all"
-        topic: "\"zigbee2mqtt/#\""
+        client:
+          type: "user"
+          value: "zigbee2mqtt"
+        operation: "all"
+        topics:
+          - "zigbee2mqtt/#"
+      - permission: "allow"
+        client:
+          type: "user"
+          value: "hass"
+        operation: "all"
+        topics:
+          - "cloudapp/QBUSMQTTGW/#"
+          - "drop_connect/discovery/#"
+          - "dsmr/#"
+          - "esphome/discover/#"
+          - "fully/deviceInfo/#"
+          - "/greencell/broadcast/#"
+          - "homeassistant/#"
+          - "inels/status/#"
+          - "pglab/discovery/#"
+          - "tasmota/discovery/#"
+          - "zigbee2mqtt/#"
       - permission: "deny"
-        clients: "all"
+        client: "all"
     emqx_docker_dashboard_port: "{{ r740xd_emqx_http_port }}"
     emqx_docker_extra_networks:
       - name: "{{ docker_networks.hass.name }}"

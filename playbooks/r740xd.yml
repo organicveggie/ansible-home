@@ -68,6 +68,7 @@
         # EMQX
         r740xd_emqx_admin_username: "{{ vault_emqx_admin_username }}"
         r740xd_emqx_admin_password: "{{ vault_emqx_admin_password }}"
+        r740xd_emqx_hass_password: "{{ vault_emqx_hass_password }}"
         r740xd_emqx_host_domain: "{{ vault_veggie_home_domain }}"
         r740xd_emqx_prometheus_username: "{{ vault_emqx_prometheus_username }}"
         r740xd_emqx_prometheus_password: "{{ vault_emqx_prometheus_password }}"
