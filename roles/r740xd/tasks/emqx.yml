@@ -18,6 +18,8 @@
       - user_id: "{{ r740xd_emqx_admin_username }}"
         password: "{{ r740xd_emqx_admin_password }}"
         is_superuser: true
+      - user_id: "hass"
+        password: "{{ r740xd_emqx_hass_password }}"
       - user_id: "zigbee2mqtt"
         password: "{{ r740xd_emqx_zigbee2mqtt_password }}"
     emqx_docker_acls:
@@ -29,6 +31,10 @@
         clients: "{user, \"zigbee2mqtt\"}"
         access: "all"
         topic: "\"zigbee2mqtt/#\""
+      - permission: "allow"
+        clients: "{user, \"hass\"}"
+        access: "all"
+        topic: "\"zigbee2mqtt/#\",\"homeassistant/#\",\"drop_connect/discovery/#\",\"dsmr/#\",\"esphome/discover/#\",\"fully/deviceInfo/#\""
       - permission: "deny"
         clients: "all"
     emqx_docker_dashboard_port: "{{ r740xd_emqx_http_port }}"
