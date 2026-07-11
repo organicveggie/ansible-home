@@ -16,8 +16,7 @@
           - "eno2"
           - "eno3"
           - "eno4"
-        addresses:
-          - "192.168.25.50/24"
+        addresses: ["192.168.25.50/24"]
         routes:
           - to: "default"
             via: "192.168.25.1"
@@ -26,8 +25,6 @@
             - "192.168.25.1"
             - "8.8.8.8"
         parameters:
-          # mode: active-backup
-          # mii-monitor-interval: 100
           lacp-rate: "fast"
           mode: "802.3ad"
           transmit-hash-policy: "layer2"
@@ -35,5 +32,9 @@
       # IOT vlan
       bond0.50:
         id: 50
-        link: bond0
-        dhcp4: no 
+        link: "bond0"
+        addresses: ["192.168.150.50/24"]
+        nameservers:
+          addresses:
+            - "8.8.8.8"
+            - "8.8.4.4"

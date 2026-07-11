@@ -5,7 +5,7 @@ netplan_cloudinit_yaml: "50-cloud-init.yaml"
 netplan_cloudinit_folder: "/etc/cloud/cloud.cfg.d"
 netplan_disable_cloudinit: true
 
-netplan_new_config_name: "01-netcfg.yml"
+netplan_new_config_name: "01-netcfg.yaml"
 
 # List of interface names.
 # e.g. ["eno1", "eno2", "eno3"]
