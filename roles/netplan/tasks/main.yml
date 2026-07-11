@@ -41,3 +41,9 @@
     src: "templates/01-netcfg.yml.j2"
     dest: "/etc/netplan/{{ netplan_new_config_name }}"
     mode: "0600"
+  register: "netplan_netcfg_file"
+
+- name: "{{ netplan_ansible_role_label }}: Apply netplan"
+  ansible.builtin.shell:
+    cmd: "/usr/sbin/netplan apply"
+  when: "netplan_netcfg_file.changed"

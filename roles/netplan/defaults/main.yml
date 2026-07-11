@@ -12,3 +12,5 @@ netplan_new_config_name: "01-netcfg.yml"
 netplan_interfaces: []
 
 netplan_bonds: []
+
+netplan_vlans: []

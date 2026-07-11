@@ -8,3 +8,7 @@ network:
     bonds:
 {{ netplan_bonds | to_nice_yaml(indent=4) | indent(8, first=True) }}
 {% endif %}
+{% if netplan_vlans | default([], true) | length > 0 %}
+    vlans:
+{{ netplan_vlans | to_nice_yaml(indent=4) | indent(8, first=True) }}    
+{% endif %}
