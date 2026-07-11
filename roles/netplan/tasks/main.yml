@@ -1,0 +1,43 @@
+---
+- name: "{{ netplan_ansible_role_label }}: Disable Cloud Init netplan"
+  when: "netplan_disable_cloudinit"
+  block:
+    - name: "{{ netplan_ansible_role_label }}: Check if Cloud Init netplan file exists"
+      ansible.builtin.stat:
+        path: "{{ netplan_folder }}/{{ netplan_cloudinit_yaml }}"
+      register: "_netplan_cloudinit_file"
+
+    - name: "{{ netplan_ansible_role_label }}: Backup Cloud Init netplan file"
+      when: "_netplan_cloudinit_file.stat.exists"
+      block:
+      - name: "{{ netplan_ansible_role_label }}: Copy Cloud Init netplan file"
+        ansible.builtin.copy:
+          src: "{{ netplan_folder }}/{{ netplan_cloudinit_yaml }}"
+          dest: "{{ netplan_folder }}/{{ netplan_cloudinit_yaml }}.bak"
+          remote_src: true
+          mode: "0600"
+
+      - name: "{{ netplan_ansible_role_label }}: Remove Cloud Init netplan file"
+        ansible.builtin.file:
+          path: "{{ netplan_folder }}/{{ netplan_cloudinit_yaml }}"
+          state: "absent"
+
+    - name: "{{ netplan_ansible_role_label }}: Check if Cloud Init folder exists"
+      ansible.builtin.stat:
+        path: "{{ netplan_cloudinit_folder }}"
+      register: "_netplan_cloudinit_folder"
+
+    - name: "{{ netplan_ansible_role_label }}: Disable networking in Cloud Init"
+      ansible.builtin.template:
+        src: "templates/99-disable-network-config.cfg.j2"
+        dest: "{{ netplan_cloudinit_folder }}/99-disable-network-config.cfg"
+        mode: "0644"
+      when:
+        - "_netplan_cloudinit_folder.stat.exists"
+        - "_netplan_cloudinit_folder.stat.isdir"
+
+- name: "{{ netplan_ansible_role_label }}: Create custom netplan"
+  ansible.builtin.template:
+    src: "templates/01-netcfg.yml.j2"
+    dest: "/etc/netplan/{{ netplan_new_config_name }}"
+    mode: "0600"

@@ -1,0 +1,33 @@
+---
+- name: "R740xd | Configure netplan"
+  ansible.builtin.import_role:
+    name: "netplan"
+  vars:
+    netplan_interfaces:
+      - "eno1"
+      - "eno2"
+      - "eno3"
+      - "eno4"
+    netplan_bonds:
+      bond0:
+        dhcp4: true
+        interfaces:
+          - "eno1"
+          - "eno2"
+          - "eno3"
+          - "eno4"
+        addresses:
+          - "192.168.25.50/24"
+        routes:
+          - to: "default"
+            via: "192.168.25.1"
+        nameservers:
+          addresses:
+            - "192.168.25.1"
+            - "8.8.8.8"
+        parameters:
+          # mode: active-backup
+          # mii-monitor-interval: 100
+          lacp-rate: "fast"
+          mode: "802.3ad"
+          transmit-hash-policy: "layer2"
