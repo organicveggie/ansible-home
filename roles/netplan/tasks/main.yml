@@ -36,6 +36,19 @@
         - "_netplan_cloudinit_folder.stat.exists"
         - "_netplan_cloudinit_folder.stat.isdir"
 
+- name: "{{ netplan_ansible_role_label }}: Define default VLAN config"
+  ansible.builtin.set_fact:
+    _netplan_default_vlan_config: {}
+
+- name: "{{ netplan_ansible_role_label }}: Assemble VLAN config"
+  ansible.builtin.include_tasks:
+    file: "vlan.yml"
+  loop: "{{ netplan_vlans | dict2items }}"
+  loop_control:
+    loop_var: "__item"
+    label: "VLAN {{ __item.key }}"
+  when: "netplan_vlans | default({}, true) | length > 0"
+
 - name: "{{ netplan_ansible_role_label }}: Create custom netplan"
   ansible.builtin.template:
     src: "templates/01-netcfg.yml.j2"

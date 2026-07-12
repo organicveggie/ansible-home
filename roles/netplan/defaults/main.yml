@@ -13,4 +13,17 @@ netplan_interfaces: []
 
 netplan_bonds: []
 
-netplan_vlans: []
+# Dictionary mapping vlan names to vlan details. Each entry should be a dictionary containg valid
+# keys for a netplan config. At a minimum, needs to include: id and link.
+#
+# Example 1
+# netplan_vlans:
+#   mgmt:
+#     id: 10
+#     link: bond0
+#   iot:
+#     id: 20
+#     link: eth1
+#     nameservers:
+#       addresses: ["8.8.8.8", "8.8.4.4"]
+netplan_vlans: {}

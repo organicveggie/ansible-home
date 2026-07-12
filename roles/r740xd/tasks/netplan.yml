@@ -16,24 +16,36 @@
           - "eno2"
           - "eno3"
           - "eno4"
-        addresses: ["192.168.25.50/24"]
+        addresses: ["{{ r740xd_network_vlan_address.default }}/{{ vlans.default.subnet_size }}"]
         routes:
           - to: "default"
-            via: "192.168.25.1"
+            via: "{{ vlans.default.subnet_base }}.1"
         nameservers:
           addresses:
-            - "192.168.25.1"
+            - "{{ vault_default_dns_address }}"
             - "8.8.8.8"
         parameters:
           lacp-rate: "fast"
           mode: "802.3ad"
           transmit-hash-policy: "layer2"
     netplan_vlans:
-      # IOT vlan
-      bond0.50:
-        id: 50
+      mgmt:
+        id: "{{ vlans.mgmt.id }}"
         link: "bond0"
-        addresses: ["192.168.150.50/24"]
+        nameservers:
+          addresses:
+            - "8.8.8.8"
+            - "8.8.4.4"
+      iot:
+        id: "{{ vlans.iot.id }}"
+        link: "bond0"
+        nameservers:
+          addresses:
+            - "8.8.8.8"
+            - "8.8.4.4"
+      dmz:
+        id: "{{ vlans.dmz.id }}"
+        link: "bond0"
         nameservers:
           addresses:
             - "8.8.8.8"

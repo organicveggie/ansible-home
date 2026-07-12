@@ -1,0 +1,11 @@
+---
+- name: "{{ netplan_ansible_role_label }}: Define vlan interface name for {{ __item.key }}"
+  ansible.builtin.set_fact:
+    _netplan_vlan_iface: "{{ __item.value.link }}.{{ __item.value.id }}"
+
+- name: "{{ netplan_ansible_role_label }}: Add VLAN {{ __item.key }}"
+  ansible.builtin.set_fact:
+    _netplan_default_vlan_config: >
+      {{ _netplan_default_vlan_config | default({}, true) | combine({
+        _netplan_vlan_iface: __item.value
+      }) }}

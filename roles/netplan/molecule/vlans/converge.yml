@@ -45,12 +45,23 @@
     netplan_disable_cloudinit: true
     netplan_new_config_name: "03-netplan-config.yml"
     netplan_interfaces:
+      - "eth0"
       - "eth1"
     netplan_vlans:
-      eth0.50:
-        id: 50
+      mgmt:
+        id: 10
         link: eth0
-        dhcp4: no 
+      servers:
+        id: 20
+        link: eth1
+        addresses: ["192.168.20.10/24"]
+        nameservers:
+          addresses:
+            - "8.8.8.8"
+            - "8.8.4.4"
+      iot:
+        id: 30
+        link: eth0
 
   roles:
     - role: "netplan"

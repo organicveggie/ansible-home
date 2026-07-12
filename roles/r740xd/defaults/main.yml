@@ -186,6 +186,13 @@ r740xd_navidrome_spotify_client_id: null
 r740xd_navidrome_spotify_client_secret: null
 
 ###
+### Network
+###
+r740xd_network_vlan_address:
+  default: null
+  servers: null
+
+###
 ### Plex
 ###
 r740xd_plex_container_name: "plex"
