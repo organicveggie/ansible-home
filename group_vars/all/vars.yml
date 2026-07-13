@@ -151,6 +151,48 @@ msmtp_from: "{{ vault_msmtp_from }}"
 default_dns_address: "{{ vault_default_dns_address }}"
 iot_vlan_docker_network_name: "iot-macvlan40"
 
+vlans:
+  default:
+    id: "1"
+    subnet_base: "{{ vault_vlans_default_subnet_part }}"
+    subnet_size: "{{ vault_vlans_default_subnet_size }}"
+    subnet: "{{ vault_vlans_default_subnet_part }}.0/{{ vault_vlans_default_subnet_size }}"
+  mgmt:
+    id: "{{ vault_vlans_mgmt_id }}"
+    subnet_base: "{{ vault_vlans_mgmt_subnet_part }}"
+    subnet_size: "{{ vault_vlans_mgmt_subnet_size }}"
+    subnet: "{{ vault_vlans_mgmt_subnet_part }}.0/{{ vault_vlans_mgmt_subnet_size }}"
+  trusted:
+    id: "{{ vault_vlans_trusted_id }}"
+    subnet_base: "{{ vault_vlans_trusted_subnet_part }}"
+    subnet_size: "{{ vault_vlans_trusted_subnet_size }}"
+    subnet: "{{ vault_vlans_trusted_subnet_part }}.0/{{ vault_vlans_trusted_subnet_size }}"
+  servers:
+    id: "{{ vault_vlans_servers_id }}"
+    subnet_base: "{{ vault_vlans_servers_subnet_part }}"
+    subnet_size: "{{ vault_vlans_servers_subnet_size }}"
+    subnet: "{{ vault_vlans_servers_subnet_part }}.0/{{ vault_vlans_servers_subnet_size }}"
+  guest:
+    id: "{{ vault_vlans_guest_id }}"
+    subnet_base: "{{ vault_vlans_guest_subnet_part }}"
+    subnet_size: "{{ vault_vlans_guest_subnet_size }}"
+    subnet: "{{ vault_vlans_guest_subnet_part }}.0/{{ vault_vlans_guest_subnet_size }}"
+  iot:
+    id: "{{ vault_vlans_iot_id }}"
+    subnet_base: "{{ vault_vlans_iot_subnet_part }}"
+    subnet_size: "{{ vault_vlans_iot_subnet_size }}"
+    subnet: "{{ vault_vlans_iot_subnet_part }}.0/{{ vault_vlans_iot_subnet_size }}"
+  dmz:
+    id: "{{ vault_vlans_dmz_id }}"
+    subnet_base: "{{ vault_vlans_dmz_subnet_part }}"
+    subnet_size: "{{ vault_vlans_dmz_subnet_size }}"
+    subnet: "{{ vault_vlans_dmz_subnet_part }}.0/{{ vault_vlans_dmz_subnet_size }}"
+  torrent:
+    id: "{{ vault_vlans_torrent_id }}"
+    subnet_base: "{{ vault_vlans_torrent_subnet_part }}"
+    subnet_size: "{{ vault_vlans_torrent_subnet_size }}"
+    subnet: "{{ vault_vlans_torrent_subnet_part }}.0/{{ vault_vlans_torrent_subnet_size }}"
+
 ###
 ### Notifications
 ###

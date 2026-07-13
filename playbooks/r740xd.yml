@@ -110,6 +110,10 @@
         r740xd_navidrome_music_folder: "{{ navidrome_music_folder }}"
         r740xd_navidrome_spotify_client_id: "{{ navidrome_spotify_client_id }}"
         r740xd_navidrome_spotify_client_secret: "{{ navidrome_spotify_client_secret }}" 
+        # Network
+        r740xd_network_vlan_address:
+          default: "{{ vault_r740xd_vlan_default_addr_ipv4 }}"
+          servers: "{{ vault_r740xd_vlan_servers_addr_ipv4 }}"
         # Node-RED
         r740xd_nodered_timezone: "{{ home_timezone }}"
         # Plex

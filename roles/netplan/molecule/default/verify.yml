@@ -1,0 +1,20 @@
+---
+- name: "Verify"
+  hosts: all
+  gather_facts: false
+
+  vars:
+    netplan_folder: "/etc/netplan"
+    netplan_new_config_name: "03-netplan-config.yml"
+
+  tasks:
+    - name: "Check new netplan config file"
+      ansible.builtin.stat:
+        path: "{{ netplan_folder }}/{{ netplan_new_config_name }}"
+      register: "_netplan_verify_config_file"
+    
+    - name: "Verify new config file exists"
+      ansible.builtin.assert:
+        that:
+          - _netplan_verify_config_file.stat.exists
+          - (not _netplan_verify_config_file.stat.isdir is defined) or (_netplan_verify_config_file.stat.isdir is defined and not _netplan_verify_config_file.stat.isdir)

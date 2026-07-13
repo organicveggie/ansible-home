@@ -1,0 +1,73 @@
+---
+- name: Install dependencies
+  hosts: all
+  become: true
+
+  vars:
+    netplan_cloudinit_folder: "/etc/cloud/cloud.cfg.d"
+
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 600
+      when: ansible_facts["os_family"] == 'Debian'
+
+    - name: Wait for systemd to complete initialization
+      ansible.builtin.command: systemctl is-system-running
+      register: systemctl_status
+      until: >
+        'running' in systemctl_status.stdout or
+        'degraded' in systemctl_status.stdout
+      retries: 30
+      delay: 5
+      when: ansible_facts["service_mgr"] == 'systemd'
+      changed_when: false
+      failed_when: systemctl_status.rc > 1
+    
+    - name: Install netplan  # noqa: command-instead-of-module var-naming[no-role-prefix]
+      ansible.builtin.apt:
+        name: "netplan.io"
+        install_recommends: false
+    
+    - name: Create fake Cloud Init folder
+      ansible.builtin.file:
+        name: "{{ netplan_cloudinit_folder }}"
+        state: "directory"
+        recurse: true
+        mode: "0770"
+
+- name: Converge
+  hosts: all
+  become: true
+
+  vars:
+    netplan_disable_cloudinit: true
+    netplan_new_config_name: "03-netplan-config.yml"
+    netplan_interfaces:
+      - "eth2"
+      - "eth3"
+      - "eth4"
+      - "eth5"
+    netplan_bonds:
+      bond1:
+        dhcp4: true
+        interfaces:
+          - "eth2"
+          - "eth3"
+        addresses:
+          - "192.172.192.50/24"
+        routes:
+          - to: "default"
+            via: "192.172.192.1"
+        nameservers:
+          addresses:
+            - "192.172.192.1"
+            - "8.8.8.8"
+        parameters:
+          lacp-rate: "fast"
+          mode: "802.3ad"
+          transmit-hash-policy: "layer2"
+
+  roles:
+    - role: "netplan"

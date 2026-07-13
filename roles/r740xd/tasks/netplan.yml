@@ -1,0 +1,52 @@
+---
+- name: "R740xd | Configure netplan"
+  ansible.builtin.import_role:
+    name: "netplan"
+  vars:
+    netplan_interfaces:
+      - "eno1"
+      - "eno2"
+      - "eno3"
+      - "eno4"
+    netplan_bonds:
+      bond0:
+        dhcp4: true
+        interfaces:
+          - "eno1"
+          - "eno2"
+          - "eno3"
+          - "eno4"
+        addresses: ["{{ r740xd_network_vlan_address.default }}/{{ vlans.default.subnet_size }}"]
+        routes:
+          - to: "default"
+            via: "{{ vlans.default.subnet_base }}.1"
+        nameservers:
+          addresses:
+            - "{{ vault_default_dns_address }}"
+            - "8.8.8.8"
+        parameters:
+          lacp-rate: "fast"
+          mode: "802.3ad"
+          transmit-hash-policy: "layer2"
+    netplan_vlans:
+      mgmt:
+        id: "{{ vlans.mgmt.id }}"
+        link: "bond0"
+        nameservers:
+          addresses:
+            - "8.8.8.8"
+            - "8.8.4.4"
+      iot:
+        id: "{{ vlans.iot.id }}"
+        link: "bond0"
+        nameservers:
+          addresses:
+            - "8.8.8.8"
+            - "8.8.4.4"
+      dmz:
+        id: "{{ vlans.dmz.id }}"
+        link: "bond0"
+        nameservers:
+          addresses:
+            - "8.8.8.8"
+            - "8.8.4.4"

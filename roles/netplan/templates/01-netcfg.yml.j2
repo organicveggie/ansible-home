@@ -1,0 +1,14 @@
+network:
+    version: 2
+    ethernets:
+{% for iface in netplan_interfaces %}
+        {{ iface }}: {}
+{% endfor %}
+{% if netplan_bonds | default([], true) | length > 0 %}
+    bonds:
+{{ netplan_bonds | to_nice_yaml(indent=4) | indent(8, first=True) }}
+{% endif %}
+{% if netplan_vlans | default([], true) | length > 0 %}
+    vlans:
+{{ _netplan_default_vlan_config | to_nice_yaml(indent=4) | indent(8, first=True) }}    
+{% endif %}

@@ -35,6 +35,10 @@
     veggie_common_extra_packages: "{{ r740xd_extra_packages }}"
   tags: ["common"]
 
+- name: "Configure netplan networking"
+  ansible.builtin.import_tasks: "netplan.yml"
+  tags: ["netplan"]
+
 - name: "Setup Logrotate"
   ansible.builtin.import_role: 
     name: "nickhammond.logrotate"

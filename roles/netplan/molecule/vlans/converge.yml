@@ -1,0 +1,67 @@
+---
+- name: Install dependencies
+  hosts: all
+  become: true
+
+  vars:
+    netplan_cloudinit_folder: "/etc/cloud/cloud.cfg.d"
+
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 600
+      when: ansible_facts["os_family"] == 'Debian'
+
+    - name: Wait for systemd to complete initialization
+      ansible.builtin.command: systemctl is-system-running
+      register: systemctl_status
+      until: >
+        'running' in systemctl_status.stdout or
+        'degraded' in systemctl_status.stdout
+      retries: 30
+      delay: 5
+      when: ansible_facts["service_mgr"] == 'systemd'
+      changed_when: false
+      failed_when: systemctl_status.rc > 1
+    
+    - name: Install netplan  # noqa: command-instead-of-module var-naming[no-role-prefix]
+      ansible.builtin.apt:
+        name: "netplan.io"
+        install_recommends: false
+    
+    - name: Create fake Cloud Init folder
+      ansible.builtin.file:
+        name: "{{ netplan_cloudinit_folder }}"
+        state: "directory"
+        recurse: true
+        mode: "0770"
+
+- name: Converge
+  hosts: all
+  become: true
+
+  vars:
+    netplan_disable_cloudinit: true
+    netplan_new_config_name: "03-netplan-config.yml"
+    netplan_interfaces:
+      - "eth0"
+      - "eth1"
+    netplan_vlans:
+      mgmt:
+        id: 10
+        link: eth0
+      servers:
+        id: 20
+        link: eth1
+        addresses: ["192.168.20.10/24"]
+        nameservers:
+          addresses:
+            - "8.8.8.8"
+            - "8.8.4.4"
+      iot:
+        id: 30
+        link: eth0
+
+  roles:
+    - role: "netplan"
