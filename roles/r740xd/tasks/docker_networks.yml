@@ -17,7 +17,7 @@
 
 - name: "{{ r740xd_ansible_role_label }} | docker | Create macvlan network"
   community.docker.docker_network:
-    name: "{{ __item.key }}"
+    name: "{{ __item.value.name }}"
     driver: "macvlan"
     driver_options:
       parent: "{{ __item.value.network_parent }}"

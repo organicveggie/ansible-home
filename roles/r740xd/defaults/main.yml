@@ -65,23 +65,6 @@ r740xd_diun_regopts_dockerio_passwd: null
 ### Docker macvlan network
 ###
 
-# IPv4 gateway for the macvlan network.
-r740xd_docker_macvlan_gateway: null
-
-# IPv4 range set aside for the macvlan network in subnet format.
-# Example: "192.168.1.240/28"
-r740xd_docker_macvlan_iprange: null
-
-# Name of the macvlan network.
-r740xd_docker_macvlan_network_name: "r740xd_macvlan"
-
-# Name of the parent interface on the host for the macvlan network.
-# Examples: "eth0", "eno1"
-r740xd_docker_macvlan_network_parent: null
-
-# IPv4 subnet for the macvlan network.
-r740xd_docker_macvlan_subnet: null
-
 # List of users who should be added to the docker group.
 r740xd_docker_users: []
 

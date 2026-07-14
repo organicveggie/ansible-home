@@ -82,7 +82,7 @@
 - name: "Setup TimeMachine"
   ansible.builtin.import_tasks: "time-machine.yml"
   vars:
-    r740xd_time_machine_network_name: "{{ r740xd_docker_macvlan_network_name }}"
+    r740xd_time_machine_network_name: "{{ docker_macvlans.nas_macvlan.name }}"
   tags: ["time-machine", "timemachine", "tim"]
 
 - name: "Setup Calibre Web"
@@ -124,7 +124,7 @@
 - name: "Setup Plex"
   ansible.builtin.import_tasks: "plex.yml"
   vars:
-    r740xd_plex_network_name: "{{ r740xd_docker_macvlan_network_name }}"
+    r740xd_plex_network_name: "{{ docker_macvlans.nas_macvlan.name }}"
   tags: ["plex", "pms"]
 
 - name: "Setup Tautulli"

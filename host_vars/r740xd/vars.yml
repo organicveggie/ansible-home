@@ -407,6 +407,7 @@ navidrome_base_url: "https://navidrome"
 ###
 docker_macvlans:
   mgmnt:
+    name: "mgmt"
     network_parent: "{{ vault_docker_macvlan_mgmt.parent }}"
     enable_ipv6: false
     internal: false
@@ -416,6 +417,7 @@ docker_macvlans:
         gateway: "{{ vault_docker_macvlan_mgmt.gateway }}"
         iprange: "{{ vault_docker_macvlan_mgmt.iprange }}"
   iot:
+    name: "iot"
     network_parent: "{{ vault_docker_macvlan_iot.parent }}"
     enable_ipv6: false
     internal: false
@@ -425,6 +427,7 @@ docker_macvlans:
         gateway: "{{ vault_docker_macvlan_iot.gateway }}"
         iprange: "{{ vault_docker_macvlan_iot.iprange }}"
   nas_macvlan:
+    name: "nas_macvlan"
     network_parent: "{{ vault_docker_macvlan_default.parent }}"
     enable_ipv6: false
     internal: false
