@@ -1,0 +1,31 @@
+---
+- name: "{{ r740xd_ansible_role_label }} | Create Docker bridge networks"
+  community.docker.docker_network:
+    name: "{{ __item.name }}"
+    driver: "bridge"
+    enable_ipv6: false
+    internal: "{{ __item.internal }}"
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ __item.subnet }}"
+        gateway: "{{ __item.gateway }}"
+  loop:
+    - "{{ docker_networks.ingressproxy }}"
+    - "{{ docker_networks.automation }}"
+  loop_control:
+    loop_var: "__item"
+
+- name: "{{ r740xd_ansible_role_label }} | docker | Create macvlan network"
+  community.docker.docker_network:
+    name: "{{ __item.key }}"
+    driver: "macvlan"
+    driver_options:
+      parent: "{{ __item.value.network_parent }}"
+    enable_ipv6: "{{ __item.value.enable_ipv6 }}"
+    internal: "{{ __item.value.internal }}"
+    scope: "{{ __item.value.scope }}"
+    ipam_config: "{{ __item.value.ipam_config }}"
+  loop: "{{ docker_macvlans | dict2items }}"
+  loop_control:
+    loop_var: "__item"
+

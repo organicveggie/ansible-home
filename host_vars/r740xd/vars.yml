@@ -403,6 +403,38 @@ kometa_trakt: |2
 navidrome_base_url: "https://navidrome"
 
 ###
+### Network
+###
+docker_macvlans:
+  mgmnt:
+    network_parent: "{{ vault_docker_macvlan_mgmt.parent }}"
+    enable_ipv6: false
+    internal: false
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ vault_docker_macvlan_mgmt.subnet }}"
+        gateway: "{{ vault_docker_macvlan_mgmt.gateway }}"
+        iprange: "{{ vault_docker_macvlan_mgmt.iprange }}"
+  iot:
+    network_parent: "{{ vault_docker_macvlan_iot.parent }}"
+    enable_ipv6: false
+    internal: false
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ vault_docker_macvlan_iot.subnet }}"
+        gateway: "{{ vault_docker_macvlan_iot.gateway }}"
+        iprange: "{{ vault_docker_macvlan_iot.iprange }}"
+  nas_macvlan:
+    network_parent: "{{ vault_docker_macvlan_default.parent }}"
+    enable_ipv6: false
+    internal: false
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ vault_docker_macvlan_default.subnet }}"
+        gateway: "{{ vault_docker_macvlan_default.gateway }}"
+        iprange: "{{ vault_docker_macvlan_default.iprange }}"
+
+###
 ### NodeRED
 ###
 nodered_credential_secret: "{{ vault_nodered_credential_secret }}"
