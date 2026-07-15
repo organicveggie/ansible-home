@@ -1,13 +1,13 @@
 ---
-- name: "hass | Set fqdn"
+- name: "{{ r740xd_ansible_role_label }} | hass | Set fqdn"
   ansible.builtin.set_fact:
     _r740xd_hass_fqdn: "{{ r740xd_hass_host_name }}.{{ r740xd_hass_host_domain }}"
 
-- name: "hass | Set endpoint URL for Ecowitt"
+- name: "{{ r740xd_ansible_role_label }} | hass | Set endpoint URL for Ecowitt"
   ansible.builtin.set_fact:
     _r740xd_hass_ecowitt_url: "http://{{ _r740xd_hass_fqdn }}:8123"
 
-- name: "hass | Setup Docker network"
+- name: "{{ r740xd_ansible_role_label }} | hass | Setup Docker network"
   community.docker.docker_network:
     name: "{{ docker_networks.hass.name }}"
     driver: "bridge"
@@ -18,7 +18,7 @@
       - subnet: "{{ docker_networks.hass.subnet }}"
         gateway: "{{ docker_networks.hass.gateway }}"
 
-- name: "hass | Setup Zigbee2MQTT container"
+- name: "{{ r740xd_ansible_role_label }} | hass | Setup Zigbee2MQTT container"
   ansible.builtin.import_role:
     name: "zigbee2mqtt"
   vars:
@@ -30,7 +30,7 @@
     - "r740xd_hass_zigbee_device is defined"
     - "r740xd_hass_zigbee_device not in (None, omit)"
 
-- name: "hass | Setup Z-Wave JS UI container"
+- name: "{{ r740xd_ansible_role_label }} | hass | Setup Z-Wave JS UI container"
   ansible.builtin.import_role:
     name: "zwavejsui"
   vars:
@@ -42,12 +42,12 @@
     - "r740xd_hass_zwave_device is defined"
     - "r740xd_hass_zwave_device not in (None, omit)"
 
-- name: "hass | Get info on data volume"
+- name: "{{ r740xd_ansible_role_label }} | hass | Get info on data volume"
   community.docker.docker_volume_info:
     name: "{{ r740xd_traefik_data_volume_name }}"
   register: "_r740xd_hass_traefik_data_volume_info"
 
-- name: "hass | Setup OpenThread Border Router container"
+- name: "{{ r740xd_ansible_role_label }} | hass | Setup OpenThread Border Router container"
   ansible.builtin.import_role:
     name: "hass-otbr"
   vars:
@@ -68,7 +68,7 @@
     - "r740xd_hass_matter_device is defined"
     - "r740xd_hass_matter_device not in (None, omit)"
 
-- name: "hass | Setup Home Assistant container"
+- name: "{{ r740xd_ansible_role_label }} | hass | Setup Home Assistant container"
   ansible.builtin.import_role:
     name: "home-assistant"
   vars:

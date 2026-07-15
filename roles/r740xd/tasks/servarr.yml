@@ -1,7 +1,7 @@
 ---
-- name: "servarr | Set group id"
+- name: "{{ r740xd_ansible_role_label }} | servarr | Set group id"
   ansible.builtin.set_fact:
-    _nas_servarr_gid: "{{ r740xd_servarr_gid | default(r740xd_servarr_uid) }}"
+    _r740xd_servarr_gid: "{{ r740xd_servarr_gid | default(r740xd_servarr_uid) }}"
   tags:
     - "setup"
     - "bazarr"
@@ -21,9 +21,9 @@
     - "syncthing"
     - "unpackerr"
 
-- name: "servarr | Set group name"
+- name: "{{ r740xd_ansible_role_label }} | servarr | Set group name"
   ansible.builtin.set_fact:
-    _nas_servarr_groupname: "{{ r740xd_servarr_groupname | default(r740xd_servarr_username) }}"
+    _r740xd_servarr_groupname: "{{ r740xd_servarr_groupname | default(r740xd_servarr_username) }}"
   tags:
     - "setup"
     - "cross-seed"
@@ -36,22 +36,22 @@
     - "syncthing"
     - "unpackerr"
 
-- name: "servarr | Create group"
+- name: "{{ r740xd_ansible_role_label }} | servarr | Create group"
   ansible.builtin.group:
-    name: "{{ _nas_servarr_groupname }}"
-    gid: "{{ _nas_servarr_gid }}"
+    name: "{{ _r740xd_servarr_groupname }}"
+    gid: "{{ _r740xd_servarr_gid }}"
   tags: ["setup"]
 
-- name: "servarr | Create user"
+- name: "{{ r740xd_ansible_role_label }} | servarr | Create user"
   ansible.builtin.user:
     name: "{{ r740xd_servarr_username }}"
     uid: "{{ r740xd_servarr_uid }}"
     create_home: "false"
-    groups: "{{ _nas_servarr_groupname }}"
+    groups: "{{ _r740xd_servarr_groupname }}"
     password: "!"
   tags: ["setup"]
 
-- name: "servarr | Create ZFS datasets"
+- name: "{{ r740xd_ansible_role_label }} | servarr | Create ZFS datasets"
   community.general.zfs:
     name: "{{ __item }}"
     state: present
@@ -64,12 +64,12 @@
     loop_var: __item
   tags: ["setup", "zfs"]
 
-- name: "servarr | Set owner/group for datasets"
+- name: "{{ r740xd_ansible_role_label }} | servarr | Set owner/group for datasets"
   ansible.builtin.file:
     path: "{{ __item }}"
     state: "directory"
     owner: "{{ r740xd_servarr_username }}"
-    group: "{{ _nas_servarr_groupname }}"
+    group: "{{ _r740xd_servarr_groupname }}"
     mode: "775"
   loop:
     - "{{ r740xd_servarr_path }}"
@@ -80,12 +80,12 @@
     loop_var: __item
   tags: ["setup", "zfs"]
 
-- name: "servarr | Create folders for downloads"
+- name: "{{ r740xd_ansible_role_label }} | servarr | Create folders for downloads"
   ansible.builtin.file:
     path: "{{ __item }}"
     state: "directory"
     owner: "{{ r740xd_servarr_username }}"
-    group: "{{ _nas_servarr_groupname }}"
+    group: "{{ _r740xd_servarr_groupname }}"
     mode: "775"
   loop:
     - "{{ r740xd_servarr_path }}/downloads/torrents/completed"
@@ -100,7 +100,7 @@
     loop_var: __item
   tags: ["setup", "zfs"]
 
-- name: "servarr | Setup Docker network"
+- name: "{{ r740xd_ansible_role_label }} | servarr | Setup Docker network"
   community.docker.docker_network:
     name: "{{ docker_networks.servarr.name }}"
     driver: "bridge"
@@ -112,21 +112,21 @@
         gateway: "{{ docker_networks.servarr.gateway }}"
   tags: ["setup", "network"]
 
-- name: "servarr | Cross-Seed"
+- name: "{{ r740xd_ansible_role_label }} | servarr | Cross-Seed"
   ansible.builtin.import_tasks:
     file: "servarr_cross_seed.yml"
   vars:
     cross_seed_script_owner: "{{ r740xd_servarr_uid }}"
-    cross_seed_script_group: "{{ _nas_servarr_gid }}"
+    cross_seed_script_group: "{{ _r740xd_servarr_gid }}"
     cross_seed_xseed_torrent_clients: ["ultra-qbit-yukon"]
     cross_seed_xseed_usenet_clients: ["SABnzbd"]
   tags: ["cross-seed", "cross_seed", "crossseed"]
 
-- name: "servarr | Setup Calibre Docker"
+- name: "{{ r740xd_ansible_role_label }} | servarr | Setup Calibre Docker"
   ansible.builtin.import_role:
     name: "calibre_docker"
   vars:
-    calibre_docker_gid: "{{ _nas_servarr_gid }}"
+    calibre_docker_gid: "{{ _r740xd_servarr_gid }}"
     calibre_docker_uid: "{{ r740xd_servarr_uid }}"
     calibre_docker_timezone: "{{ r740xd_timezone }}"
     calibre_docker_network: "{{ docker_networks.servarr.name }}"
@@ -134,7 +134,7 @@
     calibre_docker_trusted_ips: "{{ docker_networks.servarr.subnet }}"
   tags: ["setup", "calibre"]
 
-- name: "servarr | Setup Flaresolverr"
+- name: "{{ r740xd_ansible_role_label }} | servarr | Setup Flaresolverr"
   ansible.builtin.import_role:
     name: "flaresolverr"
   vars:
@@ -142,13 +142,13 @@
     flaresolverr_docker_network: "{{ docker_networks.servarr.name }}"
   tags: ["flaresolverr"]
 
-- name: "servarr | Setup Lidarr"
+- name: "{{ r740xd_ansible_role_label }} | servarr | Setup Lidarr"
   ansible.builtin.import_role:
     name: "lidarr"
   vars:
     lidarr_docker_cpus: "{{ r740xd_lidarr_cpus }}"
     lidarr_docker_data_source_path: "{{ r740xd_servarr_path }}"
-    lidarr_docker_gid: "{{ _nas_servarr_gid }}"
+    lidarr_docker_gid: "{{ _r740xd_servarr_gid }}"
     lidarr_docker_host_domain: "{{ r740xd_lidarr_host_domain }}"
     lidarr_docker_network: "{{ docker_networks.servarr.name }}"
     lidarr_docker_timezone: "{{ r740xd_timezone }}"
@@ -158,18 +158,18 @@
         target: "/data/music"
   tags: ["lidarr"]
 
-- name: "servarr | Setup prowlarr"
+- name: "{{ r740xd_ansible_role_label }} | servarr | Setup prowlarr"
   ansible.builtin.import_role:
     name: "prowlarr"
   vars:
-    prowlarr_docker_gid: "{{ _nas_servarr_gid }}"
+    prowlarr_docker_gid: "{{ _r740xd_servarr_gid }}"
     prowlarr_docker_host_domain: "{{ r740xd_prowlarr_host_domain }}"
     prowlarr_docker_network: "{{ docker_networks.servarr.name }}"
     prowlarr_docker_timezone: "{{ r740xd_timezone }}"
     prowlarr_docker_uid: "{{ r740xd_servarr_uid }}"
   tags: ["prowlarr"]
 
-- name: "servarr | Setup Radarr 1080p"
+- name: "{{ r740xd_ansible_role_label }} | servarr | Setup Radarr 1080p"
   ansible.builtin.import_role:
     name: "radarr"
   vars:
@@ -181,7 +181,7 @@
       - source: "/opt/xseed"
         target: "/xseed"
         type: "bind"
-    radarr_docker_gid: "{{ _nas_servarr_gid }}"
+    radarr_docker_gid: "{{ _r740xd_servarr_gid }}"
     radarr_docker_host_domain: "{{ r740xd_radarr1080_host_domain }}"
     radarr_docker_host_name: "{{ r740xd_radarr1080_host_name }}"
     radarr_docker_movie_source_path: "{{ r740xd_servarr_movie_source_path }}"
@@ -194,7 +194,7 @@
     radarr_docker_web_port: "{{ r740xd_radarr_web_port | default(omit) }}"
   tags: ["radarr"]
 
-- name: "servarr | Setup Radarr 4K"
+- name: "{{ r740xd_ansible_role_label }} | servarr | Setup Radarr 4K"
   ansible.builtin.import_role:
     name: "radarr"
   vars:
@@ -206,7 +206,7 @@
       - source: "/opt/xseed"
         target: "/xseed"
         type: "bind"
-    radarr_docker_gid: "{{ _nas_servarr_gid }}"
+    radarr_docker_gid: "{{ _r740xd_servarr_gid }}"
     radarr_docker_host_domain: "{{ r740xd_radarr4k_host_domain }}"
     radarr_docker_host_name: "{{ r740xd_radarr4k_host_name }}"
     radarr_docker_movie_source_path: "{{ r740xd_servarr_movie_source_path }}"
@@ -219,7 +219,7 @@
     radarr_docker_web_port: "{{ r740xd_radarr_web_port | default(omit) }}"
   tags: ["radarr"]
 
-- name: "servarr | Setup Readarr"
+- name: "{{ r740xd_ansible_role_label }} | servarr | Setup Readarr"
   ansible.builtin.import_role:
     name: "readarr"
   vars:
@@ -228,7 +228,7 @@
       - source: "{{ r740xd_readarr_library_path }}"
         target: "/data/books"
         type: "bind"
-    readarr_docker_gid: "{{ _nas_servarr_gid }}"
+    readarr_docker_gid: "{{ _r740xd_servarr_gid }}"
     readarr_docker_host_domain: "{{ r740xd_readarr_host_domain }}"
     readarr_docker_host_name: "{{ r740xd_readarr_host_name }}"
     readarr_docker_network: "{{ docker_networks.servarr.name }}"
@@ -252,19 +252,19 @@
 #       - "includes/quality-profiles/radarr-remux-web-2160p.yml"
 #       - "includes/quality-profiles/sonarr-web-1080p.yml"
 
-- name: "servarr | Setup sabnzbd"
+- name: "{{ r740xd_ansible_role_label }} | servarr | Setup sabnzbd"
   ansible.builtin.import_role:
     name: "sabnzbd"
   vars:
     sabnzbd_docker_data_source_path: "{{ r740xd_servarr_path }}"
-    sabnzbd_docker_gid: "{{ _nas_servarr_gid }}"
+    sabnzbd_docker_gid: "{{ _r740xd_servarr_gid }}"
     sabnzbd_docker_host_domain: "{{ r740xd_sabnzbd_host_domain }}"
     sabnzbd_docker_network: "{{ docker_networks.servarr.name }}"
     sabnzbd_docker_timezone: "{{ r740xd_timezone }}"
     sabnzbd_docker_uid: "{{ r740xd_servarr_uid }}"
   tags: ["sabnzbd"]
 
-- name: "servarr | Setup Sonarr 1080p"
+- name: "{{ r740xd_ansible_role_label }} | servarr | Setup Sonarr 1080p"
   ansible.builtin.import_role:
     name: "sonarr"
   vars:
@@ -275,7 +275,7 @@
       - source: "/opt/xseed/xseed.sh"
         target: "/xseed/xseed.sh"
         type: "bind"
-    sonarr_docker_gid: "{{ _nas_servarr_gid }}"
+    sonarr_docker_gid: "{{ _r740xd_servarr_gid }}"
     sonarr_docker_host_domain: "{{ r740xd_sonarr1080_host_domain }}"
     sonarr_docker_host_name: "{{ r740xd_sonarr1080_host_name }}"
     sonarr_docker_name: "{{ r740xd_sonarr1080_container_name }}"
@@ -288,7 +288,7 @@
     sonarr_docker_web_port: "{{ r740xd_sonarr_web_port | default(omit) }}"
   tags: ["sonarr"]
 
-- name: "servarr | Setup Sonarr 4K"
+- name: "{{ r740xd_ansible_role_label }} | servarr | Setup Sonarr 4K"
   ansible.builtin.import_role:
     name: "sonarr"
   vars:
@@ -299,7 +299,7 @@
       - source: "/opt/xseed/xseed.sh"
         target: "/xseed/xseed.sh"
         type: "bind"
-    sonarr_docker_gid: "{{ _nas_servarr_gid }}"
+    sonarr_docker_gid: "{{ _r740xd_servarr_gid }}"
     sonarr_docker_host_domain: "{{ r740xd_sonarr4k_host_domain }}"
     sonarr_docker_host_name: "{{ r740xd_sonarr4k_host_name }}"
     sonarr_docker_name: "{{ r740xd_sonarr4k_container_name }}"
@@ -312,24 +312,24 @@
     sonarr_docker_web_port: "{{ r740xd_sonarr_web_port | default(omit) }}"
   tags: ["sonarr"]
 
-- name: "servarr | Setup Syncthing"
+- name: "{{ r740xd_ansible_role_label }} | servarr | Setup Syncthing"
   ansible.builtin.import_role:
     name: "syncthing"
   vars:
     syncthing_available_externally: "true"
     syncthing_docker_data_source_path: "{{ r740xd_servarr_path }}"
     syncthing_docker_host_domain: "{{ r740xd_syncthing_host_domain }}"
-    syncthing_docker_gid: "{{ _nas_servarr_gid }}"
+    syncthing_docker_gid: "{{ _r740xd_servarr_gid }}"
     syncthing_docker_network: "{{ docker_networks.servarr.name }}"
     syncthing_docker_timezone: "{{ r740xd_timezone }}"
     syncthing_docker_uid: "{{ r740xd_servarr_uid }}"
   tags: ["syncthing"]
 
-- name: "servarr | Setup Unpackerr"
+- name: "{{ r740xd_ansible_role_label }} | servarr | Setup Unpackerr"
   ansible.builtin.import_role:
     name: "unpackerr"
   vars:
-    unpackerr_docker_gid: "{{ _nas_servarr_gid }}"
+    unpackerr_docker_gid: "{{ _r740xd_servarr_gid }}"
     unpackerr_docker_uid: "{{ r740xd_servarr_uid }}"
     unpackerr_docker_timezone: "{{ r740xd_timezone }}"
     unpackerr_docker_network: "{{ docker_networks.servarr.name }}"
@@ -387,7 +387,7 @@
         syncthing: true
   tags: ["unpackerr"]
 
-- name: "servarr | Setup Cloudflared"
+- name: "{{ r740xd_ansible_role_label }} | servarr | Setup Cloudflared"
   ansible.builtin.import_role:
     name: "cloudflared_docker"
   vars:
@@ -396,12 +396,12 @@
     cloudflared_docker_network: "{{ docker_networks.servarr.name }}"
   tags: ["cloudflare", "cloudflared"]
 
-- name: "Bazarr | Setup Bazarr 1080p"
+- name: "{{ r740xd_ansible_role_label }} | servarr | Setup Bazarr 1080p"
   ansible.builtin.import_role:
     name: "bazarr"
   vars:
     bazarr_docker_cpus: "{{ r740xd_bazarr_cpus }}"
-    bazarr_docker_gid: "{{ _nas_servarr_gid }}"
+    bazarr_docker_gid: "{{ _r740xd_servarr_gid }}"
     bazarr_docker_host_domain: "{{ r740xd_bazarr1080_host_domain }}"
     bazarr_docker_host_name: "{{ r740xd_bazarr1080_host_name }}"
     bazarr_docker_memory: "{{ r740xd_bazarr_memory }}"
@@ -414,12 +414,12 @@
     bazarr_docker_web_port: "{{ r740xd_bazarr_web_port }}"
   tags: ["bazarr", "bazarr1080"]
 
-- name: "Bazarr | Setup Bazarr 4K"
+- name: "{{ r740xd_ansible_role_label }} | servarr | Setup Bazarr 4K"
   ansible.builtin.import_role:
     name: "bazarr"
   vars:
     bazarr_docker_cpus: "{{ r740xd_bazarr_cpus }}"
-    bazarr_docker_gid: "{{ _nas_servarr_gid }}"
+    bazarr_docker_gid: "{{ _r740xd_servarr_gid }}"
     bazarr_docker_host_domain: "{{ r740xd_bazarr4k_host_domain }}"
     bazarr_docker_host_name: "{{ r740xd_bazarr4k_host_name }}"
     bazarr_docker_memory: "{{ r740xd_bazarr_memory }}"
@@ -432,7 +432,7 @@
     bazarr_docker_web_port: "{{ r740xd_bazarr_web_port }}"
   tags: ["bazarr", "bazarr4k"]
 
-- name: "servarr | Logrotate"
+- name: "{{ r740xd_ansible_role_label }} | servarr | Logrotate"
   ansible.builtin.include_tasks:
     file: "servarr_logrotate.yml"
   vars:

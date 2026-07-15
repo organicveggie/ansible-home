@@ -1,12 +1,12 @@
 ---
-- name: "traefik | Define fqdn"
+- name: "{{ r740xd_ansible_role_label }} | traefik v2 | Define fqdn"
   ansible.builtin.set_fact:
     _r740xd_traefik_fqdn: "traefik.{{ veggie_nas_domain_name }}"
 
 ###
 ### Configure additional networks, ports, and entrypoints
 ###
-- name: "traefik | Process extra networks"
+- name: "{{ r740xd_ansible_role_label }} | traefik v2 | Process extra networks"
   ansible.builtin.include_tasks:
     file: "traefik_network.yml"
   loop:
@@ -23,117 +23,117 @@
   loop_control:
     loop_var: __item
 
-- name: "traefik | Process Servarr network"
+- name: "{{ r740xd_ansible_role_label }} | traefik v2 | Process Servarr network"
   when: "docker_networks.servarr.name | default('') | trim | length > 0"
   block:
-    - name: "traefik | Check if Servarr network exists"
+    - name: "{{ r740xd_ansible_role_label }} | traefik v2 | Check if Servarr network exists"
       community.docker.docker_network_info:
         name: "{{ docker_networks.servarr.name }}"
       register: "_r740xd_traefik_servarr_network_info"
 
-    - name: "traefik | Configure for Servarr tools"
+    - name: "{{ r740xd_ansible_role_label }} | traefik v2 | Configure for Servarr tools"
       when: "_r740xd_traefik_servarr_network_info.exists"
       block:
-        - name: "traefik | Enable Servarr extra network"
+        - name: "{{ r740xd_ansible_role_label }} | traefik v2 | Enable Servarr extra network"
           ansible.builtin.set_fact:
             _r740xd_traefik_extra_networks: "{{ _r740xd_traefik_extra_networks | default([]) + [{'name': docker_networks.servarr.name}] }}"
 
-        - name: "traefik | Enable SyncThings (Servarr) ports"
+        - name: "{{ r740xd_ansible_role_label }} | traefik v2 | Enable SyncThings (Servarr) ports"
           ansible.builtin.set_fact:
             _r740xd_traefik_extra_ports: "{{ _r740xd_traefik_extra_ports | default([]) + r740xd_traefik_syncthings_ports }}"
         
-        - name: "traefik | Enable SyncThings (Servarr) entrypoints"
+        - name: "{{ r740xd_ansible_role_label }} | traefik v2 | Enable SyncThings (Servarr) entrypoints"
           ansible.builtin.set_fact:
             _r740xd_traefik_entrypoints: "{{ _r740xd_traefik_entrypoints | default({}) | combine(r740xd_traefik_syncthings_entrypoints) }}"
 
-- name: "traefik | Process UniFi Controller network"
+- name: "{{ r740xd_ansible_role_label }} | traefik v2 | Process UniFi Controller network"
   when: "docker_networks.unific.name | default('') | trim | length > 0"
   block:
-    - name: "traefik | Check if UniFi Controller network exists"
+    - name: "{{ r740xd_ansible_role_label }} | traefik v2 | Check if UniFi Controller network exists"
       community.docker.docker_network_info:
         name: "{{ docker_networks.unific.name }}"
       register: "_r740xd_traefik_unific_network_info"
 
-    - name: "traefik | Configure Traefik for UniFi Controller"
+    - name: "{{ r740xd_ansible_role_label }} | traefik v2 | Configure Traefik for UniFi Controller"
       when: "_r740xd_traefik_unific_network_info.exists"
       block:
-        - name: "traefik | Enable UniFi extra network"
+        - name: "{{ r740xd_ansible_role_label }} | traefik v2 | Enable UniFi extra network"
           ansible.builtin.set_fact:
             _r740xd_traefik_extra_networks: "{{ _r740xd_traefik_extra_networks | default([]) + [{'name': docker_networks.unific.name}] }}"
 
-        - name: "traefik | Enable UniFi Controlller ports"
+        - name: "{{ r740xd_ansible_role_label }} | traefik v2 | Enable UniFi Controlller ports"
           ansible.builtin.set_fact:
             _r740xd_traefik_extra_ports: "{{ _r740xd_traefik_extra_ports | default([]) + r740xd_traefik_unific_ports }}"
         
-        - name: "traefik | Enable UniFi Controller entrypoints"
+        - name: "{{ r740xd_ansible_role_label }} | traefik v2 | Enable UniFi Controller entrypoints"
           ansible.builtin.set_fact:
             _r740xd_traefik_entrypoints: "{{ _r740xd_traefik_entrypoints | default({}) | combine(r740xd_traefik_unific_entrypoints) }}"
 
-- name: "traefik | Process Home Assistant network"
+- name: "{{ r740xd_ansible_role_label }} | traefik v2 | Process Home Assistant network"
   when: "docker_networks.hass.name | default('') | trim | length > 0"
   block:
-    - name: "traefik | Check if Home Assistant network exists"
+    - name: "{{ r740xd_ansible_role_label }} | traefik v2 | Check if Home Assistant network exists"
       community.docker.docker_network_info:
         name: "{{ docker_networks.hass.name }}"
       register: "_r740xd_traefik_hass_network_info"
 
-    - name: "traefik | Configure Traefik for Home Assistant"
+    - name: "{{ r740xd_ansible_role_label }} | traefik v2 | Configure Traefik for Home Assistant"
       when: "_r740xd_traefik_hass_network_info.exists"
       block:
-        - name: "traefik | Enable Home Assistant extra network"
+        - name: "{{ r740xd_ansible_role_label }} | traefik v2 | Enable Home Assistant extra network"
           ansible.builtin.set_fact:
             _r740xd_traefik_extra_networks: "{{ _r740xd_traefik_extra_networks | default([]) + [{'name': docker_networks.hass.name}] }}"
 
-        - name: "traefik | Enable Z-Wave JS UI entrypoints"
+        - name: "{{ r740xd_ansible_role_label }} | traefik v2 | Enable Z-Wave JS UI entrypoints"
           ansible.builtin.set_fact:
             _r740xd_traefik_entrypoints: "{{ _r740xd_traefik_entrypoints | default({}) | combine(r740xd_traefik_zwavejsui_entrypoints) }}"
 
-- name: "traefik | Process Zigbee network"
+- name: "{{ r740xd_ansible_role_label }} | traefik v2 | Process Zigbee network"
   when: "docker_networks.zigbee.name | default('', true) | trim | length > 0"
   block:
-    - name: "traefik | Check if Zigbee network exists"
+    - name: "{{ r740xd_ansible_role_label }} | traefik v2 | Check if Zigbee network exists"
       community.docker.docker_network_info:
         name: "{{ docker_networks.zigbee.name }}"
       register: "_r740xd_traefik_zigbee_network_info"
 
-    - name: "traefik | Configure Traefik for Zigbee"
+    - name: "{{ r740xd_ansible_role_label }} | traefik v2 | Configure Traefik for Zigbee"
       when: "_r740xd_traefik_zigbee_network_info.exists"
       block:
-        - name: "traefik | Enable Zigbee extra network"
+        - name: "{{ r740xd_ansible_role_label }} | traefik v2 | Enable Zigbee extra network"
           ansible.builtin.set_fact:
             _r740xd_traefik_extra_networks: "{{ _r740xd_traefik_extra_networks | default([]) + [{'name': docker_networks.zigbee.name}] }}"
 
-        - name: "traefik | Enable EMQX entrypoints"
+        - name: "{{ r740xd_ansible_role_label }} | traefik v2 | Enable EMQX entrypoints"
           ansible.builtin.set_fact:
             _r740xd_traefik_entrypoints: "{{ _r740xd_traefik_entrypoints | default({}) | combine(r740xd_traefik_emqx_entrypoints) }}"
 
-- name: "traefik | Define all ports"
+- name: "{{ r740xd_ansible_role_label }} | traefik v2 | Define all ports"
   ansible.builtin.set_fact:
     _r740xd_traefik_all_ports: "{{ (_r740xd_traefik_extra_ports | default([]) + r740xd_traefik_http_ports) | sort }}"
 
-- name: "traefik | Debug entrypoints"
+- name: "{{ r740xd_ansible_role_label }} | traefik v2 | Debug entrypoints"
   ansible.builtin.debug:
     msg:
       - "Entrypoints: {{ _r740xd_traefik_entrypoints | default({}) }}"
       - "Extra networks: {{ _r740xd_traefik_extra_networks | default([]) }}"
       - "All ports: {{ _r740xd_traefik_all_ports | default([]) }}"
 
-- name: "traefik | Create Traefik data volume"
+- name: "{{ r740xd_ansible_role_label }} | traefik v2 | Create Traefik data volume"
   community.docker.docker_volume:
     name: "{{ r740xd_traefik_data_volume_name }}"
 
-- name: "traefik | Get info on data volume"
+- name: "{{ r740xd_ansible_role_label }} | traefik v2 | Get info on data volume"
   community.docker.docker_volume_info:
     name: "{{ r740xd_traefik_data_volume_name }}"
   register: "_r740xd_traefik_data_volume_info"
 
-- name: "traefik | Create dynamic configuration directory"
+- name: "{{ r740xd_ansible_role_label }} | traefik v2 | Create dynamic configuration directory"
   ansible.builtin.file:
     path: "{{ _r740xd_traefik_data_volume_info.volume.Mountpoint }}/dynamic"
     state: "directory"
     mode: "0755"
 
-- name: "traefik | Setup Traefik"
+- name: "{{ r740xd_ansible_role_label }} | traefik v2 | Setup Traefik"
   ansible.builtin.import_role:
     name: "traefik2"
   vars:
