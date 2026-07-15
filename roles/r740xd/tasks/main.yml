@@ -89,10 +89,6 @@
   ansible.builtin.import_tasks: "calibre-web.yml"
   tags: ["calibre-web", "calibreweb", "calibre_web"]
 
-- name: "Setup Diun"
-  ansible.builtin.import_tasks: "diun.yml"
-  tags: ["diun"]
-
 - name: "Setup Glances"
   ansible.builtin.import_tasks: "glances.yml"
   tags: ["glances"]

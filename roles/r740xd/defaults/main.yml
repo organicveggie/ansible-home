@@ -48,21 +48,7 @@ r740xd_cross_seed_sonarr1080_apikey: null
 r740xd_cross_seed_sonarr4k_apikey: null
 
 ###
-### Diun
-###
-r740xd_diun_config_dir: "/etc/diun"
-r740xd_diun_notify_mail_host: null
-r740xd_diun_notify_mail_port: null
-r740xd_diun_notify_mail_username: null
-r740xd_diun_notify_mail_password: null
-r740xd_diun_notify_mail_from: null
-r740xd_diun_notify_mail_to: null
-
-r740xd_diun_regopts_dockerio_user: null
-r740xd_diun_regopts_dockerio_passwd: null
-
-###
-### Docker macvlan network
+### Docker
 ###
 
 # List of users who should be added to the docker group.

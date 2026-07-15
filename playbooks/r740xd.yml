@@ -47,15 +47,6 @@
         r740xd_cross_seed_radarr4k_apikey: "{{ vault_cross_seed_radarr4k_apikey }}"
         r740xd_cross_seed_sonarr1080_apikey: "{{ vault_cross_seed_sonarr1080_apikey }}"
         r740xd_cross_seed_sonarr4k_apikey: "{{ vault_cross_seed_sonarr4k_apikey }}"
-        # Diun
-        r740xd_diun_notify_mail_host: "{{ vault_diun_notify_mail_host }}"
-        r740xd_diun_notify_mail_port: "{{ vault_diun_notify_mail_port }}"
-        r740xd_diun_notify_mail_username: "{{ vault_diun_notify_mail_username }}"
-        r740xd_diun_notify_mail_password: "{{ vault_diun_notify_mail_password }}"
-        r740xd_diun_notify_mail_from: "{{ vault_diun_notify_mail_from }}"
-        r740xd_diun_notify_mail_to: "{{ vault_diun_notify_mail_to }}"
-        r740xd_diun_regopts_dockerio_user: "{{ vault_diun_regopts_dockerio_user }}"
-        r740xd_diun_regopts_dockerio_passwd: "{{ vault_diun_regopts_dockerio_passwd }}"
         # Docker
         r740xd_docker_users: "{{ vault_nas_docker_users }}"
         # Domain name
