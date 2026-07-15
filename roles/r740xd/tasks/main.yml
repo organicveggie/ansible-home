@@ -97,10 +97,6 @@
   ansible.builtin.import_tasks: "hass.yml"
   tags: ["hass", "home-assistant", "homeassistant"]
 
-- name: "Setup InfluxDB"
-  ansible.builtin.import_tasks: "influxdb.yml"
-  tags: ["influxdb"]
-
 - name: "Setup Navidrome"
   ansible.builtin.import_tasks: "navidrome.yml"
   tags: ["navidrome"]

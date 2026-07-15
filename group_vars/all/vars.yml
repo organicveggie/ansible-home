@@ -147,6 +147,12 @@ influxdb_telegraf_token: "{{ vault_influxdb_telegraf_token }}"
 influxdb_url: "https://influxdb.{{ veggie_nas_domain_name }}"
 
 ###
+### Lets Encrypt
+###
+letsencrypt_ca_server_staging: "https://acme-staging-v02.api.letsencrypt.org/directory"
+letsencrypt_ca_server_prod: "https://acme-v02.api.letsencrypt.org/directory"
+
+###
 ### msmtp
 ###
 msmtp_host: "{{ vault_msmtp_host }}"
