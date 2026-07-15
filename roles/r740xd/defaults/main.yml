@@ -77,11 +77,6 @@ r740xd_emqx_tcp_port: "1883"
 r740xd_emqx_ws_port: "9001"
 r740xd_emqx_zigbee2mqtt_password: null
 
-###
-### Glances
-###
-r740xd_glances_config_data: null
-
 # List of dictionaries of Linux groups to create. Each entry in the list should be a dictionary
 # in the form to match ansible.builtin.group.
 # Example:

@@ -89,10 +89,6 @@
   ansible.builtin.import_tasks: "calibre-web.yml"
   tags: ["calibre-web", "calibreweb", "calibre_web"]
 
-- name: "Setup Glances"
-  ansible.builtin.import_tasks: "glances.yml"
-  tags: ["glances"]
-
 - name: "Setup EMQX"
   ansible.builtin.import_tasks: "emqx.yml"
   tags: ["emqx"]

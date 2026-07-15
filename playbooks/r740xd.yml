@@ -60,8 +60,6 @@
         r740xd_emqx_prometheus_username: "{{ vault_emqx_prometheus_username }}"
         r740xd_emqx_prometheus_password: "{{ vault_emqx_prometheus_password }}"
         r740xd_emqx_zigbee2mqtt_password: "{{ vault_emqx_zigbee2mqtt_password }}"
-        # Glances
-        r740xd_glances_config_data: "{{ _glances_config_data }}"
         # Groups
         r740xd_groups: "{{ veggie_nas_groups }}"
         # Home Assistant
