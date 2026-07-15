@@ -112,13 +112,6 @@ r740xd_hass_timezone: null
 r740xd_hass_zwave_device: null
 
 ###
-### InfluxDB
-###
-r740xd_influxdb_container_name: "influxdb27"
-r740xd_influxdb_host_domain: null
-r740xd_influxdb_host_name: "influxdb"
-
-###
 ### Kometa
 ###
 r740xd_kometa_cpus: "2"
