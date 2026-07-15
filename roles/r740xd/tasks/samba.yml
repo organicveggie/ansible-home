@@ -42,7 +42,7 @@
     samba_docker_log_level: "1"
     samba_docker_server_string: "{{ veggie_hostname }} samba server"
     samba_docker_network_ipv4: "{{ r740xd_samba_network_ipv4 }}"
-    samba_docker_network_name: "{{ r740xd_docker_macvlan_network_name }}"
+    samba_docker_network_name: "{{ docker_macvlans.nas_macvlan.name }}"
     samba_docker_timezone: "{{ r740xd_timezone }}"
     samba_docker_share_mounts: "{{ r740xd_samba_share_mounts }}"
     samba_docker_shares: "{{ r740xd_samba_shares }}"

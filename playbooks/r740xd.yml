@@ -57,10 +57,6 @@
         r740xd_diun_regopts_dockerio_user: "{{ vault_diun_regopts_dockerio_user }}"
         r740xd_diun_regopts_dockerio_passwd: "{{ vault_diun_regopts_dockerio_passwd }}"
         # Docker
-        r740xd_docker_macvlan_gateway: "{{ veggie_nas_docker_macvlan_gateway  }}"
-        r740xd_docker_macvlan_iprange: "{{ veggie_nas_docker_macvlan_iprange }}"
-        r740xd_docker_macvlan_network_parent: "{{ veggie_nas_docker_macvlan_network_parent }}"
-        r740xd_docker_macvlan_subnet: "{{ veggie_nas_docker_macvlan_subnet }}"
         r740xd_docker_users: "{{ vault_nas_docker_users }}"
         # Domain name
         r740xd_site_domain: "{{ veggie_base_domain_name }}"

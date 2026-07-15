@@ -64,21 +64,6 @@
   ansible.builtin.import_tasks: "portainer.yml"
   tags: ["portainer"]
 
-- name: "Create Docker macvlan network"
-  community.docker.docker_network:
-    name: "{{ r740xd_docker_macvlan_network_name }}"
-    driver: "macvlan"
-    driver_options:
-      parent: "{{ r740xd_docker_macvlan_network_parent }}"
-    enable_ipv6: false
-    internal: false
-    scope: "local"
-    ipam_config:
-      - subnet: "{{ r740xd_docker_macvlan_subnet }}"
-        gateway: "{{ r740xd_docker_macvlan_gateway }}"
-        iprange: "{{ r740xd_docker_macvlan_iprange }}"
-  tags: ["docker", "network"]
-
 - name: "Setup Kometa Docker network"
   community.docker.docker_network:
     name: "{{ docker_networks.kometa.name }}"
@@ -97,7 +82,7 @@
 - name: "Setup TimeMachine"
   ansible.builtin.import_tasks: "time-machine.yml"
   vars:
-    r740xd_time_machine_network_name: "{{ r740xd_docker_macvlan_network_name }}"
+    r740xd_time_machine_network_name: "{{ docker_macvlans.nas_macvlan.name }}"
   tags: ["time-machine", "timemachine", "tim"]
 
 - name: "Setup Calibre Web"
@@ -139,7 +124,7 @@
 - name: "Setup Plex"
   ansible.builtin.import_tasks: "plex.yml"
   vars:
-    r740xd_plex_network_name: "{{ r740xd_docker_macvlan_network_name }}"
+    r740xd_plex_network_name: "{{ docker_macvlans.nas_macvlan.name }}"
   tags: ["plex", "pms"]
 
 - name: "Setup Tautulli"

@@ -15,6 +15,11 @@ r740xd_extra_packages:
   - "tmux"
 
 ###
+### Ansible
+###
+r740xd_ansible_role_label: "r740xd"
+
+###
 ### Bazarr
 ### 1
 r740xd_bazarr1080_config_volume_name: "bazarr1080-config"
