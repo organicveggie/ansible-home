@@ -1,56 +1,58 @@
 ---
-- name: "{{ traefik_role_label }} | setup | create traefik directory"
+- name: "{{ traefik2_role_label }} | setup | create traefik directory"
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ __item }}"
     state: "directory"
     owner: "root"
     group: "docker"
     mode: "0550"
-  with_items:
-    - "{{ traefik_dir }}"
+  loop:
+    - "{{ traefik2_dir }}"
+  loop_control:
+    loop_var: "__item"
 
-- name: "{{ traefik_role_label }} | setup | create traefik configuration"
+- name: "{{ traefik2_role_label }} | setup | create traefik configuration"
   ansible.builtin.copy:
-    dest: "{{ traefik_dir }}/traefik.yml"
+    dest: "{{ traefik2_dir }}/traefik.yml"
     owner: "root"
     group: "docker"
     mode: "0550"
-    content: "{{ traefik_static_config | to_nice_yaml }}"
+    content: "{{ traefik2_static_config | to_nice_yaml }}"
   notify:
     - "restart traefik container"
 
-- name: "{{ traefik_role_label }} | setup | create traefik network"
+- name: "{{ traefik2_role_label }} | setup | create traefik network"
   community.docker.docker_network:
-    name: "{{ traefik_network_name }}"
+    name: "{{ traefik2_network_name }}"
     ipam_config:
-      - subnet: "{{ traefik_network_ipam_subnet }}"
-        gateway: "{{ traefik_network_ipam_gateway }}"
-        iprange: "{{ traefik_network_ipam_iprange }}"
+      - subnet: "{{ traefik2_network_ipam_subnet }}"
+        gateway: "{{ traefik2_network_ipam_gateway }}"
+        iprange: "{{ traefik2_network_ipam_iprange }}"
 
-- name: "{{ traefik_role_label }} | Create placeholder array for default network"
+- name: "{{ traefik2_role_label }} | Create placeholder array for default network"
   ansible.builtin.set_fact:
-    _traefik_default_networks:
-      - name: "{{ traefik_network_name }}"
-        aliases: "{{ traefik_network_aliases | default(omit) }}"
+    _traefik2_default_networks:
+      - name: "{{ traefik2_network_name }}"
+        aliases: "{{ traefik2_network_aliases | default(omit) }}"
 
-- name: "{{ traefik_role_label }} | Define all Docker networks for this container"
+- name: "{{ traefik2_role_label }} | Define all Docker networks for this container"
   ansible.builtin.set_fact:
-    _traefik_all_networks: >
-      {{ _traefik_default_networks + traefik_extra_networks }}
+    _traefik2_all_networks: >
+      {{ _traefik2_default_networks + traefik2_extra_networks }}
 
-- name: "{{ traefik_role_label }} | setup | start traefik container"
+- name: "{{ traefik2_role_label }} | setup | start traefik container"
   community.docker.docker_container:
-    name: "{{ traefik_container_name }}"
-    image: "{{ traefik_image }}"
+    name: "{{ traefik2_container_name }}"
+    image: "{{ traefik2_image }}"
     restart_policy: unless-stopped
-    published_ports: "{{ traefik_ports }}"
-    volumes: "{{ traefik_volumes + traefik_add_volumes }}"
-    labels: "{{ traefik_labels }}"
-    env: "{{ traefik_container_environment }}"
+    published_ports: "{{ traefik2_ports }}"
+    volumes: "{{ traefik2_volumes + traefik2_add_volumes }}"
+    labels: "{{ traefik2_labels }}"
+    env: "{{ traefik2_container_environment }}"
     command:
       - "--configFile=/etc/traefik/traefik.yml"
-    network_mode: "{{ traefik_network_name }}"
-    networks: "{{ _traefik_all_networks }}"
+    network_mode: "{{ traefik2_network_name }}"
+    networks: "{{ _traefik2_all_networks }}"
     networks_cli_compatible: true
     etc_hosts:
       host.docker.internal: "host-gateway"
