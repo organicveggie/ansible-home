@@ -28,4 +28,3 @@
   loop: "{{ docker_macvlans | dict2items }}"
   loop_control:
     loop_var: "__item"
-
