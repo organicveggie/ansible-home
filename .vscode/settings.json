@@ -1,0 +1,5 @@
+{
+    "yaml.schemas": {
+        "{\"type\": \"object\"}": ["*tasks/*.yml", "*tasks/*.yaml"]
+    }
+}

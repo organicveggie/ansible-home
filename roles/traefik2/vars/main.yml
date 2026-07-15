@@ -1,16 +1,16 @@
 ---
-traefik_int_conf_global:
-    sendAnonymousUsage: "{{ traefik_qs_send_anonymous_usage }}"
+traefik2_int_conf_global:
+    sendAnonymousUsage: "{{ traefik2_qs_send_anonymous_usage }}"
 
-traefik_int_conf_entryPoints:
+traefik2_int_conf_entrypoints:
     http:
         address: ":80"
 
-traefik_int_conf_entryPoints_https:
+traefik2_int_conf_entrypoints_https:
     https:
         address: ":443"
 
-traefik_int_conf_entryPoints_https_redirect:
+traefik2_int_conf_entrypoints_https_redirect:
     http:
         http:
             redirections:
@@ -18,43 +18,43 @@ traefik_int_conf_entryPoints_https_redirect:
                     to: "https"
                     scheme: "https"
 
-traefik_int_conf_providers:
+traefik2_int_conf_providers:
     docker: {}
 
-traefik_int_conf_log:
-    level: "{{ traefik_qs_log_level }}"
+traefik2_int_conf_log:
+    level: "{{ traefik2_qs_log_level }}"
 
-traefik_int_conf_certificatesResolvers_le:
+traefik2_int_conf_certificatesresolvers_le:
     letsencrypt:
         acme:
-            email: "{{ traefik_qs_https_le_mail }}"
+            email: "{{ traefik2_qs_https_le_mail }}"
             tlsChallenge: {}
             storage: "/letsencrypt/acme.json"
 
-traefik_conf_global: "{{ traefik_int_conf_global
-    | combine(traefik_confkey_global | default({})) }}"
-traefik_conf_entryPoints: "{{ traefik_int_conf_entryPoints
-    | combine(traefik_confkey_entryPoints
+traefik2_conf_global: "{{ traefik2_int_conf_global
+    | combine(traefik2_confkey_global | default({})) }}"
+traefik2_conf_entrypoints: "{{ traefik2_int_conf_entrypoints
+    | combine(traefik2_confkey_entryPoints
     | default({})) }}"
-traefik_conf_providers: "{{ traefik_int_conf_providers
-    | combine(traefik_confkey_providers | default({})) }}"
-traefik_conf_log: "{{ traefik_int_conf_log | combine(traefik_confkey_log | default({})) }}"
-# traefik_conf_certificatesResolvers: "{{
-#   traefik_int_conf_certificatesResolvers
-#   | combine(traefik_confkey_certificatesResolvers
+traefik2_conf_providers: "{{ traefik2_int_conf_providers
+    | combine(traefik2_confkey_providers | default({})) }}"
+traefik2_conf_log: "{{ traefik2_int_conf_log | combine(traefik2_confkey_log | default({})) }}"
+# traefik2_conf_certificatesresolvers: "{{
+#   traefik2_int_conf_certificatesresolvers
+#   | combine(traefik2_confkey_certificatesresolvers
 #     | default({})
 #   )
 # }}"
 
-traefik_volumes:
+traefik2_volumes:
     - "/etc/localtime:/etc/localtime:ro"
     - "/var/run/docker.sock:/var/run/docker.sock:ro"
-    - "{{ traefik_dir }}/traefik.yml:/etc/traefik/traefik.yml"
-    - "{{ traefik_dir }}/letsencrypt/:/letsencrypt/:rw"
+    - "{{ traefik2_dir }}/traefik.yml:/etc/traefik/traefik.yml"
+    - "{{ traefik2_dir }}/letsencrypt/:/letsencrypt/:rw"
     - "traefik-data:/etc/traefik"
 
 #####
 # Ansible
 #####
 
-traefik_role_label: "traefik2"
+traefik2_role_label: "traefik2"
