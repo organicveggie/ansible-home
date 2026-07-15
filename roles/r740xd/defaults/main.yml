@@ -48,21 +48,7 @@ r740xd_cross_seed_sonarr1080_apikey: null
 r740xd_cross_seed_sonarr4k_apikey: null
 
 ###
-### Diun
-###
-r740xd_diun_config_dir: "/etc/diun"
-r740xd_diun_notify_mail_host: null
-r740xd_diun_notify_mail_port: null
-r740xd_diun_notify_mail_username: null
-r740xd_diun_notify_mail_password: null
-r740xd_diun_notify_mail_from: null
-r740xd_diun_notify_mail_to: null
-
-r740xd_diun_regopts_dockerio_user: null
-r740xd_diun_regopts_dockerio_passwd: null
-
-###
-### Docker macvlan network
+### Docker
 ###
 
 # List of users who should be added to the docker group.
@@ -90,11 +76,6 @@ r740xd_emqx_prometheus_password: null
 r740xd_emqx_tcp_port: "1883"
 r740xd_emqx_ws_port: "9001"
 r740xd_emqx_zigbee2mqtt_password: null
-
-###
-### Glances
-###
-r740xd_glances_config_data: null
 
 # List of dictionaries of Linux groups to create. Each entry in the list should be a dictionary
 # in the form to match ansible.builtin.group.
@@ -129,13 +110,6 @@ r740xd_hass_otbr_log_level: "info"
 r740xd_hass_zigbee_device: null
 r740xd_hass_timezone: null
 r740xd_hass_zwave_device: null
-
-###
-### InfluxDB
-###
-r740xd_influxdb_container_name: "influxdb27"
-r740xd_influxdb_host_domain: null
-r740xd_influxdb_host_name: "influxdb"
 
 ###
 ### Kometa
@@ -375,8 +349,6 @@ r740xd_time_machine_zfs_dataset: null
 ###
 ### Traefik
 ###
-letsencrypt_ca_server_staging: "https://acme-staging-v02.api.letsencrypt.org/directory"
-letsencrypt_ca_server_prod: "https://acme-v02.api.letsencrypt.org/directory"
 r740xd_traefik_letsencrypt_ca_server: "{{ letsencrypt_ca_server_prod }}"
 r740xd_traefik_letsencrypt_email: null
 r740xd_traefik_data_volume_name: "traefik-data"

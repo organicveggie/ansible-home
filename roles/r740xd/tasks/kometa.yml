@@ -1,9 +1,9 @@
 ---
-- name: "kometa | Build Tautulli URL"
+- name: "{{ r740xd_ansible_role_label }} | kometa | Build Tautulli URL"
   ansible.builtin.set_fact:
-    _kometa_tautulli_url: "http://{{ r740xd_tautulli_hostname }}:{{ r740xd_tautulli_web_port }}"
+    _r740xd_kometa_tautulli_url: "http://{{ r740xd_tautulli_hostname }}:{{ r740xd_tautulli_web_port }}"
 
-- name: "kometa | Setup Kometa container"
+- name: "{{ r740xd_ansible_role_label }} | kometa | Setup Kometa container"
   ansible.builtin.import_role:
     name: "kometa"
   vars:
@@ -26,7 +26,7 @@
     kometa_docker_run_time: "{{ kometa_run_time }}"
     kometa_docker_timezone: "{{ kometa_timezone }}"
     kometa_docker_tautulli_apikey: "{{ vault_kometa_tautulli_apikey }}"
-    kometa_docker_tautulli_url: "{{ _kometa_tautulli_url }}"
+    kometa_docker_tautulli_url: "{{ _r740xd_kometa_tautulli_url }}"
     kometa_docker_tmdb_language: "{{ kometa_tmdb_language }}"
     kometa_docker_tmdb_region: "{{ kometa_tmdb_region }}"
     kometa_docker_tmdb_apikey: "{{ vault_kometa_tmdb_apikey }}"

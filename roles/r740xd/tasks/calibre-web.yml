@@ -1,12 +1,12 @@
 ---
-- name: "calibre-web | Create groups"
+- name: "{{ r740xd_ansible_role_label }} | calibre-web | Create groups"
   ansible.builtin.group:
     name: "{{ r740xd_calibre_web_groupname }}"
     gid: "{{ r740xd_calibre_web_gid }}"
     system: "false"
     state: "present"
 
-- name: "calibre-web | Create users"
+- name: "{{ r740xd_ansible_role_label }} | calibre-web | Create users"
   ansible.builtin.user:
     append: true
     create_home: false
@@ -21,7 +21,7 @@
     system: false
     uid: "{{ r740xd_calibre_web_uid }}"
 
-- name: "calibre-web | Setup Docker network"
+- name: "{{ r740xd_ansible_role_label }} | calibre-web | Setup Docker network"
   community.docker.docker_network:
     name: "{{ docker_networks.calibre_web.name }}"
     driver: "bridge"
@@ -32,7 +32,7 @@
       - subnet: "{{ docker_networks.calibre_web.subnet }}"
         gateway: "{{ docker_networks.calibre_web.gateway }}"
 
-- name: "calibre-web | Create container"
+- name: "{{ r740xd_ansible_role_label }} | calibre-web | Create container"
   ansible.builtin.import_role:
     name: "organicveggie.calibre_web_docker"
   vars:

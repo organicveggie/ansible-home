@@ -1,13 +1,13 @@
 ---
-- name: "Servarr | cross-seed | Build torznab urls"
+- name: "{{ r740xd_ansible_role_label }} | servarr | cross-seed | Build torznab urls"
   ansible.builtin.set_fact:
-    _nas_cross_seed_torznab_urls: >
-      {{ _nas_cross_seed_torznab_urls | default([]) + ["http://prowlarr:9696/" + __item + "/api?apikey=" + r740xd_cross_seed_prowlarr_api_key] }}
+    _r740xd_cross_seed_torznab_urls: >
+      {{ _r740xd_cross_seed_torznab_urls | default([]) + ["http://prowlarr:9696/" + __item + "/api?apikey=" + r740xd_cross_seed_prowlarr_api_key] }}
   loop: "{{ r740xd_cross_seed_prowlarr_indexer_ids }}"
   loop_control:
     loop_var: __item
 
-- name: "Servarr | cross-seed | Setup"
+- name: "{{ r740xd_ansible_role_label }} | servarr | cross-seed | Setup"
   ansible.builtin.import_role:
     name: "cross-seed"
   vars:
@@ -25,4 +25,4 @@
     cross_seed_sonarr_urls:
       - "http://{{ r740xd_sonarr1080_container_name }}:8989/?apikey={{ r740xd_cross_seed_sonarr1080_apikey }}"
       - "http://{{ r740xd_sonarr4k_container_name }}:8989/?apikey={{ r740xd_cross_seed_sonarr4k_apikey }}"
-    cross_seed_torznab_urls: "{{ _nas_cross_seed_torznab_urls }}"
+    cross_seed_torznab_urls: "{{ _r740xd_cross_seed_torznab_urls }}"

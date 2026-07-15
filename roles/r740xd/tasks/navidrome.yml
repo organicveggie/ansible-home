@@ -1,9 +1,5 @@
 ---
-- name: "navidrome | Set fqdn"
-  ansible.builtin.set_fact:
-    _nas_navidrome_fqdn: "{{ r740xd_navidrome_host_name }}.{{ r740xd_navidrome_host_domain }}"
-
-- name: "navidrome | Setup Docker network"
+- name: "{{ r740xd_ansible_role_label }} | navidrome | Setup Docker network"
   community.docker.docker_network:
     name: "{{ docker_networks.navidrome.name }}"
     driver: "bridge"
@@ -14,7 +10,7 @@
       - subnet: "{{ docker_networks.navidrome.subnet }}"
         gateway: "{{ docker_networks.navidrome.gateway }}"
 
-- name: "navidrome | Create Docker container"
+- name: "{{ r740xd_ansible_role_label }} | navidrome | Create Docker container"
   ansible.builtin.import_role:
     name: "navidrome_docker"
   vars:

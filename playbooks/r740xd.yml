@@ -47,15 +47,6 @@
         r740xd_cross_seed_radarr4k_apikey: "{{ vault_cross_seed_radarr4k_apikey }}"
         r740xd_cross_seed_sonarr1080_apikey: "{{ vault_cross_seed_sonarr1080_apikey }}"
         r740xd_cross_seed_sonarr4k_apikey: "{{ vault_cross_seed_sonarr4k_apikey }}"
-        # Diun
-        r740xd_diun_notify_mail_host: "{{ vault_diun_notify_mail_host }}"
-        r740xd_diun_notify_mail_port: "{{ vault_diun_notify_mail_port }}"
-        r740xd_diun_notify_mail_username: "{{ vault_diun_notify_mail_username }}"
-        r740xd_diun_notify_mail_password: "{{ vault_diun_notify_mail_password }}"
-        r740xd_diun_notify_mail_from: "{{ vault_diun_notify_mail_from }}"
-        r740xd_diun_notify_mail_to: "{{ vault_diun_notify_mail_to }}"
-        r740xd_diun_regopts_dockerio_user: "{{ vault_diun_regopts_dockerio_user }}"
-        r740xd_diun_regopts_dockerio_passwd: "{{ vault_diun_regopts_dockerio_passwd }}"
         # Docker
         r740xd_docker_users: "{{ vault_nas_docker_users }}"
         # Domain name
@@ -69,8 +60,6 @@
         r740xd_emqx_prometheus_username: "{{ vault_emqx_prometheus_username }}"
         r740xd_emqx_prometheus_password: "{{ vault_emqx_prometheus_password }}"
         r740xd_emqx_zigbee2mqtt_password: "{{ vault_emqx_zigbee2mqtt_password }}"
-        # Glances
-        r740xd_glances_config_data: "{{ _glances_config_data }}"
         # Groups
         r740xd_groups: "{{ veggie_nas_groups }}"
         # Home Assistant
@@ -86,8 +75,6 @@
         r740xd_hass_timezone: "{{ home_timezone }}"
         r740xd_hass_zigbee_device: "{{ vault_homeassistant_zigbee_device }}"
         r740xd_hass_zwave_device: "{{ vault_homeassistant_zwave_device }}"
-        # InfluxDB
-        r740xd_influxdb_host_domain: "{{ veggie_nas_domain_name }}"
         # Kometa
         r740xd_kometa_libraries: "{{ kometa_libraries }}"
         r740xd_kometa_mdblist_apikey: "{{ vault_kometa_docker_mdblist_apikey }}"

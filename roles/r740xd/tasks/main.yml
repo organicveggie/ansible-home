@@ -89,14 +89,6 @@
   ansible.builtin.import_tasks: "calibre-web.yml"
   tags: ["calibre-web", "calibreweb", "calibre_web"]
 
-- name: "Setup Diun"
-  ansible.builtin.import_tasks: "diun.yml"
-  tags: ["diun"]
-
-- name: "Setup Glances"
-  ansible.builtin.import_tasks: "glances.yml"
-  tags: ["glances"]
-
 - name: "Setup EMQX"
   ansible.builtin.import_tasks: "emqx.yml"
   tags: ["emqx"]
@@ -104,10 +96,6 @@
 - name: "Setup Home Assistant"
   ansible.builtin.import_tasks: "hass.yml"
   tags: ["hass", "home-assistant", "homeassistant"]
-
-- name: "Setup InfluxDB"
-  ansible.builtin.import_tasks: "influxdb.yml"
-  tags: ["influxdb"]
 
 - name: "Setup Navidrome"
   ansible.builtin.import_tasks: "navidrome.yml"

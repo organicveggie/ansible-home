@@ -1,4 +1,4 @@
-- name: "R740xd | EMQX | Setup Docker network"
+- name: "{{ r740xd_ansible_role_label }} | EMQX | Setup Docker network"
   community.docker.docker_network:
     name: "{{ docker_networks.zigbee.name }}"
     driver: "bridge"
@@ -10,7 +10,7 @@
         gateway: "{{ docker_networks.zigbee.gateway }}"
   tags: ["setup", "network"]
 
-- name: "R740xd | EMQX | Setup EMQX container"
+- name: "{{ r740xd_ansible_role_label }} | EMQX | Setup EMQX container"
   ansible.builtin.import_role:
     name: "emqx"
   vars:
