@@ -4,7 +4,7 @@ views:
     cards:
       - type: custom:bubble-card
         card_type: climate
-        entity: climate.other_thermostat
+        entity: climate.hallway_hall_thermostat
         sub_button:
           - name: HVAC modes menu
             select_attribute: hvac_modes
@@ -12,7 +12,7 @@ views:
             show_arrow: false
         card_layout: large
       - type: custom:button-card
-        entity: climate.other_thermostat
+        entity: climate.hallway_hall_thermostat
         icon: mdi:hvac-off
         color_type: card
         name: Disable HVAC
@@ -25,7 +25,7 @@ views:
           action: call-service
           service: script.disable_hvac
       - type: custom:button-card
-        entity: climate.other_thermostat
+        entity: climate.hallway_hall_thermostat
         icon: mdi:heat-pump-outline
         color_type: card
         name: Re-enable HVAC
@@ -38,7 +38,7 @@ views:
           action: call-service
           service: script.reset_hvac_heat_cool
       - type: custom:button-card
-        entity: climate.other_thermostat
+        entity: climate.hallway_hall_thermostat
         icon: mdi:hvac-off
         color_type: card
         name: Turn HVAC off
@@ -52,14 +52,14 @@ views:
           service: script.hvac_off
         card_mod:
           style: |
-            {% if states('climate.other_thermostat') == 'off' %}
+            {% if states('climate.hallway_hall_thermostat') == 'off' %}
              ha-card {
               background-color: gray !important;
               pointer-events: none;
             }
             {% endif %}
       - type: custom:button-card
-        entity: climate.other_thermostat
+        entity: climate.hallway_hall_thermostat
         icon: mdi:hvac
         color_type: card
         name: Turn HVAC on
@@ -73,7 +73,7 @@ views:
           service: script.hvac_on
         card_mod:
           style: |
-            {% if states('climate.other_thermostat') == 'heat_cool' %}
+            {% if states('climate.hallway_hall_thermostat') == 'heat_cool' %}
              ha-card {
               background-color: gray !important;
               pointer-events: none;
