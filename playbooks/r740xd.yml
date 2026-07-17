@@ -107,6 +107,7 @@
         r740xd_plex_videos_path: "{{ _r740xd_plex_videos_path }}"
         # Prometheus
         r740xd_prometheus_host_domain: "{{ vault_veggie_home_domain }}"
+        r740xd_prometheus_opnsense_addr: "{{ vault_opnsense_address }}"
         # Prowlarr
         r740xd_prowlarr_host_domain: "{{ veggie_base_domain_name }}"
         # Radarr

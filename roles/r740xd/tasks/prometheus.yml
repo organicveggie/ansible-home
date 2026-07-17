@@ -71,6 +71,16 @@
               action: "labelmap"
               replacement: "$1"
         
+        - job_name: "opnsense"
+          scrape_interval: "10s"
+          static_configs:
+            - targets: ['{{ r740xd_prometheus_opnsense_addr }}:{{ r740xd_prometheus_opnsense_port }}']
+          metric_relabel_configs:
+            - source_labels: [__name__]
+              regex: '(.*)'
+              target_label: __name__
+              replacement: 'opnsense_${1}'
+
         - job_name: "saurron"
           metrics_path: "/v1/metrics"
           scrape_interval: "1m"
