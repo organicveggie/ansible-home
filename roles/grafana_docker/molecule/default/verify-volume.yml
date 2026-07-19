@@ -1,0 +1,9 @@
+---
+- name: "Get info on {{ __grafana_volume_name }} volume"
+  community.docker.docker_volume_info:
+    name: "{{ __grafana_volume_name }}"
+  register: _grafana_docker_volume_info
+
+- name: "Verify {{ __grafana_volume_name }} volume exists"
+  ansible.builtin.assert:
+    that: _grafana_docker_volume_info.exists

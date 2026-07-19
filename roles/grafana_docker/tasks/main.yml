@@ -1,0 +1,141 @@
+---
+- name: "{{ grafana_docker_role_label }} | Build container FQDN"
+  ansible.builtin.set_fact:
+    _grafana_docker_fqdn: "{{ grafana_docker_host_name }}.{{ grafana_docker_host_domain }}"
+
+- name: "{{ grafana_docker_role_label }} | Check console logging"
+  ansible.builtin.set_fact:
+    _grafana_docker_logging_mode: "{{ _grafana_docker_logging_mode | default('', true) }} console"
+  when: "grafana_docker_logging_console_enabled | default(true, true)"
+
+- name: "{{ grafana_docker_role_label }} | Check file logging"
+  ansible.builtin.set_fact:
+    _grafana_docker_logging_mode: "{{ _grafana_docker_logging_mode | default('', true) }} file"
+  when: "grafana_docker_logging_file_enabled | default(true, true)"
+
+- name: "{{ grafana_docker_role_label }} | Check syslog logging"
+  ansible.builtin.set_fact:
+    _grafana_docker_logging_mode: "{{ _grafana_docker_logging_mode | default('', true) }} syslog"
+  when: "grafana_docker_logging_syslog_enabled | default(false, true)"
+
+- name: "{{ grafana_docker_role_label }} | Create Docker volumes"
+  community.docker.docker_volume:
+    name: "{{ __item }}"
+  loop:
+    - "{{ grafana_docker_volume_config_name }}"
+    - "{{ grafana_docker_volume_data_name }}"
+    - "{{ grafana_docker_volume_logs_name }}"
+  loop_control:
+    loop_var: __item
+
+- name: "{{ grafana_docker_role_label }} | Set Docker mount list for volume mounts"
+  ansible.builtin.set_fact:
+    _grafana_docker_mount_list:
+      - "source": "{{ grafana_docker_volume_config_name }}"
+        "target": "/etc/grafana"
+        "type": 'volume'
+      - "source": "{{ grafana_docker_volume_data_name }}"
+        "target": "/var/lib/grafana"
+        "type": 'volume'
+      - "source": "{{ grafana_docker_volume_logs_name }}"
+        "target": "/var/log/grafana"
+        "type": 'volume'
+
+- name: "{{ grafana_docker_role_label }} | Get path to config volume"
+  community.docker.docker_volume_info:
+    name: "{{ grafana_docker_volume_config_name }}"
+  register: "__grafana_docker_config_volume_info"
+
+- name: "{{ grafana_docker_role_label }} | Create config file"
+  ansible.builtin.template:
+    src: "templates/grafana.ini.j2"
+    dest: "{{ __grafana_docker_config_volume_info.volume.Mountpoint }}/grafana.ini"
+    mode: "0660"
+    owner: "root"
+    group: "root"
+  register: "_grafana_docker_modify_config"
+
+- name: "{{ grafana_docker_role_label }} | Create placeholder array for default network"
+  ansible.builtin.set_fact:
+    _grafana_docker_default_networks:
+      - name: "{{ grafana_docker_network_name }}"
+        aliases: "{{ grafana_docker_network_aliases | default(omit) }}"
+
+- name: "{{ grafana_docker_role_label }} | Define all Docker networks for this container"
+  ansible.builtin.set_fact:
+    _grafana_docker_all_networks: >
+      {{ _grafana_docker_default_networks + grafana_docker_extra_networks }}
+
+- name: "{{ grafana_docker_role_label }} | Define environment variables for this container"
+  ansible.builtin.set_fact:
+    _grafana_docker_env: []
+
+- name: "{{ grafana_docker_role_label }} | Add user specified environment variables"
+  ansible.builtin.set_fact:
+    _grafana_docker_env: >
+      {{ _grafana_docker_env | default([], true) | combine(grafana_docker_extra_env | default({}, true)) }}
+
+- name: "{{ grafana_docker_role_label }} | Define common Docker labels"
+  ansible.builtin.set_fact:
+    _grafana_docker_labels: "{{ _grafana_docker_labels | default({}) |
+      combine({__item.key: __item.value}) }}"
+  with_items:
+    - key: "traefik.enable"
+      value: "{{ grafana_docker_available_externally | lower | ternary('true', 'false') }}"
+  loop_control:
+    loop_var: __item
+
+- name: "{{ grafana_docker_role_label }} | Define Docker labels with Traefik enabled"
+  ansible.builtin.set_fact:
+    _grafana_docker_labels: "{{ _grafana_docker_labels | default({}) |
+      combine({__item.key: __item.value}) }}"
+  with_items:
+    - key: "traefik.docker.network"
+      value: "{{ grafana_docker_network_name }}"
+    - key: "traefik.http.routers.grafana.rule"
+      value: "Host(`{{ _grafana_docker_fqdn }}`)"
+    - key: "traefik.http.routers.grafana.entrypoints"
+      value: "http,https"
+    - key: "traefik.http.routers.grafana.tls.certresolver"
+      value: "letsencrypt"
+    - key: "traefik.http.routers.grafana.tls.domains[0].main"
+      value: "*.{{ grafana_docker_host_domain }}"
+    - key: "traefik.http.services.grafana.loadbalancer.server.port"
+      value: "{{ grafana_docker_webui_port }}"
+  loop_control:
+    loop_var: __item
+  when: "grafana_docker_available_externally"
+
+- name: "{{ grafana_docker_role_label }} | Define user-supplied extra Docker labels"
+  ansible.builtin.set_fact:
+    _grafana_docker_labels: "{{ _grafana_docker_labels | default({}) |
+      combine({__item.key: __item.value}) }}"
+  loop: "{{ grafana_docker_extra_labels | dict2items }}"
+  loop_control:
+    loop_var: __item
+
+- name: "{{ grafana_docker_role_label }} | Create Docker Container"
+  community.docker.docker_container:
+    name: "{{ grafana_docker_name }}"
+    image: "{{ grafana_docker_image_name }}:{{ grafana_docker_image_version }}"
+    pull: true
+    mounts: "{{ _grafana_docker_mount_list }}"
+    network_mode: "{{ grafana_docker_network_name }}"
+    networks: "{{ _grafana_docker_all_networks }}"
+    env: "{{ _grafana_docker_env }}"
+    etc_hosts: "{{ grafana_docker_extra_hosts | default(omit) }}"
+    restart_policy: unless-stopped
+    restart: |
+      {{ _grafana_docker_modify_config.changed | default(false) }}
+    memory: "{{ grafana_docker_memory }}"
+    cpus: "{{ grafana_docker_cpus }}"
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: yes
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
+    labels: "{{ _grafana_docker_labels }}"

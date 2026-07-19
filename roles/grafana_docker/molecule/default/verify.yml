@@ -1,0 +1,44 @@
+---
+- name: "Verify"
+  hosts: all
+  gather_facts: false
+
+  vars:
+    grafana_docker_extra_networks:
+      - name: "ingress-proxy-test"
+    grafana_docker_name: "grafana-molecule"
+    grafana_docker_network_name: "monitoring-test"
+    grafana_docker_volume_config_name: "grafana-config-test"
+    grafana_docker_volume_data_name: "grafana-data-test"
+    grafana_docker_volume_logs_name: "grafana-logs-test"
+
+  tasks:
+    - name: "Verify volumes"
+      ansible.builtin.include_tasks:
+        file: "verify-volume.yml"
+      loop:
+        - "{{ grafana_docker_volume_config_name }}"
+        - "{{ grafana_docker_volume_data_name }}"
+        - "{{ grafana_docker_volume_logs_name }}"
+      loop_control:
+        loop_var: "__grafana_volume_name"
+    
+    - name: "Verify networks"
+      ansible.builtin.include_tasks:
+        file: "verify-network.yml"
+      loop:
+        - "{{ grafana_docker_network_name }}"
+        - "{{ grafana_docker_extra_networks[0].name }}"
+      loop_control:
+        loop_var: "__grafana_network_name"
+
+    - name: Get info on container
+      community.docker.docker_container_info:
+        name: "{{ grafana_docker_name }}"
+      register: _grafana_docker_container
+
+    - name: Verify container state
+      ansible.builtin.assert:
+        that:
+          - _grafana_docker_container.exists
+          - _grafana_docker_container["container"]["State"]["Status"] == "running"

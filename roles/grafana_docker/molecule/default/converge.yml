@@ -1,0 +1,55 @@
+---
+- name: Install dependencies
+  hosts: all
+  become: true
+
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 600
+      when: ansible_facts["os_family"] == 'Debian'
+
+    - name: Wait for systemd to complete initialization
+      ansible.builtin.command: systemctl is-system-running
+      register: systemctl_status
+      until: >
+        'running' in systemctl_status.stdout or
+        'degraded' in systemctl_status.stdout
+      retries: 30
+      delay: 5
+      when: ansible_facts["service_mgr"] == 'systemd'
+      changed_when: false
+      failed_when: systemctl_status.rc > 1
+
+- name: Converge  # noqa: command-instead-of-module var-naming[no-role-prefix]
+  hosts: all
+  become: true
+
+  vars:
+    grafana_docker_config_admin_password: "password"
+    grafana_docker_config_secret_key: "Grafana Docker Config Sekret Keyz"
+    grafana_docker_extra_networks: []
+      # - name: "ingress-proxy-test"
+    grafana_docker_name: "grafana-molecule"
+    grafana_docker_network_name: "monitoring-test"
+    grafana_docker_volume_config_name: "grafana-config-test"
+    grafana_docker_volume_data_name: "grafana-data-test"
+    grafana_docker_volume_logs_name: "grafana-logs-test"
+
+  pre_tasks:
+    - name: Install Docker
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+
+    - name: Create Docker test networks
+      community.docker.docker_network:
+        name: "{{ __item.name }}"
+        state: present
+      loop: >
+        {{ grafana_docker_extra_networks + [{'name': grafana_docker_network_name}] }}
+      loop_control:
+        loop_var: "__item"
+
+  roles:
+    - role: grafana_docker
