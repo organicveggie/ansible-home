@@ -1,0 +1,31 @@
+grafana_docker_username: "grafana"
+grafana_docker_uid: 472
+
+grafana_network_name: "grafana"
+grafana_docker_extra_networks: []
+
+grafana_docker_image: "grafana/grafana-oss"
+grafana_docker_image_tag: "latest"
+
+grafana_docker_volume_data_name: "grafana-data"
+
+grafana_docker_config_dir: "/etc/grafana"
+grafana_docker_zfs_filesystems: []
+
+grafana_docker_port: "3000"
+
+grafana_available_externally: "true"
+grafana_docker_hostname: "grafana"
+grafana_docker_host_domain: "example.com"
+
+grafana_docker_cpus: "1"
+grafana_docker_memory: "512G"
+
+grafana_docker_admin_user: "admin"
+grafana_docker_admin_password: "password"
+
+grafana_docker_smtp_enabled: "false"
+grafana_docker_smtp_host: "localhost:25"
+grafana_docker_smtp_user: "username"
+grafana_docker_smtp_password: "password"
+grafana_docker_smtp_from_address: "admin@{{ grafana_docker_hostname }}.{{ grafana_docker_host_domain }}"

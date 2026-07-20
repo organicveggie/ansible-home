@@ -1,31 +1,158 @@
-grafana_docker_username: "grafana"
-grafana_docker_uid: 472
+---
+#####
+# Container
+#####
 
-grafana_network_name: "grafana"
+# Name of the Docker container.
+grafana_docker_name: "grafana"
+
+# Base name of the Docker image to use for the container.
+grafana_docker_image_name: "grafana/grafana"
+
+# Specific Docker image version to use for the container.
+grafana_docker_image_version: "latest"
+
+# Number of vCPUs to allocate to the container.
+grafana_docker_cpus: "2"
+
+# Amount of memory to allocate to the container.
+grafana_docker_memory: "1024M"
+
+# Name of the primary network.
+grafana_docker_network_name: null
+
+# Container aliases on the default network.
+grafana_docker_network_aliases: null
+
+# List of additional networks to join.
 grafana_docker_extra_networks: []
 
-grafana_docker_image: "grafana/grafana-oss"
-grafana_docker_image_tag: "latest"
-
+grafana_docker_volume_config_name: "grafana-config"
 grafana_docker_volume_data_name: "grafana-data"
+grafana_docker_volume_logs_name: "grafana-logs"
 
-grafana_docker_config_dir: "/etc/grafana"
-grafana_docker_zfs_filesystems: []
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+grafana_docker_extra_labels: {}
 
-grafana_docker_port: "3000"
+# Dictionary of extra key value pairs to set as environment variables on the Docker container.
+grafana_docker_extra_env: {}
 
-grafana_available_externally: "true"
-grafana_docker_hostname: "grafana"
+#####
+# Traefik
+#####
+
+# Enable use of Traefik as a proxy.
+grafana_docker_available_externally: true
+
+# Host name to use for the Traefik endpoint. Combined with [grafana_docker_host_domain] to form the
+# FQDN for the endpoint.
+grafana_docker_host_name: "grafana"
+
+# Domain name to use for the Traefik endpoint. Combined with [grafana_docker_host_name] to form the
+# FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
 grafana_docker_host_domain: "example.com"
 
-grafana_docker_cpus: "1"
-grafana_docker_memory: "512G"
+# Port number for the Grafana web interface.
+grafana_docker_webui_port: 3000
 
-grafana_docker_admin_user: "admin"
-grafana_docker_admin_password: "password"
+# Name of the Docker network Traefik should use when proxying.
+grafana_docker_traefik_network: null
 
-grafana_docker_smtp_enabled: "false"
-grafana_docker_smtp_host: "localhost:25"
-grafana_docker_smtp_user: "username"
-grafana_docker_smtp_password: "password"
-grafana_docker_smtp_from_address: "admin@{{ grafana_docker_hostname }}.{{ grafana_docker_host_domain }}"
+#####
+# Grafana config options
+#####
+
+# Base config options
+
+grafana_docker_config_enable_gzip: true
+grafana_docker_config_router_logging: false
+
+# Database options
+
+grafana_docker_config_conn_max_lifetime: 14400
+grafana_docker_config_high_availability: false
+grafana_docker_config_log_queries: false
+grafana_docker_config_max_idle_conn: 2
+grafana_docker_config_max_open_conn: 0
+
+# Security options
+
+grafana_docker_config_admin_email: "admin@localhost"
+grafana_docker_config_admin_password: "admin"
+grafana_docker_config_admin_user: "admin"
+
+# IMPORTANT: Set this to a unique, random string in production.
+# Used for signing. If you change it later you may need to re-encode secrets.
+# Example: openssl rand -hex 32
+grafana_docker_config_secret_key: "CHANGE_ME_TO_A_RANDOM_SECRET"
+
+# Email
+
+grafana_docker_smtp_enabled: false
+grafana_docker_smtp_from: "admin@grafana.localhost"
+grafana_docker_smtp_host: "localhost"
+grafana_docker_smtp_password: null
+grafana_docker_smtp_port: 25
+grafana_docker_smtp_user: null
+
+# Logging
+
+# "debug", "info", "warn", "error"
+grafana_docker_logging_level: "info"
+
+# Optional settings to set different levels for specific loggers. Ex filters = sqlstore:debug
+grafana_docker_logging_filters: null
+
+grafana_docker_logging_console_enabled: true
+grafana_docker_logging_console_level: null
+# Log line format, valid options are text, console and json
+grafana_docker_logging_console_format: "console"
+
+grafana_docker_logging_file_enabled: true
+grafana_docker_logging_file_level: null
+# Log line format, valid options are text, console and json
+grafana_docker_logging_file_format: "text"
+# Automated log rotation
+grafana_docker_logging_file_rotate: true
+# Max lines in single file
+grafana_docker_logging_file_max_lines: 1000000
+# Max size shift of single file, default is 28 means 1 << 28, 256MB
+grafana_docker_logging_file_max_size_shift: 28
+# Segment log daily
+grafana_docker_logging_file_daily_rotate: true
+# Delete old logs after max days
+grafana_docker_logging_file_max_days: 7
+
+grafana_docker_logging_syslog_enabled: false
+grafana_docker_logging_syslog_level: null
+# Log line format, valid options are text, console and json
+grafana_docker_logging_syslog_format: "text"
+# Syslog network type and address. This can be udp, tcp, or unix. If empty, the default unix
+# endpoints will be used.
+grafana_docker_logging_syslog_network: null
+grafana_docker_logging_syslog_address: null
+# Syslog facility. user, daemon and local0 through local7 are valid.
+grafana_docker_logging_syslog_facility: null
+# Syslog tag. If empty, the process' argv[0] is used.
+grafana_docker_logging_syslog_tag: null
+
+# Alerting
+
+grafana_docker_alerting_enabled: true
+# Comma-separated list of contact point integration types to allow. If left blank, all types are allowed.
+# Valid types: prometheus-alertmanager, dingding, discord, email, googlechat, jira, kafka,
+# mqtt, oncall, opsgenie, pagerduty, pushover, sensugo, slack, sns, teams, telegram,
+# threema, victorops, webex, webhook, wecom.
+grafana_docker_alerting_allowed_integrations: null
+# How long to wait for the alerting service to initialize
+grafana_docker_alerting_initialization_timeout: "30s"
+# Specify the frequency of polling for admin config changes.
+grafana_docker_alerting_admin_config_poll_interval: "60s"
+# Specify the frequency of polling for Alertmanager config changes.
+grafana_docker_alerting_alertmanager_config_poll_interval: "60s"
+
+#####
+# Ansible
+#####
+
+grafana_docker_role_label: "grafana"

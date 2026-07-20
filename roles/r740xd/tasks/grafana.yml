@@ -1,0 +1,41 @@
+---
+- name: "{{ r740xd_ansible_role_label }} | Grafana | Check if Docker Monitoring network exists"
+  community.docker.docker_network_info:
+    name: "{{ docker_networks.monitoring.name }}"
+  register: "__r740xd_grafana_monit_network_info"
+
+- name: "{{ r740xd_ansible_role_label }} | Grafana | Setup Docker network"
+  community.docker.docker_network:
+    name: "{{ docker_networks.monitoring.name }}"
+    driver: "bridge"
+    enable_ipv6: "no"
+    internal: "{{ docker_networks.monitoring.internal }}"
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ docker_networks.monitoring.subnet }}"
+        gateway: "{{ docker_networks.monitoring.gateway }}"
+  when: "not __r740xd_grafana_monit_network_info.exists"
+
+- name: "{{ r740xd_ansible_role_label }} | Grafana | Build container FQDN"
+  ansible.builtin.set_fact:
+    _r740xd_grafana_fqdn: "{{ r740xd_grafana_host_name }}.{{ r740xd_grafana_host_domain }}"
+
+- name: "{{ r740xd_ansible_role_label }} | Grafana | Setup container"
+  ansible.builtin.import_role:
+    name: "grafana_docker"
+  vars:
+    grafana_docker_config_admin_email: "{{ r740xd_grafana_admin_email }}"
+    grafana_docker_config_admin_password: "{{ r740xd_grafana_admin_password }}"
+    grafana_docker_host_domain: "{{ r740xd_grafana_host_domain }}"
+    grafana_docker_config_secret_key: "{{ r740xd_grafana_secret_key }}"
+    grafana_docker_config_smtp_enabled: true
+    grafana_docker_config_smtp_from: "{{ r740xd_grafana_smtp_from_user }}@{{ _r740xd_grafana_fqdn }}"
+    grafana_docker_config_smtp_host: "{{ r740xd_grafana_smtp_host }}"
+    grafana_docker_config_smtp_password: "{{ r740xd_grafana_smtp_password }}"
+    grafana_docker_config_smtp_port: "{{ r740xd_grafana_smtp_port }}"
+    grafana_docker_config_smtp_user: "{{ r740xd_grafana_smtp_user }}"
+    grafana_docker_extra_networks:
+      # - name: "{{ docker_networks.ingress-proxy.name }}"
+      - name: "{{ docker_networks.traefik.name }}"
+    grafana_docker_network_name: "{{ docker_networks.monitoring.name }}"
+    grafana_docker_traefik_network: "{{ docker_networks.traefik.name }}"

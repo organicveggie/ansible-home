@@ -60,6 +60,15 @@
         r740xd_emqx_prometheus_username: "{{ vault_emqx_prometheus_username }}"
         r740xd_emqx_prometheus_password: "{{ vault_emqx_prometheus_password }}"
         r740xd_emqx_zigbee2mqtt_password: "{{ vault_emqx_zigbee2mqtt_password }}"
+        # Grafana
+        r740xd_grafana_admin_email: "{{ vault_grafana_admin_email }}"
+        r740xd_grafana_admin_password: "{{ vault_grafana_admin_password }}"
+        r740xd_grafana_host_domain: "{{ vault_veggie_home_domain }}"
+        r740xd_grafana_smtp_host: "{{ vault_grafana_smtp_host }}"
+        r740xd_grafana_smtp_password: "{{ vault_grafana_smtp_password }}"
+        r740xd_grafana_smtp_port: "{{ vault_grafana_smtp_port }}"
+        r740xd_grafana_smtp_user: "{{ vault_grafana_smtp_user }}"
+        r740xd_grafana_secret_key: "{{ vault_grafana_secret_key }}"
         # Groups
         r740xd_groups: "{{ veggie_nas_groups }}"
         # Home Assistant

@@ -139,10 +139,9 @@
   ansible.builtin.import_tasks: "prometheus.yml"
   tags: ["prometheus"]
 
-# # - ansible.builtin.import_tasks: "influxdb.yml"
-# #   tags: ["influxdb"]
-
-# TODO: Grafana
+- name: "Setup Grafana"
+  ansible.builtin.import_tasks: "grafana.yml"
+  tags: ["grafana"]
 
 - name: "Setup Tailscale"
   ansible.builtin.import_tasks: "tailscale.yml"

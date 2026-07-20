@@ -77,6 +77,20 @@ r740xd_emqx_tcp_port: "1883"
 r740xd_emqx_ws_port: "9001"
 r740xd_emqx_zigbee2mqtt_password: null
 
+###
+### Grafana
+###
+r740xd_grafana_admin_email: "admin@localhost"
+r740xd_grafana_admin_password: "admin"
+r740xd_grafana_host_domain: null
+r740xd_grafana_host_name: "grafana"
+r740xd_grafana_smtp_from_user: "admin"
+r740xd_grafana_smtp_host: "localhost"
+r740xd_grafana_smtp_password: "CHANGE_THE_PASWORD"
+r740xd_grafana_smtp_port: 25
+r740xd_grafana_smtp_user: "FAKE_USER"
+r740xd_grafana_secret_key: "!CHANGE_ME_OR_ELSE!"
+
 # List of dictionaries of Linux groups to create. Each entry in the list should be a dictionary
 # in the form to match ansible.builtin.group.
 # Example:
