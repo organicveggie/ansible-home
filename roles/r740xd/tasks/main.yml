@@ -60,6 +60,10 @@
   ansible.builtin.import_tasks: "docker.yml"
   tags: ["docker"]
 
+- name: "Setup Docker networks"
+  ansible.builtin.import_tasks: "docker_networks.yml"
+  tags: ["docker", "docker-networks"]
+
 - name: "Install Portainer"
   ansible.builtin.import_tasks: "portainer.yml"
   tags: ["portainer"]

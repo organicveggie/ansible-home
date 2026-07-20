@@ -30,7 +30,3 @@
   loop: "{{ r740xd_docker_users | default([]) }}"
   loop_control:
     loop_var: __item
-
-- name: "{{ r740xd_ansible_role_label }} | docker | Setup networks"
-  ansible.builtin.import_tasks: "docker_networks.yml"
-  tags: ["docker", "docker-networks"]

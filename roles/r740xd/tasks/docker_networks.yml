@@ -10,12 +10,13 @@
       - subnet: "{{ __item.subnet }}"
         gateway: "{{ __item.gateway }}"
   loop:
-    - "{{ docker_networks.ingressproxy }}"
     - "{{ docker_networks.automation }}"
+    - "{{ docker_networks.ingressproxy }}"
+    - "{{ docker_networks.monitoring }}"
   loop_control:
     loop_var: "__item"
 
-- name: "{{ r740xd_ansible_role_label }} | docker | Create macvlan network"
+- name: "{{ r740xd_ansible_role_label }} | docker | Create macvlan networks"
   community.docker.docker_network:
     name: "{{ __item.value.name }}"
     driver: "macvlan"
