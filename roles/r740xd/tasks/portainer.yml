@@ -1,18 +1,11 @@
 ---
-- name: "Docker | Create Portainer Docker network"
-  community.docker.docker_network:
-    name: "{{ docker_networks.portainer.name }}"
-    driver: "bridge"
-    enable_ipv6: "no"
-    internal: "no"
-    scope: "local"
-    ipam_config:
-      - subnet: "{{ docker_networks.portainer.subnet }}"
-        gateway: "{{ docker_networks.portainer.gateway }}"
-
 - name: "Docker | Launch Portainer container"
   ansible.builtin.import_role:
     name: "portainer"
   vars:
     portainer_docker_home: "{{ r740xd_docker_home }}"
+    portainer_extra_networks:
+      - name: "{{ docker_networks.ingressproxy.name }}"
     portainer_host_domain: "{{ veggie_nas_domain_name }}"
+    portainer_network_name: "{{ docker_networks.traefik.name }}"
+    portainer_traefik_network: "{{ docker_networks.traefik.name }}"
