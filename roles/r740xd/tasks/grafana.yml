@@ -1,4 +1,9 @@
 ---
+- name: "{{ r740xd_ansible_role_label }} | Grafana | Check if Docker Monitoring network exists"
+  community.docker.docker_network_info:
+    name: "{{ docker_networks.monitoring.name }}"
+  register: "__r740xd_grafana_monit_network_info"
+
 - name: "{{ r740xd_ansible_role_label }} | Grafana | Setup Docker network"
   community.docker.docker_network:
     name: "{{ docker_networks.monitoring.name }}"
@@ -9,6 +14,7 @@
     ipam_config:
       - subnet: "{{ docker_networks.monitoring.subnet }}"
         gateway: "{{ docker_networks.monitoring.gateway }}"
+  when: "not __r740xd_grafana_monit_network_info.exists"
 
 - name: "{{ r740xd_ansible_role_label }} | Grafana | Build container FQDN"
   ansible.builtin.set_fact:
