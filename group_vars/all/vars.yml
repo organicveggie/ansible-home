@@ -34,7 +34,7 @@ veggie_new_base_domain_name: "{{ vault_veggie_new_base_domain_name }}"
 ###
 docker_networks:
   traefik:
-    name: "traefik"
+    name: "traefik_proxy"
     gateway: "172.30.1.1"
     subnet: "172.30.1.0/24"
   portainer:

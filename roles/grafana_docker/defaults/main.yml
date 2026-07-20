@@ -55,6 +55,9 @@ grafana_docker_host_domain: "example.com"
 # Port number for the Grafana web interface.
 grafana_docker_webui_port: 3000
 
+# Name of the Docker network Traefik should use when proxying.
+grafana_docker_traefik_network: null
+
 #####
 # Grafana config options
 #####
