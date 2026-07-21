@@ -1,0 +1,33 @@
+---
+- name: "Verify"
+  hosts: all
+  gather_facts: false
+
+  vars:
+    portainer_extra_networks:
+      - name: "ingress-proxy-test"
+    portainer_host_domain: "molecule.example.com"
+    portainer_name: "portainer-molecule"
+    portainer_network_name: "traefik_proxy-test"
+    portainer_traefik_network: "traefik_proxy-test"
+
+  tasks:
+    - name: "Verify networks"
+      ansible.builtin.include_tasks:
+        file: "verify-network.yml"
+      loop:
+        - "{{ portainer_network_name }}"
+        - "{{ portainer_extra_networks[0].name }}"
+      loop_control:
+        loop_var: "__item"
+
+    - name: Get info on container
+      community.docker.docker_container_info:
+        name: "{{ portainer_name }}"
+      register: _portainer_container
+
+    - name: Verify container state
+      ansible.builtin.assert:
+        that:
+          - _portainer_container.exists
+          - _portainer_container["container"]["State"]["Status"] == "running"

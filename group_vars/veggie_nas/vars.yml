@@ -267,15 +267,6 @@ pip_install_packages:
   - docker
 
 ###
-### Portainer
-###
-portainer_available_externally: "true"
-portainer_admin_password: "{{ default_portainer_admin_password }}"
-portainer_network_name: "portainer"
-portainer_network_subnet: "{{ vault_portainer_network_subnet }}"
-portainer_network_gateway: "{{ vault_portainer_network_gateway }}"
-
-###
 ### PostgreSQL
 ###
 postgres_docker_admin_password: "{{ vault_postgres_docker_admin_password }}"

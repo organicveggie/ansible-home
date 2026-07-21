@@ -1,11 +1,117 @@
 ---
-- ansible.builtin.import_tasks: docker.yml
-  tags:
-    - portainer
-    - portainer:docker
+- name: "{{ portainer_role_label }} | Build container FQDN"
+  ansible.builtin.set_fact:
+    _portainer_fqdn: "{{ portainer_hostname }}.{{ portainer_host_domain }}"
 
-# TODO: Switch to executing within the Portainer container
-# - import_tasks: admin.yml
-#   tags:
-#     - portainer
-#     - portainer:admin
+- name: "{{ portainer_role_label }} | Create Portainer config directory"
+  ansible.builtin.file:
+    path: "{{ portainer_data_directory }}"
+    state: "directory"
+    mode: "0770"
+
+- name: "{{ portainer_role_label }} | Create Docker volumes"
+  community.docker.docker_volume:
+    name: "{{ portainer_docker_volume_name }}"
+    driver_options:
+      type: "none"
+      device: "{{ portainer_data_directory }}"
+      o: "bind"
+
+- name: "{{ portainer_role_label }} | Create placeholder array for default network"
+  ansible.builtin.set_fact:
+    _portainer_default_network:
+      name: "{{ portainer_network_name }}"
+      aliases: "{{ portainer_network_aliases | default(omit) }}"
+
+- name: "{{ portainer_role_label }} | Define all Docker networks for this container"
+  ansible.builtin.set_fact:
+    _portainer_all_networks: >
+      {{ [_portainer_default_network] + portainer_extra_networks }}
+
+- name: "{{ portainer_role_label }} | Add user specified environment variables"
+  ansible.builtin.set_fact:
+    _portainer_env: >
+      {{ _portainer_env | default([], true) | combine(portainer_extra_env | default({}, true)) }}
+
+- name: "{{ portainer_role_label }} | Define common Docker labels"
+  ansible.builtin.set_fact:
+    _portainer_labels: 
+      "traefik.enable": "{{ portainer_available_externally | lower | ternary('true', 'false') }}"
+
+- name: "{{ portainer_role_label }} | Configure Docker labels with Traefik enabled"
+  when: "portainer_available_externally"
+  block:
+    - name: "{{ portainer_role_label }} | Define Docker labels with Traefik enabled"
+      ansible.builtin.set_fact:
+        __portainer_traefik_labels:
+          "traefik.http.routers.portainer.rule": "Host(`{{ _portainer_fqdn }}`)"
+          "traefik.http.routers.portainer.entrypoints": "http,https"
+          "traefik.http.routers.portainer.tls.certresolver": "letsencrypt"
+          "traefik.http.routers.portainer.tls.domains[0].main": "*.{{ portainer_host_domain }}"
+          "traefik.http.services.portainer.loadbalancer.server.port": "{{ portainer_port }}"
+
+    - name: "{{ portainer_role_label }} | Append Traefik Docker labels"
+      ansible.builtin.set_fact:
+        _portainer_labels: >
+          {{ _portainer_labels | default({}) | combine(__portainer_traefik_labels) }}
+
+    - name: "{{ portainer_role_label }} | Set Traefik network label"
+      ansible.builtin.set_fact:
+        _portainer_labels: "{{ _portainer_labels | default({}) |
+          combine({'traefik.docker.network': portainer_traefik_network}) }}"
+      when: "portainer_traefik_network | default('', true) | length > 0"
+
+- name: "{{ portainer_role_label }} | Define user-supplied extra Docker labels"
+  ansible.builtin.set_fact:
+    _portainer_labels: "{{ _portainer_labels | default({}) |
+      combine({__item.key: __item.value}) }}"
+  loop: "{{ portainer_extra_labels | dict2items }}"
+  loop_control:
+    loop_var: __item
+
+- name: "{{ portainer_role_label }} | Create container"
+  community.docker.docker_container:
+    name: "{{ portainer_name }}"
+    image: "{{ portainer_image_name }}:{{ portainer_image_version }}"
+    pull: true
+    mounts:
+      - source: "{{ portainer_docker_volume_name }}"
+        target: "/data"
+        type: "volume"
+      - source: "/var/run/docker.sock"
+        target: "/var/run/docker.sock"
+        type: "bind"
+        read_only: "true"
+      - source: "/etc/timezone"
+        target: "/etc/timezone"
+        type: "bind"
+        read_only: "true"
+    network_mode: "{{ portainer_network_name }}"
+    networks: "{{ _portainer_all_networks }}" 
+    env: "{{ _portainer_env }}"
+    etc_hosts: "{{ portainer_extra_hosts | default(omit) }}"
+    restart_policy: unless-stopped
+    memory: "{{ portainer_memory }}"
+    container_default_behavior: no_defaults
+    auto_remove: false
+    detach: true
+    init: false
+    interactive: false
+    paused: false
+    privileged: false
+    read_only: false
+    tty: false
+    labels: "{{ _portainer_labels }}"
+  register: __portainer_container
+
+- ansible.builtin.set_fact:
+    _portainer_internal_endpoint: "http://{{ __portainer_container.container.NetworkSettings.Networks.get(portainer_network_name).IPAddress }}:{{ portainer_port }}/api"
+
+# - name: Configure admin user password
+#   ansible.builtin.uri:
+#     url: "{{ _portainer_endpoint }}/users/admin/init"
+#     method: POST
+#     return_content: true
+#     body_format: json
+#     body: '{ "Username":"{{ portainer_admin_user }}", "Password":"{{ portainer_admin_password }}"}'
+#     status_code: 200, 409

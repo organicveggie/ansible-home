@@ -1,0 +1,9 @@
+---
+- name: "Get info on {{ __item }} network"
+  community.docker.docker_network_info:
+    name: "{{ __item }}"
+  register: _portainer_network_info
+
+- name: "Verify {{ __item }} network exists"
+  ansible.builtin.assert:
+    that: _portainer_network_info.exists

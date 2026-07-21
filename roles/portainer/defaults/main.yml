@@ -1,22 +1,74 @@
 ---
-portainer_available_externally: "false"
+#####
+# Container
+#####
 
-# directories
+# Name of the Docker container.
+portainer_name: "portainer"
+
+# Base name of the Docker image to use for the container.
+portainer_image_name: "portainer/portainer-ce"
+
+# Specific Docker image version to use for the container.
+portainer_image_version: "latest"
+
+# Number of vCPUs to allocate to the container.
+portainer_cpus: "1"
+
+# Amount of memory to allocate to the container.
+portainer_memory: "1024M"
+
+# Name of the primary network
+portainer_network_name: "portainer"
+
+# Container aliases on the default network.
+portainer_network_aliases: null
+
+# List of additional networks to join.
+portainer_extra_networks: []
+
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+portainer_extra_labels: {}
+
+# Dictionary of extra key value pairs to set as environment variables on the Docker container.
+portainer_extra_env: {}
+
+# Directories
 portainer_docker_home: "/var/lib/docker"
 portainer_data_directory: "{{ portainer_docker_home }}/portainer/config"
 portainer_docker_volume_name: "portainer-data"
 
-# network
-portainer_port: "9000"
+#####
+# Traefik
+#####
+
+portainer_available_externally: true
+
+# Host name to use for the Traefik endpoint. Combined with [portainer_host_domain] to form the
+# FQDN for the endpoint.
 portainer_hostname: "portainer"
+
+# Domain name to use for the Traefik endpoint. Combined with [portainer_hostname] to form the
+# FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
 portainer_host_domain: "example.com"
-portainer_network_name: "portainer"
 
-# specs
-portainer_memory: 1g
+# Port number for the web interface.
+portainer_port: "9000"
 
-# config
+# Name of the Docker network Traefik should use when proxying.
+portainer_traefik_network: null
+
+#####
+# Portainer
+#####
+
 portainer_admin_user: "admin"
 portainer_admin_password: "password"
 
 portainer_setup_debug: false
+
+#####
+# Ansible
+#####
+
+portainer_role_label: "portainer"
