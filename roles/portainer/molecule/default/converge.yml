@@ -27,7 +27,7 @@
   become: true
 
   vars:
-    porrtainer_extra_networks:
+    portainer_extra_networks:
       - name: "ingress-proxy-test"
     portainer_host_domain: "molecule.example.com"
     portainer_name: "portainer-molecule"
@@ -44,7 +44,7 @@
         name: "{{ __item.name }}"
         state: present
       loop: >
-        {{ porrtainer_extra_networks + [{'name': portainer_network_name}] }}
+        {{ portainer_extra_networks + [{'name': portainer_network_name}] }}
       loop_control:
         loop_var: "__item"
 

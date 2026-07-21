@@ -42,7 +42,7 @@ portainer_docker_volume_name: "portainer-data"
 # Traefik
 #####
 
-portainer_available_externally: "true"
+portainer_available_externally: true
 
 # Host name to use for the Traefik endpoint. Combined with [portainer_host_domain] to form the
 # FQDN for the endpoint.

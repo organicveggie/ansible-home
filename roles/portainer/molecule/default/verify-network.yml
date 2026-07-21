@@ -1,9 +1,9 @@
 ---
-- name: "Get info on {{ __grafana_network_name }} network"
+- name: "Get info on {{ __item }} network"
   community.docker.docker_network_info:
-    name: "{{ __grafana_network_name }}"
-  register: _grafana_docker_network_info
+    name: "{{ __item }}"
+  register: _portainer_network_info
 
-- name: "Verify {{ __grafana_network_name }} network exists"
+- name: "Verify {{ __item }} network exists"
   ansible.builtin.assert:
-    that: _grafana_docker_network_info.exists
+    that: _portainer_network_info.exists
