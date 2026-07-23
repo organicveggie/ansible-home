@@ -13,8 +13,10 @@
       - name: "{{ docker_networks.saurron.name }}"
       - name: "{{ docker_networks.zigbee.name }}"
     prometheus_docker_host_domain: "{{ r740xd_prometheus_host_domain }}"
+    prometheus_docker_http_api_port: "{{ r740xd_prometheus_http_api_port }}"
     prometheus_docker_memory: "1GB"
     prometheus_docker_mount_docker_socket: true
+    prometheus_docker_name: "{{ r740xd_prometheus_name }}"
     prometheus_docker_network_name: "{{ docker_networks.traefik.name }}"
     prometheus_docker_config: 
       global:
