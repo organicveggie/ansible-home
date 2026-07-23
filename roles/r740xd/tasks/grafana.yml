@@ -26,7 +26,6 @@
   vars:
     grafana_docker_config_admin_email: "{{ r740xd_grafana_admin_email }}"
     grafana_docker_config_admin_password: "{{ r740xd_grafana_admin_password }}"
-    grafana_docker_host_domain: "{{ r740xd_grafana_host_domain }}"
     grafana_docker_config_secret_key: "{{ r740xd_grafana_secret_key }}"
     grafana_docker_config_smtp_enabled: true
     grafana_docker_config_smtp_from: "{{ r740xd_grafana_smtp_from_user }}@{{ _r740xd_grafana_fqdn }}"
@@ -35,7 +34,10 @@
     grafana_docker_config_smtp_port: "{{ r740xd_grafana_smtp_port }}"
     grafana_docker_config_smtp_user: "{{ r740xd_grafana_smtp_user }}"
     grafana_docker_extra_networks:
-      # - name: "{{ docker_networks.ingress-proxy.name }}"
+      - name: "{{ docker_networks.ingressproxy.name }}"
       - name: "{{ docker_networks.traefik.name }}"
+    grafana_docker_host_domain: "{{ r740xd_grafana_host_domain }}"
     grafana_docker_network_name: "{{ docker_networks.monitoring.name }}"
     grafana_docker_traefik_network: "{{ docker_networks.traefik.name }}"
+    grafana_docker_uid: 2600
+    grafana_docker_gid: 2600

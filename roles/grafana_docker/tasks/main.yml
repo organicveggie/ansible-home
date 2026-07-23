@@ -1,4 +1,18 @@
 ---
+- name: "{{ grafana_docker_role_label }} | Create group"
+  ansible.builtin.group:
+    gid: "{{ grafana_docker_gid }}"
+    name: "{{ grafana_docker_group_name }}"
+
+- name: "{{ grafana_docker_role_label }} | Create user"
+  ansible.builtin.user:
+    create_home: false
+    group: "{{ grafana_docker_group_name }}"
+    name: "{{ grafana_docker_user_name }}"
+    password: "!"
+    shell: "/usr/bin/false"
+    uid: "{{ grafana_docker_uid }}"
+
 - name: "{{ grafana_docker_role_label }} | Build container FQDN"
   ansible.builtin.set_fact:
     _grafana_docker_fqdn: "{{ grafana_docker_host_name }}.{{ grafana_docker_host_domain }}"
@@ -19,14 +33,13 @@
   when: "grafana_docker_logging_syslog_enabled | default(false, true)"
 
 - name: "{{ grafana_docker_role_label }} | Create Docker volumes"
-  community.docker.docker_volume:
-    name: "{{ __item }}"
+  ansible.builtin.include_tasks: "docker_volume.yml"
   loop:
     - "{{ grafana_docker_volume_config_name }}"
     - "{{ grafana_docker_volume_data_name }}"
     - "{{ grafana_docker_volume_logs_name }}"
   loop_control:
-    loop_var: __item
+    loop_var: __grafana_docker_volume_name
 
 - name: "{{ grafana_docker_role_label }} | Set Docker mount list for volume mounts"
   ansible.builtin.set_fact:
@@ -51,9 +64,34 @@
     src: "templates/grafana.ini.j2"
     dest: "{{ __grafana_docker_config_volume_info.volume.Mountpoint }}/grafana.ini"
     mode: "0660"
-    owner: "root"
-    group: "root"
+    owner: "{{ grafana_docker_user_name }}"
+    group: "{{ grafana_docker_group_name }}"
   register: "_grafana_docker_modify_config"
+
+- name: "{{ grafana_docker_role_label }} | Datasource provisioning"
+  when: "grafana_docker_datasources | default({}, true) | length > 0"
+  block:
+    - name: "{{ grafana_docker_role_label }} | Get path to data volume"
+      community.docker.docker_volume_info:
+        name: "{{ grafana_docker_volume_data_name }}"
+      register: "__grafana_docker_data_volume_info"
+
+    - name: "{{ grafana_docker_role_label }} | Create provisioning folders"
+      ansible.builtin.file:
+        path: "{{ __grafana_docker_data_volume_info.volume.Mountpoint }}/{{ __item }}"
+        state: "directory"
+        mode: "770"
+      loop:
+        - "provisioning"
+        - "provisioning/datasources"
+      loop_control:
+        loop_var: "__item"
+    
+    - name: "{{ grafana_docker_role_label }} | Create datasource provisioning files"
+      ansible.builtin.include_tasks: "datasource.yml"
+      loop: "{{ grafana_docker_datasources | dict2items }}"
+      loop_control:
+        loop_var: "__datasource"
 
 - name: "{{ grafana_docker_role_label }} | Create placeholder array for default network"
   ansible.builtin.set_fact:
@@ -144,4 +182,5 @@
     privileged: no
     read_only: no
     tty: no
+    user: "{{ grafana_docker_uid }}:{{ grafana_docker_gid }}"
     labels: "{{ _grafana_docker_labels }}"
