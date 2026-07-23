@@ -1,0 +1,11 @@
+---
+# Configuration file version
+apiVersion: 1
+
+# Mark provisioned data sources for deletion if they are no longer in a provisioning file.
+# It takes no effect if data sources are already listed in the deleteDatasources section.
+prune: true
+
+# List of data sources to insert/update depending on what's available in the database.
+datasources:
+{{ __datasource.value | to_nice_yaml(indent=2) }}

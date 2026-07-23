@@ -30,12 +30,30 @@
     grafana_docker_config_admin_password: "password"
     grafana_docker_config_secret_key: "Grafana Docker Config Sekret Keyz"
     grafana_docker_extra_networks: []
-      # - name: "ingress-proxy-test"
     grafana_docker_name: "grafana-molecule"
     grafana_docker_network_name: "monitoring-test"
     grafana_docker_volume_config_name: "grafana-config-test"
     grafana_docker_volume_data_name: "grafana-data-test"
     grafana_docker_volume_logs_name: "grafana-logs-test"
+    grafana_docker_datasources:
+      prometheus:
+        - name: "Prometheus Test"
+          type: "prometheus"
+          access: "proxy"
+          url: "http://prometheus-test:9090"
+          jsonData:
+            httpMethod: "POST"
+            manageAlerts: true
+            allowAsRecordingRulesTarget: true
+            prometheusType: "Prometheus"
+            prometheusVersion: "3.3.0"
+            cacheLevel: "High"
+            disableRecordingRules: false
+            seriesEndpoint: false
+            timeInterval: "10s"
+            incrementalQueryOverlapWindow: "10m"
+    grafana_docker_gid: 1987
+    grafana_docker_uid: 1987
 
   pre_tasks:
     - name: Install Docker

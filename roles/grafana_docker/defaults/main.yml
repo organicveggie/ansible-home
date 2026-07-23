@@ -37,6 +37,11 @@ grafana_docker_extra_labels: {}
 # Dictionary of extra key value pairs to set as environment variables on the Docker container.
 grafana_docker_extra_env: {}
 
+grafana_docker_user_name: "grafana"
+grafana_docker_uid: 1000
+grafana_docker_group_name: "grafana"
+grafana_docker_gid: 1000
+
 #####
 # Traefik
 #####
@@ -150,6 +155,11 @@ grafana_docker_alerting_initialization_timeout: "30s"
 grafana_docker_alerting_admin_config_poll_interval: "60s"
 # Specify the frequency of polling for Alertmanager config changes.
 grafana_docker_alerting_alertmanager_config_poll_interval: "60s"
+
+# Used for provisioning datasources. Each key should be the name of a provisioning file to create.
+# The value of each key should be a list of data sources to insert/update.  See
+# https://grafana.com/docs/grafana/latest/administration/provisioning/#data-sources.
+grafana_docker_datasources: {}
 
 #####
 # Ansible
