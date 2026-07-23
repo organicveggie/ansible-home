@@ -71,16 +71,13 @@
 - name: "{{ grafana_docker_role_label }} | Datasource provisioning"
   when: "grafana_docker_datasources | default({}, true) | length > 0"
   block:
-    - name: "{{ grafana_docker_role_label }} | Get path to data volume"
-      community.docker.docker_volume_info:
-        name: "{{ grafana_docker_volume_data_name }}"
-      register: "__grafana_docker_data_volume_info"
-
     - name: "{{ grafana_docker_role_label }} | Create provisioning folders"
       ansible.builtin.file:
-        path: "{{ __grafana_docker_data_volume_info.volume.Mountpoint }}/{{ __item }}"
+        path: "{{ __grafana_docker_config_volume_info.volume.Mountpoint }}/{{ __item }}"
         state: "directory"
         mode: "770"
+        owner: "{{ grafana_docker_user_name }}"
+        group: "{{ grafana_docker_group_name }}"
       loop:
         - "provisioning"
         - "provisioning/datasources"
@@ -89,9 +86,12 @@
     
     - name: "{{ grafana_docker_role_label }} | Create datasource provisioning files"
       ansible.builtin.include_tasks: "datasource.yml"
+      vars:
+        __grafana_docker_datasource_path: "{{ __grafana_docker_config_volume_info.volume.Mountpoint }}/provisioning/datasources"
       loop: "{{ grafana_docker_datasources | dict2items }}"
       loop_control:
         loop_var: "__datasource"
+      register: "_grafana_docker_modify_datasource"
 
 - name: "{{ grafana_docker_role_label }} | Create placeholder array for default network"
   ansible.builtin.set_fact:
@@ -170,7 +170,8 @@
     etc_hosts: "{{ grafana_docker_extra_hosts | default(omit) }}"
     restart_policy: unless-stopped
     restart: |
-      {{ _grafana_docker_modify_config.changed | default(false) }}
+      {{ (_grafana_docker_modify_config.changed | default(false)) or 
+        (_grafana_docker_modify_datasource.change | default(false)) }}
     memory: "{{ grafana_docker_memory }}"
     cpus: "{{ grafana_docker_cpus }}"
     container_default_behavior: no_defaults
