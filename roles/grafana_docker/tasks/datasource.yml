@@ -6,4 +6,3 @@
     mode: "0660"
     owner: "{{ grafana_docker_user_name }}"
     group: "{{ grafana_docker_group_name }}"
-
