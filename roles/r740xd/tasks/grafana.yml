@@ -33,6 +33,23 @@
     grafana_docker_config_smtp_password: "{{ r740xd_grafana_smtp_password }}"
     grafana_docker_config_smtp_port: "{{ r740xd_grafana_smtp_port }}"
     grafana_docker_config_smtp_user: "{{ r740xd_grafana_smtp_user }}"
+    grafana_docker_datasources:
+      prometheus:
+        - name: "Prometheus"
+          type: "prometheus"
+          access: "proxy"
+          url: "http://{{ prometheus_docker_name }}:{{ r740xd_prometheus_http_api_port }}"
+          jsonData:
+            httpMethod: "POST"
+            manageAlerts: true
+            allowAsRecordingRulesTarget: true
+            prometheusType: "Prometheus"
+            prometheusVersion: "3.3.0"
+            cacheLevel: "High"
+            disableRecordingRules: false
+            seriesEndpoint: false
+            timeInterval: "10s"
+            incrementalQueryOverlapWindow: "10m"
     grafana_docker_extra_networks:
       - name: "{{ docker_networks.ingressproxy.name }}"
       - name: "{{ docker_networks.traefik.name }}"

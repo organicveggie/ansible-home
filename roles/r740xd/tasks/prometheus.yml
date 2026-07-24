@@ -1,15 +1,4 @@
 ---
-- name: "R740xd | Create Prometheus Docker network"
-  community.docker.docker_network:
-    name: "{{ docker_networks.prometheus.name }}"
-    driver: "bridge"
-    enable_ipv6: "no"
-    internal: "no"
-    scope: "local"
-    ipam_config:
-      - subnet: "{{ docker_networks.prometheus.subnet }}"
-        gateway: "{{ docker_networks.prometheus.gateway }}"
-
 - name: "R740xd | Launch Prometheus container"
   ansible.builtin.import_role:
     name: "prometheus_docker"
@@ -19,12 +8,16 @@
     prometheus_docker_extra_hosts:
       host.docker.internal: "host-gateway"
     prometheus_docker_extra_networks:
+      - name: "{{ docker_networks.ingressproxy.name }}"
+      - name: "{{ docker_networks.monitoring.name }}"
       - name: "{{ docker_networks.saurron.name }}"
       - name: "{{ docker_networks.zigbee.name }}"
     prometheus_docker_host_domain: "{{ r740xd_prometheus_host_domain }}"
+    prometheus_docker_http_api_port: "{{ r740xd_prometheus_http_api_port }}"
     prometheus_docker_memory: "1GB"
     prometheus_docker_mount_docker_socket: true
-    prometheus_docker_network_name: "{{ docker_networks.prometheus.name }}"
+    prometheus_docker_name: "{{ r740xd_prometheus_name }}"
+    prometheus_docker_network_name: "{{ docker_networks.traefik.name }}"
     prometheus_docker_config: 
       global:
         scrape_interval: "15s"

@@ -180,6 +180,8 @@ r740xd_plex_videos_path: null
 ### Prometheus
 ###
 r740xd_prometheus_host_domain: null
+r740xd_prometheus_http_api_port: "9090"
+r740xd_prometheus_name: "prometheus"
 r740xd_prometheus_opnsense_addr: "192.168.1.1"
 r740xd_prometheus_opnsense_port: 9100
 

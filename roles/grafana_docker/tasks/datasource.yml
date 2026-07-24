@@ -2,5 +2,7 @@
 - name: "{{ grafana_docker_role_label }} | Create datasource file for {{ __datasource.key }}"
   ansible.builtin.template:
     src: "templates/datasource.yml.j2"
-    dest: "{{ __grafana_docker_data_volume_info.volume.Mountpoint }}/provisioning/datasources/{{ __datasource.key }}.yml"
+    dest: "{{ __grafana_docker_datasource_path }}/{{ __datasource.key }}.yml"
     mode: "0660"
+    owner: "{{ grafana_docker_user_name }}"
+    group: "{{ grafana_docker_group_name }}"
