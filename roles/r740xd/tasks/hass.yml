@@ -24,11 +24,12 @@
   vars:
     zigbee2mqtt_docker_device: "{{ r740xd_hass_zigbee_device }}"
     zigbee2mqtt_docker_extra_networks:
-      - "{{ docker_networks.automation.name }}"
-      - "{{ docker_networks.ingressproxy.name }}"
+      - name: "{{ docker_networks.automation.name }}"
+      - name: "{{ docker_networks.ingressproxy.name }}"
     zigbee2mqtt_docker_host_domain: "{{ r740xd_hass_host_domain }}"
     zigbee2mqtt_docker_network_name: "{{ docker_networks.zigbee.name }}"
     zigbee2mqtt_docker_timezone: "{{ r740xd_hass_timezone }}"
+    zigbee2mqtt_docker_traefik_network: "{{ docker_networks.ingressproxy.name }}"
   when:
     - "r740xd_hass_zigbee_device is defined"
     - "r740xd_hass_zigbee_device not in (None, omit)"
@@ -38,11 +39,12 @@
     name: "zwavejsui"
   vars:
     zwavejsui_extra_networks:
-      - "{{ docker_networks.automation.name }}"      
-      - "{{ docker_networks.ingressproxy.name }}"
+      - name: "{{ docker_networks.automation.name }}"      
+      - name: "{{ docker_networks.ingressproxy.name }}"
     zwavejsui_host_domain: "{{ r740xd_hass_host_domain }}"
     zwavejsui_network: "{{ docker_networks.hass.name }}"
     zwavejsui_timezone: "{{ r740xd_hass_timezone }}"
+    zwavejsui_traefik_network: "{{ docker_networks.ingressproxy.name }}"
     zwavejsui_zwave_device: "{{ r740xd_hass_zwave_device }}"
   when:
     - "r740xd_hass_zwave_device is defined"
@@ -79,14 +81,15 @@
     name: "home-assistant"
   vars:
     hass_docker_extra_networks:
-      - "{{ docker_networks.automation.name }}"      
-      - "{{ docker_networks.ingressproxy.name }}"
+      - name: "{{ docker_networks.automation.name }}"      
+      - name: "{{ docker_networks.ingressproxy.name }}"
     hass_docker_host_domain: "{{ r740xd_hass_host_domain }}"
     hass_docker_host_name: "{{ r740xd_hass_host_name }}"
     hass_docker_zigbee_device: "{{ r740xd_hass_zigbee_device }}"
     hass_docker_network_aliases:
       - "{{ _r740xd_hass_fqdn }}"
     hass_docker_network_name: "{{ docker_networks.hass.name }}"
+    hass_docker_traefik_network: "{{ docker_networks.ingressproxy.name }}"
     hass_home_latitude: "{{ r740xd_hass_latitude }}"
     hass_home_longitude: "{{ r740xd_hass_longitude }}"
     hass_home_timezone: "{{ r740xd_hass_timezone }}"
