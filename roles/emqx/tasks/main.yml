@@ -127,25 +127,33 @@
     loop_var: __item
 
 - name: "{{ emqx_docker_role_label }} | Define Docker labels with Traefik enabled"
-  ansible.builtin.set_fact:
-    _emqx_docker_labels: "{{ _emqx_docker_labels | default({}) |
-      combine({__item.key: __item.value}) }}"
-  with_items:
-    - key: "traefik.docker.network"
-      value: "{{ emqx_docker_network_name }}"
-    - key: "traefik.http.routers.emqx.rule"
-      value: "Host(`{{ _emqx_docker_fqdn }}`)"
-    - key: "traefik.http.routers.emqx.entrypoints"
-      value: "http,https"
-    - key: "traefik.http.routers.emqx.tls.certresolver"
-      value: "letsencrypt"
-    - key: "traefik.http.routers.emqx.tls.domains[0].main"
-      value: "*.{{ emqx_docker_host_domain }}"
-    - key: "traefik.http.services.emqx.loadbalancer.server.port"
-      value: "{{ emqx_docker_dashboard_port }}"
-  loop_control:
-    loop_var: __item
   when: "emqx_docker_available_externally"
+  block:
+    - name: "{{ emqx_docker_role_label }} | Define Docker labels with Traefik enabled"
+      ansible.builtin.set_fact:
+        _emqx_docker_labels: "{{ _emqx_docker_labels | default({}) |
+          combine({__item.key: __item.value}) }}"
+      with_items:
+        - key: "traefik.docker.network"
+          value: "{{ emqx_docker_network_name }}"
+        - key: "traefik.http.routers.emqx.rule"
+          value: "Host(`{{ _emqx_docker_fqdn }}`)"
+        - key: "traefik.http.routers.emqx.entrypoints"
+          value: "http,https"
+        - key: "traefik.http.routers.emqx.tls.certresolver"
+          value: "letsencrypt"
+        - key: "traefik.http.routers.emqx.tls.domains[0].main"
+          value: "*.{{ emqx_docker_host_domain }}"
+        - key: "traefik.http.services.emqx.loadbalancer.server.port"
+          value: "{{ emqx_docker_dashboard_port }}"
+      loop_control:
+        loop_var: __item
+
+    - name: "{{ emqx_docker_role_label }} | Set Traefik network label"
+      ansible.builtin.set_fact:
+        _emqx_docker_labels: "{{ _emqx_docker_labels | default({}) |
+          combine({'traefik.docker.network': emqx_docker_traefik_network}) }}"
+      when: "emqx_docker_traefik_network | default('', true) | length > 0"
 
 - name: "{{ emqx_docker_role_label }} | Define Docker Traefik labels for TCP listener"
   ansible.builtin.set_fact:
