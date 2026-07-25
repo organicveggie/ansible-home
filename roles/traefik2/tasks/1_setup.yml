@@ -21,14 +21,6 @@
   notify:
     - "restart traefik container"
 
-- name: "{{ traefik2_role_label }} | setup | create traefik network"
-  community.docker.docker_network:
-    name: "{{ traefik2_network_name }}"
-    ipam_config:
-      - subnet: "{{ traefik2_network_ipam_subnet }}"
-        gateway: "{{ traefik2_network_ipam_gateway }}"
-        iprange: "{{ traefik2_network_ipam_iprange }}"
-
 - name: "{{ traefik2_role_label }} | Create placeholder array for default network"
   ansible.builtin.set_fact:
     _traefik2_default_networks:

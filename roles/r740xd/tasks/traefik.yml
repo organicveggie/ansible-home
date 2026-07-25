@@ -10,14 +10,13 @@
   ansible.builtin.include_tasks:
     file: "traefik_network.yml"
   loop:
-    # - "{{ docker_networks.traefik.name }}"
-    - "{{ docker_networks.glances.name }}"
     - "{{ docker_networks.influxdb.name }}"
     - "{{ docker_networks.navidrome.name }}"
     - "{{ docker_networks.node_red.name }}"
     - "{{ docker_networks.saurron.name }}"
     - "{{ docker_networks.seerr.name }}"
     - "{{ docker_networks.tautulli.name }}"
+    - "{{ docker_networks.ingressproxy.name }}"
   loop_control:
     loop_var: __item
 
