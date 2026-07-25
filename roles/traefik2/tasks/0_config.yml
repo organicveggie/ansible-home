@@ -14,21 +14,21 @@
 
 - name: "{{ traefik2_role_label }} | config | generate neutral certresolver"
   ansible.builtin.set_fact:
-    traefik2_conf_certificatesresolvers: "{{ traefik2_int_conf_certificatesResolvers_le }}"
+    traefik2_conf_certificatesresolvers: "{{ traefik2_int_conf_certificatesresolvers_le }}"
   when: "traefik2_qs_https and traefik2_qs_https_le"
 
 - name: "{{ traefik2_role_label }} | config | generate neutral certresolver"
   ansible.builtin.set_fact:
     traefik2_conf_certificatesresolvers: >
-      {{ traefik2_conf_certificatesresolvers | default({}) | combine(traefik2_confkey_certificatesResolvers) }}
-  when: "traefik2_confkey_certificatesResolvers is defined"
+      {{ traefik2_conf_certificatesresolvers | default({}) | combine(traefik2_confkey_certificatesresolvers) }}
+  when: "traefik2_confkey_certificatesresolvers is defined"
 
 - name: "{{ traefik2_role_label }} | config | generate static config"
   ansible.builtin.set_fact:
     traefik2_static_config:
       global: "{{ traefik2_conf_global }}"
       serversTransport: "{{traefik2_confkey_serversTransport | default(omit) }}"
-      entryPoints: "{{ traefik2_conf_entryPoints }}"
+      entryPoints: "{{ traefik2_conf_entrypoints }}"
       providers: "{{ traefik2_conf_providers }}"
       api: "{{ traefik2_confkey_api | default(omit) }}"
       metrics: "{{ traefik2_confkey_metrics | default(omit) }}"

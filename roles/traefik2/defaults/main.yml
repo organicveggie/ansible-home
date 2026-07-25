@@ -3,7 +3,7 @@
 # Setup vars
 traefik2_dir: "/etc/traefik"
 traefik2_hostname: "{{ inventory_hostname }}"
-traefik2_network: "traefik2_proxy"
+traefik2_network: "traefik_proxy"
 
 # quicksetup vars
 traefik2_qs_send_anonymous_usage: "{{ traefik2_sendanonymoususage | default(false) }}"
