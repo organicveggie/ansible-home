@@ -119,7 +119,6 @@ homeassistant_pgsql_init_tempates_dir: "{{ vault_homeassistant_pgsql_init_tempat
 ###
 influxdb_host_domain: "{{ veggie_nas_domain_name }}"
 influxdb_url: "https://influxdb.{{ influxdb_host_domain }}"
-influxdb_telegraf_token: "{{ vault_influxdb_telegraf_token }}"
 influxdb_admin_org: "{{ vault_influxdb_admin_org }}"
 
 ###
@@ -419,47 +418,6 @@ tautulli_network_subnet: "172.100.7.0/24"
 tautulli_network_gateway: "172.100.7.1"
 tautulli_service_name: "tautulli"
 tautulli_web_port: "8181"
-
-
-###
-### Telegraf
-###
-telegraf_influxdb_url: "{{ influxdb_url }}"
-telegraf_influxdb_token: "{{ influxdb_telegraf_token }}"
-telegraf_influxdb_org: "{{ influxdb_admin_org }}"
-telegraf_plugin_docker: true
-telegraf_plugin_smartctl: true
-telegraf_plugin_zfs_pool_sizes: true
-telegraf_plugins_extra:
-  - name: disk
-    options:
-      mount_points:
-        - "/"
-        - "/boot"
-        - "/var/log"
-        - "/mnt/nas"
-        - "/mnt/nas/backups"
-        - "/mnt/nas/data"
-        - "/mnt/nas/data/books"
-        - "/mnt/nas/data/documents"
-        - "/mnt/nas/data/music"
-        - "/mnt/nas/data/photos"
-        - "/mnt/nas/data/roms"
-        - "/mnt/nas/data/videos"
-        - "/mnt/nas/docker"
-        - "/mnt/nas/influxdb/lib"
-        - "/mnt/nas/plex"
-        - "/mnt/nas/time-machine"
-  - name: prometheus
-    options:
-      urls:
-        - "$INFLUX_URL"
-    tags:
-      influxdb_bucket: "influxdb"
-  - name: zfs
-    options:
-      poolMetrics: true
-
 
 ###
 ### TimeMachine
