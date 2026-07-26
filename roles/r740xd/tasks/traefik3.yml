@@ -25,8 +25,8 @@
     - "{{ docker_networks.calibre_web.name }}"
     - "{{ docker_networks.hass.name }}"
     - "{{ docker_networks.navidrome.name }}"
-    - "{{ docker_networks.node_red.name }}"
     - "{{ docker_networks.seerr.name }}"
+    - "{{ docker_networks.ingressproxy.name }}"
   loop_control:
     loop_var: __item
   vars:
