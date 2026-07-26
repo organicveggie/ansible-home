@@ -107,6 +107,8 @@
           default: "{{ vault_r740xd_vlan_default_addr_ipv4 }}"
           servers: "{{ vault_r740xd_vlan_servers_addr_ipv4 }}"
         # Node-RED
+        r740xd_nodered_credential_secret: "{{ vault_nodered_credential_secret }}"
+        r740xd_nodered_host_domain: "{{ vault_veggie_home_domain }}"
         r740xd_nodered_timezone: "{{ home_timezone }}"
         # Plex
         r740xd_plex_claim: "{{ vault_plex_docker_claim }}"

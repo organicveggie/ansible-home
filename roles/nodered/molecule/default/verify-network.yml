@@ -1,0 +1,15 @@
+---
+- name: "Get info on {{ __nodered_network_name }} network"
+  community.docker.docker_network_info:
+    name: "{{ __nodered_network_name }}"
+  register: __netinfo
+
+- name: "Verify {{ __nodered_network_name }} network exists"
+  ansible.builtin.assert:
+    that: __netinfo.exists
+
+- name: "Verify {{ __nodered_network_name }} is attached to container"
+  ansible.builtin.assert:
+    that:
+      - __netinfo['network']['Containers'][__container_id] is defined
+      - __netinfo['network']['Containers'][__container_id]['Name'] is defined

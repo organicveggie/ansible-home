@@ -53,6 +53,9 @@ emqx_docker_host_name: "emqx"
 # FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
 emqx_docker_host_domain: "example.com"
 
+# Name of the Docker network Traefik should use when proxying.
+emqx_docker_traefik_network: null
+
 #####
 # Ansible
 #####

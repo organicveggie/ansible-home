@@ -63,6 +63,9 @@ hass_docker_host_domain: "example.com"
 # FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
 hass_docker_host_name: "hass"
 
+# Name of the Docker network Traefik should use when proxying. Defaults to [hass_docker_network_name].
+hass_docker_traefik_network: null
+
 #####
 # Home Assistant
 #####

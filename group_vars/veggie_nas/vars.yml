@@ -215,17 +215,6 @@ nfs_exports:
   # - "/mnt/nas/data/music {{ veggie_nas_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
 
 ###
-### Node-RED
-###
-nodered_credential_secret: "nodred-secret"
-nodered_docker_image: "nodered/node-red:latest"
-nodered_host_domain: "{{ veggie_nas_domain_name }}"
-nodered_network_name: "node-red"
-nodered_network_subnet: "{{ vault_nodered_network_subnet }}"
-nodered_network_gateway: "{{ vault_nodered_network_gateway }}"
-nodered_timezone: "{{ vault_nodered_timezone }}"
-
-###
 ### organicveggie.folders
 ###
 organicveggie_folders_create:
