@@ -59,7 +59,7 @@
       ansible.builtin.assert:
         that:
           - __networks[hass_ecowitt_network_name]['Aliases'] is defined
-          -  __hass_ecowitt_alias in __networks[hass_ecowitt_network_name]['Aliases']
+          - __hass_ecowitt_alias in __networks[hass_ecowitt_network_name]['Aliases']
       loop: "{{ hass_ecowitt_network_aliases }}"
       loop_control:
         loop_var: "__hass_ecowitt_alias"

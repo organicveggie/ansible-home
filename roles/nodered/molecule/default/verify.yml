@@ -67,7 +67,7 @@
       ansible.builtin.assert:
         that:
           - __networks[nodered_docker_network_name]['Aliases'] is defined
-          -  __nodered_alias in __networks[nodered_docker_network_name]['Aliases']
+          - __nodered_alias in __networks[nodered_docker_network_name]['Aliases']
       loop: "{{ nodered_docker_network_aliases }}"
       loop_control:
         loop_var: "__nodered_alias"
