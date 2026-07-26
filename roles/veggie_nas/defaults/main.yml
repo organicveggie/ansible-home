@@ -1,8 +1,0 @@
----
-# Plain texxt
-veggie_nas_admin_samba_passwd: secretpassword
-
-# Groups to create for use with Samba.
-veggie_nas_samba_groups:
-  - group1
-  - group2
