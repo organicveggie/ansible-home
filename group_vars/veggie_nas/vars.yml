@@ -37,12 +37,6 @@ organicveggie_docker_networks:
     scope: "local"
     subnet: "172.20.0.0/16"
     gateway: "172.20.0.1"
-  - name: "{{ restic_rest_server_network_name }}"
-    enable_ipv6: "no"
-    internal: "no"
-    scope: "local"
-    subnet: "172.22.0.0/16"
-    gateway: "172.22.0.1"
   - name: "{{ grafana_network_name }}"
     enable_ipv6: "no"
     internal: "no"
@@ -314,19 +308,6 @@ resilio_docker_network_subnet: "172.100.9.0/24"
 resilio_docker_network_gateway: "172.100.9.1"
 
 ###
-### Restic
-###
-restic_rest_server_backup_dir: "{{ veggie_nas_restic_rest_server_backup_dir }}"
-restic_rest_server_hostname: "{{ veggie_nas_restic_rest_server_hostname }}"
-restic_rest_server_host_domain: "{{ veggie_nas_domain_name }}"
-restic_server_users:
-  - name: "{{ restic_user_desktop | default('') }}"
-    password: "{{ restic_htpasswd_desktop | default('') }}"
-  - name: "{{ restic_user_unific | default('') }}"
-    password: "{{ restic_htpasswd_unific | default('') }}"
-restic_rest_server_network_name: "restic_rest_server"
-
-###
 ### SABnzbd
 ###
 sabnzbd_available_externally: "true"
@@ -538,7 +519,6 @@ traefik_confkey_certificatesResolvers:  # noqa: var-naming
 #   - name: "{{ nodered_docker_network_name }}"
 #   - name: "{{ portainer_network_name }}"
 #   - name: "{{ resilio_docker_network }}"
-#   - name: "{{ restic_rest_server_network_name }}"
 #   - name: "{{ servarr_docker_network }}"
 #   - name: "{{ tautulli_network_name }}"
 #   - name: "{{ unific_network_name }}"

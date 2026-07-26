@@ -70,10 +70,6 @@ docker_networks:
     name: "kometa"
     gateway: "172.30.12.1"
     subnet: "172.30.12.0/24"
-  restic:
-    name: "restic"
-    gateway: "172.30.13.1"
-    subnet: "172.30.13.0/24"
   tautulli:
     name: "tautulli"
     gateway: "172.30.14.1"
@@ -211,21 +207,6 @@ veggie_postgres_admin_password: "{{ vault_postgres_admin_password }}"
 ### RClone
 ###
 veggie_nas_rclone_s3_bucket: "{{ vault_veggie_nas_rclone_s3_bucket }}"
-
-###
-### Restic
-###
-restic_client_admin_email: "{{ default_admin_email }}"
-restic_htpasswd_desktop: "{{ vault_restic_htpasswd_desktop }}"
-restic_htpasswd_unific: "{{ vault_restic_htpasswd_unific }}"
-restic_passwd_desktop: "{{ vault_restic_passwd_desktop }}"
-restic_passwd_unific: "{{ vault_restic_passwd_unific }}"
-restic_user_desktop: "{{ vault_restic_user_desktop }}"
-restic_user_unific: "{{ vault_restic_user_unific }}"
-veggie_desktop_restic_password: "{{ vault_veggie_desktop_restic_password }}"
-veggie_desktop_restic_server: "{{ vault_veggie_desktop_restic_server }}"
-veggie_nas_restic_rest_server_backup_dir: "{{ vault_veggie_nas_restic_rest_server_backup_dir }}"
-veggie_nas_restic_rest_server_hostname: "{{ vault_veggie_nas_restic_rest_server_hostname }}"
 
 ###
 ### SMTP
