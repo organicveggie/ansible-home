@@ -62,10 +62,6 @@ docker_networks:
     gateway: "172.30.9.1"
     subnet: "172.30.9.0/24"
     internal: false
-  influxdb:
-    name: "influxdb"
-    gateway: "172.30.10.1"
-    subnet: "172.30.10.0/24"
   grafana:
     name: "grafana"
     gateway: "172.30.11.1"
@@ -132,16 +128,6 @@ docker_networks:
 veggie_home_assistant_hostname: "{{ vault_hass_hostname }}"
 veggie_hass_db_user: "{{ vault_hass_db_user }}"
 veggie_hass_db_password: "{{ vault_hass_db_password }}"
-
-###
-### InfluxDB
-###
-influxdb_admin_user: "{{ vault_influxdb_admin_user }}"
-influxdb_admin_password: "{{ vault_influxdb_admin_password }}"
-influxdb_admin_org: "{{ vault_influxdb_admin_org }}"
-influxdb_admin_token: "{{ vault_influxdb_admin_token }}"
-influxdb_telegraf_token: "{{ vault_influxdb_telegraf_token }}"
-influxdb_url: "https://influxdb.{{ veggie_nas_domain_name }}"
 
 ###
 ### Lets Encrypt
@@ -253,20 +239,6 @@ smtp_password: "{{ vault_smtp_password }}"
 ###
 speedtest_cli_license: "{{ vault_speedtest_cli_license }}"
 speedtest_install_key: "{{ vault_speedtest_install_key }}"
-speedtest_telegraf_interval: "10m"
-
-###
-### Telegraf
-###
-telegraf_collection_jitter: 1s
-telegraf_flush_interval: 10s
-telegraf_flush_jitter: 1s
-telegraf_ping_host1: "{{ vault_telegraf_ping_host1 }}"
-telegraf_ping_host2: "{{ vault_telegraf_ping_host2 }}"
-telegraf_snmp_firewall: "{{ vault_telegraf_snmp_firewall }}"
-telegraf_snmp_firewall_community: "{{ vault_telegraf_snmp_firewall_community }}"
-telegraf_snmp_net_community: "{{ vault_telegraf_snmp_net_community }}"
-telegraf_snmp_trap_port: "{{ vault_telegraf_snmp_trap_port }}"
 
 ###
 ### Traefik

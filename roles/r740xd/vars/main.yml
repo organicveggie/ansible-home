@@ -54,12 +54,6 @@ r740xd_hass_pgsql_volume_data_name: "hass-pgsql-data"
 r740xd_hass_pgsql_volume_init_name: "hass-pgsql-initscripts"
 
 ###
-### InfluxDB
-###
-r740xd_influxdb_config_volume_name: "influxdb27-config"
-r740xd_influxdb_data_volume_name: "influxdb27-data"
-
-###
 ### Kometa
 ###
 r740xd_kometa_mdblist_cache_expiration: "60"
