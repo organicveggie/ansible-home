@@ -12,8 +12,6 @@ route53_xyz_hosted_zone_id: "{{ vault_route53_xyz_hosted_zone_id }}"
 ###
 ### AWS
 ###
-aws_s3_rclone_access_key: "{{ vault_aws_s3_rclone_access_key }}}"
-aws_s3_rclone_secret_key: "{{ vault_aws_s3_rclone_secret_key }}}"
 aws_ses_usw2_access_key: "{{ vault_aws_ses_usw2_access_key }}}"
 aws_ses_usw2_secret_key: "{{ vault_aws_ses_usw2_secret_key }}}"
 
@@ -202,11 +200,6 @@ default_portainer_admin_password: "{{ vault_portainer_admin_password }}"
 ### PostgreSQL
 ###
 veggie_postgres_admin_password: "{{ vault_postgres_admin_password }}"
-
-###
-### RClone
-###
-veggie_nas_rclone_s3_bucket: "{{ vault_veggie_nas_rclone_s3_bucket }}"
 
 ###
 ### SMTP
