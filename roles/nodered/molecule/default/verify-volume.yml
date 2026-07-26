@@ -1,0 +1,9 @@
+---
+- name: "Get info on {{ __nodered_volume_name }} volume"
+  community.docker.docker_volume_info:
+    name: "{{ __nodered_volume_name }}"
+  register: _nodered_docker_volume_info
+
+- name: "Verify {{ __nodered_volume_name }} volume exists"
+  ansible.builtin.assert:
+    that: _nodered_docker_volume_info.exists

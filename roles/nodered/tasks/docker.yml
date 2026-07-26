@@ -1,79 +1,83 @@
 ---
-- name: "Node-RED Docker Volume"
+- name: "{{ nodered_docker_role_label }} | Create Docker volumes"
   community.docker.docker_volume:
     name: "{{ nodered_docker_volume_name }}"
 
-- name: "Get info on the Node-RED Docker volume"
+- name: "{{ nodered_docker_role_label }} | Get info on the data volume"
   community.docker.docker_volume_info:
     name: "{{ nodered_docker_volume_name }}"
-  register: "_volume_info"
+  register: "_nodered_docker_data_volume_info"
 
-- name: "Update ownership of Node-RED Docker volume folder"
+- name: "{{ nodered_docker_role_label }} | Update ownership of Node-RED Docker volume folder"
   ansible.builtin.file:
-    mode: "775"
+    mode: "770"
     owner: "{{ nodered_docker_uid }}"
-    path: "{{ _volume_info.volume.Mountpoint }}"
+    group: "{{ nodered_docker_gid }}"
+    path: "{{ _nodered_docker_data_volume_info.volume.Mountpoint }}"
     state: "directory"
 
-- name: "Copy settings.js"
+- name: "{{ nodered_docker_role_label }} | Create settings.js"
   ansible.builtin.template:
     src: "settings.js.j2"
-    dest: "{{ _volume_info.volume.Mountpoint }}/settings.js"
+    dest: "{{ _nodered_docker_data_volume_info.volume.Mountpoint }}/settings.js"
     mode: "0660"
     group: "{{ nodered_docker_gid }}"
     owner: "{{ nodered_docker_uid }}"
-  notify: "Restart Node-RED Docker"
+  register: "_nodered_docker_modify_config"
 
-- name: "Create placeholder array for default network"
+- name: "{{ nodered_docker_role_label }} | Create placeholder array for default network"
   ansible.builtin.set_fact:
-    _nodered_docker_created_networks:
+    _nodered_docker_default_network:
       - name: "{{ nodered_docker_network_name }}"
         aliases: "{{ nodered_docker_network_aliases | default(omit) }}"
 
-- name: "Define all Docker networks for this container"
+- name: "{{ nodered_docker_role_label }} | Define all Docker networks for this container"
   ansible.builtin.set_fact:
     _nodered_docker_all_networks: >
-      {{ _nodered_docker_created_networks + nodered_docker_extra_networks }}
+      {{ _nodered_docker_default_network + nodered_docker_extra_networks }}
 
-- name: "Build container FQDN"
+- name: "{{ nodered_docker_role_label }} | Build container FQDN"
   ansible.builtin.set_fact:
     _nodered_docker_fqdn: "{{ nodered_hostname }}.{{ nodered_host_domain }}"
 
-- name: "Define Docker labels with Traefik disabled"
+- name: "{{ nodered_docker_role_label }} | Define common Docker labels"
   ansible.builtin.set_fact:
     _nodered_docker_labels: "{{ _nodered_docker_labels | default({}) |
       combine({__item.key: __item.value}) }}"
   with_items:
     - key: "traefik.enable"
-      value: "{{ nodered_available_externally }}"
+      value: "{{ nodered_available_externally | ternary('true', 'false') }}"
   loop_control:
     loop_var: __item
-  when: "not nodered_available_externally"
 
-- name: "Define Docker labels with Traefik enabled"
-  ansible.builtin.set_fact:
-    _nodered_docker_labels: "{{ _nodered_docker_labels | default({}) |
-      combine({__item.key: __item.value}) }}"
-  with_items:
-    - key: "traefik.enable"
-      value: "{{ nodered_available_externally }}"
-    - key: "traefik.docker.network"
-      value: "{{ nodered_docker_network_name }}"
-    - key: "traefik.http.routers.nodered.rule"
-      value: "Host(`{{ _nodered_docker_fqdn }}`)"
-    - key: "traefik.http.routers.nodered.entrypoints"
-      value: "http,https"
-    - key: "traefik.http.routers.nodered.tls.certresolver"
-      value: "letsencrypt"
-    - key: "traefik.http.routers.nodered.tls.domains[0].main"
-      value: "*.{{ nodered_host_domain }}"
-    - key: "traefik.http.services.nodered.loadbalancer.server.port"
-      value: "{{ nodered_port }}"
-  loop_control:
-    loop_var: __item
+- name: "{{ nodered_docker_role_label }} | Create Docker labels with Traefik enabled"
   when: "nodered_available_externally"
+  block:
+    - name: "{{ nodered_docker_role_label }} | Define Docker labels with Traefik enabled"
+      ansible.builtin.set_fact:
+        _nodered_docker_labels: "{{ _nodered_docker_labels | default({}) |
+          combine({__item.key: __item.value}) }}"
+      with_items:
+        - key: "traefik.http.routers.nodered.rule"
+          value: "Host(`{{ _nodered_docker_fqdn }}`)"
+        - key: "traefik.http.routers.nodered.entrypoints"
+          value: "http,https"
+        - key: "traefik.http.routers.nodered.tls.certresolver"
+          value: "letsencrypt"
+        - key: "traefik.http.routers.nodered.tls.domains[0].main"
+          value: "*.{{ nodered_host_domain }}"
+        - key: "traefik.http.services.nodered.loadbalancer.server.port"
+          value: "{{ nodered_port }}"
+      loop_control:
+        loop_var: __item
 
-- name: "Define user-supplied extra Docker labels"
+    - name: "{{ nodered_docker_role_label }} | Set Traefik network label"
+      ansible.builtin.set_fact:
+        _nodered_docker_labels: "{{ _nodered_docker_labels | default({}) |
+          combine({'traefik.docker.network': nodered_docker_traefik_network}) }}"
+      when: "nodered_docker_traefik_network | default('', true) | length > 0"
+
+- name: "{{ nodered_docker_role_label }} | Define user-supplied extra Docker labels"
   ansible.builtin.set_fact:
     _nodered_docker_labels: "{{ _nodered_docker_labels | default({}) |
       combine({__item.key: __item.value}) }}"
@@ -81,20 +85,32 @@
   loop_control:
     loop_var: __item
 
-- name: "Node-RED Docker Container"
+- name: "{{ nodered_docker_role_label }} | Define environment variables for this container"
+  ansible.builtin.set_fact:
+    _nodered_docker_env:
+      "TZ": "{{ nodered_docker_timezone }}"
+
+- name: "{{ nodered_docker_role_label }} | Add user specified environment variables"
+  ansible.builtin.set_fact:
+    _nodered_docker_env: >
+      {{ _nodered_docker_env | default({}, true) | combine(nodered_docker_extra_env | default({}, true)) }}
+
+- name: "{{ nodered_docker_role_label }} | Create Docker container"
   community.docker.docker_container:
     name: "{{ nodered_docker_name }}"
-    image: "{{ nodered_docker_image }}"
+    image: "{{ nodered_docker_image }}:{{ nodered_docker_image_version }}"
     pull: true
     mounts:
       - source: "{{ nodered_docker_volume_name }}"
         target: "/data"
         type: "volume"
-    env:
-      "TZ": "{{ nodered_docker_timezone }}"
+    env: "{{ _nodered_docker_env }}"
     network_mode: "{{ nodered_docker_network_name }}"
     networks: "{{ _nodered_docker_all_networks }}"
+    etc_hosts: "{{ nodered_docker_extra_hosts | default(omit) }}"
     restart_policy: unless-stopped
+    restart: |
+      {{ _nodered_docker_modify_config.changed | default(false, true) }}
     memory: "{{ nodered_docker_memory }}"
     cpus: "{{ nodered_docker_cpus }}"
     container_default_behavior: no_defaults
