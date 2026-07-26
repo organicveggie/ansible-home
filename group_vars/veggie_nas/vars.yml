@@ -30,11 +30,6 @@ veggie_admin_passwd: "{{ veggie_nas_admin_passwd }}"
 veggie_users_passwords:
   retropie: "*"
 
-###
-### Diun
-###
-diun_network_name: "diun"
-
 organicveggie_docker_networks:
   - name: "{{ portainer_network_name }}"
     enable_ipv6: "no"
@@ -609,7 +604,6 @@ traefik_confkey_certificatesResolvers:  # noqa: var-naming
 # traefik_image: "traefik:2.10"
 # traefik_extra_networks:
 #   - name: "{{ calibre_web_docker_network }}"
-#   - name: "{{ diun_docker_network_name }}"
 #   - name: "{{ glances_network_name }}"
 #   - name: "{{ grafana_network_name }}"
 #   - name: "{{ hass_network_name }}"

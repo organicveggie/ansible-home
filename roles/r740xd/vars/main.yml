@@ -40,13 +40,6 @@ r740xd_calibre_web_username: "calibre"
 r740xd_calibre_web_groupname: "calibre"
 
 ###
-### Diun
-###
-r740xd_diun_group: "diun"
-r740xd_diun_uid: 2450
-r740xd_diun_user: "diun"
-
-###
 ### Docker
 ###
 r740xd_docker_bridge_network_gateway: "172.17.0.1"

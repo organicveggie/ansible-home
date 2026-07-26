@@ -45,10 +45,6 @@ docker_networks:
     name: "calibre-web"
     gateway: "172.30.3.1"
     subnet: "172.30.3.0/24"
-  diun:
-    name: "diun"
-    gateway: "172.30.4.1"
-    subnet: "172.30.4.0/24"
   glances:
     name: "glances"
     gateway: "172.30.5.1"
