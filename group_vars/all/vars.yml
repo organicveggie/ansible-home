@@ -56,10 +56,6 @@ docker_networks:
     gateway: "172.30.9.1"
     subnet: "172.30.9.0/24"
     internal: false
-  grafana:
-    name: "grafana"
-    gateway: "172.30.11.1"
-    subnet: "172.30.11.0/24"
   kometa:
     name: "kometa"
     gateway: "172.30.12.1"
@@ -76,10 +72,6 @@ docker_networks:
     name: "seerr"
     gateway: "172.30.16.1"
     subnet: "172.30.16.0/24"
-  watchtower:
-    name: "watchtower"
-    gateway: "172.30.17.1"
-    subnet: "172.30.17.0/24"
   traefik3:
     name: "traefik3"
     gateway: "172.30.18.1"
