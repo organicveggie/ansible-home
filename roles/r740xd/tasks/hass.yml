@@ -24,10 +24,9 @@
   vars:
     zigbee2mqtt_docker_device: "{{ r740xd_hass_zigbee_device }}"
     zigbee2mqtt_docker_extra_networks:
-      - name: "{{ docker_networks.automation.name }}"
       - name: "{{ docker_networks.ingressproxy.name }}"
     zigbee2mqtt_docker_host_domain: "{{ r740xd_hass_host_domain }}"
-    zigbee2mqtt_docker_network_name: "{{ docker_networks.zigbee.name }}"
+    zigbee2mqtt_docker_network_name: "{{ docker_networks.automation.name }}"
     zigbee2mqtt_docker_timezone: "{{ r740xd_hass_timezone }}"
     zigbee2mqtt_docker_traefik_network: "{{ docker_networks.ingressproxy.name }}"
   when:

@@ -11,7 +11,6 @@
       - name: "{{ docker_networks.ingressproxy.name }}"
       - name: "{{ docker_networks.monitoring.name }}"
       - name: "{{ docker_networks.saurron.name }}"
-      - name: "{{ docker_networks.zigbee.name }}"
     prometheus_docker_host_domain: "{{ r740xd_prometheus_host_domain }}"
     prometheus_docker_http_api_port: "{{ r740xd_prometheus_http_api_port }}"
     prometheus_docker_memory: "1GB"
