@@ -89,7 +89,6 @@
     hass_docker_network_aliases:
       - "{{ _r740xd_hass_fqdn }}"
     hass_docker_network_name: "{{ docker_networks.hass.name }}"
-    hass_docker_traefik_network: "{{ docker_networks.ingressproxy.name }}"
     hass_home_latitude: "{{ r740xd_hass_latitude }}"
     hass_home_longitude: "{{ r740xd_hass_longitude }}"
     hass_home_timezone: "{{ r740xd_hass_timezone }}"
@@ -97,3 +96,18 @@
     hass_ecowitt_hass_auth_token: "{{ r740xd_hass_ecowitt_hass_auth_token | default(omit) }}"
     hass_ecowitt_hass_webhook_id: "{{ r740xd_hass_ecowitt_hass_webhook_id | default(omit) }}"
     hass_ecowitt_hass_url: "{{ _r740xd_hass_ecowitt_url }}"
+
+- name: "{{ r740xd_ansible_role_label }} | hass | Setup Home Assistant Ecowitt Proxy container"
+  ansible.builtin.import_role:
+    name: "hass-ecowitt-proxy"
+  vars:
+    hass_ecowitt_extra_networks:
+      - name: "{{ docker_networks.automation.name }}"      
+      - name: "{{ docker_networks.ingressproxy.name }}"
+    hass_ecowitt_hass_auth_token: "{{ r740xd_hass_ecowitt_hass_auth_token | default(omit) }}"
+    hass_ecowitt_hass_url: "{{ _r740xd_hass_ecowitt_url }}"
+    hass_ecowitt_hass_webhook_id: "{{ r740xd_hass_ecowitt_hass_webhook_id | default(omit) }}"
+    hass_ecowitt_host_domain: "{{ r740xd_hass_host_domain }}"
+    hass_ecowitt_network_name: "{{ docker_networks.hass.name }}"
+    hass_ecowitt_timezone: "{{ r740xd_hass_timezone }}"
+    hass_ecowitt_traefik_network: "{{ docker_networks.ingressproxy.name }}"

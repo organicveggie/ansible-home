@@ -1,0 +1,67 @@
+---
+- name: "Verify"
+  hosts: all
+  gather_facts: false
+
+  vars:
+    hass_ecowitt_extra_env:
+      "HASS_ECOWITT_MOLECULE_TEST": "hass-ecowitt molecule test value"
+    hass_ecowitt_extra_labels:
+      "molecule-label-01": "molecule-value-01"
+    hass_ecowitt_extra_networks:
+      - name: "ingress-proxy-test"
+    hass_ecowitt_host_name: "ecowitt-molecule"
+    hass_ecowitt_name: "hass-ecowitt-molecule"
+    hass_ecowitt_network_aliases:
+      - "he-molecule"
+    hass_ecowitt_network_name: "home-automation-test"
+
+  tasks:
+    - name: Get info on container
+      community.docker.docker_container_info:
+        name: "{{ hass_ecowitt_name }}"
+      register: _hass_ecowitt_container
+
+    - name: Verify container state
+      ansible.builtin.assert:
+        that:
+          - _hass_ecowitt_container.exists
+          - _hass_ecowitt_container["container"]["State"]["Status"] == "running"
+    
+    - name: Verify extra environment variables
+      ansible.builtin.assert:
+        that:
+          - "__env in __all_env"
+      vars:
+        __all_env: "{{ _hass_ecowitt_container['container']['Config']['Env'] }}"
+        __env: "HASS_ECOWITT_MOLECULE_TEST={{ hass_ecowitt_extra_env['HASS_ECOWITT_MOLECULE_TEST'] }}"
+
+    - name: Verify extra labels
+      ansible.builtin.assert:
+        that:
+          - __all_labels["molecule-label-01"] is defined
+          - __all_labels["molecule-label-01"] == hass_ecowitt_extra_labels["molecule-label-01"]
+      vars:
+        __all_labels: "{{ _hass_ecowitt_container['container']['Config']['Labels'] }}"
+
+    - name: "Verify networks"
+      ansible.builtin.include_tasks:
+        file: "verify-network.yml"
+      loop:
+        - "{{ hass_ecowitt_network_name }}"
+        - "{{ hass_ecowitt_extra_networks[0].name }}"
+      loop_control:
+        loop_var: "__hass_ecowitt_network_name"
+      vars:
+        __container_id: "{{ _hass_ecowitt_container['container']['Id'] }}"
+
+    - name: "Verify default network aliases"
+      ansible.builtin.assert:
+        that:
+          - __networks[hass_ecowitt_network_name]['Aliases'] is defined
+          -  __hass_ecowitt_alias in __networks[hass_ecowitt_network_name]['Aliases']
+      loop: "{{ hass_ecowitt_network_aliases }}"
+      loop_control:
+        loop_var: "__hass_ecowitt_alias"
+      vars:
+        __networks: "{{ _hass_ecowitt_container['container']['NetworkSettings']['Networks'] }}"

@@ -1,0 +1,79 @@
+---
+#####
+# Container settings
+#####
+
+# Name of the Docker container.
+hass_ecowitt_name: "ecowitt-proxy"
+
+# Base name of the Docker image to use for the container.
+hass_ecowitt_image_name: "ghcr.io/organicveggie/home-assistant-ecowitt-proxy"
+
+# Specific Docker image version to use for the container.
+hass_ecowitt_image_version: "latest"
+
+# Number of vCPUs to allocate to the container.
+hass_ecowitt_cpus: "1"
+
+# Amount of memory to allocate to the container.
+hass_ecowitt_memory: "512M"
+
+# TCP port number to expose to handle HTTP traffic.
+hass_ecowitt_web_port: "8181"
+
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+hass_ecowitt_extra_labels: {}
+
+# Dictionary of extra key value pairs to set as environment variables on the Docker container.
+hass_ecowitt_extra_env: {}
+
+# Dict of host-to-IP mappings, where each host name is a key in the dictionary. Each host name will
+# be added to the container's /etc/hosts file.
+# Instead of an IP address, the special value host-gateway can also be used, which resolves to the
+# host's gateway IP and allows containers to connect to services running on the host.
+hass_ecowitt_extra_hosts: {}
+
+# Name of the primary network.
+hass_ecowitt_network_name: null
+
+# Container aliases on the default network.
+hass_ecowitt_network_aliases: null
+
+# List of additional networks to join.
+hass_ecowitt_extra_networks: []
+
+#####
+# Traefik
+#####
+
+# Enable use of Traefik as a proxy.
+hass_ecowitt_available_externally: true
+
+# Host name to use for the Traefik endpoint. Combined with [hass_ecowitt_host_domain] to form the
+# FQDN for the endpoint.
+hass_ecowitt_host_domain: "example.com"
+
+# Domain name to use for the Traefik endpoint. Combined with [hass_ecowitt_host_name] to form the
+# FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
+hass_ecowitt_host_name: "ecowitt"
+
+# Name of the Docker network Traefik should use when proxying. Defaults to [hass_ecowitt_network_name].
+hass_ecowitt_traefik_network: null
+
+#####
+# Ecowit
+#####
+
+hass_ecowitt_hass_url: "http://hass:8123"
+
+hass_ecowitt_hass_auth_token: "ABCD"
+hass_ecowitt_hass_webhook_id: "1234"
+
+# Timezone for the container
+hass_ecowitt_timezone: "America/New_York"
+
+#####
+# Ansible
+#####
+
+hass_ecowitt_role_label: "hass-ecowitt"
