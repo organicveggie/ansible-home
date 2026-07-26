@@ -23,7 +23,6 @@
   loop:
     - "{{ docker_networks.traefik3.name }}"
     - "{{ docker_networks.calibre_web.name }}"
-    - "{{ docker_networks.glances.name }}"
     - "{{ docker_networks.hass.name }}"
     - "{{ docker_networks.influxdb.name }}"
     - "{{ docker_networks.navidrome.name }}"
