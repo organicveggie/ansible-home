@@ -73,7 +73,3 @@
         loop_var: "__nodered_alias"
       vars:
         __networks: "{{ _nodered_docker_container['container']['NetworkSettings']['Networks'] }}"
-
-    - name: Printo
-      ansible.builtin.debug:
-        msg: "{{ _nodered_docker_container }}"

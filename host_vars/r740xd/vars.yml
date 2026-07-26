@@ -438,11 +438,6 @@ docker_macvlans:
         iprange: "{{ vault_docker_macvlan_default.iprange }}"
 
 ###
-### NodeRED
-###
-nodered_credential_secret: "{{ vault_nodered_credential_secret }}"
-
-###
 ### Plex
 ###
 # See https://www.plex.tv/claim

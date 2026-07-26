@@ -3,8 +3,11 @@
   ansible.builtin.import_role:
     name: "nodered"
   vars:
-    nodered_docker_network_name: "{{ docker_networks.node_red.name }}"
+    nodered_credential_secret: "{{ r740xd_nodered_credential_secret }}"
+    nodered_docker_network_name: "{{ docker_networks.hass.name }}"
     nodered_docker_timezone: "{{ r740xd_nodered_timezone }}"
+    nodered_docker_traefik_network: "{{ docker_networks.ingressproxy.name }}"
     nodered_docker_extra_networks:
-      - name: "{{ docker_networks.hass.name }}"
+      - name: "{{ docker_networks.automation.name }}"
       - name: "{{ docker_networks.ingressproxy.name }}"      
+    nodered_host_domain: "{{ r740xd_nodered_host_domain }}"
