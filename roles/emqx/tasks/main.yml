@@ -109,12 +109,12 @@
 
 - name: "{{ emqx_docker_role_label }} | Define environment variables for this container"
   ansible.builtin.set_fact:
-    _emqx_docker_env: []
+    _emqx_docker_env: {}
 
 - name: "{{ emqx_docker_role_label }} | Add user specified environment variables"
   ansible.builtin.set_fact:
     _emqx_docker_env: >
-      {{ _emqx_docker_env | default([], true) | combine(emqx_docker_extra_env | default({}, true)) }}
+      {{ _emqx_docker_env | default({}, true) | combine(emqx_docker_extra_env | default({}, true)) }}
 
 - name: "{{ emqx_docker_role_label }} | Define common Docker labels"
   ansible.builtin.set_fact:
