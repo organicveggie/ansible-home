@@ -164,6 +164,12 @@ r740xd_network_vlan_address:
   servers: null
 
 ###
+### Node-RED
+###
+r740xd_nodered_host_domain: null
+r740xd_nodered_credential_secret: null
+
+###
 ### Plex
 ###
 r740xd_plex_container_name: "plex"

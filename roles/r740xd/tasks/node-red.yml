@@ -1,20 +1,13 @@
 ---
-- name: "Node-red| Setup Docker network"
-  community.docker.docker_network:
-    name: "{{ docker_networks.node_red.name }}"
-    driver: "bridge"
-    enable_ipv6: "no"
-    internal: "no"
-    scope: "local"
-    ipam_config:
-      - subnet: "{{ docker_networks.node_red.subnet }}"
-        gateway: "{{ docker_networks.node_red.gateway }}"
-
 - name: "node-red | Setup Node-RED"
   ansible.builtin.import_role:
     name: "nodered"
   vars:
-    nodered_docker_network_name: "{{ docker_networks.node_red.name }}"
+    nodered_credential_secret: "{{ r740xd_nodered_credential_secret }}"
+    nodered_docker_network_name: "{{ docker_networks.hass.name }}"
     nodered_docker_timezone: "{{ r740xd_nodered_timezone }}"
+    nodered_docker_traefik_network: "{{ docker_networks.ingressproxy.name }}"
     nodered_docker_extra_networks:
-      - name: "{{ docker_networks.hass.name }}"
+      - name: "{{ docker_networks.automation.name }}"
+      - name: "{{ docker_networks.ingressproxy.name }}"      
+    nodered_host_domain: "{{ r740xd_nodered_host_domain }}"

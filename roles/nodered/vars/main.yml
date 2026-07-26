@@ -1,0 +1,9 @@
+---
+# TCP port Node-RED should listen on inside the container
+nodered_port: 1880
+
+# Group ID to use inside the container
+nodered_docker_gid: "1000"
+
+# User ID to use inside the container
+nodered_docker_uid: "1000"

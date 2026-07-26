@@ -1,0 +1,75 @@
+---
+- name: "Verify"
+  hosts: all
+  gather_facts: false
+
+  vars:
+    nodered_docker_extra_env:
+      "NODERED_MOLECULE_TEST": "nodered molecule test value"
+    nodered_docker_extra_labels:
+      "molecule-label-01": "molecule-value-01"
+    nodered_docker_extra_networks:
+      - name: "ingress-proxy-test"
+    nodered_docker_name: "nodered-molecule"
+    nodered_docker_network_aliases:
+      - "nr-molecule"
+    nodered_docker_network_name: "nodered-network-test"
+    nodered_docker_volume_name: "nodered-data-test"
+
+  tasks:
+    - name: "Verify volumes"
+      ansible.builtin.include_tasks:
+        file: "verify-volume.yml"
+      loop:
+        - "{{ nodered_docker_volume_name }}"
+      loop_control:
+        loop_var: "__nodered_volume_name"
+
+    - name: Get info on container
+      community.docker.docker_container_info:
+        name: "{{ nodered_docker_name }}"
+      register: _nodered_docker_container
+
+    - name: Verify container state
+      ansible.builtin.assert:
+        that:
+          - _nodered_docker_container.exists
+          - _nodered_docker_container["container"]["State"]["Status"] == "running"
+    
+    - name: Verify extra environment variables
+      ansible.builtin.assert:
+        that:
+          - "__env in __all_env"
+      vars:
+        __all_env: "{{ _nodered_docker_container['container']['Config']['Env'] }}"
+        __env: "NODERED_MOLECULE_TEST={{ nodered_docker_extra_env['NODERED_MOLECULE_TEST'] }}"
+
+    - name: Verify extra labels
+      ansible.builtin.assert:
+        that:
+          - __all_labels["molecule-label-01"] is defined
+          - __all_labels["molecule-label-01"] == nodered_docker_extra_labels["molecule-label-01"]
+      vars:
+        __all_labels: "{{ _nodered_docker_container['container']['Config']['Labels'] }}"
+
+    - name: "Verify networks"
+      ansible.builtin.include_tasks:
+        file: "verify-network.yml"
+      loop:
+        - "{{ nodered_docker_network_name }}"
+        - "{{ nodered_docker_extra_networks[0].name }}"
+      loop_control:
+        loop_var: "__nodered_network_name"
+      vars:
+        __container_id: "{{ _nodered_docker_container['container']['Id'] }}"
+
+    - name: "Verify default network aliases"
+      ansible.builtin.assert:
+        that:
+          - __networks[nodered_docker_network_name]['Aliases'] is defined
+          - __nodered_alias in __networks[nodered_docker_network_name]['Aliases']
+      loop: "{{ nodered_docker_network_aliases }}"
+      loop_control:
+        loop_var: "__nodered_alias"
+      vars:
+        __networks: "{{ _nodered_docker_container['container']['NetworkSettings']['Networks'] }}"

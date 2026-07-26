@@ -51,10 +51,6 @@ docker_networks:
     name: "navidrome"
     gateway: "172.30.7.1"
     subnet: "172.30.7.0/24"
-  node_red:
-    name: "node-red"
-    gateway: "172.30.8.1"
-    subnet: "172.30.8.0/24"
   servarr:
     name: "servarr"
     gateway: "172.30.9.1"
@@ -96,10 +92,6 @@ docker_networks:
     name: "prometheus"
     gateway: "172.30.21.1"
     subnet: "172.30.21.0/24"
-  zigbee:
-    name: "zigbee"
-    gateway: "172.30.22.1"
-    subnet: "172.30.22.0/24"
   ingressproxy:
     name: "ingress-proxy"
     gateway: "172.40.1.1"
