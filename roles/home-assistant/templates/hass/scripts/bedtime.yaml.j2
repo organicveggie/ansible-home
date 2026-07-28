@@ -1,3 +1,4 @@
+{% if hass_espresso_machine_entity_id | default('', true) | length > 0 %}
 bedtime_shutdown:
   alias: "Bedtime shutdown"
   description: "Reset HVAC setings and turn off lights"
@@ -18,6 +19,7 @@ bedtime_shutdown:
 
     # Turn off the espresso machine
     - type: turn_off
-      device_id: d94e677d5e0eadbce78ceb5b66116f66
-      entity_id: switch.plug_in_appliance_module
+      device_id: "{{ hass_espresso_machine_device_id }}"
+      entity_id: "{{ hass_espresso_machine_entity_id }}"
       domain: switch
+{% endif %}

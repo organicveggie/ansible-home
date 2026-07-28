@@ -63,14 +63,15 @@
         _hass_ecowitt_labels: "{{ _hass_ecowitt_labels | default({}) |
           combine({'traefik.docker.network': __traefik_network_label}) }}"
       vars:
-        __traefik_network_label: >
-          {{ hass_ecowitt_traefik_network | default(hass_ecowitt_network_name, true) }}
+        __traefik_network_label: "{{ hass_ecowitt_traefik_network | default(hass_ecowitt_network_name, true) }}"
 
 - name: "{{ hass_ecowitt_role_label }} | Define user-supplied extra Docker labels"
   ansible.builtin.set_fact:
     _hass_ecowitt_labels: "{{ _hass_ecowitt_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   loop: "{{ hass_ecowitt_extra_labels | dict2items }}"
+  loop_control:
+    loop_var: "__item"
 
 - name: "{{ hass_ecowitt_role_label }} | Define default Docker environment variables"
   ansible.builtin.set_fact:

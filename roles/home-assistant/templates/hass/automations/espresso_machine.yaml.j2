@@ -1,4 +1,5 @@
 ---
+{% if hass_espresso_machine_entity_id | default('', true) | length > 0 %}
 - alias: "Espresso Machine - On (Weekend)"
   trigger:
   - platform: time
@@ -100,3 +101,4 @@
     entity_id: "{{ hass_espresso_machine_entity_id }}"
     domain: "switch"
   mode: "single"
+{% endif %}
