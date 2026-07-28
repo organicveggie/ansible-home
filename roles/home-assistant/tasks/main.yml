@@ -7,6 +7,20 @@
   ansible.builtin.set_fact:
     _hass_docker_url: "http://{{ hass_docker_host_name }}:{{ hass_docker_web_port }}"
 
+- name: "{{ hass_docker_role_label }} | Build base list of trusted proxies"
+  ansible.builtin.set_fact:
+    _home_assistant_trusted_proxies:
+      - "127.0.0.1"
+      - "::1"
+
+- name: "{{ hass_docker_role_label }} | Add list of trusted proxy subnets"
+  ansible.builtin.set_fact:
+    _home_assistant_trusted_proxies: >
+      {{ _home_assistant_trusted_proxies + [__item] }}
+  loop: "{{ hass_network_subnets }}"
+  loop_control:
+    loop_var: "__item"
+
 - name: "{{ hass_docker_role_label }} | Create Home Assistant config volume"
   community.docker.docker_volume:
     name: "{{ hass_docker_volume_config_name }}"
@@ -130,14 +144,15 @@
         _hass_docker_labels: "{{ _hass_docker_labels | default({}) |
           combine({'traefik.docker.network': __traefik_network_label}) }}"
       vars:
-        __traefik_network_label: >
-          {{ hass_docker_traefik_network | default(hass_docker_network_name, true) }}
+        __traefik_network_label: "{{ hass_docker_traefik_network | default(hass_docker_network_name, true) }}"
 
 - name: "{{ hass_docker_role_label }} | Define user-supplied extra Docker labels"
   ansible.builtin.set_fact:
     _hass_docker_labels: "{{ _hass_docker_labels | default({}) |
-      combine({item.key: item.value}) }}"
+      combine({__item.key: __item.value}) }}"
   loop: "{{ hass_docker_extra_labels | dict2items }}"
+  loop_control:
+    loop_var: "__item"
 
 - name: "{{ hass_docker_role_label }} | Attach Zigbee device"
   ansible.builtin.set_fact:

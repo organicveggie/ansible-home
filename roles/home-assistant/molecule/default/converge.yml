@@ -3,12 +3,6 @@
   hosts: all
   become: true
 
-  vars:
-    pip_install_packages:
-      - name: docker
-    docker_daemon_options:
-      storage-driver: "vfs"
-
   pre_tasks:
     - name: Update apt cache
       ansible.builtin.apt:
@@ -28,23 +22,69 @@
       changed_when: false
       failed_when: systemctl_status.rc > 1
 
-  roles:
-    - geerlingguy.pip
-    - geerlingguy.docker
-
-- name: Converge
+- name: Converge  # noqa: command-instead-of-module var-naming[no-role-prefix]
   hosts: all
   become: true
 
   vars:
-    hass_docker_network_name: "hass-test"
-    hass_docker_available_externally: false
+    _networks:
+      automation:
+        name: "home-automation-test"
+        driver: "bridge"
+        enable_ipv6: false
+        internal: true
+        scope: "local"
+        ipam_config:
+          - subnet: "172.168.50.0/24"
+            gateway: "172.168.50.1"
+      ingress:
+        name: "ingress-proxy-test"
+        driver: "bridge"
+        enable_ipv6: false
+        internal: true
+        scope: "local"
+        ipam_config:
+          - subnet: "172.168.60.0/24"
+            gateway: "172.168.60.1"
+    hass_docker_available_externally: true
+    hass_docker_extra_env:
+      "HASS_MOLECULE_TEST": "hass molecule test value"
+    hass_docker_extra_labels:
+      "molecule-label-01": "molecule-value-01"
+    hass_docker_extra_networks:
+      - name: "{{ _networks.ingress.name }}"
+    hass_docker_host_name: "hass-molecule-host"
+    hass_docker_name: "hass-molecule"
+    hass_docker_network_aliases:
+      - "hass-molecule-alias"
+    hass_docker_network_name: "{{ _networks.automation.name }}"
+    hass_docker_traefik_network: "{{ _networks.ingress.name }}"
+    hass_docker_volume_config_name: "hass-config-test"
+    hass_espresso_machine_entity_id: ""
+    hass_hvac_thermostat_device_id: ""
+    hass_network_subnets:
+      - "{{ _networks.automation.ipam_config[0].subnet }}"
+      - "{{ _networks.ingress.ipam_config[0].subnet }}"
 
   pre_tasks:
-    - name: Create Docker network
+    - name: Install Docker
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+
+    - name: Create Docker test networks
       community.docker.docker_network:
-        name: hass-test
+        name: "{{ __item.name }}"
+        driver: "{{ __item.driver }}"
+        enable_ipv6: "{{ __item.enable_ipv6 }}"
+        internal: "{{ __item.internal }}"
+        scope: "{{ __item.scope }}"
+        ipam_config: "{{ __item.ipam_config }}"
         state: present
+      loop:
+        - "{{ _networks.automation }}"
+        - "{{ _networks.ingress }}"
+      loop_control:
+        loop_var: "__item"
 
   roles:
     - role: home-assistant
