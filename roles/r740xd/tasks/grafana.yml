@@ -52,9 +52,8 @@
             incrementalQueryOverlapWindow: "10m"
     grafana_docker_extra_networks:
       - name: "{{ docker_networks.ingressproxy.name }}"
-      - name: "{{ docker_networks.traefik.name }}"
     grafana_docker_host_domain: "{{ r740xd_grafana_host_domain }}"
     grafana_docker_network_name: "{{ docker_networks.monitoring.name }}"
-    grafana_docker_traefik_network: "{{ docker_networks.traefik.name }}"
+    grafana_docker_traefik_network: "{{ docker_networks.ingressproxy.name }}"
     grafana_docker_uid: 2600
     grafana_docker_gid: 2600
