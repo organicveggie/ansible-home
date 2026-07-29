@@ -43,10 +43,6 @@ docker_networks:
     name: "calibre-web"
     gateway: "172.30.3.1"
     subnet: "172.30.3.0/24"
-  navidrome:
-    name: "navidrome"
-    gateway: "172.30.7.1"
-    subnet: "172.30.7.0/24"
   servarr:
     name: "servarr"
     gateway: "172.30.9.1"

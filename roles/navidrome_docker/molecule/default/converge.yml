@@ -1,0 +1,66 @@
+---
+- name: Install dependencies
+  hosts: all
+  become: true
+
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 600
+      when: ansible_facts["os_family"] == 'Debian'
+
+    - name: Wait for systemd to complete initialization
+      ansible.builtin.command: systemctl is-system-running
+      register: systemctl_status
+      until: >
+        'running' in systemctl_status.stdout or
+        'degraded' in systemctl_status.stdout
+      retries: 30
+      delay: 5
+      when: ansible_facts["service_mgr"] == 'systemd'
+      changed_when: false
+      failed_when: systemctl_status.rc > 1
+
+- name: Converge  # noqa: command-instead-of-module var-naming[no-role-prefix]
+  hosts: all
+  become: true
+
+  vars:
+    navidrome_docker_base_url: "https://navidrome.example.com"
+    navidrome_docker_extra_env:
+      "NAVIDROME_MOLECULE_TEST": "navidrome molecule test value"
+    navidrome_docker_extra_labels:
+      "molecule-label-01": "molecule-value-01"
+    navidrome_docker_extra_networks:
+      - name: "ingress-proxy-test"
+    navidrome_docker_host_name: "navidrome-molecule"
+    navidrome_docker_music_folder: "/opt/music"
+    navidrome_docker_name: "navidrome-molecule"
+    navidrome_docker_network_aliases:
+      - "nd-molecule"
+    navidrome_docker_network_name: "plex-test"
+    navidrome_docker_volume_name: "navidrome-test"
+
+  pre_tasks:
+    - name: Install Docker
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+
+    - name: Create Docker test networks
+      community.docker.docker_network:
+        name: "{{ __item.name }}"
+        state: present
+      loop: >
+        {{ navidrome_docker_extra_networks + [{'name': navidrome_docker_network_name}] }}
+      loop_control:
+        loop_var: "__item"
+    
+    - name: Create test folder
+      ansible.builtin.file:
+        path: "{{ navidrome_docker_music_folder }}"
+        mode: "775"
+        state: "directory"
+
+  roles:
+    - role: navidrome_docker
