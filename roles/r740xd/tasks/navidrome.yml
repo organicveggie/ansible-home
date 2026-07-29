@@ -10,6 +10,6 @@
     navidrome_docker_lastfm_apikey: "{{ r740xd_navidrome_lastfm_apikey }}"
     navidrome_docker_lastfm_secret: "{{ r740xd_navidrome_lastfm_secret }}"
     navidrome_docker_music_folder: "{{ r740xd_navidrome_music_folder }}"
-    navidrome_docker_network: "{{ docker_networks.ingressproxy.name }}"
+    navidrome_docker_network_name: "{{ docker_networks.ingressproxy.name }}"
     navidrome_docker_spotify_client_id: "{{ r740xd_navidrome_spotify_client_id }}"
     navidrome_docker_spotify_client_secret: "{{ r740xd_navidrome_spotify_client_secret }}"
