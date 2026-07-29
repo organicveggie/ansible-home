@@ -1,0 +1,9 @@
+---
+- name: "Get info on {{ __navidrome_docker_volume_name }} volume"
+  community.docker.docker_volume_info:
+    name: "{{ __navidrome_docker_volume_name }}"
+  register: _navidrome_docker_volume_info
+
+- name: "Verify {{ __navidrome_docker_volume_name }} volume exists"
+  ansible.builtin.assert:
+    that: _navidrome_docker_volume_info.exists

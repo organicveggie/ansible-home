@@ -1,0 +1,114 @@
+---
+- name: "{{ hass_ecowitt_role_label }} | Define FQDN"
+  ansible.builtin.set_fact:
+    _hass_ecowitt_fqdn: "{{ hass_ecowitt_host_name }}.{{ hass_ecowitt_host_domain }}"
+
+- name: "{{ hass_ecowitt_role_label }} | Create placeholder array for default network"
+  ansible.builtin.set_fact:
+    _hass_ecowitt_default_networks:
+      - name: "{{ hass_ecowitt_network_name }}"
+        aliases: "{{ hass_ecowitt_network_aliases | default(omit) }}"
+
+- name: "{{ hass_ecowitt_role_label }} | Define all Docker networks for this container"
+  ansible.builtin.set_fact:
+    _hass_ecowitt_all_networks: >
+      {{ _hass_ecowitt_default_networks + hass_ecowitt_extra_networks }}
+
+- name: "{{ hass_ecowitt_role_label }} | Define common Docker labels"
+  ansible.builtin.set_fact:
+    _hass_ecowitt_labels: "{{ _hass_ecowitt_labels | default({}) |
+      combine({__item.key: __item.value}) }}"
+  loop:
+    - key: "traefik.enable"
+      value: "{{ hass_ecowitt_available_externally | default(false, true) | string | lower | ternary('true', 'false') }}"
+  loop_control:
+    loop_var: "__item"
+
+- name: "{{ hass_ecowitt_role_label }} | Configure Docker labels with Traefik enabled"
+  when: "hass_ecowitt_available_externally | default(false, true)"
+  block:
+    - name: "{{ hass_ecowitt_role_label }} | Define Docker labels with Traefik enabled"
+      ansible.builtin.set_fact:
+        _hass_ecowitt_labels: "{{ _hass_ecowitt_labels | default({}) |
+          combine({__item.key: __item.value}) }}"
+      loop:
+        ### HTTP router
+        - key: "traefik.http.routers.hass_ecowitt.rule"
+          value: "Host(`{{ _hass_ecowitt_fqdn }}`)"
+        - key: "traefik.http.routers.hass_ecowitt.entrypoints"
+          value: "http"
+        - key: "traefik.http.routers.hass_ecowitt.priority"
+          value: "1000"
+        ### HTTPS router
+        - key: "traefik.http.routers.hass_ecowitt_secure.rule"
+          value: "Host(`{{ _hass_ecowitt_fqdn }}`)"
+        - key: "traefik.http.routers.hass_ecowitt_secure.entrypoints"
+          value: "https"
+        - key: "traefik.http.routers.hass_ecowitt_secure.priority"
+          value: "1000"
+        - key: "traefik.http.routers.hass_ecowitt_secure.service"
+          value: "hass_ecowitt"
+        - key: "traefik.http.routers.hass_ecowitt_secure.tls.certresolver"
+          value: "letsencrypt"
+        - key: "traefik.http.routers.hass_ecowitt_secure.tls.domains[0].main"
+          value: "*.{{ hass_ecowitt_host_domain }}"
+        ### Service
+        - key: "traefik.http.services.hass_ecowitt.loadbalancer.server.port"
+          value: "{{ hass_ecowitt_web_port }}"
+      loop_control:
+        loop_var: "__item"
+
+    - name: "{{ hass_ecowitt_role_label }} | Set Traefik network label"
+      ansible.builtin.set_fact:
+        _hass_ecowitt_labels: "{{ _hass_ecowitt_labels | default({}) |
+          combine({'traefik.docker.network': __traefik_network_label}) }}"
+      vars:
+        __traefik_network_label: "{{ hass_ecowitt_traefik_network | default(hass_ecowitt_network_name, true) }}"
+
+- name: "{{ hass_ecowitt_role_label }} | Define user-supplied extra Docker labels"
+  ansible.builtin.set_fact:
+    _hass_ecowitt_labels: "{{ _hass_ecowitt_labels | default({}) |
+      combine({__item.key: __item.value}) }}"
+  loop: "{{ hass_ecowitt_extra_labels | dict2items }}"
+  loop_control:
+    loop_var: "__item"
+
+- name: "{{ hass_ecowitt_role_label }} | Define default Docker environment variables"
+  ansible.builtin.set_fact:
+    _hass_ecowitt_env_vars:
+      "TZ": "{{ hass_ecowitt_timezone }}"
+      "HASS_URL": "{{ hass_ecowitt_hass_url }}"
+      "HASS_AUTH_TOKEN": "{{ hass_ecowitt_hass_auth_token }}"
+      "HASS_WEBHOOK_ID": "{{ hass_ecowitt_hass_webhook_id }}"
+      "ECOWITT_PROXY_LOGLEVEL": "INFO"
+      "SERVER_PORT": "{{ hass_ecowitt_web_port }}"
+
+- name: "{{ hass_ecowitt_role_label }} | Define user-supplied extra Docker environment variables"
+  ansible.builtin.set_fact:
+    _hass_ecowitt_env_vars: "{{ _hass_ecowitt_env_vars | default({}) |
+      combine({__item.key: __item.value}) }}"
+  loop: "{{ hass_ecowitt_extra_env | dict2items }}"
+  loop_control:
+    loop_var: __item
+
+- name: "{{ hass_ecowitt_role_label }} | Create Docker container"
+  community.docker.docker_container:
+    name: "{{ hass_ecowitt_name }}"
+    image: "{{ hass_ecowitt_image_name }}:{{ hass_ecowitt_image_version }}"
+    pull: true
+    env: "{{ _hass_ecowitt_env_vars }}"
+    network_mode: "{{ hass_ecowitt_network_name }}"
+    networks: "{{ _hass_ecowitt_all_networks }}"
+    restart_policy: unless-stopped
+    memory: "{{ hass_ecowitt_memory }}"
+    cpus: "{{ hass_ecowitt_cpus }}"
+    container_default_behavior: "no_defaults"
+    auto_remove: false
+    detach: true
+    init: false
+    interactive: false
+    paused: false
+    privileged: false
+    read_only: false
+    tty: false
+    labels: "{{ _hass_ecowitt_labels }}"

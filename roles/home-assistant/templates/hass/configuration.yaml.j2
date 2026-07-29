@@ -14,9 +14,7 @@ homeassistant:
 http:
   use_x_forwarded_for: true
   trusted_proxies:
-      - "127.0.0.1"
-      - "{{ hass_network_subnet }}"
-      - "::1"
+{{ _home_assistant_trusted_proxies | to_nice_yaml(indent=2, width=2147483647) | indent(4, first=True) }}
 
 automation: !include automations.yaml
 automation custom: !include_dir_merge_list automations

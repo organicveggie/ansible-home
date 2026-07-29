@@ -95,3 +95,6 @@ zwavejsui_hostname: "zwavejsui"
 # Domain name to use for the Traefik endpoint. Combined with [zwavejsui_hostname] to form
 # the FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
 zwavejsui_host_domain: "example.com"
+
+# Name of the Docker network Traefik should use when proxying. Defaults to [zwavejsui_network].
+zwavejsui_traefik_network: null

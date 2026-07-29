@@ -1,0 +1,25 @@
+{% if hass_espresso_machine_entity_id | default('', true) | length > 0 %}
+bedtime_shutdown:
+  alias: "Bedtime shutdown"
+  description: "Reset HVAC setings and turn off lights"
+  sequence:
+    # Reset the HVAC system to normal heat/cool settings.
+    - action: script.reset_hvac_heat_cool
+
+    # Turn off all of the inside lights
+    - action: light.turn_off
+      metadata: {}
+      data: {}
+      target:
+        area_id:
+          - dining_room
+          - garage
+          - kitchen
+          - living_room
+
+    # Turn off the espresso machine
+    - type: turn_off
+      device_id: "{{ hass_espresso_machine_device_id }}"
+      entity_id: "{{ hass_espresso_machine_entity_id }}"
+      domain: switch
+{% endif %}

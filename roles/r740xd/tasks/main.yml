@@ -39,23 +39,6 @@
   ansible.builtin.import_tasks: "netplan.yml"
   tags: ["netplan"]
 
-- name: "Setup Logrotate"
-  ansible.builtin.import_role: 
-    name: "nickhammond.logrotate"
-  vars:
-    # TODO: Move this into rclone setup
-    logrotate_scripts:
-      - name: "rclone"
-        path: "/var/log/rclone.log"
-        options:
-          - "daily"
-          - "rotate 7"
-          - "missingok"
-          - "compress"
-          - "delaycompress"
-          - "copytruncate"
-  tags: ["logrotate"]
-
 - name: "Install Docker"
   ansible.builtin.import_tasks: "docker.yml"
   tags: ["docker"]
