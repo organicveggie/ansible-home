@@ -1,26 +1,87 @@
 ---
-- name: Verify
+- name: "Verify"
   hosts: all
   gather_facts: false
 
   vars:
-    hass_docker_network_name: "hass-test"
+    _networks:
+      automation:
+        name: "home-automation-test"
+        subnet: "172.168.50.0/24"
+      ingress:
+        name: "ingress-proxy-test"
+        subnet: "172.168.60.0/24"
+    hass_docker_extra_env:
+      "HASS_MOLECULE_TEST": "hass molecule test value"
+    hass_docker_extra_labels:
+      "molecule-label-01": "molecule-value-01"
+    hass_docker_extra_networks:
+      - name: "{{ _networks.ingress.name }}"
+    hass_docker_host_name: "hass-molecule-host"
+    hass_docker_name: "hass-molecule"
+    hass_docker_network_aliases:
+      - "hass-molecule-alias"
+    hass_docker_network_name: "{{ _networks.automation.name }}"
+    hass_docker_traefik_network: "{{ _networks.ingress.name }}"
+    hass_docker_volume_config_name: "hass-config-test"
+    hass_network_subnets:
+      - "{{ _networks.automation.subnet }}"
+      - "{{ _networks.ingress.subnet }}"
 
   tasks:
-    - name: Get info on data volume
-      community.docker.docker_volume_info:
-        name: "{{ hass_docker_volume_name_data }}"
-      register: config_vol_info
+    - name: "Verify volumes"
+      ansible.builtin.include_tasks:
+        file: "verify-volume.yml"
+      loop:
+        - "{{ hass_docker_volume_config_name }}"
+      loop_control:
+        loop_var: "__volume_name"
 
-    - name: Verify data volume exists
-      ansible.builtin.assert:
-        that: config_vol_info.exists
-
-    - name: Get info on Home Assistant container
+    - name: Get info on container
       community.docker.docker_container_info:
-        name: hass
-      register: con_info
+        name: "{{ hass_docker_name }}"
+      register: _hass_container
 
-    - name: Verify container exists
+    - name: Verify container state
       ansible.builtin.assert:
-        that: con_info.exists
+        that:
+          - _hass_container.exists
+          - _hass_container["container"]["State"]["Status"] == "running"
+    
+    - name: Verify extra environment variables
+      ansible.builtin.assert:
+        that:
+          - "__env in __all_env"
+      vars:
+        __all_env: "{{ _hass_container['container']['Config']['Env'] }}"
+        __env: "HASS_MOLECULE_TEST={{ hass_docker_extra_env['HASS_MOLECULE_TEST'] }}"
+
+    - name: Verify extra labels
+      ansible.builtin.assert:
+        that:
+          - __all_labels["molecule-label-01"] is defined
+          - __all_labels["molecule-label-01"] == hass_docker_extra_labels["molecule-label-01"]
+      vars:
+        __all_labels: "{{ _hass_container['container']['Config']['Labels'] }}"
+
+    - name: "Verify networks"
+      ansible.builtin.include_tasks:
+        file: "verify-network.yml"
+      loop:
+        - "{{ hass_docker_network_name }}"
+        - "{{ hass_docker_extra_networks[0].name }}"
+      loop_control:
+        loop_var: "__network_name"
+      vars:
+        __container_id: "{{ _hass_container['container']['Id'] }}"
+
+    - name: "Verify default network aliases"
+      ansible.builtin.assert:
+        that:
+          - __networks[hass_docker_network_name]['Aliases'] is defined
+          - __network_alias in __networks[hass_docker_network_name]['Aliases']
+      loop: "{{ hass_docker_network_aliases }}"
+      loop_control:
+        loop_var: "__network_alias"
+      vars:
+        __networks: "{{ _hass_container['container']['NetworkSettings']['Networks'] }}"

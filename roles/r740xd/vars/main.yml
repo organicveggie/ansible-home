@@ -40,13 +40,6 @@ r740xd_calibre_web_username: "calibre"
 r740xd_calibre_web_groupname: "calibre"
 
 ###
-### Diun
-###
-r740xd_diun_group: "diun"
-r740xd_diun_uid: 2450
-r740xd_diun_user: "diun"
-
-###
 ### Docker
 ###
 r740xd_docker_bridge_network_gateway: "172.17.0.1"
@@ -59,12 +52,6 @@ r740xd_hass_pgsql_name: "hass-pgsql"
 r740xd_hass_pgsql_volume_conf_name: "hass-pgsql-conf"
 r740xd_hass_pgsql_volume_data_name: "hass-pgsql-data"
 r740xd_hass_pgsql_volume_init_name: "hass-pgsql-initscripts"
-
-###
-### InfluxDB
-###
-r740xd_influxdb_config_volume_name: "influxdb27-config"
-r740xd_influxdb_data_volume_name: "influxdb27-data"
 
 ###
 ### Kometa

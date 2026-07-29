@@ -1,0 +1,16 @@
+---
+- name: "{{ grafana_docker_role_label }} | Create Docker volume: {{ __grafana_docker_volume_name }}"
+  community.docker.docker_volume:
+    name: "{{ __grafana_docker_volume_name }}"
+
+- name: "{{ grafana_docker_role_label }} | Get path to Docker volume: {{ __grafana_docker_volume_name }}"
+  community.docker.docker_volume_info:
+    name: "{{ __grafana_docker_volume_name }}"
+  register: "__grafana_docker_volume_info"
+
+- name: "{{ grafana_docker_role_label }} | Set permissions on Docker volume: {{ __grafana_docker_volume_name }}"
+  ansible.builtin.file:
+    group: "{{ grafana_docker_group_name }}"
+    mode: "770"
+    owner: "{{ grafana_docker_user_name }}"
+    path: "{{ __grafana_docker_volume_info.volume.Mountpoint }}"

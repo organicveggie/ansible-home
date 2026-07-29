@@ -31,64 +31,12 @@ veggie_users_passwords:
   retropie: "*"
 
 ###
-### Diun
-###
-diun_network_name: "diun"
-
-organicveggie_docker_networks:
-  - name: "{{ portainer_network_name }}"
-    enable_ipv6: "no"
-    internal: "yes"
-    scope: "local"
-    subnet: "172.20.0.0/16"
-    gateway: "172.20.0.1"
-  - name: "{{ influxdb_network_name }}"
-    enable_ipv6: "no"
-    internal: "no"
-    scope: "local"
-    subnet: "172.21.0.0/16"
-    gateway: "172.21.0.1"
-  - name: "{{ restic_rest_server_network_name }}"
-    enable_ipv6: "no"
-    internal: "no"
-    scope: "local"
-    subnet: "172.22.0.0/16"
-    gateway: "172.22.0.1"
-  - name: "{{ grafana_network_name }}"
-    enable_ipv6: "no"
-    internal: "no"
-    scope: "local"
-    subnet: "172.100.2.0/24"
-    gateway: "172.100.2.1"
-  - name: "{{ unific_network_name }}"
-    enable_ipv6: "no"
-    internal: "no"
-    scope: "local"
-    subnet: "{{ unific_network_subnet }}"
-    gateway: "{{ unific_network_gateway }}"
-
-###
 ### Flaresolverr
 ###
 flaresolverr_docker_available_externally: "true"
 flaresolverr_docker_host_domain: "{{ veggie_nas_domain_name }}"
 flaresolverr_docker_network_aliases:
   - "flaresolverr"
-
-###
-### Glances
-###
-glances_network_name: "glances"
-glances_network_subnet: "{{ vault_glances_network_subnet }}"
-glances_network_gateway: "{{ vault_glances_network_gateway }}"
-glances_config_data:
-  glances_docker_config:
-    diskio:
-      "hide": "loop.*,md0"
-    fs:
-      "hide": "/etc.*"
-    network:
-      "hide": "docker.*,lo"
 
 ###
 ### Grafana
@@ -105,8 +53,6 @@ grafana_docker_smtp_host: "{{ vault_grafana_docker_smtp_host }}"
 grafana_docker_smtp_user: "{{ vault_grafana_docker_smtp_user }}"
 grafana_docker_smtp_password: "{{ vault_grafana_docker_smtp_password }}"
 grafana_docker_smtp_from_address: "{{ primary_email_address }}"
-grafana_docker_extra_networks:
-  - "influxdb"
 grafana_network_name: "grafana"
 
 ###
@@ -135,14 +81,6 @@ homeassistant_pgsql_volume_data_name: "hass-pgsql-data"
 homeassistant_pgsql_init_tempates_dir: "{{ vault_homeassistant_pgsql_init_tempates_dir }}"
 
 ###
-### InfluxDB
-###
-influxdb_host_domain: "{{ veggie_nas_domain_name }}"
-influxdb_url: "https://influxdb.{{ influxdb_host_domain }}"
-influxdb_telegraf_token: "{{ vault_influxdb_telegraf_token }}"
-influxdb_admin_org: "{{ vault_influxdb_admin_org }}"
-
-###
 ### Let's Encrypt / Certbot
 ###
 certbot_domain_name: "{{ veggie_nas_domain_name }}"
@@ -156,20 +94,6 @@ certbot_aws_secret_access_key: "{{ letsencrypt_aws_secret_key }}"
 lidarr_available_externally: "true"
 lidarr_docker_host_domain: "{{ veggie_nas_domain_name }}"
 lidarr_cpus: "2"
-
-###
-### Logrotate
-###
-# logrotate_scripts:
-#   - name: rclone
-#     path: "/var/log/rclone.log"
-#     options:
-#       - daily
-#       - rotate 7
-#       - missingok
-#       - compress
-#       - delaycompress
-#       - copytruncate
 
 ###
 ### NAS
@@ -213,17 +137,6 @@ nfs_exports:
   - "/mnt/nas/servarr/music {{ veggie_nas_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
   - "/mnt/nas/data/videos {{ veggie_nas_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
   # - "/mnt/nas/data/music {{ veggie_nas_domain_name }}(rw,sync,no_subtree_check,no_root_squash)"
-
-###
-### Node-RED
-###
-nodered_credential_secret: "nodred-secret"
-nodered_docker_image: "nodered/node-red:latest"
-nodered_host_domain: "{{ veggie_nas_domain_name }}"
-nodered_network_name: "node-red"
-nodered_network_subnet: "{{ vault_nodered_network_subnet }}"
-nodered_network_gateway: "{{ vault_nodered_network_gateway }}"
-nodered_timezone: "{{ vault_nodered_timezone }}"
 
 ###
 ### organicveggie.folders
@@ -307,26 +220,6 @@ radarr4k_docker_network_aliases:
   - "radarr4k"
 
 ###
-### RClone
-###
-rclone_configs:
-  - name: AWSS3Remote
-    properties:
-      type: s3
-      provider: AWS
-      env_auth: false
-      region: us-west-2
-      location_constraint: us-west-2
-      acl: private
-      server_side_encryption: AES256
-      storage_class: STANDARD
-      access_key_id: "{{ aws_s3_rclone_access_key }}"
-      secret_access_key: "{{ aws_s3_rclone_secret_key }}"
-rclone_config_path: "{{ veggie_rclone_config_path }}"
-veggie_rclone_s3_bucket: "{{ veggie_nas_rclone_s3_bucket }}"
-veggie_rclone_config_path: /root/.config/rclone/rclone.conf
-
-###
 ### Readarr
 ###
 readarr_api_key: "TODO-REPLACE-ME"
@@ -348,19 +241,6 @@ resilio_docker_host_domain: "{{ veggie_nas_domain_name }}"
 resilio_docker_network: "resilio-sync"
 resilio_docker_network_subnet: "172.100.9.0/24"
 resilio_docker_network_gateway: "172.100.9.1"
-
-###
-### Restic
-###
-restic_rest_server_backup_dir: "{{ veggie_nas_restic_rest_server_backup_dir }}"
-restic_rest_server_hostname: "{{ veggie_nas_restic_rest_server_hostname }}"
-restic_rest_server_host_domain: "{{ veggie_nas_domain_name }}"
-restic_server_users:
-  - name: "{{ restic_user_desktop | default('') }}"
-    password: "{{ restic_htpasswd_desktop | default('') }}"
-  - name: "{{ restic_user_unific | default('') }}"
-    password: "{{ restic_htpasswd_unific | default('') }}"
-restic_rest_server_network_name: "restic_rest_server"
 
 ###
 ### SABnzbd
@@ -439,47 +319,6 @@ tautulli_network_subnet: "172.100.7.0/24"
 tautulli_network_gateway: "172.100.7.1"
 tautulli_service_name: "tautulli"
 tautulli_web_port: "8181"
-
-
-###
-### Telegraf
-###
-telegraf_influxdb_url: "{{ influxdb_url }}"
-telegraf_influxdb_token: "{{ influxdb_telegraf_token }}"
-telegraf_influxdb_org: "{{ influxdb_admin_org }}"
-telegraf_plugin_docker: true
-telegraf_plugin_smartctl: true
-telegraf_plugin_zfs_pool_sizes: true
-telegraf_plugins_extra:
-  - name: disk
-    options:
-      mount_points:
-        - "/"
-        - "/boot"
-        - "/var/log"
-        - "/mnt/nas"
-        - "/mnt/nas/backups"
-        - "/mnt/nas/data"
-        - "/mnt/nas/data/books"
-        - "/mnt/nas/data/documents"
-        - "/mnt/nas/data/music"
-        - "/mnt/nas/data/photos"
-        - "/mnt/nas/data/roms"
-        - "/mnt/nas/data/videos"
-        - "/mnt/nas/docker"
-        - "/mnt/nas/influxdb/lib"
-        - "/mnt/nas/plex"
-        - "/mnt/nas/time-machine"
-  - name: prometheus
-    options:
-      urls:
-        - "$INFLUX_URL"
-    tags:
-      influxdb_bucket: "influxdb"
-  - name: zfs
-    options:
-      poolMetrics: true
-
 
 ###
 ### TimeMachine
@@ -609,19 +448,15 @@ traefik_confkey_certificatesResolvers:  # noqa: var-naming
 # traefik_image: "traefik:2.10"
 # traefik_extra_networks:
 #   - name: "{{ calibre_web_docker_network }}"
-#   - name: "{{ diun_docker_network_name }}"
-#   - name: "{{ glances_network_name }}"
 #   - name: "{{ grafana_network_name }}"
 #   - name: "{{ hass_network_name }}"
 #   - name: "{{ navidrome_network_name }}"
 #   - name: "{{ nodered_docker_network_name }}"
 #   - name: "{{ portainer_network_name }}"
 #   - name: "{{ resilio_docker_network }}"
-#   - name: "{{ restic_rest_server_network_name }}"
 #   - name: "{{ servarr_docker_network }}"
 #   - name: "{{ tautulli_network_name }}"
 #   - name: "{{ unific_network_name }}"
-#   - name: "influxdb27"
 
 ###
 ### TRaSH Guides

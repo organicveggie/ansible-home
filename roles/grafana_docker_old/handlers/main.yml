@@ -1,3 +1,0 @@
----
-- name: Restart Grafana
-  ansible.builtin.command: docker restart grafana

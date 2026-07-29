@@ -1,34 +1,70 @@
-nodered_port: "1880"
-nodered_available_externally: "true"
-nodered_hostname: "nodered"
-nodered_host_domain: "example.com"
+---
+#####
+# Container
+#####
 
-nodered_docker_gid: "1000"
-nodered_docker_uid: "1000"
-
+# Name of the Docker container.
 nodered_docker_name: "nodered"
-nodered_docker_image: "nodered/node-red:latest"
-nodered_docker_volume_name: "nodered-data"
 
-nodered_docker_timezone: "America/New_York"
+# Base name of the Docker image to use for the container.
+nodered_docker_image: "nodered/node-red"
 
-#####
-# Docker Network
-#####
-nodered_docker_network_internal: "false"
+# Specific Docker image version to use for the container.
+nodered_docker_image_version: "latest"
+
+# Number of vCPUs to allocate to the container.
+nodered_docker_cpus: "2"
+
+# Amount of memory to allocate to the container.
+nodered_docker_memory: "2G"
+
+# Name of the primary network.
 nodered_docker_network_name: "nodered"
-nodered_docker_network_subnet: "172.1.2.0/24"
-nodered_docker_network_gateway: "172.1.2.1"
+
+# Container aliases on the default network.
+nodered_docker_network_aliases: []
+
+# List of additional networks to join.
 nodered_docker_extra_networks: []
 
-# List of aliases for this container in the default network. These names can be used in the default
-# network to reach this container.
-nodered_docker_network_aliases: []
+# Name of the main Docker volume for storing Node-RED data
+nodered_docker_volume_name: "nodered-data"
+
+# Timezone for the container
+nodered_docker_timezone: "America/New_York"
 
 # Dictionary of extra key value pairs to set as labels on the Docker container.
 nodered_docker_extra_labels: {}
 
-nodered_docker_memory: "2G"
-nodered_docker_cpus: "2"
+# Dictionary of extra key value pairs to set as environment variables on the Docker container.
+nodered_docker_extra_env: {}
+
+#####
+# Traefik
+#####
+
+# Enable use of Traefik as a proxy.
+nodered_available_externally: true
+
+# Host name to use for the Traefik endpoint. Combined with [nodered_host_domain] to form the
+# FQDN for the endpoint.
+nodered_hostname: "nodered"
+
+# Domain name to use for the Traefik endpoint. Combined with [nodered_hostname] to form the
+# FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
+nodered_host_domain: "example.com"
+
+# Name of the Docker network Traefik should use when proxying.
+nodered_traefik_network: null
+
+#####
+# Node-RED
+#####
 
 nodered_credential_secret: "a-secret-key"
+
+#####
+# Ansible
+#####
+
+nodered_docker_role_label: "Node-RED"

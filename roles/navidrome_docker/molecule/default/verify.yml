@@ -1,0 +1,76 @@
+---
+- name: "Verify"
+  hosts: all
+  gather_facts: false
+
+  vars:
+    navidrome_docker_extra_env:
+      "NAVIDROME_MOLECULE_TEST": "navidrome molecule test value"
+    navidrome_docker_extra_labels:
+      "molecule-label-01": "molecule-value-01"
+    navidrome_docker_extra_networks:
+      - name: "ingress-proxy-test"
+    navidrome_docker_host_name: "navidrome-molecule"
+    navidrome_docker_name: "navidrome-molecule"
+    navidrome_docker_network_aliases:
+      - "nd-molecule"
+    navidrome_docker_network_name: "plex-test"
+    navidrome_docker_volume_name: "navidrome-test"
+
+  tasks:
+    - name: "Verify volumes"
+      ansible.builtin.include_tasks:
+        file: "verify-volume.yml"
+      loop:
+        - "{{ navidrome_docker_volume_name }}"
+      loop_control:
+        loop_var: "__navidrome_docker_volume_name"
+
+    - name: Get info on container
+      community.docker.docker_container_info:
+        name: "{{ navidrome_docker_name }}"
+      register: _navidrome_docker_container
+
+    - name: Verify container state
+      ansible.builtin.assert:
+        that:
+          - _navidrome_docker_container.exists
+          - _navidrome_docker_container["container"]["State"]["Status"] == "running"
+    
+    - name: Verify extra environment variables
+      ansible.builtin.assert:
+        that:
+          - "__env in __all_env"
+      vars:
+        __all_env: "{{ _navidrome_docker_container['container']['Config']['Env'] }}"
+        __env: "NAVIDROME_MOLECULE_TEST={{ navidrome_docker_extra_env['NAVIDROME_MOLECULE_TEST'] }}"
+
+    - name: Verify extra labels
+      ansible.builtin.assert:
+        that:
+          - __all_labels["molecule-label-01"] is defined
+          - __all_labels["molecule-label-01"] == navidrome_docker_extra_labels["molecule-label-01"]
+      vars:
+        __all_labels: "{{ _navidrome_docker_container['container']['Config']['Labels'] }}"
+
+    - name: "Verify networks"
+      ansible.builtin.include_tasks:
+        file: "verify-network.yml"
+      loop:
+        - "{{ navidrome_docker_network_name }}"
+        - "{{ navidrome_docker_extra_networks[0].name }}"
+      loop_control:
+        loop_var: "__navidrome_docker_network_name"
+      vars:
+        __container_id: "{{ _navidrome_docker_container['container']['Id'] }}"
+
+    - name: "Verify default network aliases"
+      ansible.builtin.assert:
+        that:
+          - __networks[navidrome_docker_network_name]['Aliases'] is defined
+          - __navidrome_docker_alias in __networks[navidrome_docker_network_name]['Aliases']
+      loop: "{{ navidrome_docker_network_aliases }}"
+      loop_control:
+        loop_var: "__navidrome_docker_alias"
+      vars:
+        __networks: "{{ _navidrome_docker_container['container']['NetworkSettings']['Networks'] }}"

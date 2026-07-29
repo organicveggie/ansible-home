@@ -1,0 +1,61 @@
+---
+- name: Install dependencies
+  hosts: all
+  become: true
+
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 600
+      when: ansible_facts["os_family"] == 'Debian'
+
+    - name: Wait for systemd to complete initialization
+      ansible.builtin.command: systemctl is-system-running
+      register: systemctl_status
+      until: >
+        'running' in systemctl_status.stdout or
+        'degraded' in systemctl_status.stdout
+      retries: 30
+      delay: 5
+      when: ansible_facts["service_mgr"] == 'systemd'
+      changed_when: false
+      failed_when: systemctl_status.rc > 1
+
+- name: Converge  # noqa: command-instead-of-module var-naming[no-role-prefix]
+  hosts: all
+  become: true
+
+  vars:
+    hass_ecowitt_extra_env:
+      "HASS_ECOWITT_MOLECULE_TEST": "hass-ecowitt molecule test value"
+    hass_ecowitt_extra_labels:
+      "molecule-label-01": "molecule-value-01"
+    hass_ecowitt_extra_networks:
+      - name: "ingress-proxy-test"
+    hass_ecowitt_host_name: "ecowitt-molecule"
+    hass_ecowitt_name: "hass-ecowitt-molecule"
+    hass_ecowitt_network_aliases:
+      - "he-molecule"
+    hass_ecowitt_network_name: "home-automation-test"
+    hass_ecowitt_hass_url: "http://hass-molecule:8813"
+    hass_ecowitt_hass_auth_token: "LMNOP"
+    hass_ecowitt_hass_webhook_id: "98765"
+    hass_ecowitt_timezone: "America/Chicago"
+
+  pre_tasks:
+    - name: Install Docker
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+
+    - name: Create Docker test networks
+      community.docker.docker_network:
+        name: "{{ __item.name }}"
+        state: present
+      loop: >
+        {{ hass_ecowitt_extra_networks + [{'name': hass_ecowitt_network_name}] }}
+      loop_control:
+        loop_var: "__item"
+
+  roles:
+    - role: hass-ecowitt-proxy

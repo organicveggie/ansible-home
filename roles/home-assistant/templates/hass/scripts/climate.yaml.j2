@@ -1,3 +1,4 @@
+{% if hass_hvac_thermostat_device_id | default('', true) | length > 0 %}
 disable_hvac:
   alias: Disable HVAC
   description: ""
@@ -81,3 +82,4 @@ hvac_on:
         fan_mode: schedule
       target:
         device_id: "{{ hass_hvac_thermostat_device_id }}"
+{% endif %}
