@@ -63,44 +63,6 @@
           ansible.builtin.set_fact:
             _r740xd_traefik_entrypoints: "{{ _r740xd_traefik_entrypoints | default({}) | combine(r740xd_traefik_unific_entrypoints) }}"
 
-- name: "{{ r740xd_ansible_role_label }} | traefik2 | Process Home Assistant network"
-  when: "docker_networks.hass.name | default('') | trim | length > 0"
-  block:
-    - name: "{{ r740xd_ansible_role_label }} | traefik2 | Check if Home Assistant network exists"
-      community.docker.docker_network_info:
-        name: "{{ docker_networks.hass.name }}"
-      register: "_r740xd_traefik_hass_network_info"
-
-    - name: "{{ r740xd_ansible_role_label }} | traefik2 | Configure Traefik for Home Assistant"
-      when: "_r740xd_traefik_hass_network_info.exists"
-      block:
-        - name: "{{ r740xd_ansible_role_label }} | traefik2 | Enable Home Assistant extra network"
-          ansible.builtin.set_fact:
-            _r740xd_traefik_extra_networks: "{{ _r740xd_traefik_extra_networks | default([]) + [{'name': docker_networks.hass.name}] }}"
-
-        - name: "{{ r740xd_ansible_role_label }} | traefik2 | Enable Z-Wave JS UI entrypoints"
-          ansible.builtin.set_fact:
-            _r740xd_traefik_entrypoints: "{{ _r740xd_traefik_entrypoints | default({}) | combine(r740xd_traefik_zwavejsui_entrypoints) }}"
-
-- name: "{{ r740xd_ansible_role_label }} | traefik2 | Process Zigbee network"
-  when: "docker_networks.zigbee.name | default('', true) | trim | length > 0"
-  block:
-    - name: "{{ r740xd_ansible_role_label }} | traefik2 | Check if Zigbee network exists"
-      community.docker.docker_network_info:
-        name: "{{ docker_networks.zigbee.name }}"
-      register: "_r740xd_traefik_zigbee_network_info"
-
-    - name: "{{ r740xd_ansible_role_label }} | traefik2 | Configure Traefik for Zigbee"
-      when: "_r740xd_traefik_zigbee_network_info.exists"
-      block:
-        - name: "{{ r740xd_ansible_role_label }} | traefik2 | Enable Zigbee extra network"
-          ansible.builtin.set_fact:
-            _r740xd_traefik_extra_networks: "{{ _r740xd_traefik_extra_networks | default([]) + [{'name': docker_networks.zigbee.name}] }}"
-
-        - name: "{{ r740xd_ansible_role_label }} | traefik2 | Enable EMQX entrypoints"
-          ansible.builtin.set_fact:
-            _r740xd_traefik_entrypoints: "{{ _r740xd_traefik_entrypoints | default({}) | combine(r740xd_traefik_emqx_entrypoints) }}"
-
 - name: "{{ r740xd_ansible_role_label }} | traefik2 | Define all ports"
   ansible.builtin.set_fact:
     _r740xd_traefik_all_ports: "{{ (_r740xd_traefik_extra_ports | default([]) + r740xd_traefik_http_ports) | sort }}"
