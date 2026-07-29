@@ -5,7 +5,7 @@
 
 - name: "{{ r740xd_ansible_role_label }} | hass | Set endpoint URL for Ecowitt"
   ansible.builtin.set_fact:
-    _r740xd_hass_ecowitt_url: "http://{{ _r740xd_hass_fqdn }}:8123"
+    _r740xd_hass_ecowitt_url: "http://{{ r740xd_hass_host_name }}:8123"
 
 - name: "{{ r740xd_ansible_role_label }} | hass | Setup Zigbee2MQTT container"
   ansible.builtin.import_role:
