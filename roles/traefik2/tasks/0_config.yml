@@ -27,7 +27,7 @@
   ansible.builtin.set_fact:
     traefik2_static_config:
       global: "{{ traefik2_conf_global }}"
-      serversTransport: "{{traefik2_confkey_serversTransport | default(omit) }}"
+      serversTransport: "{{traefik2_confkey_serverstransport | default(omit) }}"
       entryPoints: "{{ traefik2_conf_entrypoints }}"
       providers: "{{ traefik2_conf_providers }}"
       api: "{{ traefik2_confkey_api | default(omit) }}"

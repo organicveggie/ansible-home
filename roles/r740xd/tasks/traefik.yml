@@ -17,6 +17,26 @@
   loop_control:
     loop_var: __item
 
+- name: "{{ r740xd_ansible_role_label }} | traefik2 | Configure entrypoints"
+  ansible.builtin.set_fact:
+    _r740xd_traefik_entrypoints: "{{ _r740xd_traefik_entrypoints | default({}) | combine(__entry) }}"
+  loop:
+    - "{{ r740xd_traefik_emqx_entrypoints }}"
+    - "{{ r740xd_traefik_syncthings_entrypoints }}"
+    - "{{ r740xd_traefik_unific_entrypoints }}"
+    - "{{ r740xd_traefik_zwavejsui_entrypoints }}"
+  loop_control:
+    loop_var: "__entry"
+
+- name: "{{ r740xd_ansible_role_label }} | traefik2 | Configure extra ports"
+  ansible.builtin.set_fact:
+    _r740xd_traefik_extra_ports: "{{ _r740xd_traefik_extra_ports | default([]) + __entry }}"
+  loop:
+    - "{{ r740xd_traefik_syncthings_ports }}"
+    - "{{ r740xd_traefik_unific_ports }}"
+  loop_control:
+    loop_var: "__entry"
+
 - name: "{{ r740xd_ansible_role_label }} | traefik2 | Process Servarr network"
   when: "docker_networks.servarr.name | default('') | trim | length > 0"
   block:
@@ -32,14 +52,6 @@
           ansible.builtin.set_fact:
             _r740xd_traefik_extra_networks: "{{ _r740xd_traefik_extra_networks | default([]) + [{'name': docker_networks.servarr.name}] }}"
 
-        - name: "{{ r740xd_ansible_role_label }} | traefik2 | Enable SyncThings (Servarr) ports"
-          ansible.builtin.set_fact:
-            _r740xd_traefik_extra_ports: "{{ _r740xd_traefik_extra_ports | default([]) + r740xd_traefik_syncthings_ports }}"
-        
-        - name: "{{ r740xd_ansible_role_label }} | traefik2 | Enable SyncThings (Servarr) entrypoints"
-          ansible.builtin.set_fact:
-            _r740xd_traefik_entrypoints: "{{ _r740xd_traefik_entrypoints | default({}) | combine(r740xd_traefik_syncthings_entrypoints) }}"
-
 - name: "{{ r740xd_ansible_role_label }} | traefik2 | Process UniFi Controller network"
   when: "docker_networks.unific.name | default('') | trim | length > 0"
   block:
@@ -54,14 +66,6 @@
         - name: "{{ r740xd_ansible_role_label }} | traefik2 | Enable UniFi extra network"
           ansible.builtin.set_fact:
             _r740xd_traefik_extra_networks: "{{ _r740xd_traefik_extra_networks | default([]) + [{'name': docker_networks.unific.name}] }}"
-
-        - name: "{{ r740xd_ansible_role_label }} | traefik2 | Enable UniFi Controlller ports"
-          ansible.builtin.set_fact:
-            _r740xd_traefik_extra_ports: "{{ _r740xd_traefik_extra_ports | default([]) + r740xd_traefik_unific_ports }}"
-        
-        - name: "{{ r740xd_ansible_role_label }} | traefik2 | Enable UniFi Controller entrypoints"
-          ansible.builtin.set_fact:
-            _r740xd_traefik_entrypoints: "{{ _r740xd_traefik_entrypoints | default({}) | combine(r740xd_traefik_unific_entrypoints) }}"
 
 - name: "{{ r740xd_ansible_role_label }} | traefik2 | Define all ports"
   ansible.builtin.set_fact:

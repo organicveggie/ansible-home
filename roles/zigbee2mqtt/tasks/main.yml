@@ -84,8 +84,7 @@
         _zigbee2mqtt_docker_labels: "{{ _zigbee2mqtt_docker_labels | default({}) |
           combine({'traefik.docker.network': __traefik_network_label}) }}"
       vars:
-        __traefik_network_label: >
-          {{ zigbee2mqtt_docker_traefik_network | default(zigbee2mqtt_docker_network_name, true) }}
+        __traefik_network_label: "{{ zigbee2mqtt_docker_traefik_network | default(zigbee2mqtt_docker_network_name, true) }}"
 
 - name: "{{ zigbee2mqtt_docker_role_label }} | Define user-supplied extra Docker labels"
   ansible.builtin.set_fact:
