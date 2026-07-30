@@ -64,8 +64,7 @@
         _zwavejsui_labels: "{{ _zwavejsui_labels | default({}) |
           combine({'traefik.docker.network': __traefik_network_label}) }}"
       vars:
-        __traefik_network_label: >
-          {{ zwavejsui_traefik_network | default(zwavejsui_network_name, true) }}
+        __traefik_network_label: "{{ zwavejsui_traefik_network | default(zwavejsui_network_name, true) }}"
 
 - name: "{{ zwavejsui_role_name }} | Print ZWave device"
   ansible.builtin.debug:

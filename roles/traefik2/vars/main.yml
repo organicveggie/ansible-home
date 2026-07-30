@@ -34,7 +34,7 @@ traefik2_int_conf_certificatesresolvers_le:
 traefik2_conf_global: "{{ traefik2_int_conf_global
     | combine(traefik2_confkey_global | default({})) }}"
 traefik2_conf_entrypoints: "{{ traefik2_int_conf_entrypoints
-    | combine(traefik2_confkey_entryPoints
+    | combine(traefik2_confkey_entrypoints
     | default({})) }}"
 traefik2_conf_providers: "{{ traefik2_int_conf_providers
     | combine(traefik2_confkey_providers | default({})) }}"

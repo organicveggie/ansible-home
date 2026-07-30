@@ -18,8 +18,7 @@
     group: "docker"
     mode: "0550"
     content: "{{ traefik2_static_config | to_nice_yaml }}"
-  notify:
-    - "restart traefik container"
+  register: "_traefik2_modify_config"
 
 - name: "{{ traefik2_role_label }} | Create placeholder array for default network"
   ansible.builtin.set_fact:
@@ -48,3 +47,5 @@
     networks_cli_compatible: true
     etc_hosts:
       host.docker.internal: "host-gateway"
+    restart: |
+      {{ _traefik2_modify_config.changed | default(false, true) }}
