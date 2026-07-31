@@ -47,9 +47,12 @@ unpoller_cfg_quiet: false
 
 unpoller_cfg_prometheus_enable: true
 
+unpoller_cfg_prometheus_http_listen_ip: "0.0.0.0"
+unpoller_cfg_prometheus_http_listen_port: "9130"
+
 # This controls on which ip and port /metrics is exported when mode is "prometheus".
 # This has no effect in other modes. Must contain a colon and port.
-unpoller_cfg_prometheus_http_listen: "0.0.0.0:9130"
+unpoller_cfg_prometheus_http_listen: "{{ unpoller_cfg_prometheus_http_listen_ip }}:{{ unpoller_cfg_prometheus_http_listen_port }}"
 
 # Record data for disabled or down (unlinked) switch ports.
 unpoller_cfg_prometheus_dead_ports: false
@@ -90,7 +93,8 @@ unpoller_cfg_unific_pass: "unifipoller"
 
 # API Key
 # Unifi now supports API Key authentication. This is exclusive of user/pass auth.
-# api_key = "unifiapikey"
+# See https://unifi.ui.com/settings/api-keys.
+# unpoller_cfg_api_key: "unifiapikey"
 
 # Enable collection of site data. This data powers the Network Sites dashboard.
 # It's not valuable to everyone and setting this to false will save resources.

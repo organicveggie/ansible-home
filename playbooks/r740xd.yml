@@ -174,6 +174,9 @@
         r740xd_traefik_letsencrypt_email: "{{ primary_email_address }}"
         # UniFi Controller
         r740xd_unific_host_domain: "{{ veggie_base_domain_name }}"
+        # Unpoller
+        r740xd_unpoller_unific_passwd: "{{ vault_unpoller_unific_passwd }}"
+        r740xd_unpoller_unific_user: "{{ vault_unpoller_unific_user }}"
         # NAS
         r740xd_timezone: "{{ home_timezone }}"
         r740xd_users: "{{ veggie_nas_users }}"

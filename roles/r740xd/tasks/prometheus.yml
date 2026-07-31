@@ -90,6 +90,12 @@
             - targets:
               - "{{ r740xd_emqx_docker_name }}:{{ r740xd_emqx_http_port }}"
 
+        - job_name: "unific-unpoller"
+          scrape_interval: 30s
+          static_configs:
+            - targets: 
+              - "{{ r740xd_unpoller_container_name }}:{{ r740xd_unpoller_prometheus_port }}"
+
 - name: "R740xd | Install Prometheus node exporter"
   ansible.builtin.import_role:
     name: "node_exporter_docker"
