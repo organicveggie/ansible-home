@@ -1,0 +1,9 @@
+---
+- name: "Get info on {{ __unpoller_volume_name }} volume"
+  community.docker.docker_volume_info:
+    name: "{{ __unpoller_volume_name }}"
+  register: _unpoller_volume_info
+
+- name: "Verify {{ __unpoller_volume_name }} volume exists"
+  ansible.builtin.assert:
+    that: _unpoller_volume_info.exists

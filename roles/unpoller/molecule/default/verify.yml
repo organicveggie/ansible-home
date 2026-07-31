@@ -1,0 +1,75 @@
+---
+- name: "Verify"
+  hosts: all
+  gather_facts: false
+
+  vars:
+    unpoller_extra_env:
+      "UNPOLLER_MOLECULE_TEST": "unpoller molecule test value"
+    unpoller_extra_labels:
+      "molecule-label-01": "molecule-value-01"
+    unpoller_extra_networks:
+      - name: "monitoring"
+    unpoller_name: "unpoller-molecule"
+    unpoller_network_aliases:
+      - "up-molecule"
+    unpoller_network_name: "mgmt"
+    unpoller_volume_name: "unpoller-test"
+
+  tasks:
+    - name: "Verify volumes"
+      ansible.builtin.include_tasks:
+        file: "verify-volume.yml"
+      loop:
+        - "{{ unpoller_volume_name }}"
+      loop_control:
+        loop_var: "__unpoller_volume_name"
+
+    - name: Get info on container
+      community.docker.docker_container_info:
+        name: "{{ unpoller_name }}"
+      register: _unpoller_container
+
+    - name: Verify container state
+      ansible.builtin.assert:
+        that:
+          - _unpoller_container.exists
+          - _unpoller_container["container"]["State"]["Status"] == "running"
+    
+    - name: Verify extra environment variables
+      ansible.builtin.assert:
+        that:
+          - "__env in __all_env"
+      vars:
+        __all_env: "{{ _unpoller_container['container']['Config']['Env'] }}"
+        __env: "UNPOLLER_MOLECULE_TEST={{ unpoller_extra_env['UNPOLLER_MOLECULE_TEST'] }}"
+
+    - name: Verify extra labels
+      ansible.builtin.assert:
+        that:
+          - __all_labels["molecule-label-01"] is defined
+          - __all_labels["molecule-label-01"] == unpoller_extra_labels["molecule-label-01"]
+      vars:
+        __all_labels: "{{ _unpoller_container['container']['Config']['Labels'] }}"
+
+    - name: "Verify networks"
+      ansible.builtin.include_tasks:
+        file: "verify-network.yml"
+      loop:
+        - "{{ unpoller_network_name }}"
+        - "{{ unpoller_extra_networks[0].name }}"
+      loop_control:
+        loop_var: "__unpoller_network_name"
+      vars:
+        __container_id: "{{ _unpoller_container['container']['Id'] }}"
+
+    - name: "Verify default network aliases"
+      ansible.builtin.assert:
+        that:
+          - __networks[unpoller_network_name]['Aliases'] is defined
+          - __unpoller_alias in __networks[unpoller_network_name]['Aliases']
+      loop: "{{ unpoller_network_aliases }}"
+      loop_control:
+        loop_var: "__unpoller_alias"
+      vars:
+        __networks: "{{ _unpoller_container['container']['NetworkSettings']['Networks'] }}"

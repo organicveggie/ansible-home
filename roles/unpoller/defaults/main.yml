@@ -1,0 +1,111 @@
+---
+#####
+# Container
+#####
+
+# Name of the Docker container.
+unpoller_name: "unpoller"
+
+# Base name of the Docker image to use for the container.
+unpoller_image_name: "ghcr.io/unpoller/unpoller"
+
+# Specific Docker image version to use for the container.
+unpoller_image_version: "latest"
+
+# Number of vCPUs to allocate to the container.
+unpoller_cpus: "1"
+
+# Amount of memory to allocate to the container.
+unpoller_memory: "512M"
+
+# Name of the primary network.
+unpoller_network_name: null
+
+# Container aliases on the default network.
+unpoller_network_aliases: null
+
+# List of additional networks to join.
+unpoller_extra_networks: []
+
+unpoller_volume_name: "unpoller"
+
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+unpoller_extra_labels: {}
+
+# Dictionary of extra key value pairs to set as environment variables on the Docker container.
+unpoller_extra_env: {}
+
+#####
+# Unpoller config options
+#####
+
+# Turns on line numbers, microsecond logging, and a per-device log.
+unpoller_cfg_debug: false
+
+# Turns off per-interval logs. Only startup and error logs will be emitted.
+unpoller_cfg_quiet: false
+
+unpoller_cfg_prometheus_enable: true
+
+# This controls on which ip and port /metrics is exported when mode is "prometheus".
+# This has no effect in other modes. Must contain a colon and port.
+unpoller_cfg_prometheus_http_listen: "0.0.0.0:9130"
+
+# Record data for disabled or down (unlinked) switch ports.
+unpoller_cfg_prometheus_dead_ports: false
+
+# How often the background poller refreshes the cache served to /metrics.
+# Decouples scrape cadence from UniFi API calls so 429 backoff loops no
+# longer block /metrics. Default: 60s. Values below 15s are clamped to 15s.
+unpoller_cfg_prometheus_interval: "60s"
+
+# Unpoller has an optional web server. To turn it on, set enable to true. If you
+# wish to use SSL, provide SSL cert and key paths. This interface is currently
+# read-only; it just displays information, like logs, devices and clients.
+# Notice: Enabling the web server with many sites will increase memory usage.
+# This is a new feature and lacks a UI, enabling only recommended for testing.
+unpoller_cfg_webserver_enable: false
+
+# TCP port where the webserver should listen.
+unpoller_cfg_webserver_port: 37288
+
+# How many events per event group to hold. 200-2000. Use fewer with many sites.
+# With 1 site, you'll have a max total of 9 event groups; 1 per plugin, 4 per site.
+# Each site adds 1 event group for each of these inputs that is enabled:
+#   save_ids, save_events, save_anomalies, save_alarms.
+unpoller_cfg_webserver_max_events: 200
+
+# URL for the UniFi Controller. Do not add any paths after the host:port.
+# Do not use port 8443 if you have a UDM; just use "https://ip".
+unpoller_cfg_unific_url: "https://127.0.0.1:8443"
+
+# Make a read-only user in the UniFi Admin Settings, allow it access to all sites.
+unpoller_cfg_unific_user: "unifipoller"
+
+# Password for UniFi controller user (above).
+# If the password provided here begins with file:// then the password is read in from
+# the file path that follows the file:// prefix. ex: file:///etc/unifi/password.file
+# ex: file:///etc/unifi/passwd.file, windows: file://C:\\UserData\\Unifi\\Passwd.txt
+unpoller_cfg_unific_pass: "unifipoller"
+
+# API Key
+# Unifi now supports API Key authentication. This is exclusive of user/pass auth.
+# api_key = "unifiapikey"
+
+# Enable collection of site data. This data powers the Network Sites dashboard.
+# It's not valuable to everyone and setting this to false will save resources.
+unpoller_cfg_unific_save_sites: true
+
+# Enable collection of Deep Packet Inspection data. This data breaks down traffic
+# types for each client and site, it powers a dedicated DPI dashboard.
+# Enabling this adds roughly 150 data points per client.  That's 6000 metrics for
+# 40 clients.  This adds a little bit of poller run time per interval and causes
+# more API requests to your controller(s). Don't let these "cons" sway you:
+# it's cool data. Please provide feedback on your experience with this feature.
+unpoller_cfg_unific_save_dpi: false
+
+#####
+# Ansible
+#####
+
+unpoller_role_label: "unpoller"

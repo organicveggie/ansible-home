@@ -1,0 +1,15 @@
+---
+- name: "Get info on {{ __unpoller_network_name }} network"
+  community.docker.docker_network_info:
+    name: "{{ __unpoller_network_name }}"
+  register: __unpoller_netinfo
+
+- name: "Verify {{ __unpoller_network_name }} network exists"
+  ansible.builtin.assert:
+    that: __unpoller_netinfo.exists
+
+- name: "Verify {{ __unpoller_network_name }} is attached to container"
+  ansible.builtin.assert:
+    that:
+      - __unpoller_netinfo['network']['Containers'][__container_id] is defined
+      - __unpoller_netinfo['network']['Containers'][__container_id]['Name'] is defined
