@@ -414,11 +414,19 @@ r740xd_traefik3_conf_cert_resolvers:
 ###
 ### UniFi Controller
 ###
+r740xd_unific_container_name: "unific"
 r740xd_unific_cpus: "2"
 r740xd_unific_hostname: "unific"
 r740xd_unific_host_domain: null
 r740xd_unific_memory: "2G"
 
+###
+### Unpoller
+###
+r740xd_unpoller_container_name: "unpoller"
+r740xd_unpoller_prometheus_port: "9130"
+r740xd_unpoller_unific_passwd: null
+r740xd_unpoller_unific_user: null
 
 ##########
 

@@ -1,0 +1,58 @@
+---
+- name: Install dependencies
+  hosts: all
+  become: true
+
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 600
+      when: ansible_facts["os_family"] == 'Debian'
+
+    - name: Wait for systemd to complete initialization
+      ansible.builtin.command: systemctl is-system-running
+      register: systemctl_status
+      until: >
+        'running' in systemctl_status.stdout or
+        'degraded' in systemctl_status.stdout
+      retries: 30
+      delay: 5
+      when: ansible_facts["service_mgr"] == 'systemd'
+      changed_when: false
+      failed_when: systemctl_status.rc > 1
+
+- name: Converge  # noqa: command-instead-of-module var-naming[no-role-prefix]
+  hosts: all
+  become: true
+
+  vars:
+    unpoller_cfg_unific_url: "https://172.192.168.35:8765"
+    unpoller_extra_env:
+      "UNPOLLER_MOLECULE_TEST": "unpoller molecule test value"
+    unpoller_extra_labels:
+      "molecule-label-01": "molecule-value-01"
+    unpoller_extra_networks:
+      - name: "monitoring"
+    unpoller_name: "unpoller-molecule"
+    unpoller_network_aliases:
+      - "up-molecule"
+    unpoller_network_name: "mgmt"
+    unpoller_volume_name: "unpoller-test"
+
+  pre_tasks:
+    - name: Install Docker
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+
+    - name: Create Docker test networks
+      community.docker.docker_network:
+        name: "{{ __item.name }}"
+        state: present
+      loop: >
+        {{ unpoller_extra_networks + [{'name': unpoller_network_name}] }}
+      loop_control:
+        loop_var: "__item"
+
+  roles:
+    - role: unpoller

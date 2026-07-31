@@ -1,0 +1,69 @@
+---
+- name: "{{ unpoller_role_label }} | Create Docker volume"
+  community.docker.docker_volume:
+    name: "{{ unpoller_volume_name }}"
+
+- name: "{{ unpoller_role_label }} | Set Docker mount list for volume mounts"
+  ansible.builtin.set_fact:
+    _unpoller_mount_list:
+      - "source": "{{ unpoller_volume_name }}"
+        "target": "/etc/unpoller"
+        "type": 'volume'
+
+- name: "{{ unpoller_role_label }} | Get path to Docker volume"
+  community.docker.docker_volume_info:
+    name: "{{ unpoller_volume_name }}"
+  register: "__unpoller_volume_info"
+
+- name: "{{ unpoller_role_label }} | Create config file"
+  ansible.builtin.template:
+    src: "templates/up.conf.j2"
+    dest: "{{ __unpoller_volume_info.volume.Mountpoint }}/up.conf"
+    mode: "0660"
+  register: "_unpoller_modify_config"
+
+- name: "{{ unpoller_role_label }} | Create placeholder array for default network"
+  ansible.builtin.set_fact:
+    _unpoller_default_networks:
+      - name: "{{ unpoller_network_name }}"
+        aliases: "{{ unpoller_network_aliases | default(omit) }}"
+
+- name: "{{ unpoller_role_label }} | Define all Docker networks for this container"
+  ansible.builtin.set_fact:
+    _unpoller_all_networks: >
+      {{ _unpoller_default_networks + unpoller_extra_networks }}
+
+- name: "{{ unpoller_role_label }} | Define environment variables for this container"
+  ansible.builtin.set_fact:
+    _unpoller_env: []
+
+- name: "{{ unpoller_role_label }} | Add user specified environment variables"
+  ansible.builtin.set_fact:
+    _unpoller_env: >
+      {{ _unpoller_env | default([], true) | combine(unpoller_extra_env | default({}, true)) }}
+
+- name: "{{ unpoller_role_label }} | Create Docker Container"
+  community.docker.docker_container:
+    name: "{{ unpoller_name }}"
+    image: "{{ unpoller_image_name }}:{{ unpoller_image_version }}"
+    pull: true
+    mounts: "{{ _unpoller_mount_list }}"
+    network_mode: "{{ unpoller_network_name }}"
+    networks: "{{ _unpoller_all_networks }}"
+    env: "{{ _unpoller_env }}"
+    etc_hosts: "{{ unpoller_extra_hosts | default(omit) }}"
+    restart_policy: unless-stopped
+    restart: |
+      {{ _unpoller_modify_config.changed | default(false, true) }}
+    memory: "{{ unpoller_memory }}"
+    cpus: "{{ unpoller_cpus }}"
+    container_default_behavior: no_defaults
+    auto_remove: no
+    detach: yes
+    init: yes
+    interactive: no
+    paused: no
+    privileged: no
+    read_only: no
+    tty: no
+    labels: "{{ unpoller_extra_labels }}"

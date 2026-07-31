@@ -1,0 +1,13 @@
+---
+- name: "{{ r740xd_ansible_role_label }} | Unpoller | Setup Unpoller container"
+  ansible.builtin.import_role:
+    name: "unpoller"
+  vars:
+    unpoller_extra_networks:
+      - name: "{{ docker_networks.unific.name }}"
+    unpoller_cfg_prometheus_http_listen_port: "{{ r740xd_unpoller_prometheus_port }}"
+    unpoller_cfg_unific_url: "https://{{ r740xd_unific_container_name }}:8443"
+    unpoller_cfg_unific_user: "{{ r740xd_unpoller_unific_passwd }}"
+    unpoller_cfg_unific_pass: "{{ r740xd_unpoller_unific_user }}"
+    unpoller_name: "{{ r740xd_unpoller_container_name }}"
+    unpoller_network_name: "{{ docker_networks.monitoring.name }}"

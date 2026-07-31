@@ -130,6 +130,10 @@
   ansible.builtin.import_tasks: "grafana.yml"
   tags: ["grafana"]
 
+- name: "Setup Unpoller"
+  ansible.builtin.import_tasks: "unpoller.yml"
+  tags: ["unpoller"]
+
 - name: "Setup Tailscale"
   ansible.builtin.import_tasks: "tailscale.yml"
   tags: ["tailscale"]
