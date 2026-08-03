@@ -76,6 +76,11 @@ docker_networks:
     name: "prometheus"
     gateway: "172.30.21.1"
     subnet: "172.30.21.0/24"
+  plex:
+    name: "plex"
+    gateway: "172.30.22.1"
+    subnet: "172.30.22.0/24"
+    internal: true
   ingressproxy:
     name: "ingress-proxy"
     gateway: "172.40.1.1"
@@ -199,6 +204,10 @@ traefik_image: "traefik:latest"
 ### Users
 ###
 veggie_kstar_password: "{{ vault_veggie_kstar_password }}"
+user_ids:
+  tautulli:
+    uid: "{{ vault_user_ids_tautulli_uid }}"
+    gid: "{{ vault_user_ids_tautulli_gid }}"
 
 ###
 ### Veggie NAS

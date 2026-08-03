@@ -357,6 +357,7 @@ r740xd_syncthing_host_domain: null
 r740xd_tautulli_container_name: "tautulli"
 r740xd_tautulli_hostname: "tautulli"
 r740xd_tautulli_host_domain: null
+r740xd_tautulli_webui_port: 8181
 
 ###
 ### TimeMachine

@@ -1,0 +1,77 @@
+---
+- name: "Verify"
+  hosts: all
+  gather_facts: false
+
+  vars:
+    tautulli_docker_base_url: "https://tautulli.example.com"
+    tautulli_docker_extra_env:
+      "TAUTULLI_MOLECULE_TEST": "tautulli molecule test value"
+    tautulli_docker_extra_labels:
+      "molecule-label-01": "molecule-value-01"
+    tautulli_docker_extra_networks:
+      - name: "ingress-proxy-test"
+    tautulli_docker_host_name: "tautulli-molecule"
+    tautulli_docker_name: "tautulli-molecule"
+    tautulli_docker_network_aliases:
+      - "tau-molecule"
+    tautulli_docker_network_name: "plex-test"
+    tautulli_docker_volume_config_name: "tautulli-test"
+
+  tasks:
+    - name: "Verify volumes"
+      ansible.builtin.include_tasks:
+        file: "verify-volume.yml"
+      loop:
+        - "{{ tautulli_docker_volume_config_name }}"
+      loop_control:
+        loop_var: "__tautulli_docker_volume_name"
+
+    - name: Get info on container
+      community.docker.docker_container_info:
+        name: "{{ tautulli_docker_name }}"
+      register: _tautulli_docker_container
+
+    - name: Verify container state
+      ansible.builtin.assert:
+        that:
+          - _tautulli_docker_container.exists
+          - _tautulli_docker_container["container"]["State"]["Status"] == "running"
+    
+    - name: Verify extra environment variables
+      ansible.builtin.assert:
+        that:
+          - "__env in __all_env"
+      vars:
+        __all_env: "{{ _tautulli_docker_container['container']['Config']['Env'] }}"
+        __env: "TAUTULLI_MOLECULE_TEST={{ tautulli_docker_extra_env['TAUTULLI_MOLECULE_TEST'] }}"
+
+    - name: Verify extra labels
+      ansible.builtin.assert:
+        that:
+          - __all_labels["molecule-label-01"] is defined
+          - __all_labels["molecule-label-01"] == tautulli_docker_extra_labels["molecule-label-01"]
+      vars:
+        __all_labels: "{{ _tautulli_docker_container['container']['Config']['Labels'] }}"
+
+    - name: "Verify networks"
+      ansible.builtin.include_tasks:
+        file: "verify-network.yml"
+      loop:
+        - "{{ tautulli_docker_network_name }}"
+        - "{{ tautulli_docker_extra_networks[0].name }}"
+      loop_control:
+        loop_var: "__tautulli_docker_network_name"
+      vars:
+        __container_id: "{{ _tautulli_docker_container['container']['Id'] }}"
+
+    - name: "Verify default network aliases"
+      ansible.builtin.assert:
+        that:
+          - __networks[tautulli_docker_network_name]['Aliases'] is defined
+          - __tautulli_docker_alias in __networks[tautulli_docker_network_name]['Aliases']
+      loop: "{{ tautulli_docker_network_aliases }}"
+      loop_control:
+        loop_var: "__tautulli_docker_alias"
+      vars:
+        __networks: "{{ _tautulli_docker_container['container']['NetworkSettings']['Networks'] }}"

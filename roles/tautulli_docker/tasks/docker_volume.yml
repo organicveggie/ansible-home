@@ -1,0 +1,16 @@
+---
+- name: "{{ tautulli_docker_role_label }} | Create Docker volume: {{ __tautulli_docker_volume_name }}"
+  community.docker.docker_volume:
+    name: "{{ __tautulli_docker_volume_name }}"
+
+- name: "{{ tautulli_docker_role_label }} | Get path to Docker volume: {{ __tautulli_docker_volume_name }}"
+  community.docker.docker_volume_info:
+    name: "{{ __tautulli_docker_volume_name }}"
+  register: "__tautulli_docker_volume_info"
+
+- name: "{{ tautulli_docker_role_label }} | Set permissions on Docker volume: {{ __tautulli_docker_volume_name }}"
+  ansible.builtin.file:
+    group: "{{ tautulli_docker_group_name }}"
+    mode: "770"
+    owner: "{{ tautulli_docker_user_name }}"
+    path: "{{ __tautulli_docker_volume_info.volume.Mountpoint }}"

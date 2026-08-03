@@ -13,6 +13,7 @@
     - "{{ docker_networks.automation }}"
     - "{{ docker_networks.ingressproxy }}"
     - "{{ docker_networks.monitoring }}"
+    - "{{ docker_networks.plex }}"
   loop_control:
     loop_var: "__item"
 
