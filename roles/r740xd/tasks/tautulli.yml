@@ -6,7 +6,6 @@
     tautulli_docker_available_externally: true
     tautulli_docker_extra_networks:
       - name: "{{ docker_networks.ingressproxy.name }}"
-      - name: "{{ docker_networks.tautulli.name }}"
     tautulli_docker_gid: "{{ user_ids.tautulli.gid }}"
     tautulli_docker_host_domain: "{{ r740xd_tautulli_host_domain }}"
     tautulli_docker_host_name: "{{ r740xd_tautulli_hostname }}"

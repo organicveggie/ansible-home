@@ -11,7 +11,7 @@
     kometa_docker_cpus: "{{ kometa_cpus }}"
     kometa_docker_extra_networks:
       - name: "{{ docker_networks.kometa.name }}"
-      - name: "{{ docker_networks.tautulli.name | default(omit) }}"
+      - name: "{{ docker_networks.plex.name }}"
     kometa_docker_global_save_report: "{{ kometa_global_save_report }}"
     kometa_docker_libraries: "{{ kometa_libraries | default(omit) }}"
     kometa_docker_mdblist_apikey: "{{ vault_kometa_mdblist_apikey }}"

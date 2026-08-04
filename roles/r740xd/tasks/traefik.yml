@@ -12,7 +12,6 @@
   loop:
     - "{{ docker_networks.saurron.name }}"
     - "{{ docker_networks.seerr.name }}"
-    - "{{ docker_networks.tautulli.name }}"
     - "{{ docker_networks.ingressproxy.name }}"
   loop_control:
     loop_var: __item

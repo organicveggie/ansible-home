@@ -34,7 +34,7 @@
       value: "{{ seerr_available_externally }}"
   loop_control:
     loop_var: __item
-  when: "not seerr_docker_available_externally"
+  when: "not (seerr_docker_available_externally | default(false) | bool)"
 
 - name: "{{ seerr_docker_role_label }} | Define Docker labels with Traefik enabled"
   ansible.builtin.set_fact:
@@ -57,7 +57,7 @@
       value: "{{ seerr_docker_web_port }}"
   loop_control:
     loop_var: __item
-  when: "seerr_docker_available_externally"
+  when: "seerr_docker_available_externally | default(false) | bool"
 
 - name: "{{ seerr_docker_role_label }} | Define user-supplied extra Docker labels"
   ansible.builtin.set_fact:
