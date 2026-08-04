@@ -1,0 +1,9 @@
+---
+- name: "Get info on {{ __tautulli_docker_volume_name }} volume"
+  community.docker.docker_volume_info:
+    name: "{{ __tautulli_docker_volume_name }}"
+  register: _tautulli_docker_volume_info
+
+- name: "Verify {{ __tautulli_docker_volume_name }} volume exists"
+  ansible.builtin.assert:
+    that: _tautulli_docker_volume_info.exists

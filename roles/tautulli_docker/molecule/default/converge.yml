@@ -1,0 +1,61 @@
+---
+- name: Install dependencies
+  hosts: all
+  become: true
+
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 600
+      when: ansible_facts["os_family"] == 'Debian'
+
+    - name: Wait for systemd to complete initialization
+      ansible.builtin.command: systemctl is-system-running
+      register: systemctl_status
+      until: >
+        'running' in systemctl_status.stdout or
+        'degraded' in systemctl_status.stdout
+      retries: 30
+      delay: 5
+      when: ansible_facts["service_mgr"] == 'systemd'
+      changed_when: false
+      failed_when: systemctl_status.rc > 1
+
+- name: Converge  # noqa: command-instead-of-module var-naming[no-role-prefix]
+  hosts: all
+  become: true
+
+  vars:
+    tautulli_docker_base_url: "https://tautulli.example.com"
+    tautulli_docker_extra_env:
+      "TAUTULLI_MOLECULE_TEST": "tautulli molecule test value"
+    tautulli_docker_extra_labels:
+      "molecule-label-01": "molecule-value-01"
+    tautulli_docker_extra_networks:
+      - name: "ingress-proxy-test"
+    tautulli_docker_host_name: "tautulli-molecule"
+    tautulli_docker_name: "tautulli-molecule"
+    tautulli_docker_network_aliases:
+      - "tau-molecule"
+    tautulli_docker_network_name: "plex-test"
+    tautulli_docker_volume_config_name: "tautulli-test"
+    tautulli_docker_uid: 32600
+    tautulli_docker_gid: 32600
+
+  pre_tasks:
+    - name: Install Docker
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+
+    - name: Create Docker test networks
+      community.docker.docker_network:
+        name: "{{ __item.name }}"
+        state: present
+      loop: >
+        {{ tautulli_docker_extra_networks + [{'name': tautulli_docker_network_name}] }}
+      loop_control:
+        loop_var: "__item"
+
+  roles:
+    - role: tautulli_docker

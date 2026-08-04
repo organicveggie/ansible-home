@@ -1,27 +1,17 @@
 ---
-- name: "tautulli | Setup Docker network"
-  community.docker.docker_network:
-    name: "{{ docker_networks.tautulli.name }}"
-    driver: "bridge"
-    enable_ipv6: "no"
-    internal: "no"
-    scope: "local"
-    ipam_config:
-      - subnet: "{{ docker_networks.tautulli.subnet }}"
-        gateway: "{{ docker_networks.tautulli.gateway }}"
-
 - name: "tautulli | Setup Tautulli container"
   ansible.builtin.import_role:
-    name: "organicveggie.tautulli_docker"
+    name: "tautulli_docker"
   vars:
-    tautulli_docker_available_externally: "true"
+    tautulli_docker_available_externally: true
     tautulli_docker_extra_networks:
+      - name: "{{ docker_networks.ingressproxy.name }}"
       - name: "{{ docker_networks.tautulli.name }}"
+    tautulli_docker_gid: "{{ user_ids.tautulli.gid }}"
     tautulli_docker_host_domain: "{{ r740xd_tautulli_host_domain }}"
-    tautulli_docker_hostname: "{{ r740xd_tautulli_hostname }}"
+    tautulli_docker_host_name: "{{ r740xd_tautulli_hostname }}"
     tautulli_docker_name: "{{ r740xd_tautulli_container_name }}"
-    tautulli_docker_network: "{{ docker_networks.tautulli.name }}"
-    tautulli_docker_network_create: false
+    tautulli_docker_network_name: "{{ docker_networks.plex.name }}"
     tautulli_docker_timezone: "{{ r740xd_timezone }}"
-    tautulli_docker_web_port: "{{ r740xd_tautulli_web_port }}"
-    
+    tautulli_docker_uid: "{{ user_ids.tautulli.uid }}"
+    tautulli_docker_webui_port: "{{ r740xd_tautulli_webui_port }}"

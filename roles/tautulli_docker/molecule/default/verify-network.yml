@@ -1,0 +1,15 @@
+---
+- name: "Get info on {{ __tautulli_docker_network_name }} network"
+  community.docker.docker_network_info:
+    name: "{{ __tautulli_docker_network_name }}"
+  register: __tautulli_docker_netinfo
+
+- name: "Verify {{ __tautulli_docker_network_name }} network exists"
+  ansible.builtin.assert:
+    that: __tautulli_docker_netinfo.exists
+
+- name: "Verify {{ __tautulli_docker_network_name }} is attached to container"
+  ansible.builtin.assert:
+    that:
+      - __tautulli_docker_netinfo['network']['Containers'][__container_id] is defined
+      - __tautulli_docker_netinfo['network']['Containers'][__container_id]['Name'] is defined

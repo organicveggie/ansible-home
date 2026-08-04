@@ -1,0 +1,70 @@
+---
+#####
+# Container
+#####
+
+# Name of the Docker container.
+tautulli_docker_name: "tautulli"
+
+# Base name of the Docker image to use for the container.
+tautulli_docker_image_name: "lscr.io/linuxserver/tautulli"
+
+# Specific Docker image version to use for the container.
+tautulli_docker_image_version: "latest"
+
+# Number of vCPUs to allocate to the container.
+tautulli_docker_cpus: "2"
+
+# Amount of memory to allocate to the container.
+tautulli_docker_memory: "1024M"
+
+# Name of the primary network.
+tautulli_docker_network_name: null
+
+# Container aliases on the default network.
+tautulli_docker_network_aliases: null
+
+# List of additional networks to join.
+tautulli_docker_extra_networks: []
+
+tautulli_docker_volume_config_name: "tautulli"
+
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+tautulli_docker_extra_labels: {}
+
+# Dictionary of extra key value pairs to set as environment variables on the Docker container.
+tautulli_docker_extra_env: {}
+
+tautulli_docker_user_name: "tautulli"
+tautulli_docker_uid: 1000
+tautulli_docker_group_name: "tautulli"
+tautulli_docker_gid: 1000
+
+#####
+# Traefik
+#####
+
+# Enable use of Traefik as a proxy.
+tautulli_docker_available_externally: true
+
+# Host name to use for the Traefik endpoint. Combined with [tautulli_docker_host_domain] to form the
+# FQDN for the endpoint.
+tautulli_docker_host_name: "tautulli"
+
+# Domain name to use for the Traefik endpoint. Combined with [tautulli_docker_host_name] to form the
+# FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
+tautulli_docker_host_domain: "example.com"
+
+# Port number for the Tautulli web interface.
+tautulli_docker_webui_port: 8181
+
+# Name of the Docker network Traefik should use when proxying.
+tautulli_docker_traefik_network: null
+
+#####
+# tautulli settings
+#####
+
+# Timezone code for the container. Timezone codes can be found at:
+# https://en.wikipedia.org/wiki/List_of_tz_database_time_zones.
+tautulli_docker_timezone: "America/New_York"
