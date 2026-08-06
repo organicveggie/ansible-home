@@ -1,0 +1,56 @@
+---
+- name: Install dependencies
+  hosts: all
+  become: true
+
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 600
+      when: ansible_facts["os_family"] == 'Debian'
+
+    - name: Wait for systemd to complete initialization
+      ansible.builtin.command: systemctl is-system-running
+      register: systemctl_status
+      until: >
+        'running' in systemctl_status.stdout or
+        'degraded' in systemctl_status.stdout
+      retries: 30
+      delay: 5
+      when: ansible_facts["service_mgr"] == 'systemd'
+      changed_when: false
+      failed_when: systemctl_status.rc > 1
+
+- name: Converge  # noqa: command-instead-of-module var-naming[no-role-prefix]
+  hosts: all
+  become: true
+
+  vars:
+    kometa_docker_extra_env:
+      "KOMETA_MOLECULE_TEST": "kometa molecule test value"
+    kometa_docker_extra_networks:
+      - name: "ingress-proxy-test"
+    kometa_docker_host_name: "kometa-molecule"
+    kometa_docker_name: "kometa-molecule"
+    kometa_docker_network_aliases:
+      - "km-molecule"
+    kometa_docker_network_name: "plex-test"
+    kometa_docker_volume_name: "kometa-test"
+
+  pre_tasks:
+    - name: Install Docker
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+
+    - name: Create Docker test networks
+      community.docker.docker_network:
+        name: "{{ __item.name }}"
+        state: present
+      loop: >
+        {{ kometa_docker_extra_networks + [{'name': kometa_docker_network_name}] }}
+      loop_control:
+        loop_var: "__item"
+
+  roles:
+    - role: kometa

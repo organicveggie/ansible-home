@@ -1,0 +1,9 @@
+---
+- name: "Get info on {{ __kometa_docker_network_name }} network"
+  community.docker.docker_network_info:
+    name: "{{ __kometa_docker_network_name }}"
+  register: __kometa_docker_netinfo
+
+- name: "Verify {{ __kometa_docker_network_name }} network exists"
+  ansible.builtin.assert:
+    that: __kometa_docker_netinfo.exists

@@ -166,18 +166,20 @@ kometa_docker_cpus: "1"
 # Amount of memory to allocate to the container.
 kometa_docker_memory: "512M"
 
-# Override DNS servers.
-# kometa_docker_dns_servers: null
-
 # Prevent Kometa from modifying the config.yml.
 kometa_docker_config_read_only: "true"
 
 # Extra environment variables to pass to Kometa
-kometa_docker_extra_env_vars: {}
+kometa_docker_extra_env: {}
 
-#####
-# Docker volumes and folders
-#####
+# Name of the primary network.
+kometa_docker_network_name: null
+
+# Container aliases on the default network.
+kometa_docker_network_aliases: null
+
+# List of additional networks to join.
+kometa_docker_extra_networks: []
 
 # Name of the Docker volume to create to store data files. Only used when
 # [kometa_docker_use_volumes] is true.
