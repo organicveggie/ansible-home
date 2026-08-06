@@ -17,7 +17,7 @@
   vars:
     seerr_docker_extra_networks:
       - name: "{{ docker_networks.servarr.name }}"
-      - name: "{{ docker_networks.tautulli.name }}"
+      - name: "{{ docker_networks.plex.name }}"
     seerr_docker_host_domain: "{{ r740xd_seerr_host_domain }}"
     seerr_docker_network: "{{ docker_networks.seerr.name }}"
     seerr_docker_timezone: "{{ r740xd_timezone }}"

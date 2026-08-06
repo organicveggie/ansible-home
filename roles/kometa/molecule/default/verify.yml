@@ -1,0 +1,55 @@
+---
+- name: "Verify"
+  hosts: all
+  gather_facts: false
+
+  vars:
+    kometa_docker_extra_env:
+      "KOMETA_MOLECULE_TEST": "kometa molecule test value"
+    kometa_docker_extra_networks:
+      - name: "ingress-proxy-test"
+    kometa_docker_host_name: "kometa-molecule"
+    kometa_docker_name: "kometa-molecule"
+    kometa_docker_network_aliases:
+      - "km-molecule"
+    kometa_docker_network_name: "plex-test"
+    kometa_docker_volume_name: "kometa-test"
+
+  tasks:
+    - name: "Verify volumes"
+      ansible.builtin.include_tasks:
+        file: "verify-volume.yml"
+      loop:
+        - "{{ kometa_docker_volume_name }}"
+      loop_control:
+        loop_var: "__kometa_docker_volume_name"
+
+    - name: Get info on container
+      community.docker.docker_container_info:
+        name: "{{ kometa_docker_name }}"
+      register: _kometa_docker_container
+
+    - name: Verify container state
+      ansible.builtin.assert:
+        that:
+          - _kometa_docker_container.exists
+          - _kometa_docker_container["container"]["State"]["Status"] in ["running", "exited"]
+
+    - name: Verify extra environment variables
+      ansible.builtin.assert:
+        that:
+          - "__env in __all_env"
+      vars:
+        __all_env: "{{ _kometa_docker_container['container']['Config']['Env'] }}"
+        __env: "KOMETA_MOLECULE_TEST={{ kometa_docker_extra_env['KOMETA_MOLECULE_TEST'] }}"
+
+    - name: "Verify networks"
+      ansible.builtin.include_tasks:
+        file: "verify-network.yml"
+      loop:
+        - "{{ kometa_docker_network_name }}"
+        - "{{ kometa_docker_extra_networks[0].name }}"
+      loop_control:
+        loop_var: "__kometa_docker_network_name"
+      vars:
+        __container_id: "{{ _kometa_docker_container['container']['Id'] }}"

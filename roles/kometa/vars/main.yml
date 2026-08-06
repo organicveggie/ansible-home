@@ -1,2 +1,6 @@
 ---
-# vars file for kometa
+#####
+# Ansible
+#####
+
+kometa_docker_role_label: "kometa"

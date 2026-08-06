@@ -1,0 +1,9 @@
+---
+- name: "Get info on {{ __kometa_docker_volume_name }} volume"
+  community.docker.docker_volume_info:
+    name: "{{ __kometa_docker_volume_name }}"
+  register: _kometa_docker_volume_info
+
+- name: "Verify {{ __kometa_docker_volume_name }} volume exists"
+  ansible.builtin.assert:
+    that: _kometa_docker_volume_info.exists

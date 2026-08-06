@@ -52,10 +52,7 @@ docker_networks:
     name: "kometa"
     gateway: "172.30.12.1"
     subnet: "172.30.12.0/24"
-  tautulli:
-    name: "tautulli"
-    gateway: "172.30.14.1"
-    subnet: "172.30.14.0/24"
+    internal: false
   unific:
     name: "unific"
     gateway: "172.30.15.1"
