@@ -79,7 +79,7 @@
     mounts: "{{ _kometa_docker_mount_list }}"
     env: "{{ _kometa_docker_env_vars}}"
     network_mode: "{{ kometa_docker_network_name }}"
-    networks: "{{ kometa_docker_extra_networks }}"
+    networks: "{{ _kometa_docker_all_networks }}"
     restart_policy: "{{ _kometa_docker_restart_policy }}"
     restart: "{{ _kometa_docker_config.changed | default(false) }}"
     memory: "{{ kometa_docker_memory }}"
