@@ -1,0 +1,50 @@
+---
+ansible_network_os: vyos
+ansible_connection: network_cli
+ansible_user: "{{ vyos_ansible_user | default('vyos') }}"
+ansible_password: "{{ vyos_ansible_password | default('') }}"
+
+vyos_ansible_role_name: "vyos"
+
+vyos_hostname: "vyos"
+vyos_domain_name: "{{ veggie_new_base_domain_name }}"
+
+vyos_interface_wan_name: "eth0"
+vyos_interface_lan_name: "eth1"
+
+vyos_address:
+  ipv4:
+    guest_unbound: "{{ vault_vyos_alias_guest_unbound_ipv4 }}"
+    plex: "{{ vault_vyos_alias_plex_ipv4 }}"
+    proxmox: "{{ vault_vyos_alias_proxmox_ipv4 }}"
+    sonic_noc: "{{ vault_vyos_alias_sonicnoc_ipv4 }}"
+    technitium: "{{ vault_vyos_alias_technitium_ipv4 }}"
+    traefik: "{{ vault_vyos_alias_traefik_ipv4 }}"
+    ultra: "{{ vault_vyos_alias_ultra_ipv4 }}"
+    unbound: "{{ vault_vyos_alias_unbound_ipv4 }}"
+    unific: "{{ vault_vyos_alias_unific_ipv4 }}"
+  vlan:
+    default: "{{ vlans.default.subnet_base }}.7"
+    mgmt: "{{ vlans.mgmt.subnet_base }}.2"
+    trusted: "{{ vlans.trusted.subnet_base }}.2"
+    servers: "{{ vlans.servers.subnet_base }}.2"
+    guest: "{{ vlans.guest.subnet_base }}.2"
+    iot: "{{ vlans.iot.subnet_base }}.2"
+    dmz: "{{ vlans.dmz.subnet_base }}.1"
+    torrent: "{{ vlans.torrent.subnet_base }}.1"
+
+vyos_ports:
+  dns: 53
+  ntp: 123
+  plex: 32400
+  prometheus: 9100
+  syncthing: 22000
+
+vyos_user1:
+  name: "{{ vault_vyos_users[0].name }}"
+  full_name: "{{ vault_vyos_users[0].fullname }}"
+  ssh_keys: "{{ vault_vyos_ssh_keys }}"
+vyos_user2:
+  name: "{{ vault_vyos_users[1].name }}"
+  full_name: "{{ vault_vyos_users[1].fullname }}"
+  ssh_keys: "{{ vault_vyos_ssh_keys }}"
