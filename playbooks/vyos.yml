@@ -1,0 +1,418 @@
+---
+- name: "Configure VyOS firewall/router"
+  hosts: "vyos"
+  gather_facts: false
+  become: false
+
+  tasks:
+    - name: "{{ vyos_ansible_role_name }}: Configure VyOS base"
+      vyos.vyos.vyos_config:
+        lines:
+          - "set system host-name '{{ vyos_hostname }}.{{ vyos_domain_name }}'"
+          - "set system time-zone '{{ home_timezone }}'"
+          - "set system name-server '{{ default_public_dns[0] }}'"
+          - "set system name-server '{{ default_public_dns[1] }}'"
+          - "set system console device ttyS0 speed 115200"
+
+          - "set system login user {{ vyos_user1.name }} authentication public-keys '{{ vyos_user1.ssh_keys.name }}' type '{{ vyos_user1.ssh_keys.type }}'"
+          - "set system login user {{ vyos_user1.name }} authentication public-keys '{{ vyos_user1.ssh_keys.name }}' key '{{ vyos_user1.ssh_keys.key }}'"
+
+          - "set system login user {{ vyos_user2.name }} full-name '{{ vyos_user2.full_name }}'"
+          - "set system login user {{ vyos_user2.name }} authentication public-keys '{{ vyos_user2.ssh_keys.name }}' type '{{ vyos_user2.ssh_keys.type }}'"
+          - "set system login user {{ vyos_user2.name }} authentication public-keys '{{ vyos_user2.ssh_keys.name }}' key '{{ vyos_user2.ssh_keys.key }}'"
+      tags: ["base"]
+
+    - name: "{{ vyos_ansible_role_name }}: Configure VyOS interfaces"
+      vyos.vyos.vyos_config:
+        lines:
+          - "set interfaces ethernet {{ vyos_interface_wan_name }} description 'WAN'"
+          # - "set interfaces ethernet {{ vyos_interface_wan_name }} address 'dhcp'"
+
+          - "set interfaces ethernet {{ vyos_interface_lan_name }} description 'LAN-TRUNK'"
+          - "set interfaces ethernet {{ vyos_interface_lan_name }} address '{{ vyos_address.vlan.default }}/{{ vlans.default.subnet_size }}'"
+
+          - "set interfaces ethernet {{ vyos_interface_lan_name }} vif {{ vlans.mgmt.id }} description 'MGMT'"
+          - "set interfaces ethernet {{ vyos_interface_lan_name }} vif {{ vlans.mgmt.id }} address '{{ vyos_address.vlan.mgmt }}/{{ vlans.mgmt.subnet_size }}'"
+
+          - "set interfaces ethernet {{ vyos_interface_lan_name }} vif {{ vlans.trusted.id }} description 'TRUSTED'"
+          - "set interfaces ethernet {{ vyos_interface_lan_name }} vif {{ vlans.trusted.id }} address '{{ vyos_address.vlan.trusted }}/{{ vlans.trusted.subnet_size }}'"
+ 
+          - "set interfaces ethernet {{ vyos_interface_lan_name }} vif {{ vlans.servers.id }} description 'SERVERS'"
+          - "set interfaces ethernet {{ vyos_interface_lan_name }} vif {{ vlans.servers.id }} address '{{ vyos_address.vlan.servers }}/{{ vlans.servers.subnet_size }}'"
+ 
+          - "set interfaces ethernet {{ vyos_interface_lan_name }} vif {{ vlans.guest.id }} description 'GUEST'"
+          - "set interfaces ethernet {{ vyos_interface_lan_name }} vif {{ vlans.guest.id }} address '{{ vyos_address.vlan.guest }}/{{ vlans.guest.subnet_size }}'"
+ 
+          - "set interfaces ethernet {{ vyos_interface_lan_name }} vif {{ vlans.iot.id }} description 'IOT'"
+          - "set interfaces ethernet {{ vyos_interface_lan_name }} vif {{ vlans.iot.id }} address '{{ vyos_address.vlan.iot }}/{{ vlans.iot.subnet_size }}'"
+ 
+          - "set interfaces ethernet {{ vyos_interface_lan_name }} vif {{ vlans.dmz.id }} description 'DMZ'"
+          - "set interfaces ethernet {{ vyos_interface_lan_name }} vif {{ vlans.dmz.id }} address '{{ vyos_address.vlan.dmz }}/{{ vlans.dmz.subnet_size }}'"
+ 
+          - "set interfaces ethernet {{ vyos_interface_lan_name }} vif {{ vlans.torrent.id }} description 'TORRENT'"
+          - "set interfaces ethernet {{ vyos_interface_lan_name }} vif {{ vlans.torrent.id }} address '{{ vyos_address.vlan.torrent }}/{{ vlans.torrent.subnet_size }}'"
+      tags: ["interfaces"]
+
+    - name: "{{ vyos_ansible_role_name }}: Configure VyOS firewall rules"
+      vyos.vyos.vyos_config:
+        lines:
+          # ---------------------------------------------------------------------
+          # Firewall - reusable rulesets
+          # ---------------------------------------------------------------------
+          - "set firewall ipv4 name ALLOW-ALL default-action 'accept'"
+
+          - "set firewall ipv4 name WAN-TO-LOCAL default-action 'drop'"
+          - "set firewall ipv4 name WAN-TO-LOCAL rule 10 action 'accept'"
+          - "set firewall ipv4 name WAN-TO-LOCAL rule 10 state 'established'"
+          - "set firewall ipv4 name WAN-TO-LOCAL rule 10 state 'related'"
+          - "set firewall ipv4 name WAN-TO-LOCAL rule 20 action 'accept'"
+          - "set firewall ipv4 name WAN-TO-LOCAL rule 20 protocol 'icmp'"
+          - "set firewall ipv4 name WAN-TO-LOCAL rule 20 source address '{{ vyos_address.ipv4.sonic_noc }}'"
+          - "set firewall ipv4 name WAN-TO-LOCAL rule 30 action 'accept'"
+          - "set firewall ipv4 name WAN-TO-LOCAL rule 30 protocol 'icmp'"
+          - "set firewall ipv4 name WAN-TO-LOCAL rule 30 source address '{{ vyos_address.ipv4.ultra }}'"
+
+          - "set firewall ipv4 name WAN-TO-INTERNAL-TRUSTED default-action 'drop'"
+          - "set firewall ipv4 name WAN-TO-INTERNAL-TRUSTED rule 10 action 'accept'"
+          - "set firewall ipv4 name WAN-TO-INTERNAL-TRUSTED rule 10 state 'established'"
+          - "set firewall ipv4 name WAN-TO-INTERNAL-TRUSTED rule 10 state 'related'"
+          - "set firewall ipv4 name WAN-TO-INTERNAL-TRUSTED rule 20 action 'accept'"
+          - "set firewall ipv4 name WAN-TO-INTERNAL-TRUSTED rule 20 protocol 'tcp_udp'"
+          - "set firewall ipv4 name WAN-TO-INTERNAL-TRUSTED rule 20 destination address {{ vyos_address.ipv4.plex }}"
+          - "set firewall ipv4 name WAN-TO-INTERNAL-TRUSTED rule 20 destination port {{ vyos_ports.plex }}"
+          - "set firewall ipv4 name WAN-TO-INTERNAL-TRUSTED rule 30 action 'accept'"
+          - "set firewall ipv4 name WAN-TO-INTERNAL-TRUSTED rule 30 protocol 'tcp_udp'"
+          - "set firewall ipv4 name WAN-TO-INTERNAL-TRUSTED rule 30 destination address {{ vyos_address.ipv4.traefik }}"
+          - "set firewall ipv4 name WAN-TO-INTERNAL-TRUSTED rule 30 destination port {{ vyos_ports.syncthing }}"
+
+          - "set firewall ipv4 name MGMT-TO-WAN default-action 'drop'"
+          - "set firewall ipv4 name MGMT-TO-WAN rule 10 action 'accept'"
+          - "set firewall ipv4 name MGMT-TO-WAN rule 10 state 'established'"
+          - "set firewall ipv4 name MGMT-TO-WAN rule 10 state 'related'"
+          - "set firewall ipv4 name MGMT-TO-WAN rule 20 action 'accept'"
+          - "set firewall ipv4 name MGMT-TO-WAN rule 20 source address '{{ vyos_address.ipv4.unific }}'"
+          - "set firewall ipv4 name MGMT-TO-WAN rule 30 action 'accept'"
+          - "set firewall ipv4 name MGMT-TO-WAN rule 30 source address '{{ vyos_address.ipv4.proxmox }}'"
+
+          # MGMT->SERVERS and IOT->SERVERS: DNS only, to Technitium
+          - "set firewall ipv4 name ALLOW-DNS-TO-TECHNITIUM default-action 'drop'"
+          - "set firewall ipv4 name ALLOW-DNS-TO-TECHNITIUM rule 10 action 'accept'"
+          - "set firewall ipv4 name ALLOW-DNS-TO-TECHNITIUM rule 10 state 'established'"
+          - "set firewall ipv4 name ALLOW-DNS-TO-TECHNITIUM rule 10 state 'related'"
+          - "set firewall ipv4 name ALLOW-DNS-TO-TECHNITIUM rule 20 action 'accept'"
+          - "set firewall ipv4 name ALLOW-DNS-TO-TECHNITIUM rule 20 protocol 'tcp_udp'"
+          - "set firewall ipv4 name ALLOW-DNS-TO-TECHNITIUM rule 20 destination address {{ vyos_address.ipv4.technitium }}"
+          - "set firewall ipv4 name ALLOW-DNS-TO-TECHNITIUM rule 20 destination port {{ vyos_ports.dns }}"
+
+          # SERVERS/GUEST/IOT/DMZ/TORRENT -> LOCAL: only the redirected NTP hairpin
+          - "set firewall ipv4 name ALLOW-NTP-TO-ROUTER default-action 'drop'"
+          - "set firewall ipv4 name ALLOW-NTP-TO-ROUTER rule 10 action 'accept'"
+          - "set firewall ipv4 name ALLOW-NTP-TO-ROUTER rule 10 state 'established'"
+          - "set firewall ipv4 name ALLOW-NTP-TO-ROUTER rule 10 state 'related'"
+          - "set firewall ipv4 name ALLOW-NTP-TO-ROUTER rule 20 action 'accept'"
+          - "set firewall ipv4 name ALLOW-NTP-TO-ROUTER rule 20 protocol 'udp'"
+          - "set firewall ipv4 name ALLOW-NTP-TO-ROUTER rule 20 destination port {{ vyos_ports.ntp }}"
+
+          # ---------------------------------------------------------------------
+          # Firewall - zone definitions
+          # ---------------------------------------------------------------------
+          - "set firewall zone LOCAL local-zone"
+          - "set firewall zone WAN member interface '{{ vyos_interface_wan_name }}'"
+          - "set firewall zone INTERNAL_TRUSTED member interface '{{ vyos_interface_lan_name }}'"
+          - "set firewall zone INTERNAL_TRUSTED member interface '{{ vyos_interface_lan_name }}.{{ vlans.trusted.id }}'"
+          - "set firewall zone MGMT member interface '{{ vyos_interface_lan_name }}.{{ vlans.mgmt.id }}'"
+          - "set firewall zone SERVERS member interface '{{ vyos_interface_lan_name }}.{{ vlans.servers.id }}'"
+          - "set firewall zone GUEST member interface '{{ vyos_interface_lan_name }}.{{ vlans.guest.id }}'"
+          - "set firewall zone IOT member interface '{{ vyos_interface_lan_name }}.{{ vlans.iot.id }}'"
+          - "set firewall zone DMZ member interface '{{ vyos_interface_lan_name }}.{{ vlans.dmz.id }}'"
+          - "set firewall zone TORRENT member interface '{{ vyos_interface_lan_name }}.{{ vlans.torrent.id }}'"
+
+          # --- inbound from WAN ---
+          - "set firewall zone LOCAL from WAN firewall name 'WAN-TO-LOCAL'"
+          - "set firewall zone INTERNAL_TRUSTED from WAN firewall name 'WAN-TO-INTERNAL-TRUSTED'"
+
+          # --- router-initiated traffic (LOCAL -> everywhere) ---
+          - "set firewall zone WAN from LOCAL firewall name 'ALLOW-ALL'"
+          - "set firewall zone INTERNAL_TRUSTED from LOCAL firewall name 'ALLOW-ALL'"
+          - "set firewall zone MGMT from LOCAL firewall name 'ALLOW-ALL'"
+          - "set firewall zone SERVERS from LOCAL firewall name 'ALLOW-ALL'"
+          - "set firewall zone GUEST from LOCAL firewall name 'ALLOW-ALL'"
+          - "set firewall zone IOT from LOCAL firewall name 'ALLOW-ALL'"
+          - "set firewall zone DMZ from LOCAL firewall name 'ALLOW-ALL'"
+          - "set firewall zone TORRENT from LOCAL firewall name 'ALLOW-ALL'"
+
+          # --- INTERNAL_TRUSTED: full access to WAN, LOCAL, MGMT, SERVERS, IOT, DMZ, TORRENT (not GUEST) ---
+          - "set firewall zone WAN from INTERNAL_TRUSTED firewall name 'ALLOW-ALL'"
+          - "set firewall zone LOCAL from INTERNAL_TRUSTED firewall name 'ALLOW-ALL'"
+          - "set firewall zone MGMT from INTERNAL_TRUSTED firewall name 'ALLOW-ALL'"
+          - "set firewall zone SERVERS from INTERNAL_TRUSTED firewall name 'ALLOW-ALL'"
+          - "set firewall zone IOT from INTERNAL_TRUSTED firewall name 'ALLOW-ALL'"
+          - "set firewall zone DMZ from INTERNAL_TRUSTED firewall name 'ALLOW-ALL'"
+          - "set firewall zone TORRENT from INTERNAL_TRUSTED firewall name 'ALLOW-ALL'"
+
+          # --- MGMT: WAN only from UniFi/Proxmox, DNS to Technitium, full LOCAL ---
+          - "set firewall zone WAN from MGMT firewall name 'MGMT-TO-WAN'"
+          - "set firewall zone SERVERS from MGMT firewall name 'ALLOW-DNS-TO-TECHNITIUM'"
+          - "set firewall zone LOCAL from MGMT firewall name 'ALLOW-ALL'"
+
+          # --- SERVERS: WAN, IOT, DMZ, TORRENT; NTP-only to LOCAL ---
+          - "set firewall zone WAN from SERVERS firewall name 'ALLOW-ALL'"
+          - "set firewall zone IOT from SERVERS firewall name 'ALLOW-ALL'"
+          - "set firewall zone DMZ from SERVERS firewall name 'ALLOW-ALL'"
+          - "set firewall zone TORRENT from SERVERS firewall name 'ALLOW-ALL'"
+          - "set firewall zone LOCAL from SERVERS firewall name 'ALLOW-NTP-TO-ROUTER'"
+
+          # --- GUEST: WAN only; NTP-only to LOCAL ---
+          - "set firewall zone WAN from GUEST firewall name 'ALLOW-ALL'"
+          - "set firewall zone LOCAL from GUEST firewall name 'ALLOW-NTP-TO-ROUTER'"
+
+          # --- IOT: DNS to Technitium; NTP-only to LOCAL; no WAN ---
+          - "set firewall zone SERVERS from IOT firewall name 'ALLOW-DNS-TO-TECHNITIUM'"
+          - "set firewall zone LOCAL from IOT firewall name 'ALLOW-NTP-TO-ROUTER'"
+
+          # --- DMZ: WAN only; NTP-only to LOCAL ---
+          - "set firewall zone WAN from DMZ firewall name 'ALLOW-ALL'"
+          - "set firewall zone LOCAL from DMZ firewall name 'ALLOW-NTP-TO-ROUTER'"
+
+          # --- TORRENT: WAN only; NTP-only to LOCAL ---
+          - "set firewall zone WAN from TORRENT firewall name 'ALLOW-ALL'"
+          - "set firewall zone LOCAL from TORRENT firewall name 'ALLOW-NTP-TO-ROUTER'"
+      tags: ["firewall"]
+
+    - name: "{{ vyos_ansible_role_name }}: Configure VyOS NAT rules"
+      vyos.vyos.vyos_config:
+        lines:
+          # ---------------------------------------------------------------------
+          # NAT - source (masquerade outbound to WAN)
+          # ---------------------------------------------------------------------
+          - "set nat source rule 10 outbound-interface name '{{ vyos_interface_wan_name }}'"
+          - "set nat source rule 10 source address {{ vlans.default.subnet }}"
+          - "set nat source rule 10 translation address 'masquerade'"
+
+          - "set nat source rule 20 outbound-interface name '{{ vyos_interface_wan_name }}'"
+          - "set nat source rule 20 source address {{ vlans.trusted.subnet }}"
+          - "set nat source rule 20 translation address 'masquerade'"
+
+          - "set nat source rule 30 outbound-interface name '{{ vyos_interface_wan_name }}'"
+          - "set nat source rule 30 source address {{ vlans.servers.subnet }}"
+          - "set nat source rule 30 translation address 'masquerade'"
+
+          - "set nat source rule 40 outbound-interface name '{{ vyos_interface_wan_name }}'"
+          - "set nat source rule 40 source address {{ vlans.guest.subnet }}"
+          - "set nat source rule 40 translation address 'masquerade'"
+
+          - "set nat source rule 50 outbound-interface name '{{ vyos_interface_wan_name }}'"
+          - "set nat source rule 50 source address {{ vlans.dmz.subnet }}"
+          - "set nat source rule 50 translation address 'masquerade'"
+
+          - "set nat source rule 60 outbound-interface name '{{ vyos_interface_wan_name }}'"
+          - "set nat source rule 60 source address {{ vlans.torrent.subnet }}"
+          - "set nat source rule 60 translation address 'masquerade'"
+
+          # MGMT: only UniFi Controller and Proxmox VE get outbound internet
+          - "set nat source rule 70 outbound-interface name '{{ vyos_interface_wan_name }}'"
+          - "set nat source rule 70 source address {{ vyos_address.ipv4.unific }}"
+          - "set nat source rule 70 translation address 'masquerade'"
+
+          - "set nat source rule 80 outbound-interface name '{{ vyos_interface_wan_name }}'"
+          - "set nat source rule 80 source address {{ vyos_address.ipv4.proxmox }}"
+          - "set nat source rule 80 translation address 'masquerade'"
+
+          # ---------------------------------------------------------------------
+          # NAT - destination (WAN port forwards)
+          # ---------------------------------------------------------------------
+          - "set nat destination rule 10 description 'Plex'"
+          - "set nat destination rule 10 inbound-interface name '{{ vyos_interface_wan_name }}'"
+          - "set nat destination rule 10 protocol 'tcp_udp'"
+          - "set nat destination rule 10 destination port {{ vyos_ports.plex }}"
+          - "set nat destination rule 10 translation address '{{ vyos_address.ipv4.plex }}'"
+
+          - "set nat destination rule 20 description 'SyncThing'"
+          - "set nat destination rule 20 inbound-interface name '{{ vyos_interface_wan_name }}'"
+          - "set nat destination rule 20 protocol 'tcp_udp'"
+          - "set nat destination rule 20 destination port {{ vyos_ports.syncthing }}"
+          - "set nat destination rule 20 translation address '{{ vyos_address.ipv4.traefik }}'"
+
+          # ---------------------------------------------------------------------
+          # NAT - internal DNS redirect (external DNS requests -> local resolver)
+          # ---------------------------------------------------------------------
+          - "set nat destination rule 30 description 'DNS-redirect-INTERNAL'"
+          - "set nat destination rule 30 inbound-interface name '{{ vyos_interface_lan_name }}'"
+          - "set nat destination rule 30 protocol 'tcp_udp'"
+          - "set nat destination rule 30 destination port {{ vyos_ports.dns }}"
+          - "set nat destination rule 30 translation address {{ vyos_address.ipv4.technitium }}"
+
+          - "set nat destination rule 40 description 'DNS-redirect-TRUSTED'"
+          - "set nat destination rule 40 inbound-interface name '{{ vyos_interface_lan_name }}.{{ vlans.trusted.id }}'"
+          - "set nat destination rule 40 protocol 'tcp_udp'"
+          - "set nat destination rule 40 destination port {{ vyos_ports.dns }}"
+          - "set nat destination rule 40 translation address {{ vyos_address.ipv4.technitium }}"
+
+          - "set nat destination rule 50 description 'DNS-redirect-IOT'"
+          - "set nat destination rule 50 inbound-interface name '{{ vyos_interface_lan_name }}.{{ vlans.iot.id }}'"
+          - "set nat destination rule 50 protocol 'tcp_udp'"
+          - "set nat destination rule 50 destination port {{ vyos_ports.dns }}"
+          - "set nat destination rule 50 translation address {{ vyos_address.ipv4.technitium }}"
+
+          - "set nat destination rule 60 description 'DNS-redirect-GUEST'"
+          - "set nat destination rule 60 inbound-interface name '{{ vyos_interface_lan_name }}.{{ vlans.guest.id }}'"
+          - "set nat destination rule 60 protocol 'tcp_udp'"
+          - "set nat destination rule 60 destination port {{ vyos_ports.dns }}"
+          - "set nat destination rule 60 translation address {{ vyos_address.ipv4.unbound }}"
+
+          # ---------------------------------------------------------------------
+          # NAT - internal NTP redirect (external NTP requests -> VyOS's own NTP)
+          # ---------------------------------------------------------------------
+          - "set nat destination rule 70 description 'NTP-redirect-INTERNAL'"
+          - "set nat destination rule 70 inbound-interface name '{{ vyos_interface_lan_name }}'"
+          - "set nat destination rule 70 protocol 'udp'"
+          - "set nat destination rule 70 destination port {{ vyos_ports.ntp }}"
+          - "set nat destination rule 70 translation address '{{ vyos_address.vlan.default }}'"
+
+          - "set nat destination rule 80 description 'NTP-redirect-MGMT'"
+          - "set nat destination rule 80 inbound-interface name '{{ vyos_interface_lan_name }}.{{ vlans.mgmt.id }}'"
+          - "set nat destination rule 80 protocol 'udp'"
+          - "set nat destination rule 80 destination port {{ vyos_ports.ntp }}"
+          - "set nat destination rule 80 translation address '{{ vyos_address.vlan.mgmt }}'"
+
+          - "set nat destination rule 90 description 'NTP-redirect-TRUSTED'"
+          - "set nat destination rule 90 inbound-interface name '{{ vyos_interface_lan_name }}.{{ vlans.trusted.id }}'"
+          - "set nat destination rule 90 protocol 'udp'"
+          - "set nat destination rule 90 destination port {{ vyos_ports.ntp }}"
+          - "set nat destination rule 90 translation address '{{ vyos_address.vlan.trusted }}'"
+
+          - "set nat destination rule 100 description 'NTP-redirect-SERVERS'"
+          - "set nat destination rule 100 inbound-interface name '{{ vyos_interface_lan_name }}.{{ vlans.servers.id }}'"
+          - "set nat destination rule 100 protocol 'udp'"
+          - "set nat destination rule 100 destination port {{ vyos_ports.ntp }}"
+          - "set nat destination rule 100 translation address '{{ vyos_address.vlan.servers }}'"
+
+          - "set nat destination rule 110 description 'NTP-redirect-GUEST'"
+          - "set nat destination rule 110 inbound-interface name '{{ vyos_interface_lan_name }}.{{ vlans.guest.id }}'"
+          - "set nat destination rule 110 protocol 'udp'"
+          - "set nat destination rule 110 destination port {{ vyos_ports.ntp }}"
+          - "set nat destination rule 110 translation address '{{ vyos_address.vlan.guest }}'"
+
+          - "set nat destination rule 120 description 'NTP-redirect-IOT'"
+          - "set nat destination rule 120 inbound-interface name '{{ vyos_interface_lan_name }}.{{ vlans.iot.id }}'"
+          - "set nat destination rule 120 protocol 'udp'"
+          - "set nat destination rule 120 destination port {{ vyos_ports.ntp }}"
+          - "set nat destination rule 120 translation address '{{ vyos_address.vlan.iot }}'"
+
+          - "set nat destination rule 130 description 'NTP-redirect-DMZ'"
+          - "set nat destination rule 130 inbound-interface name '{{ vyos_interface_lan_name }}.{{ vlans.dmz.id }}'"
+          - "set nat destination rule 130 protocol 'udp'"
+          - "set nat destination rule 130 destination port {{ vyos_ports.ntp }}"
+          - "set nat destination rule 130 translation address '{{ vyos_address.vlan.dmz }}'"
+
+          - "set nat destination rule 140 description 'NTP-redirect-TORRENT'"
+          - "set nat destination rule 140 inbound-interface name '{{ vyos_interface_lan_name }}.{{ vlans.torrent.id }}'"
+          - "set nat destination rule 140 protocol 'udp'"
+          - "set nat destination rule 140 destination port {{ vyos_ports.ntp }}"
+          - "set nat destination rule 140 translation address '{{ vyos_address.vlan.torrent }}'"
+      tags: ["nat"]
+
+    - name: "{{ vyos_ansible_role_name }}: Configure VyOS DHCP"
+      vyos.vyos.vyos_config:
+        lines:
+          - "set service dhcp-server shared-network-name MGMT authoritative"
+          - "set service dhcp-server shared-network-name MGMT subnet '{{ vlans.mgmt.subnet }}' subnet-id '{{ vlans.mgmt.id }}'"
+          - "set service dhcp-server shared-network-name MGMT subnet '{{ vlans.mgmt.subnet }}' option default-router '{{ vyos_address.vlan.mgmt }}'"
+          - "set service dhcp-server shared-network-name MGMT subnet '{{ vlans.mgmt.subnet }}' option name-server '{{ vyos_address.ipv4.technitium }}'"
+          - "set service dhcp-server shared-network-name MGMT subnet '{{ vlans.mgmt.subnet }}' option domain-name '{{ vyos_domain_name }}'"
+          - "set service dhcp-server shared-network-name MGMT subnet '{{ vlans.mgmt.subnet }}' range 0 start '{{ vlans.mgmt.dhcp.start }}'"
+          - "set service dhcp-server shared-network-name MGMT subnet '{{ vlans.mgmt.subnet }}' range 0 stop '{{ vlans.mgmt.dhcp.stop }}'"
+
+          - "set service dhcp-server shared-network-name TRUSTED authoritative"
+          - "set service dhcp-server shared-network-name TRUSTED subnet '{{ vlans.trusted.subnet }}' subnet-id '{{ vlans.trusted.id }}'"
+          - "set service dhcp-server shared-network-name TRUSTED subnet '{{ vlans.trusted.subnet }}' option default-router '{{ vyos_address.vlan.trusted }}'"
+          - "set service dhcp-server shared-network-name TRUSTED subnet '{{ vlans.trusted.subnet }}' option name-server '{{ vyos_address.ipv4.technitium }}'"
+          - "set service dhcp-server shared-network-name TRUSTED subnet '{{ vlans.trusted.subnet }}' option domain-name '{{ vyos_domain_name }}'"
+          - "set service dhcp-server shared-network-name TRUSTED subnet '{{ vlans.trusted.subnet }}' range 0 start '{{ vlans.trusted.dhcp.start }}'"
+          - "set service dhcp-server shared-network-name TRUSTED subnet '{{ vlans.trusted.subnet }}' range 0 stop '{{ vlans.trusted.dhcp.stop }}'"
+
+          - "set service dhcp-server shared-network-name SERVERS authoritative"
+          - "set service dhcp-server shared-network-name SERVERS subnet '{{ vlans.servers.subnet }}' subnet-id '{{ vlans.servers.id }}'"
+          - "set service dhcp-server shared-network-name SERVERS subnet '{{ vlans.servers.subnet }}' option default-router '{{ vyos_address.vlan.servers }}'"
+          - "set service dhcp-server shared-network-name SERVERS subnet '{{ vlans.servers.subnet }}' option name-server '{{ vyos_address.ipv4.technitium }}'"
+          - "set service dhcp-server shared-network-name SERVERS subnet '{{ vlans.servers.subnet }}' option domain-name '{{ vyos_domain_name }}'"
+          - "set service dhcp-server shared-network-name SERVERS subnet '{{ vlans.servers.subnet }}' range 0 start '{{ vlans.servers.dhcp.start }}'"
+          - "set service dhcp-server shared-network-name SERVERS subnet '{{ vlans.servers.subnet }}' range 0 stop '{{ vlans.servers.dhcp.stop }}'"
+
+          - "set service dhcp-server shared-network-name GUEST authoritative"
+          - "set service dhcp-server shared-network-name GUEST subnet '{{ vlans.guest.subnet }}' subnet-id '{{ vlans.guest.id }}'"
+          - "set service dhcp-server shared-network-name GUEST subnet '{{ vlans.guest.subnet }}' option default-router '{{ vyos_address.vlan.guest }}'"
+          - "set service dhcp-server shared-network-name GUEST subnet '{{ vlans.guest.subnet }}' option name-server '{{ vyos_address.ipv4.unbound }}'"
+          - "set service dhcp-server shared-network-name GUEST subnet '{{ vlans.guest.subnet }}' option domain-name 'guest.{{ vyos_domain_name }}'"
+          - "set service dhcp-server shared-network-name GUEST subnet '{{ vlans.guest.subnet }}' range 0 start '{{ vlans.guest.dhcp.start }}'"
+          - "set service dhcp-server shared-network-name GUEST subnet '{{ vlans.guest.subnet }}' range 0 stop '{{ vlans.guest.dhcp.stop }}'"
+
+          - "set service dhcp-server shared-network-name IOT authoritative"
+          - "set service dhcp-server shared-network-name IOT subnet '{{ vlans.iot.subnet }}' subnet-id '{{ vlans.iot.id }}'"
+          - "set service dhcp-server shared-network-name IOT subnet '{{ vlans.iot.subnet }}' option default-router '{{ vyos_address.vlan.iot }}'"
+          - "set service dhcp-server shared-network-name IOT subnet '{{ vlans.iot.subnet }}' option name-server '{{ vyos_address.ipv4.technitium }}'"
+          - "set service dhcp-server shared-network-name IOT subnet '{{ vlans.iot.subnet }}' option domain-name 'iot.{{ vyos_domain_name }}'"
+          - "set service dhcp-server shared-network-name IOT subnet '{{ vlans.iot.subnet }}' range 0 start '{{ vlans.iot.dhcp.start }}'"
+          - "set service dhcp-server shared-network-name IOT subnet '{{ vlans.iot.subnet }}' range 0 stop '{{ vlans.iot.dhcp.stop }}'"
+
+          - "set service dhcp-server shared-network-name DMZ authoritative"
+          - "set service dhcp-server shared-network-name DMZ subnet '{{ vlans.dmz.subnet }}' subnet-id '{{ vlans.dmz.id }}'"
+          - "set service dhcp-server shared-network-name DMZ subnet '{{ vlans.dmz.subnet }}' option default-router '{{ vyos_address.vlan.dmz }}'"
+          - "set service dhcp-server shared-network-name DMZ subnet '{{ vlans.dmz.subnet }}' option name-server '{{ default_public_dns[0] }}'"
+          - "set service dhcp-server shared-network-name DMZ subnet '{{ vlans.dmz.subnet }}' option name-server '{{ default_public_dns[1] }}'"
+          - "set service dhcp-server shared-network-name DMZ subnet '{{ vlans.dmz.subnet }}' option domain-name '{{ vyos_domain_name }}'"
+          - "set service dhcp-server shared-network-name DMZ subnet '{{ vlans.dmz.subnet }}' range 0 start '{{ vlans.dmz.dhcp.start }}'"
+          - "set service dhcp-server shared-network-name DMZ subnet '{{ vlans.dmz.subnet }}' range 0 stop '{{ vlans.dmz.dhcp.stop }}'"
+
+          - "set service dhcp-server shared-network-name TORRENT authoritative"
+          - "set service dhcp-server shared-network-name TORRENT subnet '{{ vlans.torrent.subnet }}' subnet-id '{{ vlans.torrent.id }}'"
+          - "set service dhcp-server shared-network-name TORRENT subnet '{{ vlans.torrent.subnet }}' option default-router '{{ vyos_address.vlan.torrent }}'"
+          - "set service dhcp-server shared-network-name TORRENT subnet '{{ vlans.torrent.subnet }}' option name-server '{{ default_public_dns[0] }}'"
+          - "set service dhcp-server shared-network-name TORRENT subnet '{{ vlans.torrent.subnet }}' option name-server '{{ default_public_dns[1] }}'"
+          - "set service dhcp-server shared-network-name TORRENT subnet '{{ vlans.torrent.subnet }}' option domain-name '{{ vyos_domain_name }}'"
+          - "set service dhcp-server shared-network-name TORRENT subnet '{{ vlans.torrent.subnet }}' range 0 start '{{ vlans.torrent.dhcp.start }}'"
+          - "set service dhcp-server shared-network-name TORRENT subnet '{{ vlans.torrent.subnet }}' range 0 stop '{{ vlans.torrent.dhcp.stop }}'"
+      tags: ["dhcp"]
+
+    - name: "{{ vyos_ansible_role_name }}: Configure VyOS NTP"
+      vyos.vyos.vyos_config:
+        lines:
+          - "set service ntp server '0.pool.ntp.org'"
+          - "set service ntp server '1.pool.ntp.org'"
+          - "set service ntp allow-client address '{{ vlans.default.subnet }}'"
+          - "set service ntp allow-client address '{{ vlans.mgmt.subnet }}'"
+          - "set service ntp allow-client address '{{ vlans.trusted.subnet }}'"
+          - "set service ntp allow-client address '{{ vlans.servers.subnet }}'"
+          - "set service ntp allow-client address '{{ vlans.guest.subnet }}'"
+          - "set service ntp allow-client address '{{ vlans.iot.subnet }}'"
+          - "set service ntp allow-client address '{{ vlans.dmz.subnet }}'"
+          - "set service ntp allow-client address '{{ vlans.torrent.subnet }}'"
+      tags: ["ntp"]
+
+    - name: "{{ vyos_ansible_role_name }}: Configure VyOS SSH"
+      vyos.vyos.vyos_config:
+        lines:
+          - "set service ssh port '22'"
+          # - "set service ssh disable-password-authentication"
+          - "set service ssh listen-address '{{ vyos_address.vlan.mgmt }}'"
+          - "set service ssh listen-address '{{ vyos_address.vlan.trusted }}'"
+          - "set service ssh listen-address '{{ vyos_address.vlan.servers }}'"
+      tags: ["ssh"]
+
+    - name: "{{ vyos_ansible_role_name }}: Configure VyOS mDNS"
+      vyos.vyos.vyos_config:
+        lines:
+          # ---------------------------------------------------------------------
+          # mDNS repeater - IOT <-> INTERNAL <-> TRUSTED
+          # ---------------------------------------------------------------------
+          - "set service mdns repeater interface '{{ vyos_interface_lan_name }}'"
+          - "set service mdns repeater interface '{{ vyos_interface_lan_name }}.{{ vlans.trusted.id }}'"
+          - "set service mdns repeater interface '{{ vyos_interface_lan_name }}.{{ vlans.iot.id }}'"
+      tags: ["mdns"]
+
+    - name: "{{ vyos_ansible_role_name }}: Configure VyOS Prometheus node exporter"
+      vyos.vyos.vyos_config:
+        lines:
+          - "set service monitoring prometheus node-exporter listen-address '{{ vyos_address.vlan.mgmt }}'"
+          - "set service monitoring prometheus node-exporter port '9100'"
+      tags: ["prometheus"]

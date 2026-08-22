@@ -5,3 +5,4 @@ collections:
   - name: prometheus.prometheus
   - name: vladgh.samba
     version: ">=3.1.1"
+  - name: vyos.vyos

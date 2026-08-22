@@ -120,6 +120,9 @@ msmtp_from: "{{ vault_msmtp_from }}"
 ### Networking
 ###
 default_dns_address: "{{ vault_default_dns_address }}"
+default_public_dns:
+  - "8.8.8.8"
+  - "8.8.4.4"
 iot_vlan_docker_network_name: "iot-macvlan40"
 
 vlans:
@@ -133,36 +136,57 @@ vlans:
     subnet_base: "{{ vault_vlans_mgmt_subnet_part }}"
     subnet_size: "{{ vault_vlans_mgmt_subnet_size }}"
     subnet: "{{ vault_vlans_mgmt_subnet_part }}.0/{{ vault_vlans_mgmt_subnet_size }}"
+    dhcp:
+      start: "{{ vault_vlans_mgmt_subnet_part }}.{{ vault_vlans_mgmt_dhcp_start }}"
+      stop: "{{ vault_vlans_mgmt_subnet_part }}.{{ vault_vlans_mgmt_dhcp_stop }}"
   trusted:
     id: "{{ vault_vlans_trusted_id }}"
     subnet_base: "{{ vault_vlans_trusted_subnet_part }}"
     subnet_size: "{{ vault_vlans_trusted_subnet_size }}"
     subnet: "{{ vault_vlans_trusted_subnet_part }}.0/{{ vault_vlans_trusted_subnet_size }}"
+    dhcp:
+      start: "{{ vault_vlans_trusted_subnet_part }}.{{ vault_vlans_trusted_dhcp_start }}"
+      stop: "{{ vault_vlans_trusted_subnet_part }}.{{ vault_vlans_trusted_dhcp_stop }}"
   servers:
     id: "{{ vault_vlans_servers_id }}"
     subnet_base: "{{ vault_vlans_servers_subnet_part }}"
     subnet_size: "{{ vault_vlans_servers_subnet_size }}"
     subnet: "{{ vault_vlans_servers_subnet_part }}.0/{{ vault_vlans_servers_subnet_size }}"
+    dhcp:
+      start: "{{ vault_vlans_servers_subnet_part }}.{{ vault_vlans_servers_dhcp_start }}"
+      stop: "{{ vault_vlans_servers_subnet_part }}.{{ vault_vlans_servers_dhcp_stop }}"
   guest:
     id: "{{ vault_vlans_guest_id }}"
     subnet_base: "{{ vault_vlans_guest_subnet_part }}"
     subnet_size: "{{ vault_vlans_guest_subnet_size }}"
     subnet: "{{ vault_vlans_guest_subnet_part }}.0/{{ vault_vlans_guest_subnet_size }}"
+    dhcp:
+      start: "{{ vault_vlans_guest_subnet_part }}.{{ vault_vlans_guest_dhcp_start }}"
+      stop: "{{ vault_vlans_guest_subnet_part }}.{{ vault_vlans_guest_dhcp_stop }}"
   iot:
     id: "{{ vault_vlans_iot_id }}"
     subnet_base: "{{ vault_vlans_iot_subnet_part }}"
     subnet_size: "{{ vault_vlans_iot_subnet_size }}"
     subnet: "{{ vault_vlans_iot_subnet_part }}.0/{{ vault_vlans_iot_subnet_size }}"
+    dhcp:
+      start: "{{ vault_vlans_iot_subnet_part }}.{{ vault_vlans_iot_dhcp_start }}"
+      stop: "{{ vault_vlans_iot_subnet_part }}.{{ vault_vlans_iot_dhcp_stop }}"
   dmz:
     id: "{{ vault_vlans_dmz_id }}"
     subnet_base: "{{ vault_vlans_dmz_subnet_part }}"
     subnet_size: "{{ vault_vlans_dmz_subnet_size }}"
     subnet: "{{ vault_vlans_dmz_subnet_part }}.0/{{ vault_vlans_dmz_subnet_size }}"
+    dhcp:
+      start: "{{ vault_vlans_dmz_subnet_part }}.{{ vault_vlans_dmz_dhcp_start }}"
+      stop: "{{ vault_vlans_dmz_subnet_part }}.{{ vault_vlans_dmz_dhcp_stop }}"
   torrent:
     id: "{{ vault_vlans_torrent_id }}"
     subnet_base: "{{ vault_vlans_torrent_subnet_part }}"
     subnet_size: "{{ vault_vlans_torrent_subnet_size }}"
     subnet: "{{ vault_vlans_torrent_subnet_part }}.0/{{ vault_vlans_torrent_subnet_size }}"
+    dhcp:
+      start: "{{ vault_vlans_torrent_subnet_part }}.{{ vault_vlans_torrent_dhcp_start }}"
+      stop: "{{ vault_vlans_torrent_subnet_part }}.{{ vault_vlans_torrent_dhcp_stop }}"
 
 ###
 ### Notifications
