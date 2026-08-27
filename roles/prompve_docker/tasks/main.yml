@@ -1,0 +1,156 @@
+---
+- name: "{{ prompve_docker_role_label }} | Create data volume"
+  community.docker.docker_volume:
+    name: "{{ prompve_docker_volume_name }}"
+
+- name: "{{ prompve_docker_role_label }} | Set Docker mount list"
+  ansible.builtin.set_fact:
+    _prompve_docker_mount_list:
+      - "source": "{{ prompve_docker_volume_name }}"
+        "target": "/etc/prometheus"
+        "type": "volume"
+
+- name: "{{ prompve_docker_role_label }} | Get info on data volume"
+  community.docker.docker_volume_info:
+    name: "{{ prompve_docker_volume_name }}"
+  register: "_prompve_docker_data_volume_info"
+
+- name: "{{ prompve_docker_role_label }} | Create config file"
+  ansible.builtin.template:
+    src: "templates/pve.yml.j2"
+    dest: "{{ _prompve_docker_data_volume_info.volume.Mountpoint }}/pve.yml"
+    mode: "0640"
+    owner: "{{ prompve_docker_uid }}"
+    group: "{{ prompve_docker_gid }}"
+  register: "_prompve_docker_config_file"
+
+- name: "{{ prompve_docker_role_label }} | Create placeholder array for default network"
+  ansible.builtin.set_fact:
+    _prompve_docker_default_networks:
+      - name: "{{ prompve_docker_network_name }}"
+        aliases: "{{ prompve_docker_network_aliases | default(omit) }}"
+
+- name: "{{ prompve_docker_role_label }} | Define all Docker networks for this container"
+  ansible.builtin.set_fact:
+    _prompve_docker_all_networks: "{{ _prompve_docker_default_networks + prompve_docker_extra_networks }}"
+
+- name: "{{ prompve_docker_role_label }} | Build container FQDN"
+  ansible.builtin.set_fact:
+    _prompve_docker_fqdn: "{{ prompve_docker_traefik_host_name }}.{{ prompve_docker_traefik_host_domain }}"
+
+- name: "{{ prompve_docker_role_label }} | Define common Docker labels"
+  ansible.builtin.set_fact:
+    _prompve_docker_labels:
+      "traefik.enable": "{{ prompve_docker_traefik_available_externally | ternary('true', 'false') }}"
+
+- name: "{{ prompve_docker_role_label }} | Define Docker labels with Traefik enabled"
+  ansible.builtin.set_fact:
+    _prompve_docker_labels: "{{ _prompve_docker_labels | default({}) |
+      combine({__item.key: __item.value}) }}"
+  with_items:
+    - key: "traefik.docker.network"
+      value: "host"
+    - key: "traefik.http.routers.prompve.rule"
+      value: "Host(`{{ _prompve_docker_fqdn }}`)"
+    - key: "traefik.http.routers.prompve.entrypoints"
+      value: "http,https"
+    - key: "traefik.http.routers.prompve.tls.certresolver"
+      value: "letsencrypt"
+    - key: "traefik.http.routers.prompve.tls.domains[0].main"
+      value: "*.{{ prompve_docker_traefik_host_domain }}"
+    - key: "traefik.http.services.prompve.loadbalancer.server.port"
+      value: "{{ prompve_docker_web_port }}"
+  loop_control:
+    loop_var: __item
+  when: "prompve_docker_traefik_available_externally | default(false, true)"
+
+- name: "{{ prompve_docker_role_label }} | Define user-supplied extra Docker labels"
+  ansible.builtin.set_fact:
+    _prompve_docker_labels: "{{ _prompve_docker_labels | default({}) |
+      combine({__item.key: __item.value}) }}"
+  loop: "{{ prompve_docker_extra_labels | dict2items }}"
+  loop_control:
+    loop_var: __item
+
+- name: "{{ prompve_docker_role_label }} | Define default Docker environment variables"
+  ansible.builtin.set_fact:
+    _prompve_docker_env_vars: []
+
+- name: "{{ prompve_docker_role_label }} | Define user-supplied extra Docker environment variables"
+  ansible.builtin.set_fact:
+    _prompve_docker_env_vars: "{{ _prompve_docker_env_vars | default({}) |
+      combine({__item.key: __item.value}) }}"
+  loop: "{{ prompve_docker_extra_env | dict2items }}"
+  loop_control:
+    loop_var: __item
+
+- name: "{{ prompve_docker_role_label }} | Define cluster collector commands"
+  ansible.builtin.include_tasks:
+    file: "collector.yml"
+  with_items:
+    - name: "status"
+      value: "{{ prompve_docker_collector_status }}"
+    - name: "version"
+      value: "{{ prompve_docker_collector_version }}"
+    - name: "node"
+      value: "{{ prompve_docker_collector_node }}"
+    - name: "cluster"
+      value: "{{ prompve_docker_collector_cluster }}"
+    - name: "resources"
+      value: "{{ prompve_docker_collector_resources }}"
+    - name: "backup-info"
+      value: "{{ prompve_docker_collector_backupinfo }}"
+  loop_control:
+    loop_var: __prompve_collector  
+
+- name: "{{ prompve_docker_role_label }} | Define node collector commands"
+  ansible.builtin.include_tasks:
+    file: "collector.yml"
+  with_items:
+    - name: "config"
+      value: "{{ prompve_docker_collector_config }}"
+    - name: "replication"
+      value: "{{ prompve_docker_collector_replication }}"
+    - name: "subscription"
+      value: "{{ prompve_docker_collector_subscription }}"
+  loop_control:
+    loop_var: __prompve_collector  
+
+- name: "{{ prompve_docker_role_label }} | Define scrape collector commands"
+  ansible.builtin.include_tasks:
+    file: "collector.yml"
+  with_items:
+    - name: "pve-api-metrics"
+      value: "{{ prompve_docker_collector_api_metrics }}"
+    - name: "target-metrics"
+      value: "{{ prompve_docker_collector_target_metrics }}"
+  loop_control:
+    loop_var: __prompve_collector  
+
+- name: "{{ prompve_docker_role_label }} | Create Docker container"
+  community.docker.docker_container:
+    name: "{{ prompve_docker_name }}"
+    image: "{{ prompve_docker_image_name }}:{{ prompve_docker_image_version }}"
+    pull: true
+    mounts: "{{ _prompve_docker_mount_list }}"
+    env: "{{ _prompve_docker_env_vars }}"
+    network_mode: "{{ prompve_docker_network_name }}"
+    networks: "{{ _prompve_docker_all_networks }}"
+    command: "{{ _prompve_docker_commands }}"
+    restart: "{{ _prompve_docker_config_file.changed | default(false) }}"
+    restart_policy: unless-stopped
+    memory: "{{ prompve_docker_memory }}"
+    cpus: "{{ prompve_docker_cpus }}"
+    container_default_behavior: "no_defaults"
+    auto_remove: false
+    detach: true
+    init: false
+    interactive: false
+    paused: false
+    privileged: true
+    read_only: false
+    tty: false
+    capabilities:
+      - "NET_ADMIN"
+      - "SYS_ADMIN"
+    labels: "{{ _prompve_docker_labels }}"

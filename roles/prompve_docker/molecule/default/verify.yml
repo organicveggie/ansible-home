@@ -1,0 +1,76 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+
+  vars:
+    prompve_docker_available_externally: true
+    prompve_docker_extra_env:
+      "_MOLECULE_TEST": "prompve_docker molecule test value"
+    prompve_docker_extra_labels:
+      "molecule-label-01": "molecule-value-01"
+    prompve_docker_extra_networks:
+      - name: "extra-network"
+    prompve_docker_name: "prompve_docker-molecule"
+    prompve_docker_network_aliases:
+      - "zzz-molecule"
+    prompve_docker_network_name: "molecule-test-network"
+    prompve_docker_volume_name: "prompve_docker-molecule-volume"
+
+  tasks:
+    - name: "Verify volumes"
+      ansible.builtin.include_tasks:
+        file: "includes/verify-volume.yml"
+      loop:
+        - "{{ prompve_docker_volume_name }}"
+      loop_control:
+        loop_var: "__molecule_volume_name"
+
+    - name: Get info on container
+      community.docker.docker_container_info:
+        name: "{{ prompve_docker_name }}"
+      register: _prompve_docker_container
+
+    - name: Verify container exists
+      ansible.builtin.assert:
+        that:
+          - _prompve_docker_container.exists
+          - _prompve_docker_container["container"]["State"]["Status"] == "running"
+
+    - name: Verify extra environment variables
+      ansible.builtin.assert:
+        that:
+          - "__env in __all_env"
+      vars:
+        __all_env: "{{ _prompve_docker_container['container']['Config']['Env'] }}"
+        __env: "_MOLECULE_TEST={{ prompve_docker_extra_env['_MOLECULE_TEST'] }}"
+
+    - name: Verify extra labels
+      ansible.builtin.assert:
+        that:
+          - __all_labels["molecule-label-01"] is defined
+          - __all_labels["molecule-label-01"] == prompve_docker_extra_labels["molecule-label-01"]
+      vars:
+        __all_labels: "{{ _prompve_docker_container['container']['Config']['Labels'] }}"
+
+    - name: "Verify networks"
+      ansible.builtin.include_tasks:
+        file: "includes/verify-network.yml"
+      loop:
+        - "{{ prompve_docker_network_name }}"
+        - "{{ prompve_docker_extra_networks[0].name }}"
+      loop_control:
+        loop_var: "__molecule_network_name"
+      vars:
+        __container_id: "{{ _prompve_docker_container['container']['Id'] }}"
+
+    - name: "Verify default network aliases"
+      ansible.builtin.assert:
+        that:
+          - __networks[prompve_docker_network_name]['Aliases'] is defined
+          - __role_alias in __networks[prompve_docker_network_name]['Aliases']
+      loop: "{{ prompve_docker_network_aliases }}"
+      loop_control:
+        loop_var: "__role_alias"
+      vars:
+        __networks: "{{ _prompve_docker_container['container']['NetworkSettings']['Networks'] }}"
