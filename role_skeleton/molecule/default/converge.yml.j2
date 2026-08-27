@@ -1,0 +1,49 @@
+---
+- name: Install dependencies
+  hosts: all
+
+  vars:
+    pip_install_packages:
+      - name: docker
+    docker_daemon_options:
+      storage-driver: "vfs"
+
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 600
+
+    - name: Install Docker
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+
+- name: Converge
+  hosts: all
+  become: true
+
+  vars:
+    {{ role_name }}_available_externally: true
+    {{ role_name }}_extra_env:
+      "_MOLECULE_TEST": "{{ role_name }} molecule test value"
+    {{ role_name }}_extra_labels:
+      "molecule-label-01": "molecule-value-01"
+    {{ role_name }}_extra_networks:
+      - name: "extra-network"
+    {{ role_name }}_name: "{{ role_name }}-molecule"
+    {{ role_name }}_network_aliases:
+      - "zzz-molecule"
+    {{ role_name }}_network_name: "molecule-test-network"
+    {{ role_name }}_volume_name: "{{ role_name }}-molecule-volume"
+
+  pre_tasks:
+    - name: Create Docker test networks
+      community.docker.docker_network:
+        name: "{% raw %}{{ __item.name }}{% endraw %}"
+        state: present
+      loop: "{% raw %}{{{% endraw %} {{ role_name }}_extra_networks + [{'name': {{ role_name }}_network_name}] {% raw %}}}{% endraw %}"
+      loop_control:
+        loop_var: "__item"
+
+  roles:
+    - role: {{ role_name }}

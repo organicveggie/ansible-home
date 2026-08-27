@@ -1,0 +1,60 @@
+---
+#####
+# Container settings
+#####
+# Name of the Docker container.
+{{ role_name }}_name: "{{ role_name }}"
+
+# Base name of the Docker image to use for the container.
+{{ role_name }}_image_name: "{{ role_name }}/{{ role_name }}"
+
+# Specific Docker image version to use for the container.
+{{ role_name }}_image_version: "latest"
+
+# Number of vCPUs to allocate to the container.
+{{ role_name }}_cpus: "1"
+
+# Amount of memory to allocate to the container.
+{{ role_name }}_memory: "512MB"
+
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+{{ role_name }}_extra_labels: {}
+
+# Dictionary of extra key value pairs to set as environment variables on the Docker container.
+{{ role_name }}_extra_env: {}
+
+# Dict of host-to-IP mappings, where each host name is a key in the dictionary. Each host name will
+# be added to the container's /etc/hosts file.
+# Instead of an IP address, the special value host-gateway can also be used, which resolves to the
+# host's gateway IP and allows containers to connect to services running on the host.
+{{ role_name }}_extra_hosts: {}
+
+# Name of the Docker volume. 
+{{ role_name }}_volume_name: "{{ role_name }}"
+
+# Name of the primary network.
+{{ role_name }}_network_name: null
+
+# Container aliases on the default network.
+{{ role_name }}_network_aliases: null
+
+# List of additional networks to join.
+{{ role_name }}_extra_networks: []
+
+# TCP port number for web interface.
+{{ role_name }}_web_port: "8080"
+
+#####
+# Traefik
+#####
+
+# Enable use of Traefik as a proxy.
+{{ role_name }}_traefik_available_externally: false
+
+# Host name to use for the Traefik endpoint. Combined with [{{ role_name }}_traefik_host_domain] to form the
+# FQDN for the endpoint.
+{{ role_name }}_traefik_host_name: "{{ role_name }}"
+
+# Domain name to use for the Traefik endpoint. Combined with [{{ role_name }}_traefik_host_name] to form the
+# FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
+{{ role_name }}_traefik_host_domain: "example.com"

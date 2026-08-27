@@ -1,0 +1,96 @@
+---
+- name: "{% raw %}{{{% endraw %} {{ role_name }}_role_label {% raw %}}}{% endraw %} | Create data volume"
+  community.docker.docker_volume:
+    name: "{% raw %}{{{% endraw %} {{ role_name }}_volume_name {% raw %}}}{% endraw %}"
+
+- name: "{% raw %}{{{% endraw %} {{ role_name }}_role_label {% raw %}}}{% endraw %} | Set Docker mount list"
+  ansible.builtin.set_fact:
+    _{{ role_name }}_mount_list:
+      - "source": "{% raw %}{{{% endraw %} {{ role_name }}_volume_name {% raw %}}}{% endraw %}"
+        "target": "/config"
+        "type": "volume"
+
+- name: "{% raw %}{{{% endraw %} {{ role_name }}_role_label {% raw %}}}{% endraw %} | Create placeholder array for default network"
+  ansible.builtin.set_fact:
+    _{{ role_name }}_default_networks:
+      - name: "{% raw %}{{{% endraw %} {{ role_name }}_network_name {% raw %}}}{% endraw %}"
+        aliases: "{% raw %}{{{% endraw %} {{ role_name }}_network_aliases | default(omit) {% raw %}}}{% endraw %}"
+
+- name: "{% raw %}{{{% endraw %} {{ role_name }}_role_label {% raw %}}}{% endraw %} | Define all Docker networks for this container"
+  ansible.builtin.set_fact:
+    _{{ role_name }}_all_networks: "{% raw %}{{{% endraw %} _{{ role_name }}_default_networks + {{ role_name }}_extra_networks {% raw %}}}{% endraw %}"
+
+- name: "{% raw %}{{{% endraw %} {{ role_name }}_role_label {% raw %}}}{% endraw %} | Build container FQDN"
+  ansible.builtin.set_fact:
+    _{{ role_name }}_fqdn: "{% raw %}{{{% endraw %} {{ role_name }}_traefik_host_name {% raw %}}}{% endraw %}.{% raw %}{{{% endraw %} {{ role_name }}_traefik_host_domain {% raw %}}}{% endraw %}"
+
+- name: "{% raw %}{{{% endraw %} {{ role_name }}_role_label {% raw %}}}{% endraw %} | Define common Docker labels"
+  ansible.builtin.set_fact:
+    _{{ role_name }}_labels:
+      "traefik.enable": "{% raw %}{{{% endraw %} {{ role_name }}_traefik_available_externally | ternary('true', 'false') {% raw %}}}{% endraw %}"
+
+- name: "{% raw %}{{{% endraw %} {{ role_name }}_role_label {% raw %}}}{% endraw %} | Define Docker labels with Traefik enabled"
+  ansible.builtin.set_fact:
+    _{{ role_name }}_labels: "{% raw %}{{{% endraw %} _{{ role_name }}_labels | default({}) |
+      combine({__item.key: __item.value}) {% raw %}}}{% endraw %}"
+  with_items:
+    - key: "traefik.docker.network"
+      value: "host"
+    - key: "traefik.http.routers.{{ role_name }}.rule"
+      value: "Host(`{% raw %}{{{% endraw %} _{{ role_name }}_fqdn {% raw %}}}{% endraw %}`)"
+    - key: "traefik.http.routers.{{ role_name }}.entrypoints"
+      value: "http,https"
+    - key: "traefik.http.routers.{{ role_name }}.tls.certresolver"
+      value: "letsencrypt"
+    - key: "traefik.http.routers.{{ role_name }}.tls.domains[0].main"
+      value: "*.{% raw %}{{{% endraw %} {{ role_name }}_traefik_host_domain {% raw %}}}{% endraw %}"
+    - key: "traefik.http.services.{{ role_name }}.loadbalancer.server.port"
+      value: "{% raw %}{{{% endraw %} {{ role_name }}_web_port {% raw %}}}{% endraw %}"
+  loop_control:
+    loop_var: __item
+  when: "{{ role_name }}_traefik_available_externally | default(false, true)"
+
+- name: "{% raw %}{{{% endraw %} {{ role_name }}_role_label {% raw %}}}{% endraw %} | Define user-supplied extra Docker labels"
+  ansible.builtin.set_fact:
+    _{{ role_name }}_labels: "{% raw %}{{{% endraw %} _{{ role_name }}_labels | default({}) |
+      combine({__item.key: __item.value}) {% raw %}}}{% endraw %}"
+  loop: "{% raw %}{{{% endraw %} {{ role_name }}_extra_labels | dict2items {% raw %}}}{% endraw %}"
+  loop_control:
+    loop_var: __item
+
+- name: "{% raw %}{{{% endraw %} {{ role_name }}_role_label {% raw %}}}{% endraw %} | Define default Docker environment variables"
+  ansible.builtin.set_fact:
+    _{{ role_name }}_env_vars: []
+
+- name: "{% raw %}{{{% endraw %} {{ role_name }}_role_label {% raw %}}}{% endraw %} | Define user-supplied extra Docker environment variables"
+  ansible.builtin.set_fact:
+    _{{ role_name }}_env_vars: "{% raw %}{{{% endraw %} _{{ role_name }}_env_vars | default({}) |
+      combine({__item.key: __item.value}) {% raw %}}}{% endraw %}"
+  loop: "{% raw %}{{{% endraw %} {{ role_name }}_extra_env | dict2items {% raw %}}}{% endraw %}"
+  loop_control:
+    loop_var: __item
+
+- name: "{% raw %}{{{% endraw %} {{ role_name }}_role_label {% raw %}}}{% endraw %} | Create {{ role_name }} container"
+  community.docker.docker_container:
+    name: "{% raw %}{{{% endraw %} {{ role_name }}_name {% raw %}}}{% endraw %}"
+    image: "{% raw %}{{{% endraw %} {{ role_name }}_image_name {% raw %}}}{% endraw %}:{% raw %}{{{% endraw %} {{ role_name }}_image_version {% raw %}}}{% endraw %}"
+    pull: true
+    mounts: "{% raw %}{{{% endraw %} _{{ role_name }}_mount_list {% raw %}}}{% endraw %}"
+    env: "{% raw %}{{{% endraw %} _{{ role_name }}_env_vars {% raw %}}}{% endraw %}"
+    network_mode: "host"
+    restart_policy: unless-stopped
+    memory: "{% raw %}{{{% endraw %} _{{ role_name }}_memory {% raw %}}}{% endraw %}"
+    cpus: "{% raw %}{{{% endraw %} _{{ role_name }}_cpus {% raw %}}}{% endraw %}"
+    container_default_behavior: "no_defaults"
+    auto_remove: false
+    detach: true
+    init: false
+    interactive: false
+    paused: false
+    privileged: true
+    read_only: false
+    tty: false
+    capabilities:
+      - "NET_ADMIN"
+      - "SYS_ADMIN"
+    labels: "{% raw %}{{{% endraw %} _{{ role_name }}_labels {% raw %}}}{% endraw %}"

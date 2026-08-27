@@ -21,3 +21,7 @@ skip_list:
 # You must enable opt-in rules by listing each rule 'id' below.
 enable_list:
   - loop-var-prefix
+
+# Tell ansible-lint that 
+kinds:
+  - tasks: "role_skeleton/molecule/includes/*.yml"
