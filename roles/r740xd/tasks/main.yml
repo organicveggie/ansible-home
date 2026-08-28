@@ -123,6 +123,10 @@
   ansible.builtin.import_tasks: "unpoller.yml"
   tags: ["unpoller"]
 
+- name: "Setup prometheus-pve-exporter"
+  ansible.builtin.import_tasks: "prompve.yml"
+  tags: ["prompve"]
+
 - name: "Setup Tailscale"
   ansible.builtin.import_tasks: "tailscale.yml"
   tags: ["tailscale"]

@@ -1,0 +1,15 @@
+---
+- name: "{{ r740xd_ansible_role_label }} | prompve_docker | Create prometheus-pve-export container"
+  ansible.builtin.import_role:
+    name: "prompve_docker"
+  vars:
+    prompve_docker_extra_networks:
+      - name: "{{ docker_networks.ingressproxy.name }}"
+    prompve_docker_name: "{{ r740xd_prompve_name }}"
+    prompve_docker_network_name: "{{ docker_networks.monitoring.name }}"
+    prompve_docker_traefik_host_domain: "{{ r740xd_prompve_host_domain }}"
+    prompve_docker_traefik_available_externally: true
+    prompve_docker_traefik_network: "{{ docker_networks.ingressproxy.name }}"
+    prompve_docker_user: "{{ r740xd_prompve_user }}"
+    prompve_docker_token_name: "{{ r740xd_prompve_token_name }}"
+    prompve_docker_token_value: "{{ r740xd_prompve_token_value }}"

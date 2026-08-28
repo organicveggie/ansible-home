@@ -192,6 +192,21 @@ r740xd_prometheus_opnsense_addr: "192.168.1.1"
 r740xd_prometheus_opnsense_port: 9100
 
 ###
+### Prometheus Proxmox VE Export
+###
+r740xd_prompve_host_domain: null
+r740xd_prompve_name: "prometheus-pve-exporter"
+r740xd_prompve_token_name: null
+r740xd_prompve_token_value: null
+r740xd_prompve_user: null
+
+###
+### Proxmox VE
+###
+r740xd_proxmox_fqdn: null
+
+
+###
 ### Prowlarr
 ###
 r740xd_prowlarr_host_domain: null

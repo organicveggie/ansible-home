@@ -1,0 +1,95 @@
+---
+#####
+# Container settings
+#####
+# Name of the Docker container.
+prompve_docker_name: "prometheus-pve-exporter"
+
+# Base name of the Docker image to use for the container.
+prompve_docker_image_name: "prompve/prometheus-pve-exporter"
+
+# Specific Docker image version to use for the container.
+prompve_docker_image_version: "latest"
+
+# Number of vCPUs to allocate to the container.
+prompve_docker_cpus: "1"
+
+# Amount of memory to allocate to the container.
+prompve_docker_memory: "512MB"
+
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+prompve_docker_extra_labels: {}
+
+# Dictionary of extra key value pairs to set as environment variables on the Docker container.
+prompve_docker_extra_env: {}
+
+# Dict of host-to-IP mappings, where each host name is a key in the dictionary. Each host name will
+# be added to the container's /etc/hosts file.
+# Instead of an IP address, the special value host-gateway can also be used, which resolves to the
+# host's gateway IP and allows containers to connect to services running on the host.
+prompve_docker_extra_hosts: {}
+
+# Name of the Docker volume. 
+prompve_docker_volume_name: "prompve-config"
+
+# Name of the primary network.
+prompve_docker_network_name: null
+
+# Container aliases on the default network.
+prompve_docker_network_aliases: null
+
+# List of additional networks to join.
+prompve_docker_extra_networks: []
+
+# TCP port number for web interface.
+prompve_docker_web_port: "9221"
+
+# User/Group ownership for the config file
+prompve_docker_gid: 101
+prompve_docker_uid: 101
+
+#####
+# Traefik
+#####
+
+# Enable use of Traefik as a proxy.
+prompve_docker_traefik_available_externally: false
+
+# Host name to use for the Traefik endpoint. Combined with [prompve_docker_traefik_host_domain] to form the
+# FQDN for the endpoint.
+prompve_docker_traefik_host_name: "prompve"
+
+# Domain name to use for the Traefik endpoint. Combined with [prompve_docker_traefik_host_name] to form the
+# FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
+prompve_docker_traefik_host_domain: "example.com"
+
+# Name of the Docker network Traefik should use when proxying.
+prompve_docker_traefik_network: null
+
+#####
+# Prometheus PVE Exporter
+#####
+
+# Cluster collectors
+prompve_docker_collector_status: true
+prompve_docker_collector_version: true
+prompve_docker_collector_node: true
+prompve_docker_collector_cluster: true
+prompve_docker_collector_resources: true
+prompve_docker_collector_backupinfo: false
+  
+# Node collectors
+prompve_docker_collector_config: true
+prompve_docker_collector_replication: false
+prompve_docker_collector_subscription: false
+
+# Scrape collectors
+prompve_docker_collector_api_metrics: true
+prompve_docker_collector_target_metrics: true
+
+# Authentication
+prompve_docker_user: null
+prompve_docker_token_name: null
+prompve_docker_token_value: null
+
+prompve_docker_verify_ssl: false

@@ -1,0 +1,12 @@
+---
+- name: "{{ prompve_docker_role_label }} | collector.{{ __prompve_collector.name }} prefix"
+  ansible.builtin.set_fact:
+    __prompve_collector_prefix: "{{ __prompve_collector.value | default(false, true) | ternary('', 'no-') }}collector"
+  
+- name: "{{ prompve_docker_role_label }} | collector.{{ __prompve_collector.name }} command"
+  ansible.builtin.set_fact:
+    __prompve_collector_command: "--{{ __prompve_collector_prefix }}.{{ __prompve_collector.name }}"
+
+- name: "{{ prompve_docker_role_label }} | collector.{{ __prompve_collector.name }} add to commands"
+  ansible.builtin.set_fact:
+    _prompve_docker_commands: "{{ _prompve_docker_commands | default([], true) + [__prompve_collector_command] }}"

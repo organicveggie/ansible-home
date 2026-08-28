@@ -1,0 +1,6 @@
+---
+#####
+# Ansible
+#####
+
+prompve_docker_role_label: "prompve_docker_role"
