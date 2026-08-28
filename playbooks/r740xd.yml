@@ -121,8 +121,13 @@
         r740xd_prometheus_opnsense_addr: "{{ vault_opnsense_address }}"
         # prometheus-pve-export
         r740xd_prompve_host_domain: "{{ vault_veggie_home_domain }}"
+        r740xd_prompve_token_name: "{{ vault_prompve_token_name }}"
+        r740xd_prompve_token_value: "{{ vault_prompve_token_value }}"
+        r740xd_prompve_user: "{{ vault_prompve_user }}"
         # Prowlarr
         r740xd_prowlarr_host_domain: "{{ veggie_base_domain_name }}"
+        # Proxmox
+        r740xd_proxmox_fqdn: "{{ vault_proxmox_fqdn }}"
         # Radarr
         r740xd_radarr1080_api_key: "{{ vault_radarr1080_api_key }}"
         r740xd_radarr1080_host_domain: "{{ veggie_base_domain_name }}"
