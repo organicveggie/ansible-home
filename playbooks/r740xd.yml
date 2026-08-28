@@ -119,6 +119,7 @@
         # Prometheus
         r740xd_prometheus_host_domain: "{{ vault_veggie_home_domain }}"
         r740xd_prometheus_opnsense_addr: "{{ vault_opnsense_address }}"
+        r740xd_prometheus_vyos_addr: "{{ vault_vyos_address }}"
         # prometheus-pve-export
         r740xd_prompve_host_domain: "{{ vault_veggie_home_domain }}"
         r740xd_prompve_token_name: "{{ vault_prompve_token_name }}"

@@ -73,6 +73,16 @@
               target_label: __name__
               replacement: 'opnsense_${1}'
 
+        - job_name: "vyos"
+          scrape_interval: "10s"
+          static_configs:
+            - targets: ['{{ r740xd_prometheus_vyos_addr }}:{{ r740xd_prometheus_vyos_port }}']
+          metric_relabel_configs:
+            - source_labels: [__name__]
+              regex: '(.*)'
+              target_label: __name__
+              replacement: 'vyos_${1}'
+
         - job_name: "saurron"
           metrics_path: "/v1/metrics"
           scrape_interval: "1m"
@@ -113,7 +123,7 @@
               target_label: instance
             - target_label: __address__
               replacement: "{{ r740xd_prompve_name }}:9221"  # PVE exporter
-
+        
 - name: "R740xd | Install Prometheus node exporter"
   ansible.builtin.import_role:
     name: "node_exporter_docker"
