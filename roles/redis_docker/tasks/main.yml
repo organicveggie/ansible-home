@@ -1,0 +1,107 @@
+---
+- name: "{{ redis_docker_role_label }} | Create data volume"
+  community.docker.docker_volume:
+    name: "{{ redis_docker_volume_name }}"
+
+- name: "{{ redis_docker_role_label }} | Get info on data volume"
+  community.docker.docker_volume_info:
+    name: "{{ redis_docker_volume_name }}"
+  register: "_redis_docker_volume_info"
+
+- name: "{{ redis_docker_role_label }} | Set ownership for data volume"
+  ansible.builtin.file:
+    path: "{{ _redis_docker_volume_info.volume.Mountpoint }}"
+    owner: "{{ redis_docker_uid }}"
+    group: "{{ redis_docker_gid }}"
+    recurse: false
+    state: "directory"
+    mode: "0770"
+
+- name: "{{ redis_docker_role_label }} | Create Redis Docker config folder"
+  ansible.builtin.file:
+    path: "{{ redis_docker_config_folder }}"
+    owner: "{{ redis_docker_uid }}"
+    group: "{{ redis_docker_gid }}"
+    mode: "0750"
+    state: "directory"
+
+- name: "{{ redis_docker_role_label }} | Create Redis Docker config file"
+  ansible.builtin.template:
+    src: "templates/redis.conf.j2"
+    dest: "{{ redis_docker_config_folder }}/{{ redis_docker_config_file }}"
+    mode: "0640"
+    group: "{{ redis_docker_gid }}"
+    owner: "{{ redis_docker_uid }}"
+  register: "_redis_docker_modify_config"
+
+- name: "{{ redis_docker_role_label }} | Set Docker mount list"
+  ansible.builtin.set_fact:
+    _redis_docker_mount_list:
+      - "source": "{{ redis_docker_volume_name }}"
+        "target": "/data"
+        "type": "volume"
+      - source: "{{ redis_docker_config_folder }}/{{ redis_docker_config_file }}"
+        target: "/usr/local/etc/redis/redis.conf"
+        type: "bind"
+        read_only: true
+
+- name: "{{ redis_docker_role_label }} | Create placeholder array for default network"
+  ansible.builtin.set_fact:
+    _redis_docker_default_networks:
+      - name: "{{ redis_docker_network_name }}"
+        aliases: "{{ redis_docker_network_aliases | default(omit) }}"
+
+- name: "{{ redis_docker_role_label }} | Define all Docker networks for this container"
+  ansible.builtin.set_fact:
+    _redis_docker_all_networks: "{{ _redis_docker_default_networks + redis_docker_extra_networks }}"
+
+- name: "{{ redis_docker_role_label }} | Define user-supplied extra Docker labels"
+  ansible.builtin.set_fact:
+    _redis_docker_labels: "{{ _redis_docker_labels | default({}) |
+      combine({__item.key: __item.value}) }}"
+  loop: "{{ redis_docker_extra_labels | dict2items }}"
+  loop_control:
+    loop_var: __item
+
+- name: "{{ redis_docker_role_label }} | Define default Docker environment variables"
+  ansible.builtin.set_fact:
+    _redis_docker_env_vars: []
+
+- name: "{{ redis_docker_role_label }} | Define user-supplied extra Docker environment variables"
+  ansible.builtin.set_fact:
+    _redis_docker_env_vars: "{{ _redis_docker_env_vars | default({}) |
+      combine({__item.key: __item.value}) }}"
+  loop: "{{ redis_docker_extra_env | dict2items }}"
+  loop_control:
+    loop_var: __item
+
+- name: "{{ redis_docker_role_label }} | Create container"
+  community.docker.docker_container:
+    name: "{{ redis_docker_name }}"
+    image: "{{ redis_docker_image_name }}:{{ redis_docker_image_version }}"
+    pull: true
+    mounts: "{{ _redis_docker_mount_list }}"
+    env: "{{ _redis_docker_env_vars }}"
+    network_mode: "{{ redis_docker_network_name }}"
+    networks: "{{ _redis_docker_all_networks }}"
+    command:
+      - "redis-server"
+      - "/usr/local/etc/redis/redis.conf"
+    restart_policy: unless-stopped
+    restart: |
+      {{ _redis_docker_modify_config.changed | default(false) }}
+    memory: "{{ redis_docker_memory }}"
+    cpus: "{{ redis_docker_cpus }}"
+    container_default_behavior: "no_defaults"
+    auto_remove: false
+    detach: true
+    init: false
+    interactive: false
+    paused: false
+    privileged: true
+    read_only: false
+    tty: false
+    capabilities:
+      - "NET_ADMIN"
+      - "SYS_ADMIN"
+    labels: "{{ _redis_docker_labels }}"

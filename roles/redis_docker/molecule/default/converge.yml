@@ -1,0 +1,55 @@
+---
+- name: Install dependencies
+  hosts: all
+
+  vars:
+    pip_install_packages:
+      - name: docker
+    docker_daemon_options:
+      storage-driver: "vfs"
+
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 600
+
+    - name: Install Docker
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+
+- name: Converge
+  hosts: all
+  become: true
+
+  vars:
+    redis_docker_available_externally: true
+    redis_docker_extra_env:
+      "_MOLECULE_TEST": "redis_docker molecule test value"
+    redis_docker_extra_labels:
+      "molecule-label-01": "molecule-value-01"
+    redis_docker_extra_networks:
+      - name: "extra-network"
+    redis_docker_name: "redis_docker-molecule"
+    redis_docker_network_aliases:
+      - "zzz-molecule"
+    redis_docker_network_name: "molecule-test-network"
+    redis_docker_volume_name: "redis_docker-molecule-volume"
+    redis_docker_config_bind_address: null
+    redis_docker_database_count: 2
+    redis_docker_config_persist_rdb_filename: "molecule-test.rdb"
+    redis_docker_acls:
+      - "user default on +@all -@dangerous ~*"
+      - "user molecule on >topsecretpassword +@read +@write +@search +@set +@sortedset +@string +@list +@hash -@dangerous ~*"
+
+  pre_tasks:
+    - name: Create Docker test networks
+      community.docker.docker_network:
+        name: "{{ __item.name }}"
+        state: present
+      loop: "{{ redis_docker_extra_networks + [{'name': redis_docker_network_name}] }}"
+      loop_control:
+        loop_var: "__item"
+
+  roles:
+    - role: redis_docker
