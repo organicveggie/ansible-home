@@ -15,6 +15,7 @@
     - "{{ docker_networks.kometa }}"
     - "{{ docker_networks.monitoring }}"
     - "{{ docker_networks.plex }}"
+    - "{{ docker_networks.unbound }}"
   loop_control:
     loop_var: "__item"
 

@@ -1,0 +1,82 @@
+---
+#####
+# Container settings
+#####
+# Name of the Docker container.
+unbound_docker_name: "unbound"
+
+# Base name of the Docker image to use for the container.
+unbound_docker_image_name: "madnuttah/unbound"
+
+# Specific Docker image version to use for the container.
+unbound_docker_image_version: "latest"
+
+# Number of vCPUs to allocate to the container.
+unbound_docker_cpus: "1"
+
+# Amount of memory to allocate to the container.
+unbound_docker_memory: "512MB"
+
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+unbound_docker_extra_labels: {}
+
+# Dictionary of extra key value pairs to set as environment variables on the Docker container.
+unbound_docker_extra_env: {}
+
+# Dict of host-to-IP mappings, where each host name is a key in the dictionary. Each host name will
+# be added to the container's /etc/hosts file.
+# Instead of an IP address, the special value host-gateway can also be used, which resolves to the
+# host's gateway IP and allows containers to connect to services running on the host.
+unbound_docker_extra_hosts: {}
+
+# Name of the config folder on the host OS. 
+unbound_docker_config_dir: "/usr/local/unbound"
+
+# Name of the Docker volume to hold logs.
+unbound_docker_logs_volume_name: "unbound-logs"
+
+# Name of the primary network.
+unbound_docker_network_name: null
+
+# Container aliases on the default network.
+unbound_docker_network_aliases: null
+
+# List of additional networks to join.
+unbound_docker_extra_networks: []
+
+# TCP port number for web interface.
+unbound_docker_web_port: "8080"
+
+#####
+# Traefik
+#####
+
+# Enable use of Traefik as a proxy.
+unbound_docker_traefik_available_externally: false
+
+# Host name to use for the Traefik endpoint. Combined with [unbound_docker_traefik_host_domain] to form the
+# FQDN for the endpoint.
+unbound_docker_traefik_host_name: "unbound_docker"
+
+# Domain name to use for the Traefik endpoint. Combined with [unbound_docker_traefik_host_name] to form the
+# FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
+unbound_docker_traefik_host_domain: "example.com"
+
+#####
+# Unbound
+#####
+
+unbound_docker_timezone: "Europe/Berlin"
+unbound_docker_uid: 1000
+unbound_docker_gid: 1000
+
+unbound_docker_healthcheck_port: 5335
+unbound_docker_extended_healthcheck: true
+unbound_docker_extended_healthcheck_domain: "nlnetlabs.nl"
+unbound_docker_enable_stats: false
+
+unbound_docker_redis_cache: false
+unbound_docker_redis_host: "redis"
+unbound_docker_redis_port: 6379
+unbound_docker_redis_password: "unbound"
+unbound_docker_redis_username: "unbound"

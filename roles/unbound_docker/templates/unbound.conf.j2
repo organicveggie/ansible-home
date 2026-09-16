@@ -1,0 +1,10 @@
+# unbound.conf(5) config file for unbound(8).
+server:
+    module-config: "validator iterator"
+	username: ""
+directory: "/usr/local/unbound"
+	chroot: ""
+	do-daemonize: no
+
+include-toplevel: "/usr/local/unbound/conf.d/*.conf"
+include-toplevel: "/usr/local/unbound/zones.d/*.conf"

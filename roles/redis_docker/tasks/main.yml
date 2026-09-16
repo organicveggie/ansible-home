@@ -65,7 +65,7 @@
 
 - name: "{{ redis_docker_role_label }} | Define default Docker environment variables"
   ansible.builtin.set_fact:
-    _redis_docker_env_vars: []
+    _redis_docker_env_vars: {}
 
 - name: "{{ redis_docker_role_label }} | Define user-supplied extra Docker environment variables"
   ansible.builtin.set_fact:
@@ -104,4 +104,4 @@
     capabilities:
       - "NET_ADMIN"
       - "SYS_ADMIN"
-    labels: "{{ _redis_docker_labels }}"
+    labels: "{{ _redis_docker_labels | default({}, true) }}"

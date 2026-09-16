@@ -70,17 +70,18 @@
   loop_control:
     loop_var: __item
 
-- name: "{% raw %}{{{% endraw %} {{ role_name }}_role_label {% raw %}}}{% endraw %} | Create {{ role_name }} container"
+- name: "{% raw %}{{{% endraw %} {{ role_name }}_role_label {% raw %}}}{% endraw %} | Create container"
   community.docker.docker_container:
     name: "{% raw %}{{{% endraw %} {{ role_name }}_name {% raw %}}}{% endraw %}"
     image: "{% raw %}{{{% endraw %} {{ role_name }}_image_name {% raw %}}}{% endraw %}:{% raw %}{{{% endraw %} {{ role_name }}_image_version {% raw %}}}{% endraw %}"
     pull: true
     mounts: "{% raw %}{{{% endraw %} _{{ role_name }}_mount_list {% raw %}}}{% endraw %}"
     env: "{% raw %}{{{% endraw %} _{{ role_name }}_env_vars {% raw %}}}{% endraw %}"
-    network_mode: "host"
+    networks: "{% raw %}{{{% endraw %} _{{ role_name }}_all_networks {% raw %}}}{% endraw %}"
+    network_mode: "{% raw %}{{{% endraw %} {{ role_name }}_network_name {% raw %}}}{% endraw %}"
     restart_policy: unless-stopped
-    memory: "{% raw %}{{{% endraw %} _{{ role_name }}_memory {% raw %}}}{% endraw %}"
-    cpus: "{% raw %}{{{% endraw %} _{{ role_name }}_cpus {% raw %}}}{% endraw %}"
+    memory: "{% raw %}{{{% endraw %} {{ role_name }}_memory {% raw %}}}{% endraw %}"
+    cpus: "{% raw %}{{{% endraw %} {{ role_name }}_cpus {% raw %}}}{% endraw %}"
     container_default_behavior: "no_defaults"
     auto_remove: false
     detach: true

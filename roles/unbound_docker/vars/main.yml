@@ -1,0 +1,6 @@
+---
+#####
+# Ansible
+#####
+
+unbound_docker_role_label: "unbound_docker_role"

@@ -376,6 +376,16 @@ docker_macvlans:
       - subnet: "{{ vault_docker_macvlan_default.subnet }}"
         gateway: "{{ vault_docker_macvlan_default.gateway }}"
         iprange: "{{ vault_docker_macvlan_default.iprange }}"
+  guest:
+    name: "guest"
+    network_parent: "{{ vault_docker_macvlan_guest.parent }}"
+    enable_ipv6: false
+    internal: false
+    scope: "local"
+    ipam_config:
+      - subnet: "{{ vault_docker_macvlan_guest.subnet }}"
+        gateway: "{{ vault_docker_macvlan_guest.gateway }}"
+        iprange: "{{ vault_docker_macvlan_guest.iprange }}"
 
 ###
 ### Plex
