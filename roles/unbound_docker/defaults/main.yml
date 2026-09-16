@@ -62,6 +62,9 @@ unbound_docker_traefik_host_name: "unbound_docker"
 # FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
 unbound_docker_traefik_host_domain: "example.com"
 
+# Name of the Docker network Traefik should use when proxying.
+unbound_docker_traefik_network: null
+
 #####
 # Unbound
 #####
