@@ -1,0 +1,27 @@
+---
+interior_lights_on:
+    alias: "All interior lights on"
+    description: "Turn on all interior lights"
+    sequence:
+        - action: light.turn_on
+          metadata: {}
+          data: {}
+          target:
+            area_id:
+              - bedroom
+              - dining_room
+              - kitchen
+              - living_room
+interior_lights_off:
+    alias: "All interior lights off"
+    description: "Turn off all interior lights"
+    sequence:
+        - action: light.turn_off
+          metadata: {}
+          data: {}
+          target:
+            area_id:
+              - bedroom
+              - dining_room
+              - kitchen
+              - living_room

@@ -1,13 +1,66 @@
 ---
-{# - alias: "Do Evening Lighting Stuff"
-  description: ""
+- alias: Turn off lights - AM
+  description: 'Turn off all interior lights late morning'
   triggers:
     - trigger: time
-      at: "19:00:00"
+      at: '10:00:00'
   conditions: []
   actions:
-    - action: "light.turn_on"
+    - action: script.interior_lights_off
+      metadata: {}
+      data: {}
+  mode: single
+
+- alias: Lights off - PM
+  description: 'Turn off all interior lights at night'
+  triggers:
+    - trigger: time
+      at: '00:00:00'
+  conditions:
+    - condition: media_player.is_off
       target:
         entity_id:
-          - "light.dining_room"
-  mode: "single" #}
+          - media_player.anthem_av
+  actions:
+    - action: script.interior_lights_off
+      metadata: {}
+      data: {}
+  mode: single
+
+- alias: Lights on - AM
+  description: 'Turn on all interior lights in the morning'
+  triggers:
+    - trigger: sun.dawn
+      options:
+        offset:
+          hours: 0
+          minutes: 30
+          seconds: 0
+          days: 0
+        offset_type: before
+        type: civil
+  conditions: []
+  actions:
+    - action: script.interior_lights_on
+      metadata: {}
+      data: {}
+  mode: single
+
+- alias: Lights on - PM
+  description: ''
+  triggers:
+    - trigger: sun.dusk
+      options:
+        offset:
+          hours: 1
+          minutes: 0
+          seconds: 0
+          days: 0
+        offset_type: before
+        type: civil
+  conditions: []
+  actions:
+    - action: script.interior_lights_on
+      metadata: {}
+      data: {}
+  mode: single
