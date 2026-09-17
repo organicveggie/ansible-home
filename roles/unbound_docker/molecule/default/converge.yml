@@ -1,0 +1,51 @@
+---
+- name: Install dependencies
+  hosts: all
+
+  vars:
+    pip_install_packages:
+      - name: docker
+    docker_daemon_options:
+      storage-driver: "vfs"
+
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 600
+
+    - name: Install Docker
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+
+- name: Converge
+  hosts: all
+  become: true
+
+  vars:
+    unbound_docker_available_externally: true
+    unbound_docker_extra_env:
+      "_MOLECULE_TEST": "unbound_docker molecule test value"
+    unbound_docker_extra_labels:
+      "molecule-label-01": "molecule-value-01"
+    unbound_docker_extra_networks:
+      - name: "extra-network"
+    unbound_docker_name: "unbound_docker-molecule"
+    unbound_docker_network_aliases:
+      - "zzz-molecule"
+    unbound_docker_network_name: "molecule-test-network"
+    unbound_docker_config_dir: "/usr/local/unbound_molecule"
+    unbound_docker_logs_volume_name: "unbound-logs-molecule"
+    unbound_docker_traefik_network: "{{ unbound_docker_extra_networks[0].name }}"
+
+  pre_tasks:
+    - name: Create Docker test networks
+      community.docker.docker_network:
+        name: "{{ __item.name }}"
+        state: present
+      loop: "{{ unbound_docker_extra_networks + [{'name': unbound_docker_network_name}] }}"
+      loop_control:
+        loop_var: "__item"
+
+  roles:
+    - role: unbound_docker

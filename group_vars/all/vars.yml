@@ -93,6 +93,11 @@ docker_networks:
     gateway: "172.40.3.1"
     subnet: "172.40.3.0/24"
     internal: false
+  unbound:
+    name: "unbound"
+    gateway: "172.40.4.1"
+    subnet: "172.40.4.0/24"
+    internal: false
 
 ###
 ### Home Assistant

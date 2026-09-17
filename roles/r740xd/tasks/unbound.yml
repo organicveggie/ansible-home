@@ -1,0 +1,28 @@
+---
+- name: "{{ r740xd_ansible_role_label }} | unbound | Setup Redis"
+  ansible.builtin.import_role:
+    name: "redis_docker"
+  vars:
+    redis_docker_acls:
+      - "user default on +@all -@dangerous ~*"
+      - "user {{ r740xd_unbound_redis_username }} on >{{ r740xd_unbound_redis_password }} +@connection +@read +@search +@write -@dangerous ~*"
+    redis_docker_config_bind_address: null
+    redis_docker_config_folder: "{{ r740xd_unbound_redis_docker_config_folder }}"
+    redis_docker_config_persist_rdb: true
+    redis_docker_database_count: 2
+    redis_docker_name: "{{ r740xd_unbound_redis_container_name }}"
+    redis_docker_port: "{{ r740xd_unbound_redis_port }}"
+    redis_docker_network_name: "{{ docker_networks.unbound.name }}"
+    redis_docker_volume_name: "{{ r740xd_unbound_redis_docker_volume_name }}"
+
+- name: "{{ r740xd_ansible_role_label }} | unbound | Setup Unbound"
+  ansible.builtin.import_role:
+    name: "unbound_docker"
+  vars:
+    unbound_docker_network_name: "{{ docker_macvlans.guest.name }}"
+    unbound_docker_extra_networks:
+      - "{{ docker_networks.unbound.name }}"
+    unbound_docker_redis_cache: true
+    unbound_docker_redis_host: "{{ r740xd_unbound_redis_container_name }}"
+    unbound_docker_redis_port: "{{ r740xd_unbound_redis_port }}"
+    unbound_docker_timezone: "{{ home_timezone }}"

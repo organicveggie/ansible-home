@@ -1,0 +1,195 @@
+---
+- name: "{{ unbound_docker_role_label }} | Create logs volume"
+  community.docker.docker_volume:
+    name: "{{ unbound_docker_logs_volume_name }}"
+
+- name: "{{ unbound_docker_role_label }} | Get info on logs volume"
+  community.docker.docker_volume_info:
+    name: "{{ unbound_docker_logs_volume_name }}"
+  register: "_unbound_docker_logs_volume_info"
+
+- name: "{{ unbound_docker_role_label }} | Set ownership for logs volume"
+  ansible.builtin.file:
+    path: "{{ _unbound_docker_logs_volume_info.volume.Mountpoint }}"
+    owner: "{{ unbound_docker_uid }}"
+    group: "{{ unbound_docker_gid }}"
+    recurse: false
+    state: "directory"
+    mode: "0770"
+
+- name: "{{ unbound_docker_role_label }} | Create config folder"
+  ansible.builtin.file:
+    name: "{{ unbound_docker_config_dir }}"
+    state: directory
+    owner: "{{ unbound_docker_uid }}"
+    group: "{{ unbound_docker_gid }}"
+    mode: "0750"
+
+- name: "{{ unbound_docker_role_label }} | Create config folder child folders"
+  ansible.builtin.file:
+    name: "{{ unbound_docker_config_dir }}/{{ __item }}"
+    state: directory
+    owner: "{{ unbound_docker_uid }}"
+    group: "{{ unbound_docker_gid }}"
+    mode: "0750"
+  with_items:
+    - "certs.d"
+    - "conf.d"
+    - "zones.d"
+  loop_control:
+    loop_var: __item
+
+- name: "{{ unbound_docker_role_label }} | Create main unbound.conf file"
+  ansible.builtin.template:
+    src: "unbound.conf.j2"
+    dest: "{{ unbound_docker_config_dir }}/unbound.conf"
+    owner: "{{ unbound_docker_uid }}"
+    group: "{{ unbound_docker_gid }}"
+    mode: "0640"
+
+- name: "{{ unbound_docker_role_label }} | Create conf.d config files "
+  ansible.builtin.template:
+    src: "{{ __item }}.j2"
+    dest: "{{ unbound_docker_config_dir }}/conf.d/{{ __item }}"
+    owner: "{{ unbound_docker_uid }}"
+    group: "{{ unbound_docker_gid }}"
+    mode: "0640"
+  with_items:
+    - "logging.conf"
+    - "access-control.conf"
+    - "interfaces.conf"
+    - "remote-control.conf"
+    - "security.conf"
+  loop_control:
+    loop_var: __item
+
+- name: "{{ unbound_docker_role_label }} | Set Docker mount list"
+  ansible.builtin.set_fact:
+    _unbound_docker_mount_list:
+      - "source": "{{ unbound_docker_config_dir }}/unbound.conf"
+        "target": "/usr/local/unbound/unbound.conf"
+        "type": "bind"
+        "read_only": true
+      - "source": "{{ unbound_docker_config_dir }}/conf.d"
+        "target": "/usr/local/unbound/conf.d"
+        "type": "bind"
+        "read_only": true
+      - "source": "{{ unbound_docker_config_dir }}/zones.d"
+        "target": "/usr/local/unbound/zones.d"
+        "type": "bind"
+        "read_only": true
+      - "source": "{{ unbound_docker_logs_volume_name }}"
+        "target": "/usr/local/unbound/log.d"
+        "type": "volume"
+
+- name: "{{ unbound_docker_role_label }} | Create placeholder array for default network"
+  ansible.builtin.set_fact:
+    _unbound_docker_default_networks:
+      - name: "{{ unbound_docker_network_name }}"
+        aliases: "{{ unbound_docker_network_aliases | default(omit) }}"
+
+- name: "{{ unbound_docker_role_label }} | Define all Docker networks for this container"
+  ansible.builtin.set_fact:
+    _unbound_docker_all_networks: "{{ _unbound_docker_default_networks + unbound_docker_extra_networks }}"
+
+- name: "{{ unbound_docker_role_label }} | Build container FQDN"
+  ansible.builtin.set_fact:
+    _unbound_docker_fqdn: "{{ unbound_docker_traefik_host_name }}.{{ unbound_docker_traefik_host_domain }}"
+
+- name: "{{ unbound_docker_role_label }} | Define common Docker labels"
+  ansible.builtin.set_fact:
+    _unbound_docker_labels:
+      "traefik.enable": "{{ unbound_docker_traefik_available_externally | ternary('true', 'false') }}"
+
+- name: "{{ unbound_docker_role_label }} | Define Docker labels with Traefik enabled"
+  when: "unbound_docker_traefik_available_externally | default(false, true)"
+  block:
+    - name: "{{ unbound_docker_role_label }} | Define Docker labels"
+      ansible.builtin.set_fact:
+        _unbound_docker_labels: "{{ _unbound_docker_labels | default({}) |
+          combine({__item.key: __item.value}) }}"
+      with_items:
+        - key: "traefik.docker.network"
+          value: "host"
+        - key: "traefik.http.routers.unbound_docker.rule"
+          value: "Host(`{{ _unbound_docker_fqdn }}`)"
+        - key: "traefik.http.routers.unbound_docker.entrypoints"
+          value: "http,https"
+        - key: "traefik.http.routers.unbound_docker.tls.certresolver"
+          value: "letsencrypt"
+        - key: "traefik.http.routers.unbound_docker.tls.domains[0].main"
+          value: "*.{{ unbound_docker_traefik_host_domain }}"
+        - key: "traefik.http.services.unbound_docker.loadbalancer.server.port"
+          value: "{{ unbound_docker_web_port }}"
+      loop_control:
+        loop_var: __item
+
+    - name: "{{ unbound_docker_role_label }} | Set Traefik network label"
+      ansible.builtin.set_fact:
+        _unbound_docker_labels: "{{ _unbound_docker_labels | default({}) |
+          combine({'traefik.docker.network': unbound_docker_traefik_network}) }}"
+      when: "unbound_docker_traefik_network | default('', true) | length > 0"
+
+- name: "{{ unbound_docker_role_label }} | Define user-supplied extra Docker labels"
+  ansible.builtin.set_fact:
+    _unbound_docker_labels: "{{ _unbound_docker_labels | default({}) |
+      combine({__item.key: __item.value}) }}"
+  loop: "{{ unbound_docker_extra_labels | dict2items }}"
+  loop_control:
+    loop_var: __item
+
+- name: "{{ unbound_docker_role_label }} | Define default Docker environment variables"
+  ansible.builtin.set_fact:
+    _unbound_docker_env_vars:
+      "TZ": "{{ unbound_docker_timezone }}"
+      "UNBOUND_UID": "{{ unbound_docker_uid | string }}"
+      "UNBOUND_GID": "{{ unbound_docker_gid | string }}"
+      "ENABLE_STATS": "{{ unbound_docker_enable_stats | default(false, true) | string | lower }}"
+
+- name: "{{ unbound_docker_role_label }} | Define health check environment variables"
+  ansible.builtin.set_fact:
+    _unbound_docker_env_vars: "{{ _unbound_docker_env_vars | default({}) | combine({__item.key: __item.value}) }}"
+  with_items:
+    - key: "HEALTHCHECK_PORT"
+      value: "{{ unbound_docker_healthcheck_port | string }}"
+    - key: "EXTENDED_HEALTHCHECK"
+      value: "{{ unbound_docker_extended_healthcheck | default(false, true) | string | lower }}"
+    - key: "EXTENDED_HEALTHCHECK_DOMAIN"
+      value: "{{ unbound_docker_extended_healthcheck_domain }}"
+  loop_control:
+    loop_var: __item
+  when: "unbound_docker_extended_healthcheck | default(false, true)"
+
+- name: "{{ unbound_docker_role_label }} | Define user-supplied extra Docker environment variables"
+  ansible.builtin.set_fact:
+    _unbound_docker_env_vars: "{{ _unbound_docker_env_vars | default({}) |
+      combine({__item.key: __item.value}) }}"
+  loop: "{{ unbound_docker_extra_env | dict2items }}"
+  loop_control:
+    loop_var: __item
+
+- name: "{{ unbound_docker_role_label }} | Create unbound_docker container"
+  community.docker.docker_container:
+    name: "{{ unbound_docker_name }}"
+    image: "{{ unbound_docker_image_name }}:{{ unbound_docker_image_version }}"
+    pull: true
+    mounts: "{{ _unbound_docker_mount_list }}"
+    env: "{{ _unbound_docker_env_vars }}"
+    network_mode: "{{ unbound_docker_network_name }}"
+    networks: "{{ _unbound_docker_all_networks }}"
+    restart_policy: unless-stopped
+    memory: "{{ unbound_docker_memory }}"
+    cpus: "{{ unbound_docker_cpus }}"
+    container_default_behavior: "no_defaults"
+    auto_remove: false
+    detach: true
+    init: false
+    interactive: false
+    paused: false
+    privileged: true
+    read_only: false
+    tty: false
+    capabilities:
+      - "NET_ADMIN"
+      - "SYS_ADMIN"
+    labels: "{{ _unbound_docker_labels }}"

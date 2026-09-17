@@ -1,0 +1,110 @@
+---
+#####
+# Container settings
+#####
+# Name of the Docker container.
+redis_docker_name: "redis"
+
+# Base name of the Docker image to use for the container.
+redis_docker_image_name: "redis"
+
+# Specific Docker image version to use for the container.
+redis_docker_image_version: "latest"
+
+# Number of vCPUs to allocate to the container.
+redis_docker_cpus: "2"
+
+# Amount of memory to allocate to the container.
+redis_docker_memory: "1024MB"
+
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+redis_docker_extra_labels: {}
+
+# Dictionary of extra key value pairs to set as environment variables on the Docker container.
+redis_docker_extra_env: {}
+
+# Dict of host-to-IP mappings, where each host name is a key in the dictionary. Each host name will
+# be added to the container's /etc/hosts file.
+# Instead of an IP address, the special value host-gateway can also be used, which resolves to the
+# host's gateway IP and allows containers to connect to services running on the host.
+redis_docker_extra_hosts: {}
+
+# Name of the Docker volume. 
+redis_docker_volume_name: "redis-data"
+
+# Name of the folder on the host machine where the Redis configuration file is located.
+# This folder will be mounted into the container at /usr/local/etc/redis.
+redis_docker_config_folder: "/etc/redis"
+
+# Name of the Redis configuration file. This file will be mounted into the container at /usr/local/etc/redis/redis.conf.
+# The default value is "redis.conf", which is the default configuration file name used by the official Redis Docker image.
+redis_docker_config_file: "redis.conf"
+
+# Name of the primary network.
+redis_docker_network_name: null
+
+# Container aliases on the default network.
+redis_docker_network_aliases: null
+
+# List of additional networks to join.
+redis_docker_extra_networks: []
+
+redis_docker_gid: 999
+redis_docker_uid: 999
+
+#####
+# Redis config settings
+#####
+
+# By default, if no "bind" configuration directive is specified, Redis listens for connections from
+# all available network interfaces on the host machine. You will also need to set a password unless
+# you explicitly disable protected mode.
+redis_docker_config_bind_address: "127.0.0.1 -::1"
+
+# When protected mode is on and the default user has no password, the server only accepts local
+# connections from the IPv4 address (127.0.0.1), IPv6 address (::1) or Unix domain sockets.
+redis_docker_config_protected_mode: true
+
+redis_docker_port: 6379
+
+redis_docker_config_persist_appendonly: false
+
+# Server logging level. This is the minimum level of messages that are logged. The levels are
+# ordered as follows:
+#
+# debug (a lot of information, useful for development/testing)
+# verbose (many rarely useful info, but not a mess like the debug level)
+# notice (moderately verbose, what you want in production probably)
+# warning (only very important / critical messages are logged)
+# nothing (nothing is logged)
+redis_docker_config_loglevel: "notice"
+
+# Name of the log file where Redis will dump its log. If the value is null or an empty string,
+# Redis will log to standard output.
+redis_docker_config_logfile: null
+
+# Avoid logging personal identifiable information (PII) into server log file
+redis_docker_config_avoid_pii_logging: true
+
+# Sets the number of databases.
+redis_docker_database_count: 16
+
+# Snapshotting configuration. Configures Redis to dump the dataset to disk on a periodic basis.
+redis_docker_config_persist_rdb: false
+redis_docker_config_persist_rdb_interval: 60
+redis_docker_config_persist_rdb_writeops: 1
+
+# Name of the database snapshot file. The database snapshots will be written inside the directory
+# specified in [redis_docker_config_working_directory] using this filename.
+redis_docker_config_persist_rdb_filename: "dump.rdb"
+
+# The database snapshots will be written inside this directory using the filename specified in
+# the [redis_docker_config_persist_rdb_filename] option. The Append Only File will also be created
+# inside this directory.
+redis_docker_config_working_directory: "/data"
+
+# List of Redis ACL users in the following format:
+#
+#   user <username> ... acl rules ...
+#
+redis_docker_acls: []

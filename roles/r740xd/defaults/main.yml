@@ -430,6 +430,16 @@ r740xd_traefik3_conf_cert_resolvers:
           - "8.8.8.8:53" # Use external DNS to verify TXT record changes
 
 ###
+### Unbound
+###
+r740xd_unbound_redis_docker_config_folder: "/etc/redis/unbound"
+r740xd_unbound_redis_docker_name: "unbound-redis"
+r740xd_unbound_redis_docker_volume_name: "unbound-redis-data"
+r740xd_unbound_redis_port: 6379
+r740xd_unbound_redis_password: null
+r740xd_unbound_redis_username: "unbound"
+
+###
 ### UniFi Controller
 ###
 r740xd_unific_container_name: "unific"
