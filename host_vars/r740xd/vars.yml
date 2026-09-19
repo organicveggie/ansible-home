@@ -36,34 +36,50 @@ kometa_libraries: |2
         language: "en"
       collection_files:
         - default: actor
+          schedule: weekly(monday)
         - default: basic
+          schedule: weekly(wednesday)
         - default: bafta
+          schedule: weekly(friday)
         - default: cannes
+          schedule: weekly(monday)
         - default: decade
+          schedule: weekly(wednesday)
         - default: director
+          schedule: weekly(friday)
         - default: franchise
+          schedule: weekly(monday)
           template_variables:
             data:
               visible_home: true
         - default: genre
+          schedule: weekly(wednesday)
           template_variables:
             data:
               visible_home: true
         - default: imdb
+          schedule: weekly(friday)
         - default: oscars
+          schedule: weekly(monday)
           template_variables:
             data:
               starting: current_year-10
               ending: current_year
         - default: seasonal
+          schedule: weekly(wednesday)
           template_variables:
             data:
               visible_home: true
         - default: streaming
+          schedule: weekly(friday)
         - default: sundance
+          schedule: weekly(monday)
         - default: tmdb
+          schedule: weekly(wednesday)
         - default: universe
+          schedule: weekly(friday)
         - default: year
+          schedule: weekly(monday)
       overlay_files:
         - remove_overlays: false
         - default: resolution
@@ -98,34 +114,50 @@ kometa_libraries: |2
         language: "en"
       collection_files:
         - default: actor
+          schedule: weekly(monday)
         - default: basic
+          schedule: weekly(wednesday)
         - default: bafta
+          schedule: weekly(friday)
         - default: cannes
+          schedule: weekly(monday)
         - default: decade
+          schedule: weekly(wednesday)
         - default: director
+          schedule: weekly(friday)
         - default: franchise
+          schedule: weekly(monday)
           template_variables:
             data:
               visible_home: true
         - default: genre
+          schedule: weekly(wednesday)
           template_variables:
             data:
               visible_home: true
         - default: imdb
+          schedule: weekly(friday)
         - default: oscars
+          schedule: weekly(monday)
           template_variables:
             data:
               starting: current_year-10
               ending: current_year
         - default: seasonal
+          schedule: weekly(wednesday)
           template_variables:
             data:
               visible_home: true
         - default: streaming
+          schedule: weekly(friday)
         - default: sundance
+          schedule: weekly(monday)
         - default: tmdb
+          schedule: weekly(wednesday)
         - default: universe
+          schedule: weekly(friday)
         - default: year
+          schedule: weekly(monday)
       overlay_files:
         - remove_overlays: false
         - default: resolution
@@ -160,10 +192,15 @@ kometa_libraries: |2
         language: en
       collection_files:
         - default: basic
+          schedule: weekly(tuesday)
         - default: franchise
+          schedule: weekly(thursday)
         - default: genre
+          schedule: weekly(saturday)
         - default: network
+          schedule: weekly(tuesday)
         - default: year
+          schedule: weekly(thursday)
       overlay_files:
         - remove_overlays: false
         - default: resolution
@@ -236,10 +273,15 @@ kometa_libraries: |2
         language: en
       collection_files:
         - default: basic
+          schedule: weekly(tuesday)
         - default: franchise
+          schedule: weekly(thursday)
         - default: genre
+          schedule: weekly(saturday)
         - default: network
+          schedule: weekly(tuesday)
         - default: year
+          schedule: weekly(thursday)
       overlay_files:
         - remove_overlays: false
         - default: resolution
