@@ -30,47 +30,63 @@ kometa_tmdb_region: "US"
 kometa_tautulli_apikey: "{{ vault_kometa_tautulli_apikey }}"
 kometa_libraries: |2
     Movies:
-      schedule: weekly(sunday)
+      schedule: weekly(monday|wednesday|friday)
       report_path: /config/reports/Movies-1080p.yml
       template_variables:
         language: "en"
       collection_files:
-        - pmm: actor
-        - pmm: basic
-        - pmm: bafta
-        - pmm: cannes
-        - pmm: decade
-        - pmm: director
-        - pmm: franchise
+        - default: actor
+          schedule: weekly(monday)
+        - default: basic
+          schedule: weekly(wednesday)
+        - default: bafta
+          schedule: weekly(friday)
+        - default: cannes
+          schedule: weekly(monday)
+        - default: decade
+          schedule: weekly(wednesday)
+        - default: director
+          schedule: weekly(friday)
+        - default: franchise
+          schedule: weekly(monday)
           template_variables:
             data:
               visible_home: true
-        - pmm: genre
+        - default: genre
+          schedule: weekly(wednesday)
           template_variables:
             data:
               visible_home: true
-        - pmm: imdb
-        - pmm: oscars
+        - default: imdb
+          schedule: weekly(friday)
+        - default: oscars
+          schedule: weekly(monday)
           template_variables:
             data:
               starting: current_year-10
               ending: current_year
-        - pmm: seasonal
+        - default: seasonal
+          schedule: weekly(wednesday)
           template_variables:
             data:
               visible_home: true
-        - pmm: streaming
-        - pmm: sundance
-        - pmm: tmdb
-        - pmm: universe
-        - pmm: year
+        - default: streaming
+          schedule: weekly(friday)
+        - default: sundance
+          schedule: weekly(monday)
+        - default: tmdb
+          schedule: weekly(wednesday)
+        - default: universe
+          schedule: weekly(friday)
+        - default: year
+          schedule: weekly(monday)
       overlay_files:
         - remove_overlays: false
-        - pmm: resolution
-        - pmm: audio_codec
-        - pmm: streaming
-        - pmm: video_format
-        - pmm: ratings
+        - default: resolution
+        - default: audio_codec
+        - default: streaming
+        - default: video_format
+        - default: ratings
           template_variables:
             rating1: critic
             rating1_image: imdb
@@ -86,53 +102,69 @@ kometa_libraries: |2
             rating3_image: tmdb
             # rating3_font: config/metadata/fonts/Avenir_95_Black.ttf
             # rating3_font_size: 70
-        - pmm: ribbon
+        - default: ribbon
       operations:
         mass_user_rating_update: mdb_tomatoes   # Update user ratings with mdb_tomatoes
         mass_critic_rating_update: imdb         # Update critic ratings with imdb
         mass_audience_rating_update: tmdb       # Update audience ratings with tmdb
     Movies (4K):
-      schedule: weekly(monday)
+      schedule: weekly(monday|wednesday|friday)
       report_path: /config/reports/Movies-4K.yml
       template_variables:
         language: "en"
       collection_files:
-        - pmm: actor
-        - pmm: basic
-        - pmm: bafta
-        - pmm: cannes
-        - pmm: decade
-        - pmm: director
-        - pmm: franchise
+        - default: actor
+          schedule: weekly(monday)
+        - default: basic
+          schedule: weekly(wednesday)
+        - default: bafta
+          schedule: weekly(friday)
+        - default: cannes
+          schedule: weekly(monday)
+        - default: decade
+          schedule: weekly(wednesday)
+        - default: director
+          schedule: weekly(friday)
+        - default: franchise
+          schedule: weekly(monday)
           template_variables:
             data:
               visible_home: true
-        - pmm: genre
+        - default: genre
+          schedule: weekly(wednesday)
           template_variables:
             data:
               visible_home: true
-        - pmm: imdb
-        - pmm: oscars
+        - default: imdb
+          schedule: weekly(friday)
+        - default: oscars
+          schedule: weekly(monday)
           template_variables:
             data:
               starting: current_year-10
               ending: current_year
-        - pmm: seasonal
+        - default: seasonal
+          schedule: weekly(wednesday)
           template_variables:
             data:
               visible_home: true
-        - pmm: streaming
-        - pmm: sundance
-        - pmm: tmdb
-        - pmm: universe
-        - pmm: year
+        - default: streaming
+          schedule: weekly(friday)
+        - default: sundance
+          schedule: weekly(monday)
+        - default: tmdb
+          schedule: weekly(wednesday)
+        - default: universe
+          schedule: weekly(friday)
+        - default: year
+          schedule: weekly(monday)
       overlay_files:
         - remove_overlays: false
-        - pmm: resolution
-        - pmm: audio_codec
-        - pmm: streaming
-        - pmm: video_format
-        - pmm: ratings
+        - default: resolution
+        - default: audio_codec
+        - default: streaming
+        - default: video_format
+        - default: ratings
           template_variables:
             rating1: critic
             rating1_image: imdb
@@ -148,54 +180,59 @@ kometa_libraries: |2
             rating3_image: tmdb
             # rating3_font: config/metadata/fonts/Avenir_95_Black.ttf
             # rating3_font_size: 70
-        - pmm: ribbon
+        - default: ribbon
       operations:
         mass_user_rating_update: mdb_tomatoes   # Update user ratings with mdb_tomatoes
         mass_critic_rating_update: imdb         # Update critic ratings with imdb
         mass_audience_rating_update: tmdb       # Update audience ratings with tmdb
     TV Shows:
-      schedule: weekly(tuesday)
+      schedule: weekly(tuesday|thursday|saturday)
       report_path: /config/reports/TV_Shows-1080p.yml
       template_variables:
         language: en
       collection_files:
-        - pmm: basic
-        - pmm: franchise
-        - pmm: genre
-        - pmm: network
-        - pmm: year
+        - default: basic
+          schedule: weekly(tuesday)
+        - default: franchise
+          schedule: weekly(thursday)
+        - default: genre
+          schedule: weekly(saturday)
+        - default: network
+          schedule: weekly(tuesday)
+        - default: year
+          schedule: weekly(thursday)
       overlay_files:
         - remove_overlays: false
-        - pmm: resolution
-        - pmm: resolution
+        - default: resolution
+        - default: resolution
           template_variables:
             builder_level: season
-        - pmm: resolution
+        - default: resolution
           template_variables:
             builder_level: episode
-        - pmm: audio_codec
-        - pmm: audio_codec
+        - default: audio_codec
+        - default: audio_codec
           template_variables:
             builder_level: season
-        - pmm: audio_codec
+        - default: audio_codec
           template_variables:
             builder_level: episode
-        - pmm: streaming
-        - pmm: video_format
-        - pmm: video_format
+        - default: streaming
+        - default: video_format
+        - default: video_format
           template_variables:
             builder_level: season
-        - pmm: video_format
+        - default: video_format
           template_variables:
             builder_level: episode
-        - pmm: episode_info
+        - default: episode_info
           template_variables:
             builder_level: episode
-        - pmm: runtimes
+        - default: runtimes
           template_variables:
             builder_level: episode
-        - pmm: ribbon
-        - pmm: ratings
+        - default: ribbon
+        - default: ratings
           template_variables:
             rating1: critic
             rating1_image: imdb
@@ -211,7 +248,7 @@ kometa_libraries: |2
             rating3_image: tmdb
             # rating3_font: config/metadata/fonts/Avenir_95_Black.ttf
             # rating3_font_size: 70
-        - pmm: ratings
+        - default: ratings
           template_variables:
             builder_level: episode
             rating1: critic
@@ -230,48 +267,53 @@ kometa_libraries: |2
         mass_episode_critic_rating_update: imdb
         mass_episode_audience_rating_update: tmdb
     TV Shows (4K):
-      schedule: weekly(wednesday)
+      schedule: weekly(tuesday|thursday|saturday)
       report_path: /config/reports/TV_Shows-4K.yml
       template_variables:
         language: en
       collection_files:
-        - pmm: basic
-        - pmm: franchise
-        - pmm: genre
-        - pmm: network
-        - pmm: year
+        - default: basic
+          schedule: weekly(tuesday)
+        - default: franchise
+          schedule: weekly(thursday)
+        - default: genre
+          schedule: weekly(saturday)
+        - default: network
+          schedule: weekly(tuesday)
+        - default: year
+          schedule: weekly(thursday)
       overlay_files:
         - remove_overlays: false
-        - pmm: resolution
-        - pmm: resolution
+        - default: resolution
+        - default: resolution
           template_variables:
             builder_level: season
-        - pmm: resolution
+        - default: resolution
           template_variables:
             builder_level: episode
-        - pmm: audio_codec
-        - pmm: audio_codec
+        - default: audio_codec
+        - default: audio_codec
           template_variables:
             builder_level: season
-        - pmm: audio_codec
+        - default: audio_codec
           template_variables:
             builder_level: episode
-        - pmm: streaming
-        - pmm: video_format
-        - pmm: video_format
+        - default: streaming
+        - default: video_format
+        - default: video_format
           template_variables:
             builder_level: season
-        - pmm: video_format
+        - default: video_format
           template_variables:
             builder_level: episode
-        - pmm: episode_info
+        - default: episode_info
           template_variables:
             builder_level: episode
-        - pmm: runtimes
+        - default: runtimes
           template_variables:
             builder_level: episode
-        - pmm: ribbon
-        - pmm: ratings
+        - default: ribbon
+        - default: ratings
           template_variables:
             rating1: critic
             rating1_image: imdb
@@ -287,7 +329,7 @@ kometa_libraries: |2
             rating3_image: tmdb
             # rating3_font: config/metadata/fonts/Avenir_95_Black.ttf
             # rating3_font_size: 70
-        - pmm: ratings
+        - default: ratings
           template_variables:
             builder_level: episode
             rating1: critic
@@ -306,23 +348,23 @@ kometa_libraries: |2
         mass_episode_critic_rating_update: imdb
         mass_episode_audience_rating_update: tmdb
     Anime Movies:
-      schedule: weekly(thursday)
+      schedule: weekly(sunday)
       report_path: /config/reports/Anime_Movies.yml
       template_variables:
         language: en
       collection_files:
-        - pmm: anilist
-        - pmm: basic
-        - pmm: myanimelist
+        - default: anilist
+        - default: basic
+        - default: myanimelist
     Anime Series:
-      schedule: weekly(friday)
+      schedule: weekly(sunday)
       report_path: /config/reports/Anime_Series.yml
       template_variables:
         language: en
       collection_files:
-        - pmm: anilist
-        - pmm: basic
-        - pmm: myanimelist
+        - default: anilist
+        - default: basic
+        - default: myanimelist
 
 # See https://replit.com/@chazlarson/TraktAuth to generate the auth data.
 kometa_trakt: |2
