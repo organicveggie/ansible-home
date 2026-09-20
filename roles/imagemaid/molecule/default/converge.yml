@@ -1,0 +1,64 @@
+---
+- name: Install dependencies
+  hosts: all
+
+  vars:
+    pip_install_packages:
+      - name: docker
+    docker_daemon_options:
+      storage-driver: "vfs"
+
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 600
+
+    - name: Install Docker
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+
+- name: Converge
+  hosts: all
+  become: true
+
+  vars:
+    imagemaid_available_externally: true
+    imagemaid_extra_env:
+      "_MOLECULE_TEST": "imagemaid molecule test value"
+    imagemaid_extra_labels:
+      "molecule-label-01": "molecule-value-01"
+    imagemaid_extra_networks:
+      - name: "extra-network"
+    imagemaid_name: "imagemaid-molecule"
+    imagemaid_network_aliases:
+      - "zzz-molecule"
+    imagemaid_network_name: "molecule-test-network"
+    imagemaid_volume_name: "imagemaid-molecule-volume"
+    imagemaid_host_plex_path: "/opt/fake-plex"
+    imagemaid_plex_token: "fake-plex-token"
+
+  pre_tasks:
+    - name: Create Docker test networks
+      community.docker.docker_network:
+        name: "{{ __item.name }}"
+        state: present
+      loop: "{{ imagemaid_extra_networks + [{'name': imagemaid_network_name}] }}"
+      loop_control:
+        loop_var: "__item"
+    
+    - name: Create fake Plex directory
+      ansible.builtin.file:
+        path: "{{ imagemaid_host_plex_path }}"
+        state: directory
+        recurse: true
+
+  roles:
+    - role: imagemaid
+      vars:
+        imagemaid_log_requests: true
+        imagemaid_run_photo_transcoder: true
+        imagemaid_run_empty_trash: true
+        imagemaid_run_clean_bundles: true
+        imagemaid_run_optimize_db: true
+        imagemaid_schedule: "05:00|monthly(31)"

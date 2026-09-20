@@ -1,0 +1,6 @@
+---
+- name: "{{ imagemaid_role_label }} | Define environment variable: {{ __item.key }}"
+  ansible.builtin.set_fact:
+    _imagemaid_env_vars: "{{ _imagemaid_env_vars | default({}) |
+      combine({__item.key: __item.value | string }) }}"
+  when: __item.value | default('', true) | string | length > 0

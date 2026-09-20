@@ -1,0 +1,8 @@
+---
+- name: "Verify that {{ __item.key }} environment variable is set"
+  ansible.builtin.assert:
+    that:
+      - "__envvar in __all_env"
+  vars:
+    __envvar: "{{ __item.key }}={{ __item.value }}"
+    __all_env: "{{ __container['container']['Config']['Env'] }}"
