@@ -21,7 +21,7 @@
   vars:
     unbound_docker_network_name: "{{ docker_macvlans.guest.name }}"
     unbound_docker_extra_networks:
-      - "{{ docker_networks.unbound.name }}"
+      - name: "{{ docker_networks.unbound.name }}"
     unbound_docker_redis_cache: true
     unbound_docker_redis_host: "{{ r740xd_unbound_redis_container_name }}"
     unbound_docker_redis_port: "{{ r740xd_unbound_redis_port }}"
