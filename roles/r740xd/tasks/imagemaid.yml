@@ -1,0 +1,22 @@
+---
+- name: "{{ r740xd_ansible_role_label }} | imagemaid | Get path to Plex data volume"
+  community.docker.docker_volume_info:
+    name: "{{ plex_docker_volume_name_home }}"
+  register: _r740xd_imagemaid_plex_volume_info
+
+- name: "{{ r740xd_ansible_role_label }} | imagemaid | Define path to Plex folder"
+  ansible.builtin.set_fact:
+    _r740xd_imagemaid_plex_path: "{{ _r740xd_imagemaid_plex_volume_info.volume.Mountpoint }}/Library/Application Support/Plex Media Server"
+
+- name: "{{ r740xd_ansible_role_label }} | imagemaid | Setup ImageMaid container"
+  ansible.builtin.import_role:
+    name: "imagemaid"
+  vars:
+    imagemaid_host_plex_path: "{{ _r740xd_imagemaid_plex_path }}"
+    imagemaid_network_name: "{{ docker_networks.plex.name }}"
+    imagemaid_plex_noverify_ssl: true
+    imagemaid_plex_token: "{{ r740xd_imagemaid_plex_token }}"
+    imagemaid_plex_url: "http://{{ r740xd_plex_container_name }}:32400"
+    imagemaid_run_mode: "remove"
+    imagemaid_schedule: "12:00|weekly(wednesday)"
+    imagemaid_timezone: "{{ r740xd_timezone }}"

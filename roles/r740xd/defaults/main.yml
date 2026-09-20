@@ -126,6 +126,11 @@ r740xd_hass_timezone: null
 r740xd_hass_zwave_device: null
 
 ###
+### ImageMaid
+###
+r740xd_imagemaid_plex_token: null
+
+###
 ### Kometa
 ###
 r740xd_kometa_cpus: "2"

@@ -89,4 +89,4 @@
     privileged: true
     read_only: false
     tty: false
-    labels: "{{ _imagemaid_labels }}"
+    labels: "{{ _imagemaid_labels | default({}, true) }}"

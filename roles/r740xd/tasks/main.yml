@@ -99,6 +99,10 @@
   ansible.builtin.import_tasks: "kometa.yml"
   tags: ["kometa", "pmm", "plex-media-manager"]
 
+- name: "Setup ImageMaid"
+  ansible.builtin.import_tasks: "imagemaid.yml"
+  tags: ["imagemaid", "imagemaid-docker", "imagemaid_docker"]
+
 - name: "Setup Servarr apps"
   ansible.builtin.import_tasks: "servarr.yml"
   tags: ["servarr"]
