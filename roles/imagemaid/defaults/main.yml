@@ -1,0 +1,92 @@
+---
+#####
+# Container settings
+#####
+# Name of the Docker container.
+imagemaid_name: "imagemaid"
+
+# Base name of the Docker image to use for the container.
+imagemaid_image_name: "kometateam/imagemaid"
+
+# Specific Docker image version to use for the container.
+imagemaid_image_version: "latest"
+
+# Number of vCPUs to allocate to the container.
+imagemaid_cpus: "1"
+
+# Amount of memory to allocate to the container.
+imagemaid_memory: "512MB"
+
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+imagemaid_extra_labels: {}
+
+# Dictionary of extra key value pairs to set as environment variables on the Docker container.
+imagemaid_extra_env: {}
+
+# Dict of host-to-IP mappings, where each host name is a key in the dictionary. Each host name will
+# be added to the container's /etc/hosts file.
+# Instead of an IP address, the special value host-gateway can also be used, which resolves to the
+# host's gateway IP and allows containers to connect to services running on the host.
+imagemaid_extra_hosts: {}
+
+# Name of the Docker volume. 
+imagemaid_volume_name: "imagemaid-config"
+
+# Name of the primary network.
+imagemaid_network_name: null
+
+# Container aliases on the default network.
+imagemaid_network_aliases: null
+
+# List of additional networks to join.
+imagemaid_extra_networks: []
+
+#####
+# ImageMaid settings
+#####
+
+# Plex Config Directory containing the server's metadata including Cache, Metadata, and Plug-in Support folders.
+imagemaid_host_plex_path: "/opt/plex"
+
+# Timezone to use for the container.
+imagemaid_timezone: "America/New_York"
+
+# Operational run mode. One of report, move, restore, clear, remove, nothing. See
+# https://kometa.wiki/en/latest/kometa/scripts/imagemaid/#base-options
+imagemaid_run_mode: "report"
+
+imagemaid_plex_url: "http://plex:32400"
+imagemaid_plex_token: null
+
+# Disables SSL verification for the Plex server. Set to true if using a self-signed certificate.
+imagemaid_plex_noverify_ssl: true
+
+# Sleep Timer between Empty Trash, Clean Bundles, and Optimize DB in seconds that's greater than 0.
+imagemaid_sleep: 60
+
+# Run with extra trace logs.
+imagemaid_run_trace: false
+
+# Log every request and file action.
+imagemaid_log_requests: false
+
+# Controls when ImageMaid will run. If set to null, ImageMaid will run once and exit. Otherwise,
+# see https://kometa.wiki/en/latest/kometa/scripts/imagemaid/#continuous-schedule for the format of
+# the schedule string.
+imagemaid_schedule: null
+
+# Clean the PhotoTranscoder directory.
+imagemaid_run_photo_transcoder: false
+
+# Empty the Plex trash.
+imagemaid_run_empty_trash: false
+
+# Clean the Bundles directory.
+imagemaid_run_clean_bundles: false
+
+# Optimize the Plex database.
+imagemaid_run_optimize_db: false
+
+# Set to true to remove only the Kometa Overlay Images; other images will be ignored. Set to
+# false to remove all images that meet the criteria.
+imagemaid_run_kometa_overlays_only: false

@@ -1,0 +1,92 @@
+---
+- name: "{{ imagemaid_role_label }} | Create config volume"
+  community.docker.docker_volume:
+    name: "{{ imagemaid_volume_name }}"
+
+- name: "{{ imagemaid_role_label }} | Set Docker mount list"
+  ansible.builtin.set_fact:
+    _imagemaid_mount_list:
+      - "source": "{{ imagemaid_volume_name }}"
+        "target": "/config"
+        "type": "volume"
+      - "source": "{{ imagemaid_host_plex_path }}"
+        "target": "/plex"
+        "type": "bind"
+
+- name: "{{ imagemaid_role_label }} | Create placeholder array for default network"
+  ansible.builtin.set_fact:
+    _imagemaid_default_networks:
+      - name: "{{ imagemaid_network_name }}"
+        aliases: "{{ imagemaid_network_aliases | default(omit) }}"
+
+- name: "{{ imagemaid_role_label }} | Define all Docker networks for this container"
+  ansible.builtin.set_fact:
+    _imagemaid_all_networks: "{{ _imagemaid_default_networks + imagemaid_extra_networks }}"
+
+- name: "{{ imagemaid_role_label }} | Define user-supplied extra Docker labels"
+  ansible.builtin.set_fact:
+    _imagemaid_labels: "{{ _imagemaid_labels | default({}) |
+      combine({__item.key: __item.value}) }}"
+  loop: "{{ imagemaid_extra_labels | dict2items }}"
+  loop_control:
+    loop_var: __item
+
+- name: "{{ imagemaid_role_label }} | Define default Docker environment variables"
+  ansible.builtin.set_fact:
+    _imagemaid_env_vars:
+      - "TZ": "{{ imagemaid_timezone }}"
+      - "PLEX_PATH": "/plex"
+      - "PLEX_TOKEN": "{{ imagemaid_plex_token }}"
+      - "PLEX_URL": "{{ imagemaid_plex_url }}"
+      - "MODE": "{{ imagemaid_run_mode }}"
+
+- name: "{{ imagemaid_role_label }} | Define additional environment variables"
+  ansible.builtin.include_tasks:
+    file: "envvar.yml"
+  loop: "{{ __imagemaid_env_vars | dict2items }}"
+  loop_control:
+    loop_var: "__item"
+  vars:
+    __imagemaid_env_vars:
+      CLEAN_BUNDLES: "{{ imagemaid_run_clean_bundles | default('', true) }}"
+      EMPTY_TRASH: "{{ imagemaid_run_empty_trash | default('', true) }}"
+      LOG_REQUESTS: "{{ imagemaid_log_requests | default('', true) }}"
+      NO_VERIFY_SSL: "{{ imagemaid_plex_no_verify_ssl | default('', true) }}"
+      OPTIMIZE_DB: "{{ imagemaid_run_optimize_db | default('', true) }}"
+      OVERLAYS_ONLY: "{{ imagemaid_run_kometa_overlays_only | default('', true) }}"
+      PHOTO_TRANSCODER: "{{ imagemaid_run_photo_transcoder | default('', true) }}"
+      PLEX_TOKEN: "{{ imagemaid_plex_token | default('', true) }}"
+      SCHEDULE: "{{ imagemaid_schedule | default('', true) }}"
+      SLEEP: "{{ imagemaid_sleep | default('', true) }}"
+      TRACE: "{{ imagemaid_run_trace | default('', true) }}"
+
+- name: "{{ imagemaid_role_label }} | Define user-supplied extra Docker environment variables"
+  ansible.builtin.set_fact:
+    _imagemaid_env_vars: "{{ _imagemaid_env_vars | default({}) |
+      combine({__item.key: __item.value}) }}"
+  loop: "{{ imagemaid_extra_env | dict2items }}"
+  loop_control:
+    loop_var: __item
+
+- name: "{{ imagemaid_role_label }} | Create container"
+  community.docker.docker_container:
+    name: "{{ imagemaid_name }}"
+    image: "{{ imagemaid_image_name }}:{{ imagemaid_image_version }}"
+    pull: true
+    mounts: "{{ _imagemaid_mount_list }}"
+    env: "{{ _imagemaid_env_vars }}"
+    networks: "{{ _imagemaid_all_networks }}"
+    network_mode: "{{ imagemaid_network_name }}"
+    restart_policy: unless-stopped
+    memory: "{{ imagemaid_memory }}"
+    cpus: "{{ imagemaid_cpus }}"
+    container_default_behavior: "no_defaults"
+    auto_remove: false
+    detach: true
+    init: false
+    interactive: false
+    paused: false
+    privileged: true
+    read_only: false
+    tty: false
+    labels: "{{ _imagemaid_labels | default({}, true) }}"
