@@ -30,7 +30,7 @@ kometa_tmdb_region: "US"
 kometa_tautulli_apikey: "{{ vault_kometa_tautulli_apikey }}"
 kometa_libraries: |2
     Movies:
-      schedule: weekly(monday|wednesday|friday)
+      schedule: daily
       report_path: /config/reports/Movies-1080p.yml
       template_variables:
         language: "en"
@@ -90,74 +90,67 @@ kometa_libraries: |2
           template_variables:
             rating1: critic
             rating1_image: imdb
-            # rating1_font: config/metadata/fonts/Impact.ttf
-            # rating1_font_size: 70
-
             rating2: audience
             rating2_image: rt_popcorn
-            # rating2_font: config/metadata/fonts/Adlib.ttf
-            # rating2_font_size: 63
-
             rating3: user
             rating3_image: tmdb
-            # rating3_font: config/metadata/fonts/Avenir_95_Black.ttf
-            # rating3_font_size: 70
         - default: ribbon
       operations:
+        schedule: weekly(monday)
         mass_user_rating_update: mdb_tomatoes   # Update user ratings with mdb_tomatoes
         mass_critic_rating_update: imdb         # Update critic ratings with imdb
         mass_audience_rating_update: tmdb       # Update audience ratings with tmdb
     Movies (4K):
-      schedule: weekly(monday|wednesday|friday)
+      schedule: daily
       report_path: /config/reports/Movies-4K.yml
       template_variables:
         language: "en"
       collection_files:
         - default: actor
-          schedule: weekly(monday)
+          schedule: weekly(tuesday)
         - default: basic
-          schedule: weekly(wednesday)
+          schedule: weekly(thursday)
         - default: bafta
-          schedule: weekly(friday)
+          schedule: weekly(saturday)
         - default: cannes
-          schedule: weekly(monday)
+          schedule: weekly(tuesday)
         - default: decade
-          schedule: weekly(wednesday)
+          schedule: weekly(thursday)
         - default: director
-          schedule: weekly(friday)
+          schedule: weekly(saturday)
         - default: franchise
-          schedule: weekly(monday)
+          schedule: weekly(tuesday)
           template_variables:
             data:
               visible_home: true
         - default: genre
-          schedule: weekly(wednesday)
+          schedule: weekly(thursday)
           template_variables:
             data:
               visible_home: true
         - default: imdb
-          schedule: weekly(friday)
+          schedule: weekly(saturday)
         - default: oscars
-          schedule: weekly(monday)
+          schedule: weekly(tuesday)
           template_variables:
             data:
               starting: current_year-10
               ending: current_year
         - default: seasonal
-          schedule: weekly(wednesday)
+          schedule: weekly(thursday)
           template_variables:
             data:
               visible_home: true
         - default: streaming
-          schedule: weekly(friday)
+          schedule: weekly(saturday)
         - default: sundance
-          schedule: weekly(monday)
+          schedule: weekly(tuesday)
         - default: tmdb
-          schedule: weekly(wednesday)
+          schedule: weekly(thursday)
         - default: universe
-          schedule: weekly(friday)
+          schedule: weekly(saturday)
         - default: year
-          schedule: weekly(monday)
+          schedule: weekly(tuesday)
       overlay_files:
         - remove_overlays: false
         - default: resolution
@@ -168,20 +161,13 @@ kometa_libraries: |2
           template_variables:
             rating1: critic
             rating1_image: imdb
-            # rating1_font: config/metadata/fonts/Impact.ttf
-            # rating1_font_size: 70
-
             rating2: audience
             rating2_image: rt_popcorn
-            # rating2_font: config/metadata/fonts/Adlib.ttf
-            # rating2_font_size: 63
-
             rating3: user
             rating3_image: tmdb
-            # rating3_font: config/metadata/fonts/Avenir_95_Black.ttf
-            # rating3_font_size: 70
         - default: ribbon
       operations:
+        schedule: weekly(tuesday)
         mass_user_rating_update: mdb_tomatoes   # Update user ratings with mdb_tomatoes
         mass_critic_rating_update: imdb         # Update critic ratings with imdb
         mass_audience_rating_update: tmdb       # Update audience ratings with tmdb
@@ -192,15 +178,15 @@ kometa_libraries: |2
         language: en
       collection_files:
         - default: basic
-          schedule: weekly(tuesday)
+          schedule: weekly(thursday)
         - default: franchise
-          schedule: weekly(thursday)
-        - default: genre
           schedule: weekly(saturday)
-        - default: network
+        - default: genre
           schedule: weekly(tuesday)
-        - default: year
+        - default: network
           schedule: weekly(thursday)
+        - default: year
+          schedule: weekly(saturday)
       overlay_files:
         - remove_overlays: false
         - default: resolution
@@ -236,52 +222,41 @@ kometa_libraries: |2
           template_variables:
             rating1: critic
             rating1_image: imdb
-            # rating1_font: config/metadata/fonts/Impact.ttf
-            # rating1_font_size: 70
-
             rating2: audience
             rating2_image: rt_popcorn
-            # rating2_font: config/metadata/fonts/Adlib.ttf
-            # rating2_font_size: 63
-
             rating3: user
             rating3_image: tmdb
-            # rating3_font: config/metadata/fonts/Avenir_95_Black.ttf
-            # rating3_font_size: 70
         - default: ratings
+          schedule: weekly(tuesday)
           template_variables:
             builder_level: episode
             rating1: critic
             rating1_image: imdb
-            # rating1_font: config/metadata/fonts/Impact.ttf
-            # rating1_font_size: 70
-
             rating2: audience
             rating2_image: tmdb
-            # rating2_font: config/metadata/fonts/Avenir_95_Black.ttf
-            # rating2_font_size: 70
       operations:
+        schedule: weekly(saturday)
         mass_user_rating_update: mdb_tomatoes   # Update user ratings with mdb_tomatoes
         mass_critic_rating_update: imdb         # Update critic ratings with imdb
         mass_audience_rating_update: tmdb       # Update audience ratings with tmdb
         mass_episode_critic_rating_update: imdb
         mass_episode_audience_rating_update: tmdb
     TV Shows (4K):
-      schedule: weekly(tuesday|thursday|saturday)
+      schedule: weekly(monday|wednesday|friday)
       report_path: /config/reports/TV_Shows-4K.yml
       template_variables:
         language: en
       collection_files:
         - default: basic
-          schedule: weekly(tuesday)
+          schedule: weekly(monday)
         - default: franchise
-          schedule: weekly(thursday)
+          schedule: weekly(wednesday)
         - default: genre
-          schedule: weekly(saturday)
+          schedule: weekly(friday)
         - default: network
-          schedule: weekly(tuesday)
+          schedule: weekly(monday)
         - default: year
-          schedule: weekly(thursday)
+          schedule: weekly(wednesday)
       overlay_files:
         - remove_overlays: false
         - default: resolution
@@ -317,31 +292,19 @@ kometa_libraries: |2
           template_variables:
             rating1: critic
             rating1_image: imdb
-            # rating1_font: config/metadata/fonts/Impact.ttf
-            # rating1_font_size: 70
-
             rating2: audience
             rating2_image: rt_popcorn
-            # rating2_font: config/metadata/fonts/Adlib.ttf
-            # rating2_font_size: 63
-
             rating3: user
             rating3_image: tmdb
-            # rating3_font: config/metadata/fonts/Avenir_95_Black.ttf
-            # rating3_font_size: 70
         - default: ratings
           template_variables:
             builder_level: episode
             rating1: critic
             rating1_image: imdb
-            # rating1_font: config/metadata/fonts/Impact.ttf
-            # rating1_font_size: 70
-
             rating2: audience
             rating2_image: tmdb
-            # rating2_font: config/metadata/fonts/Avenir_95_Black.ttf
-            # rating2_font_size: 70
       operations:
+        schedule: weekly(friday)
         mass_user_rating_update: mdb_tomatoes   # Update user ratings with mdb_tomatoes
         mass_critic_rating_update: imdb         # Update critic ratings with imdb
         mass_audience_rating_update: tmdb       # Update audience ratings with tmdb
