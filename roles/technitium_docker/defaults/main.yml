@@ -1,0 +1,92 @@
+---
+#####
+# Container settings
+#####
+# Name of the Docker container.
+technitium_docker_name: "technitium"
+
+# Base name of the Docker image to use for the container.
+technitium_docker_image_name: "technitium/dns-server"
+
+# Specific Docker image version to use for the container.
+technitium_docker_image_version: "latest"
+
+# Number of vCPUs to allocate to the container.
+technitium_docker_cpus: "1"
+
+# Amount of memory to allocate to the container.
+technitium_docker_memory: "1024MB"
+
+# Dictionary of extra key value pairs to set as labels on the Docker container.
+technitium_docker_extra_labels: {}
+
+# Dictionary of extra key value pairs to set as environment variables on the Docker container.
+technitium_docker_extra_env: {}
+
+# Dict of host-to-IP mappings, where each host name is a key in the dictionary. Each host name will
+# be added to the container's /etc/hosts file.
+# Instead of an IP address, the special value host-gateway can also be used, which resolves to the
+# host's gateway IP and allows containers to connect to services running on the host.
+technitium_docker_extra_hosts: {}
+
+# Name of the Docker volume. 
+technitium_docker_config_volume_name: "technitium-config"
+technitium_docker_logs_volume_name: "technitium-logs"
+
+# Name of the primary network.
+technitium_docker_network_name: null
+
+# Container aliases on the default network.
+technitium_docker_network_aliases: null
+
+# List of additional networks to join.
+technitium_docker_extra_networks: []
+
+# TCP port number for web interface.
+technitium_docker_web_port: "5380"
+
+#####
+# Traefik
+#####
+
+# Enable use of Traefik as a proxy.
+technitium_docker_traefik_available_externally: false
+
+# Host name to use for the Traefik endpoint. Combined with [technitium_docker_traefik_host_domain] to form the
+# FQDN for the endpoint.
+technitium_docker_traefik_host_name: "technitium_docker"
+
+# Domain name to use for the Traefik endpoint. Combined with [technitium_docker_traefik_host_name] to form the
+# FQDN for the endpoint. Also used by Traefik to create the necessary Let's Encrypt certificate.
+technitium_docker_traefik_host_domain: "example.com"
+
+# Name of the Docker network Traefik should use when proxying.
+technitium_docker_traefik_network: null
+
+#####
+# Technitium DNS
+#####
+
+# Enable this option to use local time instead of UTC for logging.
+technitium_docker_log_local_time: true
+
+# DNS web console admin user password.
+technitium_docker_admin_password: null
+
+# List of forwarder addresses.
+technitium_docker_server_forwarders: []
+
+# Forwarder protocol options: Udp, Tcp, Tls, Https, HttpsJson.
+technitium_docker_server_forwarder_protocol: null
+
+# DNS-over-QUIC service
+technitium_docker_enable_dns_over_quic: false
+
+# DNS-over-TLS service
+technitium_docker_enable_dns_over_tls: false
+
+# DNS-over-HTTPS service (HTTP/3)
+technitium_docker_enable_dns_over_https3: false
+
+# DNS-over-HTTPS service (HTTP/1.1, HTTP/2)
+technitium_docker_enable_dns_over_https2: false

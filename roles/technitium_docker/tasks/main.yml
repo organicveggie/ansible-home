@@ -1,0 +1,172 @@
+---
+- name: "{{ technitium_docker_role_label }} | Create volumes"
+  community.docker.docker_volume:
+    name: "{{ __item }}"
+  with_items:
+    - "{{ technitium_docker_config_volume_name }}"
+    - "{{ technitium_docker_logs_volume_name }}"
+  loop_control:
+    loop_var: __item
+
+- name: "{{ technitium_docker_role_label }} | Set Docker mount list"
+  ansible.builtin.set_fact:
+    _technitium_docker_mount_list:
+      - "source": "{{ technitium_docker_config_volume_name }}"
+        "target": "/etc/dns"
+        "type": "volume"
+      - "source": "{{ technitium_docker_logs_volume_name }}"
+        "target": "/var/log/technitium/dns"
+        "type": "volume"
+
+- name: "{{ technitium_docker_role_label }} | Create placeholder array for default network"
+  ansible.builtin.set_fact:
+    _technitium_docker_default_networks:
+      - name: "{{ technitium_docker_network_name }}"
+        aliases: "{{ technitium_docker_network_aliases | default(omit) }}"
+
+- name: "{{ technitium_docker_role_label }} | Define all Docker networks for this container"
+  ansible.builtin.set_fact:
+    _technitium_docker_all_networks: "{{ _technitium_docker_default_networks + technitium_docker_extra_networks }}"
+
+- name: "{{ technitium_docker_role_label }} | Build container FQDN"
+  ansible.builtin.set_fact:
+    _technitium_docker_fqdn: "{{ technitium_docker_traefik_host_name }}.{{ technitium_docker_traefik_host_domain }}"
+
+- name: "{{ technitium_docker_role_label }} | Define common Docker labels"
+  ansible.builtin.set_fact:
+    _technitium_docker_labels:
+      "traefik.enable": "{{ technitium_docker_traefik_available_externally | ternary('true', 'false') }}"
+
+- name: "{{ technitium_docker_role_label }} | Define Docker labels with Traefik enabled"
+  ansible.builtin.set_fact:
+    _technitium_docker_labels: "{{ _technitium_docker_labels | default({}) |
+      combine({__item.key: __item.value}) }}"
+  with_items:
+    - key: "traefik.docker.network"
+      value: "{{ technitium_docker_traefik_network | default(omit, true) }}"
+    - key: "traefik.http.routers.technitium_docker.rule"
+      value: "Host(`{{ _technitium_docker_fqdn }}`)"
+    - key: "traefik.http.routers.technitium_docker.entrypoints"
+      value: "http,https"
+    - key: "traefik.http.routers.technitium_docker.tls.certresolver"
+      value: "letsencrypt"
+    - key: "traefik.http.routers.technitium_docker.tls.domains[0].main"
+      value: "*.{{ technitium_docker_traefik_host_domain }}"
+    - key: "traefik.http.services.technitium_docker.loadbalancer.server.port"
+      value: "{{ technitium_docker_web_port }}"
+  loop_control:
+    loop_var: __item
+  when: "technitium_docker_traefik_available_externally | default(false, true)"
+
+- name: "{{ technitium_docker_role_label }} | Define user-supplied extra Docker labels"
+  ansible.builtin.set_fact:
+    _technitium_docker_labels: "{{ _technitium_docker_labels | default({}) |
+      combine({__item.key: __item.value}) }}"
+  loop: "{{ technitium_docker_extra_labels | dict2items }}"
+  loop_control:
+    loop_var: __item
+
+- name: "{{ technitium_docker_role_label }} | Define default Docker environment variables"
+  ansible.builtin.set_fact:
+    _technitium_docker_env_vars:
+      "DNS_SERVER_DOMAIN": "{{ _technitium_docker_fqdn }}"
+      "DNS_SERVER_LOG_FOLDER_PATH": "/var/log/technitium/dns"
+      "DNS_SERVER_LOG_USING_LOCAL_TIME": "{{ technitium_docker_log_local_time | default(false, true) | string }}"
+      "DNS_SERVER_WEB_SERVICE_HTTP_PORT": "{{ technitium_docker_web_port | string }}"
+
+- name: "{{ technitium_docker_role_label }} | Define DNS_SERVER_ADMIN_PASSWORD environment variable"
+  ansible.builtin.set_fact:
+    _technitium_docker_env_vars: "{{ _technitium_docker_env_vars | 
+      combine({'DNS_SERVER_ADMIN_PASSWORD': technitium_docker_admin_password}) }}"
+  when: "technitium_docker_admin_password | default('', true) | length > 0"
+
+- name: "{{ technitium_docker_role_label }} | Define DNS_SERVER_FORWARDERS environment variable"
+  when: "technitium_docker_server_forwarders | default([], true) | length > 0"
+  block:
+    - name: "{{ technitium_docker_role_label }} | Define DNS_SERVER_FORWARDERS"
+      ansible.builtin.set_fact:
+        _technitium_docker_env_vars: "{{ _technitium_docker_env_vars | 
+          combine({'DNS_SERVER_FORWARDERS': __forwarders}) }}"
+      vars:
+        __forwarders: "{{ technitium_docker_server_forwarders | join(', ') }}"
+
+    - name: "{{ technitium_docker_role_label }} | Define DNS_SERVER_FORWARDER_PROTOCOL"
+      ansible.builtin.set_fact:
+        _technitium_docker_env_vars: "{{ _technitium_docker_env_vars | 
+          combine({'DNS_SERVER_FORWARDER_PROTOCOL': technitium_docker_server_forwarder_protocol}) }}"
+      when: "technitium_docker_server_forwarder_protocol | default('', true) | length > 0"
+
+- name: "{{ technitium_docker_role_label }} | Define Docker health check"
+  ansible.builtin.set_fact:
+    _technitium_docker_health_check:
+      "interval": "30s"
+      "timeout": "10s"
+      "retries": "3"
+      "start_period": "10s"
+      "test":
+        - "CMD-SHELL"
+        - "curl -f http://127.0.0.1:{{ technitium_docker_web_port }}/api/dnsClient/healthCheck | grep '\"status\":\"ok\"'"
+
+- name: "{{ technitium_docker_role_label }} | Define user-supplied extra Docker environment variables"
+  ansible.builtin.set_fact:
+    _technitium_docker_env_vars: "{{ _technitium_docker_env_vars | default({}) |
+      combine({__item.key: __item.value}) }}"
+  loop: "{{ technitium_docker_extra_env | dict2items }}"
+  loop_control:
+    loop_var: __item
+
+- name: "{{ technitium_docker_role_label }} | Define container ports"
+  ansible.builtin.set_fact:
+    _technitium_docker_ports:
+      - "5380:5380/tcp"   # DNS web console (HTTP)
+      - "53:53/udp"       # DNS service
+      - "53:53/tcp"       # DNS service
+
+- name: "{{ technitium_docker_role_label }} | Define DNS-over-QUIC ports"
+  ansible.builtin.set_fact:
+    _technitium_docker_ports: "{{ _technitium_docker_ports + ['853:853/udp'] }}"
+  when: "technitium_docker_enable_dns_over_quic | default(false, true)"
+
+- name: "{{ technitium_docker_role_label }} | Define DNS-over-TLS ports"
+  ansible.builtin.set_fact:
+    _technitium_docker_ports: "{{ _technitium_docker_ports + ['853:853/tcp'] }}"
+  when: "technitium_docker_enable_dns_over_tls | default(false, true)"
+
+- name: "{{ technitium_docker_role_label }} | Define DNS-over-HTTPS (HTTP/3)"
+  ansible.builtin.set_fact:
+    _technitium_docker_ports: "{{ _technitium_docker_ports + ['443:443/udp'] }}"
+  when: "technitium_docker_enable_dns_over_https3 | default(false, true)"
+
+- name: "{{ technitium_docker_role_label }} | Define DNS-over-HTTPS (HTTP/1.1, HTTP/2)"
+  ansible.builtin.set_fact:
+    _technitium_docker_ports: "{{ _technitium_docker_ports + ['443:443/tcp'] }}"
+  when: "technitium_docker_enable_dns_over_https2 | default(false, true)"
+
+- name: "{{ technitium_docker_role_label }} | debugggggggg"
+  ansible.builtin.debug:
+    msg:
+      - "_technitium_docker_ports: {{ _technitium_docker_ports }}"
+
+- name: "{{ technitium_docker_role_label }} | Create container"
+  community.docker.docker_container:
+    name: "{{ technitium_docker_name }}"
+    image: "{{ technitium_docker_image_name }}:{{ technitium_docker_image_version }}"
+    pull: true
+    mounts: "{{ _technitium_docker_mount_list }}"
+    env: "{{ _technitium_docker_env_vars }}"
+    networks: "{{ _technitium_docker_all_networks }}"
+    network_mode: "{{ technitium_docker_network_name }}"
+    restart_policy: unless-stopped
+    memory: "{{ technitium_docker_memory }}"
+    cpus: "{{ technitium_docker_cpus }}"
+    container_default_behavior: "no_defaults"
+    auto_remove: false
+    detach: true
+    init: false
+    interactive: false
+    paused: false
+    published_ports: "{{ _technitium_docker_ports }}"
+    privileged: true
+    read_only: false
+    tty: false
+    labels: "{{ _technitium_docker_labels }}"

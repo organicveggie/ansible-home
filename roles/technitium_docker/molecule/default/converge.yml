@@ -1,0 +1,56 @@
+---
+- name: Install dependencies
+  hosts: all
+
+  vars:
+    pip_install_packages:
+      - name: docker
+    docker_daemon_options:
+      storage-driver: "vfs"
+
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 600
+
+    - name: Install Docker
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+
+- name: Converge
+  hosts: all
+  become: true
+
+  vars:
+    technitium_docker_admin_password: "abc123"
+    technitium_docker_available_externally: true
+    technitium_docker_config_volume_name: "molecule-technitium-cfg"
+    technitium_docker_extra_env:
+      "_MOLECULE_TEST": "technitium_docker molecule test value"
+    technitium_docker_extra_labels:
+      "molecule-label-01": "molecule-value-01"
+    technitium_docker_extra_networks:
+      - name: "molecule-ingress-network"
+    technitium_docker_logs_volume_name: "molecule-technitium-logs"
+    technitium_docker_name: "technitium_docker-molecule"
+    technitium_docker_network_aliases:
+      - "zzz-molecule"
+    technitium_docker_network_name: "molecule-test-network"
+    technitium_docker_server_forwarders:
+      - "8.8.8.8"
+      - "1.1.1.1"
+    technitium_docker_server_forwarder_protocol: "tcp"
+    technitium_docker_traefik_network: "{{ technitium_docker_extra_networks[0].name }}"
+
+  pre_tasks:
+    - name: Create Docker test networks
+      community.docker.docker_network:
+        name: "{{ __item.name }}"
+        state: present
+      loop: "{{ technitium_docker_extra_networks + [{'name': technitium_docker_network_name}] }}"
+      loop_control:
+        loop_var: "__item"
+
+  roles:
+    - role: technitium_docker

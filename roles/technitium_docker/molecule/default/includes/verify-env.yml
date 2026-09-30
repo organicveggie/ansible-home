@@ -1,0 +1,11 @@
+---
+- name: "Assemble environment variable name/value: {{ __item.key }}"
+  ansible.builtin.set_fact:
+    __env: "{{ __item.key }}={{ __item.value }}"
+
+- name: "Verify environment variable: {{ __item.key }}"
+  ansible.builtin.assert:
+    that:
+      - "__env in __all_env"
+  vars:
+    __all_env: "{{ _technitium_docker_container['container']['Config']['Env'] }}"
