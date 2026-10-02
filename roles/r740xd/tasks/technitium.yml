@@ -1,0 +1,19 @@
+---
+- name: "technitium | Setup Technitium container"
+  ansible.builtin.import_role:
+    name: "technitium_docker"
+  vars:
+    technitium_docker_admin_password: "{{ r740xd_technitium_admin_password }}"
+    technitium_docker_extra_networks:
+      - name: "{{ docker_networks.ingressproxy.name }}"
+    technitium_docker_default_network:
+      name: "{{ docker_macvlans.nas_macvlan.name }}"
+      ipv4_address: "{{ r740xd_technitium_ip_address }}"
+    technitium_docker_server_forwarders:
+      - "8.8.8.8"
+      - "1.1.1.1"
+    technitium_docker_server_forwarder_protocol: "tcp"
+    technitium_docker_traefik_available_externally: true
+    technitium_docker_traefik_host_domain: "{{ r740xd_technitium_host_domain }}"
+    technitium_docker_traefik_host_name: "{{ r740xd_technitium_hostname }}"
+    technitium_docker_traefik_network: "{{ docker_networks.ingressproxy.name }}"

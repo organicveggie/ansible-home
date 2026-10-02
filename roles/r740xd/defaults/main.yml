@@ -382,6 +382,13 @@ r740xd_tautulli_host_domain: null
 r740xd_tautulli_webui_port: 8181
 
 ###
+### Technitium DNS Server
+###
+r740xd_technitium_hostname: "technitium"
+r740xd_technitium_host_domain: null
+r740xd_technitium_admin_password: null
+
+###
 ### TimeMachine
 ###
 r740xd_time_machine_data_directory: null

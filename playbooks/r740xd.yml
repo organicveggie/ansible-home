@@ -174,6 +174,11 @@
         r740xd_syncthing_host_domain: "{{ veggie_base_domain_name }}"
         # Tautulli
         r740xd_tautulli_host_domain: "{{ vault_veggie_home_domain }}"
+        # Technitium DNS
+        r740xd_technitium_admin_password: "{{ vault_technitium_admin_password }}"
+        r740xd_technitium_ip_address: "{{ vault_technitium_ipv4 }}"
+        r740xd_technitium_host_domain: "{{ vault_veggie_home_domain }}"
+        r740xd_technitium_hostname: "tdns"
         # TimeMachine
         r740xd_time_machine_data_directory: "{{ vault_time_machine_data_directory }}"
         r740xd_time_machine_hostname: "{{ vault_time_machine_hostname }}"
