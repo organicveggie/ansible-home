@@ -27,7 +27,7 @@
   tasks:
     - name: "Verify volumes"
       ansible.builtin.include_tasks:
-        file: "includes/verify-volume.yml"
+        file: "../includes/verify-volume.yml"
       loop:
         - "{{ technitium_docker_config_volume_name }}"
         - "{{ technitium_docker_logs_volume_name }}"
@@ -55,7 +55,7 @@
 
     - name: Verify environment variables
       ansible.builtin.include_tasks:
-        file: "includes/verify-env.yml"
+        file: "../includes/verify-env.yml"
       loop: "{{ _technitium_docker_env_vars | dict2items }}"
       loop_control:
         loop_var: "__item"
@@ -70,7 +70,7 @@
 
     - name: "Verify networks"
       ansible.builtin.include_tasks:
-        file: "includes/verify-network.yml"
+        file: "../includes/verify-network.yml"
       loop:
         - "{{ technitium_docker_network_name }}"
         - "{{ technitium_docker_extra_networks[0].name }}"

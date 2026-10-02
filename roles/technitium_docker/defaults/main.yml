@@ -33,11 +33,19 @@ technitium_docker_extra_hosts: {}
 technitium_docker_config_volume_name: "technitium-config"
 technitium_docker_logs_volume_name: "technitium-logs"
 
-# Name of the primary network.
+# Name of the primary network. Either specify this or [technitium_docker_default_network] but not
+# both.
 technitium_docker_network_name: null
 
-# Container aliases on the default network.
+# Container aliases on the default network. Specify this along with [technitium_docker_network_name]
+# to set aliases on the default network. Ignored if [technitium_docker_network_name] is not set.
 technitium_docker_network_aliases: null
+
+# Default network configuration as a dictionary. Specify this or [technitium_docker_network_name]
+# but not both. The dictionary should contain keys matching the parameters of the networks field
+# in the Docker container module. See 
+# https://docs.ansible.com/projects/ansible/latest/collections/community/docker/docker_container_module.html#parameter-networks.
+technitium_docker_default_network: null
 
 # List of additional networks to join.
 technitium_docker_extra_networks: []

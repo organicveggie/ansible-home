@@ -1,4 +1,19 @@
 ---
+- name: "{{ technitium_docker_role_label }} | Debug network config options"
+  ansible.builtin.debug:
+    msg:
+      - "technitium_docker_network_name: {{ technitium_docker_network_name | default('undefined') }}"
+      - "technitium_docker_default_network: {{ technitium_docker_default_network | default('undefined') }}"
+      - "technitium_docker_network_name | default('', true) | length > 0: {{ technitium_docker_network_name | default('', true) | length > 0 }}"
+      - "technitium_docker_default_network | default({}, true) | length > 0: {{ technitium_docker_default_network | default({}, true) | length > 0 }}"
+
+- name: "{{ technitium_docker_role_label }} | Verify network config options"
+  ansible.builtin.assert:
+    that:
+      - "(technitium_docker_network_name | default('', true) | length > 0) or (technitium_docker_default_network | default({}, true) | length > 0)"
+      - "not ((technitium_docker_network_name | default('', true) | length > 0) and (technitium_docker_default_network | default({}, true) | length > 0))"
+    fail_msg: "You cannot specify both [technitium_docker_network_name] and [technitium_docker_default_network]. Please specify only one of these options."
+
 - name: "{{ technitium_docker_role_label }} | Create volumes"
   community.docker.docker_volume:
     name: "{{ __item }}"
@@ -18,11 +33,22 @@
         "target": "/var/log/technitium/dns"
         "type": "volume"
 
-- name: "{{ technitium_docker_role_label }} | Create placeholder array for default network"
+- name: "{{ technitium_docker_role_label }} | Configure default network from name and aliases"
   ansible.builtin.set_fact:
     _technitium_docker_default_networks:
       - name: "{{ technitium_docker_network_name }}"
         aliases: "{{ technitium_docker_network_aliases | default(omit) }}"
+  when: "technitium_docker_network_name | default('', true) | length > 0"
+
+- name: "{{ technitium_docker_role_label }} | Use specified default network"
+  ansible.builtin.set_fact:
+    _technitium_docker_default_networks:
+      - "{{ technitium_docker_default_network }}"
+  when: "technitium_docker_default_network | default({}, true) | length > 0"
+    
+- name: "{{ technitium_docker_role_label }} | Set default network name"
+  ansible.builtin.set_fact:
+    _technitium_docker_default_network_name: "{{ _technitium_docker_default_networks[0].name }}"
 
 - name: "{{ technitium_docker_role_label }} | Define all Docker networks for this container"
   ansible.builtin.set_fact:
@@ -155,7 +181,7 @@
     mounts: "{{ _technitium_docker_mount_list }}"
     env: "{{ _technitium_docker_env_vars }}"
     networks: "{{ _technitium_docker_all_networks }}"
-    network_mode: "{{ technitium_docker_network_name }}"
+    network_mode: "{{ _technitium_docker_default_network_name }}"
     restart_policy: unless-stopped
     memory: "{{ technitium_docker_memory }}"
     cpus: "{{ technitium_docker_cpus }}"
