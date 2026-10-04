@@ -1,0 +1,25 @@
+---
+- name: "{{ dns_records_role_label }} | Build Technitium DNS API URL"
+  ansible.builtin.set_fact:
+    _dns_records_api_url: "http://{{ dns_records_server_address }}"
+
+- name: "DNS | Configure the Technitium DNS server"
+  effectivelywild.technitium_dns.technitium_dns_set_server_settings:
+    api_url: "{{ _dns_records_api_url }}"
+    api_token: "{{ dns_records_server_api_token }}"
+    api_port: "{{ dns_records_server_port }}"
+    concurrentForwarding: true
+    forwarders: "{{ dns_records_forwarders }}"
+
+- name: "{{ dns_records_role_label }} | Configure zones"
+  ansible.builtin.include_tasks:
+    file: zone.yml
+  vars:
+    __url: "{{ _dns_records_api_url }}"
+    __api_token: "{{ dns_records_server_api_token }}"
+    __port: "{{ dns_records_server_port }}"
+    __zone_name: "{{ __zone.key }}"
+    __zone_records: "{{ __zone.value }}"
+  loop: "{{ dns_records_by_zone | dict2items }}"
+  loop_control:
+    loop_var: __zone

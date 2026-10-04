@@ -1,0 +1,16 @@
+---
+- name: Configure Technitium DNS from localhost
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: "DNS | Configure the Technitium DNS server"
+      ansible.builtin.include_role:
+        name: dns_records
+      vars:
+        dns_records_by_zone: "{{ dns_internal_zones }}"
+        dns_records_forwarders:
+          - "8.8.8.8"
+          - "1.1.1.1"
+        dns_records_server_address: "{{ technitium_dns_ipv4_address }}"
+        dns_records_server_api_token: "{{ technitium_dns_api_token }}"
+        dns_records_server_port: "{{ technitium_dns_port }}"

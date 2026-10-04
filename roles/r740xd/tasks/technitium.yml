@@ -17,3 +17,4 @@
     technitium_docker_traefik_host_domain: "{{ r740xd_technitium_host_domain }}"
     technitium_docker_traefik_host_name: "{{ r740xd_technitium_hostname }}"
     technitium_docker_traefik_network: "{{ docker_networks.ingressproxy.name }}"
+    technitium_docker_web_port: "{{ r740xd_technitium_port }}"
