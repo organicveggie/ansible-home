@@ -1,0 +1,71 @@
+---
+- name: Install dependencies
+  hosts: all
+
+  vars:
+    pip_install_packages:
+      - name: docker
+    docker_daemon_options:
+      storage-driver: "vfs"
+
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 600
+
+    - name: Install Docker
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+
+- name: Converge
+  hosts: all
+  become: true
+
+  vars:
+    __networks:
+      - name: "molecule-test-network"
+        driver: "bridge"
+        internal: false
+        ipam_config:
+          - subnet: "172.20.10.0/24"
+      - name: "molecule-ingress-network"
+        driver: "bridge"
+        ipam_config:
+          - subnet: "172.20.20.0/24"
+
+    technitium_docker_admin_password: "abc123"
+    technitium_docker_available_externally: true
+    technitium_docker_config_volume_name: "molecule-technitium-cfg"
+    technitium_docker_extra_networks:
+      - name: "{{ __networks[1].name }}"
+    technitium_docker_default_network:
+      name: "{{ __networks[0].name }}"
+      ipv4_address: "172.20.10.10"
+    technitium_docker_logs_volume_name: "molecule-technitium-logs"
+    technitium_docker_name: "technitium_docker-molecule"
+    technitium_docker_server_forwarders:
+      - "8.8.8.8"
+      - "1.1.1.1"
+    technitium_docker_server_forwarder_protocol: "tcp"
+    technitium_docker_traefik_network: "{{ technitium_docker_extra_networks[1].name }}"
+
+  pre_tasks:
+    - name: Create Docker test networks
+      community.docker.docker_network:
+        name: "{{ __item.name }}"
+        driver: "{{ __item.driver | default(omit) }}"
+        driver_options: "{{ __item.driver_options | default(omit) }}"
+        enable_ipv4: "{{ __item.enable_ipv4 | default(omit) }}"
+        enable_ipv6: "{{ __item.enable_ipv6 | default(omit) }}"
+        internal: "{{ __item.internal | default(omit) }}"
+        ipam_config: "{{ __item.ipam_config | default(omit) }}"
+        ipam_driver: "{{ __item.ipam_driver | default(omit) }}"
+        ipam_driver_options: "{{ __item.ipam_driver_options | default(omit) }}"
+        state: present
+      loop: "{{ __networks }}"
+      loop_control:
+        loop_var: "__item"
+
+  roles:
+    - role: technitium_docker

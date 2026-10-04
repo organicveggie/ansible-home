@@ -28,6 +28,11 @@ veggie_base_domain_name: "{{ vault_veggie_base_domain_name }}"
 veggie_new_base_domain_name: "{{ vault_veggie_new_base_domain_name }}"
 
 ###
+### DNS
+###
+dns_internal_zones: "{{ vault_dns_internal_zones }}"
+
+###
 ### Docker
 ###
 docker_networks:
@@ -220,6 +225,15 @@ smtp_password: "{{ vault_smtp_password }}"
 ###
 speedtest_cli_license: "{{ vault_speedtest_cli_license }}"
 speedtest_install_key: "{{ vault_speedtest_install_key }}"
+
+###
+### Technitium DNS
+###
+technitium_dns_api_token: "{{ vault_technitium_dns_api_token }}"
+technitium_dns_host_domain: "{{ vault_technitium_dns_host_domain }}"
+technitium_dns_hostname: "{{ vault_technitium_dns_hostname }}"
+technitium_dns_ipv4_address: "{{ vault_technitium_dns_ipv4 }}"
+technitium_dns_port: "{{ vault_technitium_dns_port }}"
 
 ###
 ### Traefik

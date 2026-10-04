@@ -1,0 +1,44 @@
+---
+dns_records_server_address: "192.168.1.2"
+dns_records_server_api_token: null
+dns_records_server_port: "5380"
+dns_records_forwarders:
+  - "8.8.8.8"
+  - "1.1.1.1"
+
+dns_records_by_zone:
+  "example.com":
+    A:
+      "host1":
+        address: "192.168.1.101"
+      "host2":
+        address: "192.168.1.102"
+        ttl: 600
+        # state: absent
+        # overwrite: false
+    ANAME:
+      "alias1":
+        alias: "host1.example.com"
+      "alias2":
+        alias: "host2.example.com"
+        ttl: 600
+        # state: absent
+        # overwrite: false
+    CNAME:
+      "c1":
+        alias: "host1.example.com"
+      "c2":
+        alias: "host2.example.com"
+        ttl: 1800
+        # state: absent
+    MX:
+      "smtp.example.com":
+        preference: 10
+    TXT:
+      "txt1":
+        text: "This is a TXT record"
+      "txt2":
+        text: "This is another TXT record"
+        ttl: 300
+        # state: absent
+        # overwrite: false

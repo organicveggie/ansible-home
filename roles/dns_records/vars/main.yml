@@ -1,0 +1,6 @@
+---
+#####
+# Ansible
+#####
+
+dns_records_role_label: "DNS Records"

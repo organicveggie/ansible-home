@@ -1,0 +1,91 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+
+  vars:
+    technitium_docker_admin_password: "abc123"
+    technitium_docker_available_externally: true
+    technitium_docker_config_volume_name: "molecule-technitium-cfg"
+    technitium_docker_extra_env:
+      "_MOLECULE_TEST": "technitium_docker molecule test value"
+    technitium_docker_extra_labels:
+      "molecule-label-01": "molecule-value-01"
+    technitium_docker_extra_networks:
+      - name: "molecule-ingress-network"
+    technitium_docker_logs_volume_name: "molecule-technitium-logs"
+    technitium_docker_name: "technitium_docker-molecule"
+    technitium_docker_network_aliases:
+      - "zzz-molecule"
+    technitium_docker_network_name: "molecule-test-network"
+    technitium_docker_server_forwarders:
+      - "8.8.8.8"
+      - "1.1.1.1"
+    technitium_docker_server_forwarder_protocol: "tcp"
+    technitium_docker_traefik_network: "{{ technitium_docker_extra_networks[0].name }}"
+
+  tasks:
+    - name: "Verify volumes"
+      ansible.builtin.include_tasks:
+        file: "../includes/verify-volume.yml"
+      loop:
+        - "{{ technitium_docker_config_volume_name }}"
+        - "{{ technitium_docker_logs_volume_name }}"
+      loop_control:
+        loop_var: "__molecule_volume_name"
+
+    - name: Get info on container
+      community.docker.docker_container_info:
+        name: "{{ technitium_docker_name }}"
+      register: _technitium_docker_container
+
+    - name: Verify container exists
+      ansible.builtin.assert:
+        that:
+          - _technitium_docker_container.exists
+          - _technitium_docker_container["container"]["State"]["Status"] == "running"
+
+    - name: Define environment variables to check
+      ansible.builtin.set_fact:
+        _technitium_docker_env_vars:
+          "_MOLECULE_TEST": "{{ technitium_docker_extra_env['_MOLECULE_TEST'] }}"
+          "DNS_SERVER_LOG_FOLDER_PATH": "/var/log/technitium/dns"
+          "DNS_SERVER_ADMIN_PASSWORD": "{{ technitium_docker_admin_password }}"
+          "DNS_SERVER_FORWARDERS": "8.8.8.8, 1.1.1.1"
+
+    - name: Verify environment variables
+      ansible.builtin.include_tasks:
+        file: "../includes/verify-env.yml"
+      loop: "{{ _technitium_docker_env_vars | dict2items }}"
+      loop_control:
+        loop_var: "__item"
+
+    - name: Verify extra labels
+      ansible.builtin.assert:
+        that:
+          - __all_labels["molecule-label-01"] is defined
+          - __all_labels["molecule-label-01"] == technitium_docker_extra_labels["molecule-label-01"]
+      vars:
+        __all_labels: "{{ _technitium_docker_container['container']['Config']['Labels'] }}"
+
+    - name: "Verify networks"
+      ansible.builtin.include_tasks:
+        file: "../includes/verify-network.yml"
+      loop:
+        - "{{ technitium_docker_network_name }}"
+        - "{{ technitium_docker_extra_networks[0].name }}"
+      loop_control:
+        loop_var: "__molecule_network_name"
+      vars:
+        __container_id: "{{ _technitium_docker_container['container']['Id'] }}"
+
+    - name: "Verify default network aliases"
+      ansible.builtin.assert:
+        that:
+          - __networks[technitium_docker_network_name]['Aliases'] is defined
+          - __role_alias in __networks[technitium_docker_network_name]['Aliases']
+      loop: "{{ technitium_docker_network_aliases }}"
+      loop_control:
+        loop_var: "__role_alias"
+      vars:
+        __networks: "{{ _technitium_docker_container['container']['NetworkSettings']['Networks'] }}"

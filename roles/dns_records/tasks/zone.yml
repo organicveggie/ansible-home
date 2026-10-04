@@ -1,0 +1,106 @@
+---
+- name: "DNS | Setup the {{ __zone_name }} zone"
+  effectivelywild.technitium_dns.technitium_dns_zone:
+    api_url: "{{ __url }}"
+    api_token: "{{ __api_token }}"
+    api_port: "{{ __port }}"
+    zone: "{{ __zone_name }}"
+    type: "Primary"
+
+- name: "DNS | Assemble the {{ __zone_name }} MX records"
+  ansible.builtin.set_fact:
+    __zone_mx_records: >
+      {{ __zone_mx_records | default([]) + [{'exchange': __item.key, 'preference': __item.value.preference}] }}
+  loop: "{{ __zone_records.MX | dict2items }}"
+  loop_control:
+    loop_var: __item
+  when: "__zone_records.MX | default({}) | length > 0"
+
+- name: "DNS | Debug the {{ __zone_name }} MX records"
+  ansible.builtin.debug:
+    msg: "MX records for {{ __zone_name }}: {{ __zone_mx_records | default([]) }}"
+
+- name: "DNS | Configure the {{ __zone_name }} MX records"
+  effectivelywild.technitium_dns.technitium_dns_record:
+    api_url: "{{ __url }}"
+    api_token: "{{ __api_token }}"
+    api_port: "{{ __port }}"
+    zone: "{{ __zone_name }}"
+    name: "{{ __zone_name }}"
+    type: "MX"
+    records: "{{ __zone_mx_records }}"
+    # records:
+    #   - exchange: "feedback-smtp.us-west-2.amazonses.com"
+    #     preference: 10
+    overwrite: true
+    state: "present"
+  when: "__zone_records.MX | default({}) | length > 0"
+
+- name: "DNS | Configure the {{ __zone_name }} A records"
+  effectivelywild.technitium_dns.technitium_dns_record:
+    api_url: "{{ __url }}"
+    api_token: "{{ __api_token }}"
+    api_port: "{{ __port }}"
+    zone: "{{ __zone_name }}"
+    name: "{{ __item.key }}.{{ __zone_name }}"
+    type: "A"
+    ttl: "{{ __item.value.ttl | default(300, true) }}"
+    records:
+      - ipAddress: "{{ __item.value.address }}"
+    overwrite: "{{ __item.value.overwrite | default(true, true) }}"
+    state: "{{ __item.value.state | default('present', true) }}"
+  loop: "{{ __zone_records.A | dict2items }}"
+  loop_control:
+    loop_var: __item
+  when: "__zone_records.A | default({}) | length > 0"
+
+- name: "DNS | Configure the {{ __zone_name }} ANAME records"
+  effectivelywild.technitium_dns.technitium_dns_record:
+    api_url: "{{ __url }}"
+    api_token: "{{ __api_token }}"
+    api_port: "{{ __port }}"
+    zone: "{{ __zone_name }}"
+    name: "{{ __item.key }}.{{ __zone_name }}"
+    type: "ANAME"
+    ttl: "{{ __item.value.ttl | default(300, true) }}"
+    aname: "{{ __item.value.alias }}"
+    overwrite: "{{ __item.value.overwrite | default(true, true) }}"
+    state: "{{ __item.value.state | default('present', true) }}"
+  loop: "{{ __zone_records.ANAME | dict2items }}"
+  loop_control:
+    loop_var: __item
+  when: "__zone_records.ANAME | default({}) | length > 0"
+
+- name: "DNS | Configure the {{ __zone_name }} CNAME records"
+  effectivelywild.technitium_dns.technitium_dns_record:
+    api_url: "{{ __url }}"
+    api_token: "{{ __api_token }}"
+    api_port: "{{ __port }}"
+    zone: "{{ __zone_name }}"
+    name: "{{ __item.key }}.{{ __zone_name }}"
+    type: "CNAME"
+    ttl: "{{ __item.value.ttl | default(300, true) }}"
+    cname: "{{ __item.value.alias }}"
+    overwrite: "{{ __item.value.overwrite | default(true, true) }}"
+    state: "{{ __item.value.state | default('present', true) }}"
+  loop: "{{ __zone_records.CNAME | dict2items }}"
+  loop_control:
+    loop_var: __item
+  when: "__zone_records.CNAME | default({}) | length > 0"
+
+- name: "DNS | Configure the {{ __zone_name }} TXT records"
+  effectivelywild.technitium_dns.technitium_dns_record:
+    api_url: "{{ __url }}"
+    api_token: "{{ __api_token }}"
+    api_port: "{{ __port }}"
+    zone: "{{ __zone_name }}"
+    name: "{{ __item.key }}.{{ __zone_name }}"
+    type: "TXT"
+    ttl: "{{ __item.value.ttl | default(300, true) }}"
+    text: "{{ __item.value.text }}"
+    overwrite: "{{ __item.value.overwrite | default(true, true) }}"
+    state: "{{ __item.value.state | default('present', true) }}"
+  loop: "{{ __zone_records.TXT | dict2items }}"
+  loop_control:
+    loop_var: __item
+  when: "__zone_records.TXT | default({}) | length > 0"

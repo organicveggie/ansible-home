@@ -51,6 +51,10 @@
   ansible.builtin.import_tasks: "portainer.yml"
   tags: ["portainer"]
 
+- name: "Install Technitium DNS Server"
+  ansible.builtin.import_tasks: "technitium.yml"
+  tags: ["technitium", "technitium-dns", "technitium_dns"]
+
 - name: "Install Samba"
   ansible.builtin.import_tasks: "samba.yml"
   tags: ["samba"]
